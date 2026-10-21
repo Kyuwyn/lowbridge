@@ -1,0 +1,76 @@
+[
+  { "id": "coin", "kind": "resource", "name": "Coin", "group": "Stores", "desc": "Hard money, counted into your hand.", "initial": { "max": 10 } },
+  { "id": "herbs", "kind": "resource", "name": "Herbs", "group": "Stores", "desc": "Bundles tied at the stem.", "initial": { "max": 6 } },
+  { "id": "vigor", "kind": "resource", "name": "Vigor", "group": "Body", "desc": "What your body has left today.", "initial": { "value": 10, "max": 10 } },
+  { "id": "qi", "kind": "resource", "name": "Qi", "group": "Body", "desc": "Breath you have gathered and kept.", "initial": { "max": 4 } },
+  {
+    "id": "notes", "kind": "resource", "name": "Notes", "group": "Stores",
+    "desc": "Loose pages. Every one you keep makes the next reading quicker and gives you somewhere to tuck a coin.",
+    "initial": { "max": 5 }, "mod": { "reading.rate": 0.1, "coin.max": 1 }
+  },
+  { "id": "home_space", "kind": "resource", "name": "Floor", "group": "Home", "desc": "Spans of floor you can put something on.", "initial": { "max": 2 } },
+  { "id": "attune_slots", "kind": "resource", "name": "Attunement", "group": "Body", "desc": "How many techniques you can hold ready at once.", "initial": { "max": 1 } },
+
+  { "id": "carried", "kind": "flag", "name": "Carried current", "group": "Body", "desc": "A charge you are carrying to the next place." },
+
+  {
+    "id": "lore", "kind": "family", "name": "Lore", "group": "Knowledge",
+    "desc": "What you have read and can call back.",
+    "initial": { "max": 4, "open": true }, "perLevel": { "coin.max": 2 }, "at": { "2": { "herbs.discount": 0.1 } }
+  },
+
+  { "id": "reading", "kind": "task", "name": "Read the almanac", "group": "Work", "desc": "Sit with the pages until something sticks.", "length": "continuous", "train": "lore", "effect": { "lore.exp": 1 } },
+  {
+    "id": "breath", "kind": "task", "name": "Gather the breath", "group": "Work",
+    "desc": "Sit and draw until you are full; there is nowhere to put any more.",
+    "length": "continuous", "train": "lore", "effect": { "qi": 0.5, "lore.exp": 0.5 }, "fill": ["qi"]
+  },
+  { "id": "rest", "kind": "task", "name": "Rest", "group": "Work", "desc": "Sit down until you can work again.", "length": "continuous", "effect": { "vigor": 1 }, "fill": ["vigor"], "autoStart": true },
+  {
+    "id": "chore", "kind": "task", "name": "Haul sacks", "group": "Work",
+    "desc": "Two vigor for three coin. After the third load the miller rounds the wage up.",
+    "cost": { "vigor": 2 }, "result": { "coin": 3 }, "at": { "3": { "chore.yield": 1 } },
+    "flavor": "Wen counts every sack you carry."
+  },
+  { "id": "gather", "kind": "task", "name": "Gather herbs", "group": "Work", "desc": "A trip out to the beds and back.", "length": 10, "cost": { "vigor": 1 }, "result": { "herbs": 2 } },
+  { "id": "walk", "kind": "site", "name": "Walk the ridge", "group": "Places", "desc": "A long climb for a long look.", "length": 30, "result": { "notes": 1 }, "boost": { "flag": "carried", "multiplier": 1.5 } },
+
+  { "id": "pouch", "kind": "purchase", "name": "A larger pouch", "group": "Purchases", "desc": "Leather, double-stitched.", "buy": { "coin": 5 }, "mod": { "coin.max": 10 } },
+  {
+    "id": "margin_notes", "kind": "purchase", "name": "Marginal notes", "group": "Purchases",
+    "desc": "You start writing prices in the margins, and every level of Lore you already have widens your purse.",
+    "require": "g.lore >= 1", "buy": { "coin": 4 }, "mod": { "lore.mod.coin.max": 3 }
+  },
+  {
+    "id": "move_on", "kind": "purchase", "name": "Take the ferry road", "group": "Purchases",
+    "desc": "You leave the barn and the herb beds behind.",
+    "warn": "The herb beds are half a day behind you after this.",
+    "lock": ["gather", "hayloft"]
+  },
+  { "id": "turn_back", "kind": "purchase", "name": "Turn back", "group": "Purchases", "desc": "The road was a mistake.", "require": "g.move_on > 0", "enable": ["gather", "hayloft"] },
+  { "id": "focus_charm", "kind": "purchase", "name": "Focus charm", "group": "Purchases", "desc": "A knot of cord you can hang a second technique on.", "buy": { "coin": 6 }, "mod": { "attune_slots.max": 1 } },
+
+  { "id": "hayloft", "kind": "home", "name": "Hayloft", "group": "Home", "desc": "Straw, a slatted window, and the smell of grain.", "initial": { "value": 1 }, "slots": ["rest"] },
+  { "id": "lean_to", "kind": "home", "name": "Lean-to", "group": "Home", "desc": "Your own four walls, nearly.", "buy": { "coin": 8 }, "mod": { "home_space.max": 2 }, "slots": ["rest", "study"], "lock": ["hayloft"] },
+  { "id": "pallet", "kind": "arrangement", "name": "Straw pallet", "group": "Home", "desc": "Better than the bare boards.", "slot": "rest", "buy": { "coin": 2 }, "mod": { "rest.rate": 0.5 } },
+  { "id": "cot", "kind": "arrangement", "name": "Rope cot", "group": "Home", "desc": "Off the floor at last.", "slot": "rest", "buy": { "coin": 4 }, "mod": { "rest.rate": 1 } },
+  { "id": "herb_rack", "kind": "arrangement", "name": "Herb rack", "group": "Home", "desc": "Somewhere to hang what you cut.", "space": 1, "buy": { "coin": 3 }, "mod": { "herbs.max": 6 } },
+
+  {
+    "id": "ember_form", "kind": "technique", "name": "Ember form", "group": "Techniques",
+    "desc": "A shape you hold in the breath while you work.", "tags": ["t_fireform"],
+    "attune": true, "length": 10, "cost": { "qi": 1 }, "result": { "coin": 2 }, "flavor": "It is warm, and it wants to be used."
+  },
+  {
+    "id": "ash_form", "kind": "technique", "name": "Ash form", "group": "Techniques",
+    "desc": "The same shape, run cold.", "tags": ["t_fireform"],
+    "attune": true, "length": 10, "cost": { "qi": 1 }, "result": { "herbs": 1 }
+  },
+  {
+    "id": "kindling_form", "kind": "technique", "name": "Kindling form", "group": "Techniques",
+    "desc": "A reading of the same shape that cannot be held beside the cold one.",
+    "attune": true, "length": 10, "cost": { "qi": 1 }, "result": { "coin": 1 },
+    "lock": ["ash_form"], "warn": "Taking up the kindling reading settles the shape for good."
+  },
+  { "id": "fire_adept", "kind": "class", "name": "Fire adept", "title": "Fire Adept", "group": "Standing", "desc": "Two forms held and used is a standing of sorts.", "require": "g.t_fireform >= 2", "max": 1 }
+]

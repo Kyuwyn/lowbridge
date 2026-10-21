@@ -1,0 +1,73 @@
+{
+  "repository": "https://gitlab.com/mathiashjelm/arcanum",
+  "commit": "a2632d2edf3e07e9168fff81167b11f2792e9197",
+  "root": "/tmp/arcanum-study-2026-10-16",
+  "method": "git ls-files; decode UTF-8 with replacement; Python str.splitlines() counts physical lines including comments and blank lines; nonblank means line.strip() is nonempty. Bytes are filesystem stat sizes.",
+  "scope": "Tracked files only. Main source comprises src/**/*.js, src/**/*.ts and src/**/*.vue outside src/unused. CSS is tracked css subtree. Data/docs/unused are reported separately.",
+  "exclusions": "Main source excludes src/unused, data, docs, root build/config scripts, dependency lockfile, generated artifacts and dependencies. Main source can still include legacy/optional systems, e.g. cloud persistence, so is not an active/shipped executable LOC count.",
+  "tracked_files": 305,
+  "groups": {
+    "css": {
+      "files": 1,
+      "physical_lines": 1357,
+      "nonblank_lines": 1095,
+      "bytes": 20262
+    },
+    "data": {
+      "files": 77,
+      "physical_lines": 65389,
+      "nonblank_lines": 65355,
+      "bytes": 1436658
+    },
+    "docs": {
+      "files": 11,
+      "physical_lines": 3842,
+      "nonblank_lines": 2534,
+      "bytes": 125047
+    },
+    "src.js": {
+      "files": 121,
+      "physical_lines": 26163,
+      "nonblank_lines": 22603,
+      "bytes": 611128
+    },
+    "src.vue": {
+      "files": 74,
+      "physical_lines": 12683,
+      "nonblank_lines": 11544,
+      "bytes": 305414
+    },
+    "src_unused": {
+      "files": 3,
+      "physical_lines": 917,
+      "nonblank_lines": 902,
+      "bytes": 18381
+    },
+    "src.ts": {
+      "files": 1,
+      "physical_lines": 347,
+      "nonblank_lines": 303,
+      "bytes": 12372
+    }
+  },
+  "source_physical_lines_excluding_unused": 39193,
+  "source_plus_css_physical_lines_excluding_unused": 40550,
+  "dependencies": {
+    "runtime": {
+      "vue": "3.4.30",
+      "eventemitter3": "3.1.2"
+    },
+    "tooling": {
+      "vite": "5.4.20",
+      "typescript": "4.5.5"
+    }
+  },
+  "verification": {
+    "installs_builds_tests_run": false,
+    "source_changed": false,
+    "graph_project": "arcanum-study-2026-10-16",
+    "generation": "2026-10-16T05:38:02Z",
+    "tier": "2 task-directed",
+    "coverage": "Exact evidence paths metadata-match/no recorded issue; src/css/data scopes no recorded issue; docs excluded and directly read; Vue main component function symbols unavailable, directly read."
+  }
+}

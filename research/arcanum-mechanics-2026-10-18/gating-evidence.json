@@ -1,0 +1,3346 @@
+{
+ "pinned_commit": "a2632d2edf3e07e9168fff81167b11f2792e9197",
+ "files_scanned": [
+  "classes",
+  "events",
+  "furniture",
+  "homes",
+  "locales",
+  "mod:extraaction/resources",
+  "mod:extraaction/tasks",
+  "mod:extraaction/upgrades",
+  "mod:learning/resourcesUnused",
+  "mod:learning/upgrades",
+  "mod:swordplay/classes",
+  "mod:swordplay/skills",
+  "mod:swordplay/spells",
+  "mod:swordplay/tags",
+  "mod:swordplay/tasks",
+  "mod:swordplay/upgrades",
+  "quests",
+  "resources",
+  "shadow/classes",
+  "shadow/events",
+  "shadow/furniture",
+  "shadow/homes",
+  "shadow/monsters",
+  "shadow/potions",
+  "shadow/resources",
+  "shadow/skills",
+  "shadow/spells",
+  "shadow/tags",
+  "shadow/tasks",
+  "shadow/upgrades",
+  "skills",
+  "tasks",
+  "upgrades"
+ ],
+ "record_count": 1130,
+ "skill_count": 60,
+ "skills_without_base_max": 59,
+ "classes_opening_at_least_one_base0_skill": 60,
+ "classes": [
+  {
+   "id": "apprentice",
+   "source": "classes",
+   "tier": null,
+   "require": "research",
+   "cost": {
+    "research": 10,
+    "gold": 20
+   },
+   "tags": null,
+   "skill_caps_raised": {},
+   "base0_skills_opened": [],
+   "downstream_gated_records": 0
+  },
+  {
+   "id": "falconer",
+   "source": "classes",
+   "tier": null,
+   "require": "animals",
+   "cost": {
+    "gold": 100,
+    "research": 100
+   },
+   "tags": "t_job",
+   "skill_caps_raised": {
+    "lore": 2,
+    "animals": 1,
+    "naturelore": 1
+   },
+   "base0_skills_opened": [
+    "lore",
+    "animals",
+    "naturelore"
+   ],
+   "downstream_gated_records": 113
+  },
+  {
+   "id": "herbalist",
+   "source": "classes",
+   "tier": null,
+   "require": "herbalism",
+   "cost": {
+    "gold": 100,
+    "research": 100
+   },
+   "tags": "t_job",
+   "skill_caps_raised": {
+    "lore": 2,
+    "herbalism": 1,
+    "alchemy": 1
+   },
+   "base0_skills_opened": [
+    "lore",
+    "herbalism",
+    "alchemy"
+   ],
+   "downstream_gated_records": 89
+  },
+  {
+   "id": "job_smith",
+   "source": "classes",
+   "tier": null,
+   "require": "g.crafting>=5",
+   "cost": {
+    "gold": 250
+   },
+   "tags": "t_job",
+   "skill_caps_raised": {
+    "lore": 2,
+    "crafting": 1
+   },
+   "base0_skills_opened": [
+    "lore",
+    "crafting"
+   ],
+   "downstream_gated_records": 118
+  },
+  {
+   "id": "scribe",
+   "source": "classes",
+   "tier": null,
+   "require": "scribescroll",
+   "cost": {
+    "gold": 100,
+    "research": 100
+   },
+   "tags": "t_job",
+   "skill_caps_raised": {
+    "lore": 2,
+    "history": 1,
+    "languages": 1
+   },
+   "base0_skills_opened": [
+    "lore",
+    "history",
+    "languages"
+   ],
+   "downstream_gated_records": 91
+  },
+  {
+   "id": "adept",
+   "source": "classes",
+   "tier": 0,
+   "require": "g.t0unlocker>0&&g.research.max>=100&&g.lore>=4",
+   "cost": {
+    "research": 225,
+    "gold": 200
+   },
+   "tags": "t_tier0",
+   "skill_caps_raised": {
+    "mysticism": 1,
+    "lore": 1,
+    "history": 1,
+    "languages": 1
+   },
+   "base0_skills_opened": [
+    "mysticism",
+    "lore",
+    "history",
+    "languages"
+   ],
+   "downstream_gated_records": 92
+  },
+  {
+   "id": "blueadept",
+   "source": "classes",
+   "tier": 0,
+   "require": "g.t0unlocker>0&&g.research.max>=100&&g.lore>=4",
+   "cost": null,
+   "tags": "t_tier0",
+   "skill_caps_raised": {
+    "mysticism": 1,
+    "lightlore": 1,
+    "spiritlore": 1,
+    "divination": 1
+   },
+   "base0_skills_opened": [
+    "mysticism",
+    "lightlore",
+    "spiritlore",
+    "divination"
+   ],
+   "downstream_gated_records": 56
+  },
+  {
+   "id": "darkadept",
+   "source": "classes",
+   "tier": 0,
+   "require": "g.t0unlocker>0&&g.research.max>=100&&g.lore>=4",
+   "cost": {
+    "research": 225
+   },
+   "tags": "t_tier0",
+   "skill_caps_raised": {
+    "mysticism": 1,
+    "spiritlore": 1,
+    "shadowlore": 1,
+    "trickery": 1
+   },
+   "base0_skills_opened": [
+    "mysticism",
+    "spiritlore",
+    "shadowlore",
+    "trickery"
+   ],
+   "downstream_gated_records": 79
+  },
+  {
+   "id": "redadept",
+   "source": "classes",
+   "tier": 0,
+   "require": "g.t0unlocker>0&&g.research.max>=100&&g.lore>=4",
+   "cost": null,
+   "tags": "t_tier0",
+   "skill_caps_raised": {
+    "anatomy": 1,
+    "firelore": 1,
+    "mysticism": 1
+   },
+   "base0_skills_opened": [
+    "anatomy",
+    "firelore",
+    "mysticism"
+   ],
+   "downstream_gated_records": 41
+  },
+  {
+   "id": "savant",
+   "source": "classes",
+   "tier": 0,
+   "require": "g.t0unlocker>0&&g.research.max>=100&&g.lore>=4",
+   "cost": null,
+   "tags": "t_tier0",
+   "skill_caps_raised": {
+    "mysticism": 2,
+    "conjuration": 1,
+    "spiritlore": 1
+   },
+   "base0_skills_opened": [
+    "mysticism",
+    "conjuration",
+    "spiritlore"
+   ],
+   "downstream_gated_records": 28
+  },
+  {
+   "id": "conjurer",
+   "source": "classes",
+   "tier": 1,
+   "require": "g.conjuration>=5&&g.t1unlocker>0",
+   "cost": null,
+   "tags": "t_tier1,t_summonclass",
+   "skill_caps_raised": {
+    "summoning": 2,
+    "charms": 1,
+    "lore": 2,
+    "conjuration": 4
+   },
+   "base0_skills_opened": [
+    "summoning",
+    "charms",
+    "lore",
+    "conjuration"
+   ],
+   "downstream_gated_records": 78
+  },
+  {
+   "id": "elementalist",
+   "source": "classes",
+   "tier": 1,
+   "require": "g.t1unlocker>0&&g.airlore>=3&&g.firelore>=3&&g.earthlore>=3&&g.waterlore>=3",
+   "cost": null,
+   "tags": "t_tier1,t_elementalclass",
+   "skill_caps_raised": {},
+   "base0_skills_opened": [],
+   "downstream_gated_records": 0
+  },
+  {
+   "id": "magician",
+   "source": "classes",
+   "tier": 1,
+   "require": "g.t1unlocker>0&&g.lore>=10",
+   "cost": {
+    "research": 500,
+    "codices": 2
+   },
+   "tags": "t_tier1,t_manaclass,t_knowledgeclass",
+   "skill_caps_raised": {
+    "lore": 1,
+    "astronomy": 1,
+    "languages": 1
+   },
+   "base0_skills_opened": [
+    "lore",
+    "astronomy",
+    "languages"
+   ],
+   "downstream_gated_records": 97
+  },
+  {
+   "id": "oracle",
+   "source": "classes",
+   "tier": 1,
+   "require": "g.t1unlocker>0&&g.spiritlore>=5&&g.divination>=5",
+   "cost": null,
+   "tags": "t_tier1,t_divinationclass",
+   "skill_caps_raised": {
+    "lore": 2,
+    "scrying": 2,
+    "divination": 2,
+    "airlore": 1,
+    "spiritlore": 1
+   },
+   "base0_skills_opened": [
+    "lore",
+    "scrying",
+    "divination",
+    "airlore",
+    "spiritlore"
+   ],
+   "downstream_gated_records": 140
+  },
+  {
+   "id": "reanimator",
+   "source": "shadow/classes",
+   "tier": 1,
+   "require": "g.t1unlocker>0&&g.evil1>0&&g.good2==0",
+   "cost": null,
+   "tags": "t_tier1,t_shadowclass,t_necroclass",
+   "skill_caps_raised": {
+    "reanimation": 3,
+    "embalming": 1,
+    "shadowlore": 2,
+    "spiritlore": 2,
+    "potions": 1
+   },
+   "base0_skills_opened": [
+    "reanimation",
+    "embalming",
+    "shadowlore",
+    "spiritlore",
+    "potions"
+   ],
+   "downstream_gated_records": 92
+  },
+  {
+   "id": "trickster",
+   "source": "classes",
+   "tier": 1,
+   "require": "g.trickery>=4&&g.t1unlocker>0&&g.tier1==0",
+   "cost": null,
+   "tags": "t_tier1,t_chaosclass",
+   "skill_caps_raised": {
+    "trickery": 2,
+    "conjuration": 1,
+    "spiritlore": 1,
+    "potions": 1
+   },
+   "base0_skills_opened": [
+    "trickery",
+    "conjuration",
+    "spiritlore",
+    "potions"
+   ],
+   "downstream_gated_records": 59
+  },
+  {
+   "id": "warden",
+   "source": "classes",
+   "tier": 1,
+   "require": "g.t1unlocker>0&&g.naturelore>=8",
+   "cost": {
+    "herbs": 50
+   },
+   "tags": "t_tier1,t_natureclass",
+   "skill_caps_raised": {
+    "naturelore": 3,
+    "animals": 3,
+    "potions": 1
+   },
+   "base0_skills_opened": [
+    "naturelore",
+    "animals",
+    "potions"
+   ],
+   "downstream_gated_records": 56
+  },
+  {
+   "id": "witch",
+   "source": "shadow/classes",
+   "tier": 1,
+   "require": "g.t1unlocker>0&&g.animals>=2&&g.potions>=3&&g.tier1==0",
+   "cost": {
+    "arcana": 13
+   },
+   "tags": "t_tier1,t_shadowclass,t_demonclass,t_potionclass",
+   "skill_caps_raised": {
+    "demonology": 2,
+    "potions": 2,
+    "spiritlore": 2
+   },
+   "base0_skills_opened": [
+    "demonology",
+    "potions",
+    "spiritlore"
+   ],
+   "downstream_gated_records": 51
+  },
+  {
+   "id": "alchemist",
+   "source": "classes",
+   "tier": 2,
+   "require": "g.t2unlocker>0&&g.potions>=4&&g.alchemy>=5",
+   "cost": {
+    "managem": 5,
+    "firegem": 2,
+    "watergem": 2,
+    "earthgem": 2
+   },
+   "tags": "t_tier2,t_bloodclass,t_potionclass,t_craftingclass",
+   "skill_caps_raised": {
+    "crafting": 3,
+    "potions": 3,
+    "alchemy": 3,
+    "lore": 1
+   },
+   "base0_skills_opened": [
+    "crafting",
+    "potions",
+    "alchemy",
+    "lore"
+   ],
+   "downstream_gated_records": 135
+  },
+  {
+   "id": "battlemage",
+   "source": "classes",
+   "tier": 2,
+   "require": "g.t2unlocker>0&&g.weaponlore>=6&&g.tier2==0",
+   "cost": null,
+   "tags": "t_tier2,t_swordclass,t_manaclass",
+   "skill_caps_raised": {
+    "firelore": 2,
+    "earthlore": 1
+   },
+   "base0_skills_opened": [
+    "firelore",
+    "earthlore"
+   ],
+   "downstream_gated_records": 50
+  },
+  {
+   "id": "bonemonger",
+   "source": "shadow/classes",
+   "tier": 2,
+   "require": "g.t2unlocker>0&&g.t_necroclass>0&&g.evil1>0",
+   "cost": {
+    "bodies": 3,
+    "bones": 10,
+    "bonedust": 15
+   },
+   "tags": "t_tier2,t_shadowclass,t_necroclass",
+   "skill_caps_raised": {
+    "reanimation": 2,
+    "embalming": 1,
+    "shadowlore": 3,
+    "spiritlore": 1,
+    "potions": 1
+   },
+   "base0_skills_opened": [
+    "reanimation",
+    "embalming",
+    "shadowlore",
+    "spiritlore",
+    "potions"
+   ],
+   "downstream_gated_records": 92
+  },
+  {
+   "id": "darkmagician",
+   "source": "shadow/classes",
+   "tier": 2,
+   "require": "g.t2unlocker>0&&g.shadowlore>=10",
+   "cost": {
+    "arcana": 13
+   },
+   "tags": "t_tier2,t_shadowclass,t_demonclass,t_knowledgeclass",
+   "skill_caps_raised": {
+    "shadowlore": 1,
+    "demonology": 2,
+    "lore": 1
+   },
+   "base0_skills_opened": [
+    "shadowlore",
+    "demonology",
+    "lore"
+   ],
+   "downstream_gated_records": 121
+  },
+  {
+   "id": "enchanter",
+   "source": "classes",
+   "tier": 2,
+   "require": "g.t2unlocker>0&&g.enchanting>=6&&g.charms>=3",
+   "cost": {
+    "managem": 5
+   },
+   "tags": "t_tier2,t_craftingclass,t_enchantingclass",
+   "skill_caps_raised": {
+    "enchanting": 3,
+    "naturelore": 2,
+    "airlore": 2,
+    "waterlore": 2
+   },
+   "base0_skills_opened": [
+    "enchanting",
+    "naturelore",
+    "airlore",
+    "waterlore"
+   ],
+   "downstream_gated_records": 102
+  },
+  {
+   "id": "geomancer",
+   "source": "classes",
+   "tier": 2,
+   "require": "g.t2unlocker>0&&g.earthlore>=7&&g.tier2==0",
+   "cost": {
+    "earthgem": 10
+   },
+   "tags": "t_tier2,t_earthclass,t_hammerclass",
+   "skill_caps_raised": {
+    "earthlore": 2,
+    "geosculpting": 2
+   },
+   "base0_skills_opened": [
+    "earthlore",
+    "geosculpting"
+   ],
+   "downstream_gated_records": 38
+  },
+  {
+   "id": "hydromancer",
+   "source": "classes",
+   "tier": 2,
+   "require": "g.t2unlocker>0&&g.waterlore>=10",
+   "cost": {
+    "watergem": 10
+   },
+   "tags": "t_tier2,t_waterclass",
+   "skill_caps_raised": {
+    "waterlore": 2
+   },
+   "base0_skills_opened": [
+    "waterlore"
+   ],
+   "downstream_gated_records": 28
+  },
+  {
+   "id": "madcap",
+   "source": "classes",
+   "tier": 2,
+   "require": "g.trickery>=7&&g.t2unlocker>0&&g.tier2==0",
+   "cost": {
+    "managem": 7,
+    "airgem": 7,
+    "watergem": 7
+   },
+   "tags": "t_tier2,t_chaosclass",
+   "skill_caps_raised": {
+    "trickery": 2,
+    "conjuration": 1,
+    "mysticism": 1,
+    "potions": 1,
+    "lore": 1
+   },
+   "base0_skills_opened": [
+    "trickery",
+    "conjuration",
+    "mysticism",
+    "potions",
+    "lore"
+   ],
+   "downstream_gated_records": 102
+  },
+  {
+   "id": "mage",
+   "source": "classes",
+   "tier": 2,
+   "require": "g.t2unlocker>0&&g.lore>=14",
+   "cost": {
+    "research": 1000,
+    "codices": 5
+   },
+   "tags": "t_tier2,t_manaclass,t_knowledgeclass",
+   "skill_caps_raised": {
+    "firelore": 1,
+    "mysticism": 2,
+    "enchanting": 1,
+    "lore": 2
+   },
+   "base0_skills_opened": [
+    "firelore",
+    "mysticism",
+    "enchanting",
+    "lore"
+   ],
+   "downstream_gated_records": 113
+  },
+  {
+   "id": "seer",
+   "source": "classes",
+   "tier": 2,
+   "require": "g.t2unlocker>0&&g.divination>=10",
+   "cost": null,
+   "tags": "t_tier2,t_divinationclass",
+   "skill_caps_raised": {
+    "lore": 2,
+    "divination": 2,
+    "scrying": 2,
+    "spiritlore": 2
+   },
+   "base0_skills_opened": [
+    "lore",
+    "divination",
+    "scrying",
+    "spiritlore"
+   ],
+   "downstream_gated_records": 115
+  },
+  {
+   "id": "windmage",
+   "source": "classes",
+   "tier": 2,
+   "require": "g.t2unlocker>0&&g.airlore>=10",
+   "cost": {
+    "airgem": 10
+   },
+   "tags": "t_tier2,t_airclass",
+   "skill_caps_raised": {
+    "airlore": 2
+   },
+   "base0_skills_opened": [
+    "airlore"
+   ],
+   "downstream_gated_records": 27
+  },
+  {
+   "id": "bloodmage",
+   "source": "classes",
+   "tier": 3,
+   "require": "g.t3unlocker>0&&(g.battlemage>0||g.hp.max>=150)&&g.tier3==0",
+   "cost": {
+    "bloodgem": 20
+   },
+   "tags": "t_tier3,t_bloodclass,t_manaclass",
+   "skill_caps_raised": {
+    "anatomy": 3,
+    "earthlore": 2,
+    "waterlore": 1
+   },
+   "base0_skills_opened": [
+    "anatomy",
+    "earthlore",
+    "waterlore"
+   ],
+   "downstream_gated_records": 65
+  },
+  {
+   "id": "doomsayer",
+   "source": "classes",
+   "tier": 3,
+   "require": "g.t3unlocker>0&&g.spirit>=12&&g.divination>=12",
+   "cost": {
+    "spiritgem": 15
+   },
+   "tags": "t_tier3,t_divinationclass",
+   "skill_caps_raised": {
+    "spiritlore": 2,
+    "divination": 3,
+    "planeslore": 1,
+    "scrying": 2,
+    "lore": 2
+   },
+   "base0_skills_opened": [
+    "spiritlore",
+    "divination",
+    "planeslore",
+    "scrying",
+    "lore"
+   ],
+   "downstream_gated_records": 135
+  },
+  {
+   "id": "dreadlord",
+   "source": "shadow/classes",
+   "tier": 3,
+   "require": "g.t3unlocker>0&&g.evil2>0&&g.hp>=100",
+   "cost": {
+    "shadowgem": 10
+   },
+   "tags": "t_tier3,t_shadowclass,t_swordclass",
+   "skill_caps_raised": {
+    "shadowlore": 2
+   },
+   "base0_skills_opened": [
+    "shadowlore"
+   ],
+   "downstream_gated_records": 38
+  },
+  {
+   "id": "druid",
+   "source": "classes",
+   "tier": 3,
+   "require": "g.t3unlocker>0&&g.naturelore>=15",
+   "cost": {
+    "naturegem": 20,
+    "herbs": 50
+   },
+   "tags": "t_tier3,t_natureclass",
+   "skill_caps_raised": {
+    "naturelore": 3,
+    "animals": 2,
+    "herbalism": 2,
+    "potions": 1
+   },
+   "base0_skills_opened": [
+    "naturelore",
+    "animals",
+    "herbalism",
+    "potions"
+   ],
+   "downstream_gated_records": 64
+  },
+  {
+   "id": "highelemental",
+   "source": "classes",
+   "tier": 3,
+   "require": "g.t3unlocker>0&&g.airlore>=8&&g.firelore>=8&&g.waterlore>=8&&g.earthlore>=8",
+   "cost": {
+    "airgem": 20,
+    "firegem": 20,
+    "earthgem": 20,
+    "watergem": 20
+   },
+   "tags": "t_tier3,t_elementalclass",
+   "skill_caps_raised": {
+    "airlore": 2,
+    "firelore": 2,
+    "earthlore": 2,
+    "waterlore": 2
+   },
+   "base0_skills_opened": [
+    "airlore",
+    "firelore",
+    "earthlore",
+    "waterlore"
+   ],
+   "downstream_gated_records": 94
+  },
+  {
+   "id": "highmage",
+   "source": "classes",
+   "tier": 3,
+   "require": "g.t3unlocker>0&&g.lore>=18",
+   "cost": {
+    "research": 2000,
+    "tomes": 5
+   },
+   "tags": "t_tier3,t_manaclass,t_knowledgeclass",
+   "skill_caps_raised": {
+    "firelore": 1,
+    "mysticism": 2,
+    "alchemy": 1,
+    "spellcraft": 2,
+    "crafting": 1,
+    "lore": 2
+   },
+   "base0_skills_opened": [
+    "firelore",
+    "mysticism",
+    "alchemy",
+    "spellcraft",
+    "crafting",
+    "lore"
+   ],
+   "downstream_gated_records": 157
+  },
+  {
+   "id": "spellblade",
+   "source": "mod:swordplay/classes",
+   "tier": 3,
+   "require": "g.t3unlocker>0&&g.enchanting>=7&&g.weaponlore>=8&&g.tier3==0",
+   "cost": null,
+   "tags": "t_tier3,t_swordclass",
+   "skill_caps_raised": {
+    "history": 1,
+    "enchanting": 2,
+    "anatomy": 1,
+    "vivification": 1
+   },
+   "base0_skills_opened": [
+    "history",
+    "enchanting",
+    "anatomy",
+    "vivification"
+   ],
+   "downstream_gated_records": 51
+  },
+  {
+   "id": "stormcaller",
+   "source": "classes",
+   "tier": 3,
+   "require": "(g.t_waterclass>0||g.t_airclass>0)&&g.t3unlocker>0",
+   "cost": {
+    "airgem": 20,
+    "watergem": 20
+   },
+   "tags": "t_tier3,t_waterclass,t_airclass",
+   "skill_caps_raised": {
+    "lore": 1,
+    "airlore": 3,
+    "waterlore": 3
+   },
+   "base0_skills_opened": [
+    "lore",
+    "airlore",
+    "waterlore"
+   ],
+   "downstream_gated_records": 116
+  },
+  {
+   "id": "summoner",
+   "source": "classes",
+   "tier": 3,
+   "require": "g.summoning>=5&&g.t3unlocker>0&&g.lore>=20",
+   "cost": null,
+   "tags": "t_tier3,t_summonclass",
+   "skill_caps_raised": {
+    "summoning": 4,
+    "conjuration": 2,
+    "charms": 1,
+    "lore": 2
+   },
+   "base0_skills_opened": [
+    "summoning",
+    "conjuration",
+    "charms",
+    "lore"
+   ],
+   "downstream_gated_records": 78
+  },
+  {
+   "id": "thanophage",
+   "source": "shadow/classes",
+   "tier": 3,
+   "require": "g.t3unlocker>0&&g.evil2>0",
+   "cost": {
+    "bloodgem": 10
+   },
+   "tags": "t_tier3,t_shadowclass,t_bloodclass",
+   "skill_caps_raised": {
+    "shadowlore": 2,
+    "anatomy": 3,
+    "lore": 2
+   },
+   "base0_skills_opened": [
+    "shadowlore",
+    "anatomy",
+    "lore"
+   ],
+   "downstream_gated_records": 116
+  },
+  {
+   "id": "bladeweaver",
+   "source": "mod:swordplay/classes",
+   "tier": 4,
+   "require": "g.t4unlocker>0&&(g.bladelore+g.weaponlore)>=10&&g.tier4==0&&g.weaving>=5",
+   "cost": {
+    "airgem": 10,
+    "firegem": 5,
+    "earthgem": 5,
+    "watergem": 5
+   },
+   "tags": "t_tier4,t_swordclass",
+   "skill_caps_raised": {
+    "history": 1,
+    "enchanting": 1,
+    "anatomy": 1,
+    "vivification": 1
+   },
+   "base0_skills_opened": [
+    "history",
+    "enchanting",
+    "anatomy",
+    "vivification"
+   ],
+   "downstream_gated_records": 51
+  },
+  {
+   "id": "destined",
+   "source": "classes",
+   "tier": 4,
+   "require": "g.t4unlocker>0&&g.spirit>=15&&g.divination>=15",
+   "cost": {
+    "spiritgem": 20
+   },
+   "tags": "t_tier4,t_enchantingclass,t_divinationclass",
+   "skill_caps_raised": {
+    "spiritlore": 2,
+    "divination": 3,
+    "spellcraft": 2,
+    "lore": 2
+   },
+   "base0_skills_opened": [
+    "spiritlore",
+    "divination",
+    "spellcraft",
+    "lore"
+   ],
+   "downstream_gated_records": 108
+  },
+  {
+   "id": "earthshaker",
+   "source": "classes",
+   "tier": 4,
+   "require": "g.t4unlocker>0&&g.earthlore>=11&&g.tier4==0",
+   "cost": {
+    "earthgem": 50
+   },
+   "tags": "t_tier4,t_earthclass,t_hammerclass",
+   "skill_caps_raised": {
+    "earthlore": 3
+   },
+   "base0_skills_opened": [
+    "earthlore"
+   ],
+   "downstream_gated_records": 29
+  },
+  {
+   "id": "fey",
+   "source": "classes",
+   "tier": 4,
+   "require": "g.lore>999",
+   "cost": null,
+   "tags": "t_tier4,t_chaosclass,t_natureclass",
+   "skill_caps_raised": {
+    "waterlore": 2,
+    "earthlore": 2,
+    "airlore": 2,
+    "naturelore": 3,
+    "animals": 2,
+    "herbalism": 2
+   },
+   "base0_skills_opened": [
+    "waterlore",
+    "earthlore",
+    "airlore",
+    "naturelore",
+    "animals",
+    "herbalism"
+   ],
+   "downstream_gated_records": 125
+  },
+  {
+   "id": "jester",
+   "source": "classes",
+   "tier": 4,
+   "require": "g.trickery>=15&&g.t_chaosclass>0&&g.t4unlocker>0&&g.tier4==0",
+   "cost": {
+    "managem": 13,
+    "airgem": 13,
+    "watergem": 13
+   },
+   "tags": "t_tier4,t_chaosclass",
+   "skill_caps_raised": {
+    "trickery": 3,
+    "conjuration": 2,
+    "lore": 2,
+    "chaoslore": 1,
+    "mysticism": 1
+   },
+   "base0_skills_opened": [
+    "trickery",
+    "conjuration",
+    "lore",
+    "chaoslore",
+    "mysticism"
+   ],
+   "downstream_gated_records": 97
+  },
+  {
+   "id": "necromancer",
+   "source": "shadow/classes",
+   "tier": 4,
+   "require": "g.t4unlocker>0&&g.evil2>0&&g.shadowlore>=17",
+   "cost": {
+    "bloodgem": 30,
+    "shadowgem": 30
+   },
+   "tags": "t_tier4,t_shadowclass,t_necroclass,t_minionclass",
+   "skill_caps_raised": {
+    "embalming": 1,
+    "reanimation": 2,
+    "shadowlore": 2,
+    "potions": 1,
+    "necromancy": 3,
+    "spiritlore": 2
+   },
+   "base0_skills_opened": [
+    "embalming",
+    "reanimation",
+    "shadowlore",
+    "potions",
+    "necromancy",
+    "spiritlore"
+   ],
+   "downstream_gated_records": 107
+  },
+  {
+   "id": "sorcerer",
+   "source": "classes",
+   "tier": 4,
+   "require": "g.t4unlocker>0&&(g.earthlore>=15||g.waterlore>=15||g.firelore>=15)&&(g.t_elementalclass+g.t_fireclass+g.t_waterclass+g.t_earthclass)>0",
+   "cost": {
+    "managem": 5,
+    "firegem": 15,
+    "earthgem": 15,
+    "watergem": 15
+   },
+   "tags": "t_tier4,t_elementalclass",
+   "skill_caps_raised": {
+    "lore": 1,
+    "earthlore": 2,
+    "waterlore": 2,
+    "firelore": 2
+   },
+   "base0_skills_opened": [
+    "lore",
+    "earthlore",
+    "waterlore",
+    "firelore"
+   ],
+   "downstream_gated_records": 138
+  },
+  {
+   "id": "warlock",
+   "source": "shadow/classes",
+   "tier": 4,
+   "require": "g.t4unlocker>0&&g.evil2>0",
+   "cost": {
+    "arcana": 25
+   },
+   "tags": "t_tier4,t_shadowclass,t_demonclass,t_summonclass",
+   "skill_caps_raised": {
+    "anatomy": 3,
+    "lore": 2,
+    "firelore": 1,
+    "shadowlore": 2,
+    "demonology": 3
+   },
+   "base0_skills_opened": [
+    "anatomy",
+    "lore",
+    "firelore",
+    "shadowlore",
+    "demonology"
+   ],
+   "downstream_gated_records": 157
+  },
+  {
+   "id": "wizard",
+   "source": "classes",
+   "tier": 4,
+   "require": "g.t4unlocker>0&&g.lore>=25",
+   "cost": {
+    "research": 6000,
+    "tomes": 15,
+    "runestones": 5
+   },
+   "tags": "t_tier4,t_manaclass,t_knowledgeclass",
+   "skill_caps_raised": {
+    "languages": 2,
+    "conjuration": 1,
+    "crafting": 1,
+    "lore": 3,
+    "spellcraft": 3,
+    "mysticism": 1
+   },
+   "base0_skills_opened": [
+    "languages",
+    "conjuration",
+    "crafting",
+    "lore",
+    "spellcraft",
+    "mysticism"
+   ],
+   "downstream_gated_records": 143
+  },
+  {
+   "id": "arcanedervish",
+   "source": "mod:swordplay/classes",
+   "tier": 5,
+   "require": "g.t5unlocker>0&&g.bladelore>=7&&g.tier5==0",
+   "cost": {
+    "airgem": 20,
+    "firegem": 10,
+    "earthgem": 10,
+    "watergem": 10
+   },
+   "tags": "t_tier5,t_swordclass",
+   "skill_caps_raised": {
+    "history": 1,
+    "enchanting": 1,
+    "anatomy": 1,
+    "vivification": 2
+   },
+   "base0_skills_opened": [
+    "history",
+    "enchanting",
+    "anatomy",
+    "vivification"
+   ],
+   "downstream_gated_records": 51
+  },
+  {
+   "id": "archlock",
+   "source": "shadow/classes",
+   "tier": 5,
+   "require": "g.t5unlocker>0&&g.warlock>0&&g.demonology>=12&&g.evil3>0",
+   "cost": {
+    "arcana": 25
+   },
+   "tags": "t_tier5,t_shadowclass,t_demonclass,t_summonclass",
+   "skill_caps_raised": {
+    "lore": 2,
+    "firelore": 3,
+    "demonology": 5
+   },
+   "base0_skills_opened": [
+    "lore",
+    "firelore",
+    "demonology"
+   ],
+   "downstream_gated_records": 109
+  },
+  {
+   "id": "greynecromancer",
+   "source": "shadow/classes",
+   "tier": 5,
+   "require": "g.t5unlocker>0&&g.t_permanent_transformation>0&&g.evil3>0",
+   "cost": {
+    "bones": 100,
+    "bodies": 50,
+    "souls": 100
+   },
+   "tags": "t_tier5,t_shadowclass,t_necroclass,t_minionclass",
+   "skill_caps_raised": {
+    "lore": 2,
+    "embalming": 2,
+    "necromancy": 3,
+    "reanimation": 3,
+    "shadowlore": 2,
+    "spiritlore": 2
+   },
+   "base0_skills_opened": [
+    "lore",
+    "embalming",
+    "necromancy",
+    "reanimation",
+    "shadowlore",
+    "spiritlore"
+   ],
+   "downstream_gated_records": 160
+  },
+  {
+   "id": "heresiarch",
+   "source": "classes",
+   "tier": 5,
+   "require": "g.t5unlocker>0&&g.spirit>=15&&g.divination>=17",
+   "cost": {
+    "spiritgem": 50
+   },
+   "tags": "t_tier5,t_divinationclass",
+   "skill_caps_raised": {
+    "spiritlore": 3,
+    "divination": 3,
+    "scrying": 2,
+    "lore": 2
+   },
+   "base0_skills_opened": [
+    "spiritlore",
+    "divination",
+    "scrying",
+    "lore"
+   ],
+   "downstream_gated_records": 115
+  },
+  {
+   "id": "kell",
+   "source": "classes",
+   "tier": 5,
+   "require": "g.t5unlocker>0&&g.naturelore>=21&&g.t_natureclass>0&&g.t_permanent_transformation>0",
+   "cost": {
+    "naturegem": 50,
+    "herbs": 75
+   },
+   "tags": "t_tier5,t_natureclass",
+   "skill_caps_raised": {
+    "lore": 2,
+    "airlore": 2,
+    "naturelore": 3,
+    "animals": 2,
+    "herbalism": 1
+   },
+   "base0_skills_opened": [
+    "lore",
+    "airlore",
+    "naturelore",
+    "animals",
+    "herbalism"
+   ],
+   "downstream_gated_records": 146
+  },
+  {
+   "id": "wizard2",
+   "source": "classes",
+   "tier": 5,
+   "require": "g.t5unlocker>0&&g.lore>=30",
+   "cost": {
+    "research": 15000,
+    "tomes": 10,
+    "runestones": 10
+   },
+   "tags": "t_tier5,t_manaclass,t_knowledgeclass",
+   "skill_caps_raised": {
+    "languages": 2,
+    "firelore": 1,
+    "waterlore": 1,
+    "airlore": 1,
+    "lightlore": 1,
+    "crafting": 2,
+    "lore": 5,
+    "mysticism": 1
+   },
+   "base0_skills_opened": [
+    "languages",
+    "firelore",
+    "waterlore",
+    "airlore",
+    "lightlore",
+    "crafting",
+    "lore",
+    "mysticism"
+   ],
+   "downstream_gated_records": 215
+  },
+  {
+   "id": "astralseer",
+   "source": "classes",
+   "tier": 6,
+   "require": "g.t6unlocker>0&&g.astronomy>=15&&g.planeslore>=12",
+   "cost": {
+    "sindel": 3
+   },
+   "tags": "t_tier6",
+   "skill_caps_raised": {
+    "spellcraft": 1,
+    "planeslore": 2,
+    "astronomy": 2,
+    "scrying": 1,
+    "mysticism": 2,
+    "crafting": 2
+   },
+   "base0_skills_opened": [
+    "spellcraft",
+    "planeslore",
+    "astronomy",
+    "scrying",
+    "mysticism",
+    "crafting"
+   ],
+   "downstream_gated_records": 104
+  },
+  {
+   "id": "c_avatar",
+   "source": "classes",
+   "tier": 6,
+   "require": "g.t6unlocker>0&&(g.t_elementalclass+g.t_natureclass+g.heresiarch+g.destined)>=2",
+   "cost": {
+    "sindel": 3,
+    "managem": 70,
+    "airgem": 40,
+    "earthgem": 40,
+    "firegem": 40,
+    "watergem": 40
+   },
+   "tags": "t_tier6,t_elementalclass",
+   "skill_caps_raised": {
+    "airlore": 2,
+    "earthlore": 3,
+    "waterlore": 2,
+    "firelore": 1
+   },
+   "base0_skills_opened": [
+    "airlore",
+    "earthlore",
+    "waterlore",
+    "firelore"
+   ],
+   "downstream_gated_records": 94
+  },
+  {
+   "id": "deathlock",
+   "source": "shadow/classes",
+   "tier": 6,
+   "require": "g.t6unlocker>0&&g.demonology>=19&&g.evil3>0",
+   "cost": {
+    "arcana": 60,
+    "firerune": 10
+   },
+   "tags": "t_tier6,t_shadowclass,t_demonclass,t_summonclass",
+   "skill_caps_raised": {
+    "earthlore": 2,
+    "firelore": 3,
+    "shadowlore": 3,
+    "demonology": 5
+   },
+   "base0_skills_opened": [
+    "earthlore",
+    "firelore",
+    "shadowlore",
+    "demonology"
+   ],
+   "downstream_gated_records": 101
+  },
+  {
+   "id": "eldritchknight",
+   "source": "mod:swordplay/classes",
+   "tier": 6,
+   "require": "g.t6unlocker>0&&g.t_swordclass>0&&(g.bladelore+g.weaponlore)>=12&&g.tier6==0",
+   "cost": {
+    "airgem": 40,
+    "firegem": 20,
+    "earthgem": 20,
+    "watergem": 20
+   },
+   "tags": "t_tier6,t_swordclass",
+   "skill_caps_raised": {
+    "history": 1,
+    "enchanting": 1,
+    "anatomy": 1,
+    "vivification": 2
+   },
+   "base0_skills_opened": [
+    "history",
+    "enchanting",
+    "anatomy",
+    "vivification"
+   ],
+   "downstream_gated_records": 51
+  },
+  {
+   "id": "highkell",
+   "source": "classes",
+   "tier": 6,
+   "require": "g.lore>999",
+   "cost": null,
+   "tags": "t_tier6,t_natureclass",
+   "skill_caps_raised": {
+    "airlore": 2,
+    "naturelore": 3,
+    "animals": 2,
+    "earthlore": 1
+   },
+   "base0_skills_opened": [
+    "airlore",
+    "naturelore",
+    "animals",
+    "earthlore"
+   ],
+   "downstream_gated_records": 98
+  },
+  {
+   "id": "necro3",
+   "source": "shadow/classes",
+   "tier": 6,
+   "require": "g.t6unlocker>0&&g.up_lich>0",
+   "cost": {
+    "bones": 100,
+    "bodies": 50,
+    "souls": 100,
+    "earthrune": 10
+   },
+   "tags": "t_tier6,t_shadowclass,t_necroclass,t_minionclass",
+   "skill_caps_raised": {
+    "lore": 1,
+    "spellcraft": 1,
+    "embalming": 1,
+    "necromancy": 3,
+    "reanimation": 3,
+    "shadowlore": 2,
+    "spiritlore": 2
+   },
+   "base0_skills_opened": [
+    "lore",
+    "spellcraft",
+    "embalming",
+    "necromancy",
+    "reanimation",
+    "shadowlore",
+    "spiritlore"
+   ],
+   "downstream_gated_records": 164
+  },
+  {
+   "id": "titan",
+   "source": "classes",
+   "tier": 6,
+   "require": "g.t6unlocker>0&&g.t_earthclass>0&&g.hammerlore>=10&&g.geosculpting>=10&&g.tier6==0",
+   "cost": {
+    "earthgem": 100,
+    "earthrune": 20
+   },
+   "tags": "t_tier6,t_earthclass,t_hammerclass",
+   "skill_caps_raised": {
+    "earthlore": 3,
+    "hammerlore": 3
+   },
+   "base0_skills_opened": [
+    "earthlore",
+    "hammerlore"
+   ],
+   "downstream_gated_records": 30
+  },
+  {
+   "id": "wizard3",
+   "source": "classes",
+   "tier": 6,
+   "require": "g.t6unlocker>0&&g.lore>=35&&g.spellcraft>=10",
+   "cost": {
+    "research": 20000,
+    "tomes": 20,
+    "sindel": 3,
+    "runestones": 10
+   },
+   "tags": "t_tier6,t_manaclass,t_knowledgeclass",
+   "skill_caps_raised": {
+    "spellcraft": 1,
+    "firelore": 1,
+    "enchanting": 1,
+    "waterlore": 1,
+    "earthlore": 1,
+    "crafting": 2,
+    "history": 1,
+    "potions": 1,
+    "alchemy": 1,
+    "mysticism": 2
+   },
+   "base0_skills_opened": [
+    "spellcraft",
+    "firelore",
+    "enchanting",
+    "waterlore",
+    "earthlore",
+    "crafting",
+    "history",
+    "potions",
+    "alchemy",
+    "mysticism"
+   ],
+   "downstream_gated_records": 179
+  }
+ ],
+ "skills": [
+  {
+   "id": "lore",
+   "base_max": null,
+   "require": "g.apprentice>0",
+   "class_raisers": [
+    "adept",
+    "alchemist",
+    "archlock",
+    "conjurer",
+    "darkmagician",
+    "destined",
+    "doomsayer",
+    "falconer",
+    "greynecromancer",
+    "herbalist",
+    "heresiarch",
+    "highmage",
+    "jester",
+    "job_smith",
+    "kell",
+    "madcap",
+    "mage",
+    "magician",
+    "necro3",
+    "oracle",
+    "scribe",
+    "seer",
+    "sorcerer",
+    "stormcaller",
+    "summoner",
+    "thanophage",
+    "warlock",
+    "wizard",
+    "wizard2"
+   ],
+   "nonclass_raisers": [
+    "events:tier7",
+    "quests:neophyte",
+    "quests:t_2",
+    "quests:t_3",
+    "quests:t_4",
+    "quests:t_5",
+    "quests:t_6",
+    "shadow/tasks:blackbook",
+    "shadow/tasks:up_lich",
+    "shadow/upgrades:demonicpact",
+    "skills:runelore",
+    "tasks:animalfriend",
+    "tasks:healthrite",
+    "upgrades:breviary",
+    "upgrades:crystalmind",
+    "upgrades:familiartome",
+    "upgrades:internalizelore",
+    "upgrades:lorecoda"
+   ],
+   "downstream_gated_records": [
+    "classes:adept",
+    "classes:blueadept",
+    "classes:darkadept",
+    "classes:fey",
+    "classes:highkell",
+    "classes:highmage",
+    "classes:mage",
+    "classes:magician",
+    "classes:redadept",
+    "classes:savant",
+    "classes:summoner",
+    "classes:wizard",
+    "classes:wizard2",
+    "classes:wizard3",
+    "events:evt_manafix",
+    "furniture:archive",
+    "mod:learning/upgrades:magelorelearn1",
+    "mod:learning/upgrades:magelorelearn2",
+    "mod:learning/upgrades:magelorelearn3",
+    "mod:learning/upgrades:magelorelearn4",
+    "mod:learning/upgrades:magelorelearn5",
+    "mod:swordplay/spells:mana_slash",
+    "shadow/upgrades:manatrans",
+    "shadow/upgrades:siversdemon",
+    "shadow/upgrades:siversnecro",
+    "skills:airlore",
+    "skills:anatomy",
+    "skills:charms",
+    "skills:conjuration",
+    "skills:earthlore",
+    "skills:enchanting",
+    "skills:firelore",
+    "skills:lightlore",
+    "skills:manalore2",
+    "skills:mysticism",
+    "skills:naturelore",
+    "skills:shadowlore",
+    "skills:spellcraft",
+    "skills:spiritlore",
+    "skills:waterlore",
+    "tasks:bindcodex",
+    "tasks:compiletome",
+    "tasks:grind",
+    "tasks:riddlebook",
+    "tasks:scribescroll",
+    "tasks:spellbook",
+    "upgrades:abstraction",
+    "upgrades:arcanebody",
+    "upgrades:bagofholding",
+    "upgrades:chirography",
+    "upgrades:explosiverunes",
+    "upgrades:goals1",
+    "upgrades:hobbies1",
+    "upgrades:ithkuil",
+    "upgrades:magictent",
+    "upgrades:orthography",
+    "upgrades:pendulum",
+    "upgrades:potted_milkweed",
+    "upgrades:restless",
+    "upgrades:siversgate",
+    "upgrades:siversshadow",
+    "upgrades:siversspirit",
+    "upgrades:specialization",
+    "upgrades:symboliccompression",
+    "upgrades:thaumictext",
+    "upgrades:up_magiccircle"
+   ]
+  },
+  {
+   "id": "crafting",
+   "base_max": null,
+   "require": null,
+   "class_raisers": [
+    "alchemist",
+    "astralseer",
+    "highmage",
+    "job_smith",
+    "wizard",
+    "wizard2",
+    "wizard3"
+   ],
+   "nonclass_raisers": [
+    "events:tier7",
+    "quests:t_1",
+    "quests:t_3",
+    "quests:t_4",
+    "quests:t_5",
+    "quests:t_6",
+    "skills:weaving",
+    "tasks:craftgem",
+    "tasks:dwarfbook",
+    "tasks:shopwork",
+    "tasks:toolwork",
+    "upgrades:bellows",
+    "upgrades:mythicanvil"
+   ],
+   "downstream_gated_records": [
+    "classes:job_smith",
+    "furniture:portaalchemica",
+    "furniture:runepress",
+    "furniture:runeworkshop",
+    "furniture:workshop",
+    "homes:shop",
+    "mod:learning/upgrades:craftinglearn1",
+    "mod:learning/upgrades:craftinglearn2",
+    "mod:learning/upgrades:craftinglearn3",
+    "mod:learning/upgrades:craftinglearn4",
+    "mod:learning/upgrades:craftinglearn5",
+    "shadow/furniture:casket",
+    "shadow/furniture:vat",
+    "shadow/tasks:demonbag",
+    "shadow/tasks:phylactory",
+    "shadow/tasks:up_lich",
+    "shadow/upgrades:bonecollector",
+    "shadow/upgrades:ebonwoodbroomstick",
+    "shadow/upgrades:glassware",
+    "shadow/upgrades:magicbroomstick",
+    "skills:potions",
+    "tasks:artificedskeleton",
+    "tasks:bindcodex",
+    "tasks:chaosbag",
+    "tasks:compiletome",
+    "tasks:craftgem",
+    "tasks:craftrune",
+    "tasks:malleus",
+    "tasks:randompotions",
+    "tasks:scribescroll",
+    "tasks:shopwork",
+    "tasks:smith_work",
+    "tasks:spellbook",
+    "tasks:tools_1",
+    "tasks:tools_2",
+    "tasks:tools_3",
+    "tasks:toolwork",
+    "upgrades:advbooks",
+    "upgrades:advgems",
+    "upgrades:alkahest",
+    "upgrades:armillarysphere",
+    "upgrades:bagofholding",
+    "upgrades:bagoftricks",
+    "upgrades:bellows",
+    "upgrades:bookcarousel",
+    "upgrades:bookcraft",
+    "upgrades:celestialglobe",
+    "upgrades:dreamcatcher",
+    "upgrades:gemcraft",
+    "upgrades:longpipe",
+    "upgrades:magichorseshoe",
+    "upgrades:metronome",
+    "upgrades:orb",
+    "upgrades:up_loom",
+    "upgrades:up_map1",
+    "upgrades:up_ten_map",
+    "upgrades:woodpipe"
+   ]
+  },
+  {
+   "id": "shadowlore",
+   "base_max": null,
+   "require": null,
+   "class_raisers": [
+    "bonemonger",
+    "darkadept",
+    "darkmagician",
+    "deathlock",
+    "dreadlord",
+    "greynecromancer",
+    "necro3",
+    "necromancer",
+    "reanimator",
+    "thanophage",
+    "warlock"
+   ],
+   "nonclass_raisers": [
+    "shadow/tasks:phylactory",
+    "shadow/upgrades:magicskull",
+    "tasks:caveattunement",
+    "tasks:corrupted",
+    "tasks:defilespirits",
+    "tasks:earthabyss",
+    "tasks:sensorydeprivation",
+    "tasks:waterabyss",
+    "tasks:wicked1",
+    "upgrades:siversshadow"
+   ],
+   "downstream_gated_records": [
+    "furniture:bloodfountain",
+    "furniture:darkshrine",
+    "furniture:gargoyle",
+    "furniture:grotesque",
+    "furniture:smcage",
+    "mod:learning/upgrades:shadowlorelearn1",
+    "mod:learning/upgrades:shadowlorelearn2",
+    "mod:learning/upgrades:shadowlorelearn3",
+    "mod:learning/upgrades:shadowlorelearn4",
+    "mod:learning/upgrades:shadowlorelearn5",
+    "mod:swordplay/spells:drain_slash",
+    "quests:q_t1mana",
+    "shadow/classes:darkmagician",
+    "shadow/classes:necromancer",
+    "shadow/skills:shadowlore2",
+    "shadow/spells:blast",
+    "shadow/spells:bolsterundead",
+    "shadow/spells:darkfeast",
+    "shadow/spells:darkpromptings",
+    "shadow/spells:deathbolt",
+    "shadow/spells:gloom",
+    "shadow/spells:lifedrain",
+    "shadow/spells:mk_demon",
+    "shadow/spells:obscure2",
+    "shadow/spells:obscure3",
+    "shadow/spells:soul_acquisition",
+    "shadow/spells:terrifyingvisage",
+    "shadow/spells:waveofdarkness",
+    "shadow/tasks:vileexperiment",
+    "tasks:caveattunement",
+    "tasks:defilespirits",
+    "tasks:earthabyss",
+    "tasks:imbueshadowgem",
+    "tasks:murder",
+    "tasks:sensorydeprivation",
+    "tasks:waterabyss",
+    "upgrades:bolthole",
+    "upgrades:siversshadow"
+   ]
+  },
+  {
+   "id": "naturelore",
+   "base_max": null,
+   "require": "g.herbalism>=3&&g.lore>=3",
+   "class_raisers": [
+    "druid",
+    "enchanter",
+    "falconer",
+    "fey",
+    "highkell",
+    "kell",
+    "warden"
+   ],
+   "nonclass_raisers": [
+    "tasks:act_fey",
+    "tasks:act_highkell",
+    "tasks:animalfriend",
+    "tasks:balanced1",
+    "tasks:balanced2",
+    "tasks:detached1",
+    "tasks:detached2",
+    "tasks:gardenersalmanac",
+    "tasks:onewithnature",
+    "tasks:plantattunement",
+    "tasks:rabbittrick",
+    "tasks:sylvansyllabary",
+    "tasks:treehugging",
+    "tasks:wander",
+    "tasks:watercyclestudy",
+    "tasks:wildfirestudy",
+    "upgrades:speakbirds",
+    "upgrades:tent"
+   ],
+   "downstream_gated_records": [
+    "classes:druid",
+    "classes:kell",
+    "classes:warden",
+    "furniture:latticefence",
+    "homes:camp",
+    "homes:home_waterfall",
+    "homes:lodge",
+    "homes:wagon",
+    "mod:learning/upgrades:naturelorelearn1",
+    "mod:learning/upgrades:naturelorelearn2",
+    "mod:learning/upgrades:naturelorelearn3",
+    "mod:learning/upgrades:naturelorelearn4",
+    "mod:learning/upgrades:naturelorelearn5",
+    "mod:swordplay/spells:poison_blade",
+    "quests:q_t1mana",
+    "shadow/spells:mk_grimstalk",
+    "skills:magicbeasts",
+    "skills:naturelore2",
+    "tasks:act_fey",
+    "tasks:excavatewaterfall",
+    "tasks:foundcollective",
+    "tasks:herbstudy",
+    "tasks:idrasilgrow1",
+    "tasks:idrasilgrow2",
+    "tasks:imbuelifegem",
+    "tasks:onewithnature",
+    "tasks:plantattunement",
+    "tasks:treehugging",
+    "tasks:watercyclestudy",
+    "tasks:wildfirestudy",
+    "upgrades:backyard",
+    "upgrades:botanical_kit",
+    "upgrades:naturecamprest",
+    "upgrades:tent"
+   ]
+  },
+  {
+   "id": "earthlore",
+   "base_max": null,
+   "require": null,
+   "class_raisers": [
+    "battlemage",
+    "bloodmage",
+    "c_avatar",
+    "deathlock",
+    "earthshaker",
+    "fey",
+    "geomancer",
+    "highelemental",
+    "highkell",
+    "sorcerer",
+    "titan",
+    "wizard3"
+   ],
+   "nonclass_raisers": [
+    "tasks:act_element",
+    "tasks:caveattunement",
+    "tasks:earthabyss",
+    "tasks:soilstudies",
+    "tasks:worldmap",
+    "upgrades:coretap",
+    "upgrades:earthplanesecrets",
+    "upgrades:earthsoul",
+    "upgrades:geomeditation",
+    "upgrades:heartofstone"
+   ],
+   "downstream_gated_records": [
+    "classes:earthshaker",
+    "classes:elementalist",
+    "classes:geomancer",
+    "classes:highelemental",
+    "classes:sorcerer",
+    "furniture:grotesque",
+    "furniture:mineshaft",
+    "furniture:vivarium",
+    "homes:cavern",
+    "mod:learning/upgrades:earthlorelearn1",
+    "mod:learning/upgrades:earthlorelearn2",
+    "mod:learning/upgrades:earthlorelearn3",
+    "mod:learning/upgrades:earthlorelearn4",
+    "mod:learning/upgrades:earthlorelearn5",
+    "quests:q_t1mana",
+    "skills:earthlore2",
+    "tasks:caveattunement",
+    "tasks:craftearthrune",
+    "tasks:earthabyss",
+    "tasks:excavatewaterfall",
+    "tasks:imbuebloodgem",
+    "tasks:imbueearthgem",
+    "tasks:soilstudies",
+    "tasks:worldmap",
+    "upgrades:basement",
+    "upgrades:bolthole",
+    "upgrades:earthplane",
+    "upgrades:granite_barrier",
+    "upgrades:stonyresilience"
+   ]
+  },
+  {
+   "id": "waterlore",
+   "base_max": null,
+   "require": null,
+   "class_raisers": [
+    "bloodmage",
+    "c_avatar",
+    "enchanter",
+    "fey",
+    "highelemental",
+    "hydromancer",
+    "sorcerer",
+    "stormcaller",
+    "wizard2",
+    "wizard3"
+   ],
+   "nonclass_raisers": [
+    "tasks:act_element",
+    "tasks:waterabyss",
+    "tasks:watercyclestudy",
+    "tasks:waterdiving",
+    "upgrades:up_pitcher",
+    "upgrades:waterplanesecrets"
+   ],
+   "downstream_gated_records": [
+    "classes:elementalist",
+    "classes:highelemental",
+    "classes:hydromancer",
+    "classes:sorcerer",
+    "furniture:fountain",
+    "furniture:gargoyle",
+    "furniture:pond",
+    "mod:learning/upgrades:waterlorelearn1",
+    "mod:learning/upgrades:waterlorelearn2",
+    "mod:learning/upgrades:waterlorelearn3",
+    "mod:learning/upgrades:waterlorelearn4",
+    "mod:learning/upgrades:waterlorelearn5",
+    "mod:swordplay/spells:tide_blows",
+    "quests:q_t1mana",
+    "skills:waterlore2",
+    "tasks:craftwaterrune",
+    "tasks:excavatewaterfall",
+    "tasks:imbuebloodgem",
+    "tasks:imbuewatergem",
+    "tasks:waterabyss",
+    "tasks:watercyclestudy",
+    "tasks:waterdiving",
+    "upgrades:dishwasher",
+    "upgrades:up_stam1",
+    "upgrades:up_stam2",
+    "upgrades:up_stam3",
+    "upgrades:waterplane",
+    "upgrades:watertricks"
+   ]
+  },
+  {
+   "id": "airlore",
+   "base_max": null,
+   "require": null,
+   "class_raisers": [
+    "c_avatar",
+    "enchanter",
+    "fey",
+    "highelemental",
+    "highkell",
+    "kell",
+    "oracle",
+    "stormcaller",
+    "windmage",
+    "wizard2"
+   ],
+   "nonclass_raisers": [
+    "tasks:act_element",
+    "tasks:breathingexercises",
+    "tasks:icarusgliding",
+    "tasks:newskies",
+    "tasks:skygazing",
+    "upgrades:airglobe",
+    "upgrades:airplanesecrets",
+    "upgrades:evanescence"
+   ],
+   "downstream_gated_records": [
+    "classes:elementalist",
+    "classes:highelemental",
+    "classes:windmage",
+    "furniture:cloudchamber",
+    "furniture:glassdome",
+    "furniture:latticewindow",
+    "mod:learning/upgrades:airlorelearn1",
+    "mod:learning/upgrades:airlorelearn2",
+    "mod:learning/upgrades:airlorelearn3",
+    "mod:learning/upgrades:airlorelearn4",
+    "mod:learning/upgrades:airlorelearn5",
+    "mod:swordplay/spells:whirl_slices",
+    "quests:q_t1mana",
+    "skills:airlore2",
+    "tasks:breathingexercises",
+    "tasks:craftairrune",
+    "tasks:icarusgliding",
+    "tasks:imbueairgem",
+    "tasks:skygazing",
+    "upgrades:airplane",
+    "upgrades:fly",
+    "upgrades:flyingcarpet",
+    "upgrades:unseenscribe",
+    "upgrades:up_stam2",
+    "upgrades:up_stam3",
+    "upgrades:up_windspeed",
+    "upgrades:windsecrets"
+   ]
+  },
+  {
+   "id": "firelore",
+   "base_max": null,
+   "require": null,
+   "class_raisers": [
+    "archlock",
+    "battlemage",
+    "c_avatar",
+    "deathlock",
+    "highelemental",
+    "highmage",
+    "mage",
+    "redadept",
+    "sorcerer",
+    "warlock",
+    "wizard2",
+    "wizard3"
+   ],
+   "nonclass_raisers": [
+    "events:secretfire",
+    "tasks:act_element",
+    "tasks:firegazing",
+    "tasks:trataka",
+    "tasks:wildfirestudy",
+    "upgrades:coretap",
+    "upgrades:fireplanesecrets",
+    "upgrades:innerfire"
+   ],
+   "downstream_gated_records": [
+    "classes:elementalist",
+    "classes:highelemental",
+    "classes:sorcerer",
+    "furniture:bonfire",
+    "furniture:campfire",
+    "furniture:cleansingfire",
+    "furniture:fireplace",
+    "mod:learning/upgrades:firelorelearn1",
+    "mod:learning/upgrades:firelorelearn2",
+    "mod:learning/upgrades:firelorelearn3",
+    "mod:learning/upgrades:firelorelearn4",
+    "mod:learning/upgrades:firelorelearn5",
+    "mod:swordplay/spells:flameslash",
+    "quests:q_t1mana",
+    "shadow/spells:mk_demon",
+    "skills:firelore2",
+    "tasks:craftfirerune",
+    "tasks:firegazing",
+    "tasks:imbuefiregem",
+    "tasks:trataka",
+    "tasks:wildfirestudy",
+    "upgrades:firecharger",
+    "upgrades:firechariot",
+    "upgrades:fireplane",
+    "upgrades:up_firespeed"
+   ]
+  },
+  {
+   "id": "enchanting",
+   "base_max": null,
+   "require": "g.tier1>0&&g.lore>=11",
+   "class_raisers": [
+    "arcanedervish",
+    "bladeweaver",
+    "eldritchknight",
+    "enchanter",
+    "mage",
+    "spellblade",
+    "wizard3"
+   ],
+   "nonclass_raisers": [
+    "tasks:shopwork",
+    "tasks:toolwork"
+   ],
+   "downstream_gated_records": [
+    "classes:enchanter",
+    "furniture:cache",
+    "furniture:workshop",
+    "mod:learning/upgrades:enchantinglearn1",
+    "mod:learning/upgrades:enchantinglearn2",
+    "mod:swordplay/classes:spellblade",
+    "mod:swordplay/spells:blade_buff",
+    "quests:q_t2enchanting",
+    "skills:charms",
+    "tasks:imbueairgem",
+    "tasks:imbuechaosgem",
+    "tasks:imbueearthgem",
+    "tasks:imbuefiregem",
+    "tasks:imbuelifegem",
+    "tasks:imbuelightgem",
+    "tasks:imbuemanagem",
+    "tasks:imbueshadowgem",
+    "tasks:imbuespiritgem",
+    "tasks:imbuewatergem",
+    "tasks:shopwork",
+    "upgrades:arcane_veil",
+    "upgrades:enchanted_study",
+    "upgrades:magichorseshoe",
+    "upgrades:thaumictext"
+   ]
+  },
+  {
+   "id": "trickery",
+   "base_max": null,
+   "require": "spellbook",
+   "class_raisers": [
+    "darkadept",
+    "jester",
+    "madcap",
+    "trickster"
+   ],
+   "nonclass_raisers": [
+    "tasks:heist",
+    "tasks:riddlebook",
+    "tasks:riddlecontest",
+    "tasks:securityconsultant",
+    "upgrades:bagoftricks",
+    "upgrades:familiarimp",
+    "upgrades:spiritpranks",
+    "upgrades:threesidecoin",
+    "upgrades:trickspying",
+    "upgrades:watertricks",
+    "upgrades:windsecrets"
+   ],
+   "downstream_gated_records": [
+    "classes:jester",
+    "classes:madcap",
+    "classes:trickster",
+    "homes:facemuseum",
+    "mod:learning/upgrades:trickerylearn1",
+    "mod:learning/upgrades:trickerylearn2",
+    "mod:learning/upgrades:trickerylearn3",
+    "mod:learning/upgrades:trickerylearn4",
+    "skills:chaoslore",
+    "tasks:heist",
+    "tasks:museumgallery",
+    "tasks:riddlebook",
+    "tasks:riddlecontest",
+    "tasks:thievery",
+    "upgrades:carddeck",
+    "upgrades:fourleaf",
+    "upgrades:hiddenpockets",
+    "upgrades:spiritpranks",
+    "upgrades:threesidecoin",
+    "upgrades:trickspying",
+    "upgrades:watertricks",
+    "upgrades:windsecrets"
+   ]
+  },
+  {
+   "id": "spiritlore",
+   "base_max": null,
+   "require": null,
+   "class_raisers": [
+    "blueadept",
+    "bonemonger",
+    "darkadept",
+    "destined",
+    "doomsayer",
+    "greynecromancer",
+    "heresiarch",
+    "necro3",
+    "necromancer",
+    "oracle",
+    "reanimator",
+    "savant",
+    "seer",
+    "trickster",
+    "witch"
+   ],
+   "nonclass_raisers": [
+    "shadow/tasks:phylactory",
+    "shadow/upgrades:graveyard_landscaping",
+    "shadow/upgrades:graveyard_soulkeeping",
+    "shadow/upgrades:magicskull",
+    "tasks:balanced1",
+    "tasks:balanced2",
+    "tasks:defilespirits",
+    "tasks:detached1",
+    "tasks:detached2",
+    "tasks:lemurlexicon",
+    "tasks:malleus",
+    "tasks:spiritchats",
+    "upgrades:dreamcatcher",
+    "upgrades:mendicant",
+    "upgrades:siversspirit"
+   ],
+   "downstream_gated_records": [
+    "classes:oracle",
+    "mod:learning/upgrades:spiritlorelearn1",
+    "mod:learning/upgrades:spiritlorelearn2",
+    "mod:learning/upgrades:spiritlorelearn3",
+    "mod:learning/upgrades:spiritlorelearn4",
+    "mod:learning/upgrades:spiritlorelearn5",
+    "mod:swordplay/spells:spirit_strike",
+    "quests:q_t1mana",
+    "shadow/tasks:sabbat",
+    "shadow/upgrades:graveyard_soulkeeping",
+    "skills:divination",
+    "skills:spiritlore2",
+    "skills:vivification",
+    "tasks:defilespirits",
+    "tasks:lemurlexicon",
+    "tasks:restoreruins",
+    "tasks:spiritchats",
+    "upgrades:siversspirit",
+    "upgrades:sombercandle",
+    "upgrades:spiritpranks",
+    "upgrades:unseenscribe",
+    "upgrades:up_ghostlyassist"
+   ]
+  },
+  {
+   "id": "planeslore",
+   "base_max": null,
+   "require": "g.astronomy>=5&&g.tier1>0",
+   "class_raisers": [
+    "astralseer",
+    "doomsayer"
+   ],
+   "nonclass_raisers": [
+    "shadow/upgrades:demonicpact",
+    "shadow/upgrades:siversdemon",
+    "shadow/upgrades:siversnecro",
+    "tasks:newskies",
+    "tasks:planar_exploration",
+    "upgrades:armillarysphere",
+    "upgrades:familiarcat",
+    "upgrades:familiarimp",
+    "upgrades:familiarkobold",
+    "upgrades:familiarowl",
+    "upgrades:familiartome",
+    "upgrades:siversshadow",
+    "upgrades:siversspirit"
+   ],
+   "downstream_gated_records": [
+    "classes:astralseer",
+    "furniture:bottomlesspit",
+    "furniture:lexyrinth",
+    "furniture:mineshaft",
+    "furniture:portaalchemica",
+    "mod:learning/upgrades:planeslorelearn1",
+    "mod:learning/upgrades:planeslorelearn2",
+    "mod:learning/upgrades:planeslorelearn3",
+    "mod:learning/upgrades:planeslorelearn4",
+    "skills:astrallore",
+    "skills:voidlore",
+    "tasks:hall_probematerials_1",
+    "tasks:hall_probematerials_2",
+    "tasks:hall_probematerials_3",
+    "tasks:hall_probematerials_4",
+    "tasks:summonfamiliar",
+    "upgrades:backyard",
+    "upgrades:bolthole",
+    "upgrades:dimensional_well",
+    "upgrades:gate"
+   ]
+  },
+  {
+   "id": "demonology",
+   "base_max": null,
+   "require": "g.t_shadowclass>0",
+   "class_raisers": [
+    "archlock",
+    "darkmagician",
+    "deathlock",
+    "warlock",
+    "witch"
+   ],
+   "nonclass_raisers": [
+    "shadow/tasks:blackbook",
+    "shadow/tasks:demondict",
+    "shadow/tasks:demonicgrimoire",
+    "shadow/tasks:demonquizzing",
+    "shadow/upgrades:demonicpact",
+    "shadow/upgrades:siversdemon"
+   ],
+   "downstream_gated_records": [
+    "furniture:bindcircle",
+    "mod:learning/upgrades:demonologylearn1",
+    "mod:learning/upgrades:demonologylearn2",
+    "mod:learning/upgrades:demonologylearn3",
+    "mod:learning/upgrades:demonologylearn4",
+    "shadow/classes:archlock",
+    "shadow/classes:deathlock",
+    "shadow/furniture:pentagram",
+    "shadow/spells:mk_demon",
+    "shadow/spells:mk_grimstalk",
+    "shadow/spells:mk_imp",
+    "shadow/spells:mk_quasit",
+    "shadow/tasks:blackbook",
+    "shadow/tasks:demonbag",
+    "shadow/tasks:demondict",
+    "shadow/tasks:demonicgrimoire",
+    "shadow/tasks:demonquizzing",
+    "shadow/tasks:sabbat",
+    "shadow/upgrades:demonicpact",
+    "shadow/upgrades:siversdemon"
+   ]
+  },
+  {
+   "id": "divination",
+   "base_max": null,
+   "require": "g.spiritlore>=6||g.mysticism>=5",
+   "class_raisers": [
+    "blueadept",
+    "destined",
+    "doomsayer",
+    "heresiarch",
+    "oracle",
+    "seer"
+   ],
+   "nonclass_raisers": [
+    "tasks:astrologypractice",
+    "upgrades:celestialglobe",
+    "upgrades:crystalmind",
+    "upgrades:fatalist",
+    "upgrades:thirdeye",
+    "upgrades:truesight"
+   ],
+   "downstream_gated_records": [
+    "classes:destined",
+    "classes:doomsayer",
+    "classes:heresiarch",
+    "classes:oracle",
+    "classes:seer",
+    "mod:learning/upgrades:divinationlearn1",
+    "mod:learning/upgrades:divinationlearn2",
+    "mod:learning/upgrades:divinationlearn3",
+    "mod:learning/upgrades:divinationlearn4",
+    "mod:learning/upgrades:divinationlearn5",
+    "skills:conjuration",
+    "skills:scrying",
+    "tasks:readpalms",
+    "tasks:starwish",
+    "upgrades:forewarned",
+    "upgrades:innerlight",
+    "upgrades:predictive_padding",
+    "upgrades:trickspying",
+    "upgrades:wishingwells"
+   ]
+  },
+  {
+   "id": "languages",
+   "base_max": null,
+   "require": "lore",
+   "class_raisers": [
+    "adept",
+    "magician",
+    "scribe",
+    "wizard",
+    "wizard2"
+   ],
+   "nonclass_raisers": [
+    "shadow/tasks:demondict",
+    "skills:runelore",
+    "tasks:bookdiving",
+    "tasks:ciphertext",
+    "tasks:dwarfbook",
+    "tasks:lemurlexicon",
+    "tasks:sylvansyllabary",
+    "upgrades:dragontongue",
+    "upgrades:explosiverunes",
+    "upgrades:ithkuil",
+    "upgrades:speakbirds"
+   ],
+   "downstream_gated_records": [
+    "furniture:codexloom",
+    "furniture:scrollloom",
+    "furniture:tomeloom",
+    "homes:inn",
+    "mod:learning/upgrades:languageslearn1",
+    "mod:learning/upgrades:languageslearn2",
+    "mod:learning/upgrades:languageslearn3",
+    "shadow/tasks:demondict",
+    "skills:history",
+    "skills:s_travel",
+    "tasks:bookdiving",
+    "tasks:dwarfbook",
+    "tasks:lemurlexicon",
+    "tasks:spellbook",
+    "tasks:sylvansyllabary",
+    "tasks:unendingscroll",
+    "upgrades:dragontongue",
+    "upgrades:symboliccompression"
+   ]
+  },
+  {
+   "id": "lightlore",
+   "base_max": null,
+   "require": null,
+   "class_raisers": [
+    "blueadept",
+    "wizard2"
+   ],
+   "nonclass_raisers": [
+    "events:secretfire",
+    "tasks:icarusgliding",
+    "tasks:skygazing",
+    "tasks:trataka",
+    "upgrades:fatalist",
+    "upgrades:mendicant",
+    "upgrades:siegeperilous",
+    "upgrades:truesight"
+   ],
+   "downstream_gated_records": [
+    "furniture:cleansingfire",
+    "furniture:glassdome",
+    "mod:learning/upgrades:lightlorelearn1",
+    "mod:learning/upgrades:lightlorelearn2",
+    "mod:learning/upgrades:lightlorelearn3",
+    "mod:learning/upgrades:lightlorelearn4",
+    "mod:learning/upgrades:lightlorelearn5",
+    "mod:swordplay/spells:blind_sword",
+    "quests:q_t1mana",
+    "skills:lightlore2",
+    "tasks:icarusgliding",
+    "tasks:imbuelightgem",
+    "tasks:malleus",
+    "tasks:skygazing",
+    "tasks:trataka",
+    "upgrades:firechariot",
+    "upgrades:pegasusmount"
+   ]
+  },
+  {
+   "id": "necromancy",
+   "base_max": null,
+   "require": "g.evil2>0&&g.reanimation>=7",
+   "class_raisers": [
+    "greynecromancer",
+    "necro3",
+    "necromancer"
+   ],
+   "nonclass_raisers": [
+    "shadow/tasks:corpsestudy",
+    "shadow/tasks:phylactory",
+    "shadow/upgrades:siversnecro"
+   ],
+   "downstream_gated_records": [
+    "mod:learning/upgrades:necromancylearn1",
+    "mod:learning/upgrades:necromancylearn2",
+    "shadow/events:recal_evil2",
+    "shadow/furniture:crypt",
+    "shadow/skills:shademastery",
+    "shadow/spells:healshade",
+    "shadow/spells:lifedrain",
+    "shadow/spells:mk_lich",
+    "shadow/spells:mk_reaper",
+    "shadow/spells:mk_spectre",
+    "shadow/spells:reviveshade",
+    "shadow/spells:soul_acquisition",
+    "shadow/tasks:corpsestudy",
+    "shadow/tasks:phylactory",
+    "shadow/tasks:raisenecropolis",
+    "shadow/tasks:up_lich",
+    "shadow/upgrades:siversnecro"
+   ]
+  },
+  {
+   "id": "anatomy",
+   "base_max": null,
+   "require": "g.neophyte>0&&g.lore>=6",
+   "class_raisers": [
+    "arcanedervish",
+    "bladeweaver",
+    "bloodmage",
+    "eldritchknight",
+    "redadept",
+    "spellblade",
+    "thanophage",
+    "warlock"
+   ],
+   "nonclass_raisers": [
+    "tasks:autovivisect",
+    "tasks:biganatomy",
+    "tasks:corporisfabrica",
+    "tasks:dehumanis",
+    "tasks:demonicanatomy",
+    "tasks:horsemeds",
+    "tasks:medicalpractice",
+    "tasks:smallanatomy",
+    "tasks:spiritanatomy",
+    "upgrades:chakravarti"
+   ],
+   "downstream_gated_records": [
+    "shadow/furniture:vat",
+    "shadow/upgrades:manatrans",
+    "shadow/upgrades:model_animals",
+    "shadow/upgrades:model_skeleton_body",
+    "skills:vivification",
+    "tasks:biganatomy",
+    "tasks:corporisfabrica",
+    "tasks:dehumanis",
+    "tasks:horsemeds",
+    "tasks:imbuebloodgem",
+    "tasks:murder",
+    "tasks:smallanatomy",
+    "tasks:treatailments",
+    "upgrades:autonomicmending",
+    "upgrades:bodyrebuild"
+   ]
+  },
+  {
+   "id": "astronomy",
+   "base_max": null,
+   "require": null,
+   "class_raisers": [
+    "astralseer",
+    "magician"
+   ],
+   "nonclass_raisers": [
+    "tasks:aryabhatiya",
+    "tasks:catasterismi",
+    "tasks:healthrite",
+    "tasks:newskies",
+    "tasks:picatrix",
+    "tasks:recordstars",
+    "tasks:sindelstudy",
+    "upgrades:airsign",
+    "upgrades:armillarysphere",
+    "upgrades:celestialglobe",
+    "upgrades:earthsign",
+    "upgrades:firesign",
+    "upgrades:lightsign",
+    "upgrades:manasign",
+    "upgrades:naturesign",
+    "upgrades:shadowsign",
+    "upgrades:spiritsign",
+    "upgrades:watersign"
+   ],
+   "downstream_gated_records": [
+    "classes:astralseer",
+    "furniture:orrery",
+    "mod:learning/upgrades:astronomylearn1",
+    "mod:learning/upgrades:astronomylearn2",
+    "mod:learning/upgrades:astronomylearn3",
+    "mod:learning/upgrades:astronomylearn4",
+    "skills:planeslore",
+    "tasks:almagest",
+    "tasks:astrologypractice",
+    "tasks:newskies",
+    "tasks:recordstars",
+    "upgrades:armillarysphere",
+    "upgrades:celestialglobe",
+    "upgrades:guidingstar",
+    "upgrades:up_map1"
+   ]
+  },
+  {
+   "id": "animals",
+   "base_max": null,
+   "require": null,
+   "class_raisers": [
+    "druid",
+    "falconer",
+    "fey",
+    "highkell",
+    "kell",
+    "warden"
+   ],
+   "nonclass_raisers": [
+    "tasks:act_fey",
+    "tasks:act_highkell",
+    "tasks:animalfriend",
+    "tasks:animalstudy",
+    "tasks:bestiary",
+    "tasks:bestiary2",
+    "tasks:chaosbag",
+    "tasks:rabbittrick",
+    "upgrades:familiarcat"
+   ],
+   "downstream_gated_records": [
+    "furniture:menagerie",
+    "furniture:smstables",
+    "mod:learning/upgrades:animalslearn1",
+    "mod:learning/upgrades:animalslearn2",
+    "mod:learning/upgrades:animalslearn3",
+    "shadow/classes:witch",
+    "shadow/upgrades:model_animals",
+    "skills:magicbeasts",
+    "tasks:bestiary",
+    "tasks:magicanimalstudy",
+    "tasks:summonfamiliar",
+    "upgrades:mule",
+    "upgrades:oldnag",
+    "upgrades:speakbirds"
+   ]
+  },
+  {
+   "id": "alchemy",
+   "base_max": null,
+   "require": "g.tier0>0&&g.herbalism>=4",
+   "class_raisers": [
+    "alchemist",
+    "herbalist",
+    "highmage",
+    "wizard3"
+   ],
+   "nonclass_raisers": [
+    "tasks:act_element",
+    "tasks:fazbitfixate",
+    "tasks:randompotions",
+    "upgrades:alkahest",
+    "upgrades:bellows",
+    "upgrades:crucible"
+   ],
+   "downstream_gated_records": [
+    "classes:alchemist",
+    "furniture:portaalchemica",
+    "locales:fazbitshop",
+    "mod:learning/upgrades:alchemylearn1",
+    "mod:learning/upgrades:alchemylearn2",
+    "mod:learning/upgrades:alchemylearn3",
+    "skills:potions",
+    "tasks:craftgem",
+    "tasks:imbuebloodgem",
+    "tasks:randompotions",
+    "upgrades:alembic",
+    "upgrades:alkahest",
+    "upgrades:crucible",
+    "upgrades:solidifier"
+   ]
+  },
+  {
+   "id": "reanimation",
+   "base_max": null,
+   "require": "g.evil1>0&&g.embalming>=3",
+   "class_raisers": [
+    "bonemonger",
+    "greynecromancer",
+    "necro3",
+    "necromancer",
+    "reanimator"
+   ],
+   "nonclass_raisers": [
+    "shadow/tasks:corpsestudy",
+    "shadow/upgrades:animate_model_skeleton",
+    "shadow/upgrades:siversnecro"
+   ],
+   "downstream_gated_records": [
+    "mod:learning/upgrades:reanimationlearn1",
+    "mod:learning/upgrades:reanimationlearn2",
+    "shadow/homes:home_tomb",
+    "shadow/skills:necromancy",
+    "shadow/skills:undeadmastery",
+    "shadow/spells:bolsterundead",
+    "shadow/spells:healundead",
+    "shadow/spells:mk_bonegolem",
+    "shadow/spells:mk_skeleton",
+    "shadow/spells:mk_zombie",
+    "shadow/spells:reviveundead",
+    "shadow/upgrades:animate_model_skeleton",
+    "shadow/upgrades:bonecollector",
+    "shadow/upgrades:skelcharger"
+   ]
+  },
+  {
+   "id": "runelore",
+   "base_max": null,
+   "require": "g.tier2>0&&g.dwarfbook>0",
+   "class_raisers": [],
+   "nonclass_raisers": [
+    "upgrades:conlanging"
+   ],
+   "downstream_gated_records": [
+    "furniture:cairn",
+    "furniture:runechest",
+    "furniture:runepress",
+    "furniture:runeworkshop",
+    "mod:learning/upgrades:runelorelearn1",
+    "tasks:craftrune",
+    "tasks:restoreruins",
+    "upgrades:conlanging",
+    "upgrades:explosiverunes",
+    "upgrades:runebag",
+    "upgrades:runedome",
+    "upgrades:up_evil_runecrafter",
+    "upgrades:up_runecrafter"
+   ]
+  },
+  {
+   "id": "chronomancy",
+   "base_max": 1,
+   "require": "tier3",
+   "class_raisers": [],
+   "nonclass_raisers": [
+    "mod:learning/upgrades:chronomancylearn1",
+    "mod:learning/upgrades:chronomancylearn2",
+    "mod:learning/upgrades:chronomancylearn3",
+    "mod:learning/upgrades:chronomancylearn4",
+    "tasks:aryabhatiya",
+    "upgrades:metronome"
+   ],
+   "downstream_gated_records": [
+    "mod:learning/upgrades:chronomancylearn1",
+    "mod:learning/upgrades:chronomancylearn2",
+    "mod:learning/upgrades:chronomancylearn3",
+    "mod:learning/upgrades:chronomancylearn4",
+    "mod:swordplay/spells:cut_time",
+    "quests:q_t4chronomancy",
+    "tasks:act_scry",
+    "tasks:aryabhatiya",
+    "tasks:autovivisect",
+    "tasks:rabbittrick",
+    "upgrades:chronoshell",
+    "upgrades:timesplit",
+    "upgrades:up_timespeed"
+   ]
+  },
+  {
+   "id": "weaving",
+   "base_max": null,
+   "require": null,
+   "class_raisers": [],
+   "nonclass_raisers": [
+    "mod:swordplay/upgrades:bladeweaver_upgrade",
+    "tasks:spingold",
+    "tasks:unspingold"
+   ],
+   "downstream_gated_records": [
+    "furniture:codexloom",
+    "furniture:scrollloom",
+    "furniture:spinwheel",
+    "furniture:tomeloom",
+    "mod:learning/upgrades:weavinglearn1",
+    "mod:learning/upgrades:weavinglearn2",
+    "mod:swordplay/classes:bladeweaver",
+    "tasks:dreamweaver",
+    "tasks:spingold",
+    "upgrades:bloodbag",
+    "upgrades:flyingcarpet",
+    "upgrades:gordian_knot"
+   ]
+  },
+  {
+   "id": "scrying",
+   "base_max": null,
+   "require": "g.divination>=6",
+   "class_raisers": [
+    "astralseer",
+    "doomsayer",
+    "heresiarch",
+    "oracle",
+    "seer"
+   ],
+   "nonclass_raisers": [
+    "tasks:newskies",
+    "upgrades:familiarowl",
+    "upgrades:fatalist",
+    "upgrades:guidingstar",
+    "upgrades:longpipe",
+    "upgrades:thirdeye",
+    "upgrades:truesight",
+    "upgrades:woodpipe"
+   ],
+   "downstream_gated_records": [
+    "locales:fazbitshop",
+    "locales:hallofmirrors",
+    "locales:loc_orrem",
+    "mod:learning/upgrades:scryinglearn1",
+    "mod:learning/upgrades:scryinglearn2",
+    "mod:learning/upgrades:scryinglearn3",
+    "mod:swordplay/spells:spirit_strike",
+    "tasks:act_scry",
+    "tasks:act_spy",
+    "upgrades:longpipe",
+    "upgrades:thirdeye",
+    "upgrades:woodpipe"
+   ]
+  },
+  {
+   "id": "embalming",
+   "base_max": null,
+   "require": "g.dissection>=3",
+   "class_raisers": [
+    "bonemonger",
+    "greynecromancer",
+    "necro3",
+    "necromancer",
+    "reanimator"
+   ],
+   "nonclass_raisers": [
+    "shadow/tasks:corpsestudy",
+    "shadow/upgrades:model_animals",
+    "shadow/upgrades:model_skeleton",
+    "shadow/upgrades:model_skeleton_body"
+   ],
+   "downstream_gated_records": [
+    "mod:learning/upgrades:embalminglearn1",
+    "mod:learning/upgrades:embalminglearn2",
+    "mod:learning/upgrades:embalminglearn3",
+    "shadow/furniture:casket",
+    "shadow/furniture:vat",
+    "shadow/skills:reanimation",
+    "shadow/spells:body_acquisition",
+    "shadow/tasks:embalm",
+    "shadow/upgrades:model_animals",
+    "shadow/upgrades:model_skeleton",
+    "upgrades:faceharvest"
+   ]
+  },
+  {
+   "id": "herbalism",
+   "base_max": null,
+   "require": "lore",
+   "class_raisers": [
+    "druid",
+    "fey",
+    "herbalist",
+    "kell"
+   ],
+   "nonclass_raisers": [
+    "tasks:act_fey",
+    "tasks:act_highkell",
+    "tasks:bestiary2",
+    "tasks:gardenersalmanac",
+    "tasks:herbstudy",
+    "upgrades:mortar"
+   ],
+   "downstream_gated_records": [
+    "furniture:creepingvine",
+    "mod:learning/upgrades:herbalismlearn1",
+    "mod:learning/upgrades:herbalismlearn2",
+    "skills:alchemy",
+    "skills:naturelore",
+    "tasks:gatherherbs",
+    "tasks:herbstudy",
+    "upgrades:botanical_kit",
+    "upgrades:herbbag",
+    "upgrades:mortar"
+   ]
+  },
+  {
+   "id": "history",
+   "base_max": null,
+   "require": "g.languages>=6",
+   "class_raisers": [
+    "adept",
+    "arcanedervish",
+    "bladeweaver",
+    "eldritchknight",
+    "scribe",
+    "spellblade",
+    "wizard3"
+   ],
+   "nonclass_raisers": [
+    "tasks:arazorannals",
+    "tasks:catasterismi",
+    "tasks:orremannals",
+    "upgrades:lorecoda",
+    "upgrades:loreoverture"
+   ],
+   "downstream_gated_records": [
+    "locales:genezereth",
+    "locales:loc_orrem",
+    "locales:pidwigcove",
+    "locales:rithel",
+    "mod:learning/upgrades:historylearn1",
+    "mod:learning/upgrades:historylearn2",
+    "mod:learning/upgrades:historylearn3",
+    "skills:s_travel",
+    "tasks:catasterismi",
+    "upgrades:up_ten_map"
+   ]
+  },
+  {
+   "id": "potions",
+   "base_max": null,
+   "require": "g.crafting>=3&&g.alchemy>=2&&g.potsource.locked==0",
+   "class_raisers": [
+    "alchemist",
+    "bonemonger",
+    "druid",
+    "madcap",
+    "necromancer",
+    "reanimator",
+    "trickster",
+    "warden",
+    "witch",
+    "wizard3"
+   ],
+   "nonclass_raisers": [
+    "tasks:randompotions",
+    "upgrades:alembic",
+    "upgrades:lorecoda"
+   ],
+   "downstream_gated_records": [
+    "classes:alchemist",
+    "mod:learning/upgrades:potionslearn1",
+    "mod:learning/upgrades:potionslearn2",
+    "mod:learning/upgrades:potionslearn3",
+    "shadow/classes:witch",
+    "shadow/potions:pot_fake",
+    "shadow/potions:pot_souls",
+    "shadow/potions:pot_vileempowerment",
+    "tasks:bloodascension",
+    "tasks:randompotions"
+   ]
+  },
+  {
+   "id": "dissection",
+   "base_max": null,
+   "require": "g.t_necroclass>0",
+   "class_raisers": [],
+   "nonclass_raisers": [
+    "shadow/tasks:medicalmalpractice",
+    "shadow/upgrades:deepincisions",
+    "shadow/upgrades:model_animals",
+    "shadow/upgrades:model_skeleton",
+    "shadow/upgrades:model_skeleton_body"
+   ],
+   "downstream_gated_records": [
+    "mod:learning/upgrades:dissectionlearn1",
+    "mod:learning/upgrades:dissectionlearn2",
+    "shadow/skills:embalming",
+    "shadow/tasks:dissect",
+    "shadow/tasks:graverob",
+    "shadow/tasks:grindbones",
+    "shadow/tasks:grindskull",
+    "shadow/tasks:vileexperiment",
+    "shadow/upgrades:deepincisions",
+    "shadow/upgrades:dungeon_catacomb"
+   ]
+  },
+  {
+   "id": "geosculpting",
+   "base_max": null,
+   "require": "g.t_earthclass>0",
+   "class_raisers": [
+    "geomancer"
+   ],
+   "nonclass_raisers": [
+    "tasks:terraform",
+    "upgrades:artificialmountain",
+    "upgrades:coretap",
+    "upgrades:earthworks",
+    "upgrades:geomeditation",
+    "upgrades:mythicanvil"
+   ],
+   "downstream_gated_records": [
+    "classes:titan",
+    "homes:earthspire",
+    "tasks:act_mine",
+    "tasks:remoldspire",
+    "upgrades:coretap",
+    "upgrades:earthworks",
+    "upgrades:geomeditation",
+    "upgrades:hiddenchamber",
+    "upgrades:undertunnels"
+   ]
+  },
+  {
+   "id": "magicbeasts",
+   "base_max": null,
+   "require": "g.animals>=7&&g.naturelore>=5",
+   "class_raisers": [],
+   "nonclass_raisers": [
+    "locales:loc_menagerie",
+    "tasks:bestiary2",
+    "tasks:magicanimalstudy",
+    "upgrades:dragontongue"
+   ],
+   "downstream_gated_records": [
+    "furniture:menagerie",
+    "locales:loc_menagerie",
+    "mod:learning/upgrades:magicbeastslearn1",
+    "tasks:magicanimalstudy",
+    "upgrades:dragontongue",
+    "upgrades:firecharger",
+    "upgrades:gryffonmount"
+   ]
+  },
+  {
+   "id": "summoning",
+   "base_max": null,
+   "require": "g.tier1>0&&g.conjuration>=5",
+   "class_raisers": [
+    "conjurer",
+    "summoner"
+   ],
+   "nonclass_raisers": [
+    "tasks:malleus",
+    "tasks:summonquizzing",
+    "upgrades:familiarcat",
+    "upgrades:familiarimp",
+    "upgrades:familiarkobold",
+    "upgrades:familiarowl",
+    "upgrades:familiartome"
+   ],
+   "downstream_gated_records": [
+    "classes:summoner",
+    "furniture:bindcircle",
+    "mod:learning/upgrades:summoninglearn1",
+    "mod:swordplay/spells:blade_buff",
+    "mod:swordplay/spells:mk_blade",
+    "tasks:summonfamiliar",
+    "tasks:summonquizzing"
+   ]
+  },
+  {
+   "id": "spellcraft",
+   "base_max": null,
+   "require": "g.tier3>0&&g.lore>=15",
+   "class_raisers": [
+    "astralseer",
+    "destined",
+    "highmage",
+    "necro3",
+    "wizard",
+    "wizard3"
+   ],
+   "nonclass_raisers": [
+    "tasks:markhulcodex"
+   ],
+   "downstream_gated_records": [
+    "classes:wizard3",
+    "mod:learning/upgrades:spellcraftlearn1",
+    "mod:learning/upgrades:spellcraftlearn2",
+    "quests:q_t4spellcraft",
+    "tasks:picatrix",
+    "upgrades:ithkuil"
+   ]
+  },
+  {
+   "id": "conjuration",
+   "base_max": null,
+   "require": "g.tier0>0&&g.lore>=7&&g.divination>=3",
+   "class_raisers": [
+    "conjurer",
+    "jester",
+    "madcap",
+    "savant",
+    "summoner",
+    "trickster",
+    "wizard"
+   ],
+   "nonclass_raisers": [],
+   "downstream_gated_records": [
+    "classes:conjurer",
+    "skills:summoning",
+    "tasks:hattrick",
+    "upgrades:bagofholding",
+    "upgrades:deeppockets",
+    "upgrades:magictent"
+   ]
+  },
+  {
+   "id": "s_travel",
+   "base_max": null,
+   "require": "(g.languages+g.history)>=12",
+   "class_raisers": [],
+   "nonclass_raisers": [
+    "locales:loc_orrem",
+    "skills:history",
+    "tasks:aryabhatiya"
+   ],
+   "downstream_gated_records": [
+    "locales:loc_tenwick",
+    "mod:learning/upgrades:s_travellearn1",
+    "mod:learning/upgrades:s_travellearn2",
+    "mod:learning/upgrades:s_travellearn3",
+    "tasks:establishcaravan",
+    "tasks:travelogue"
+   ]
+  },
+  {
+   "id": "chaoslore",
+   "base_max": null,
+   "require": "g.tier4>0&&g.trickery>=12",
+   "class_raisers": [
+    "jester"
+   ],
+   "nonclass_raisers": [
+    "tasks:harvestownface"
+   ],
+   "downstream_gated_records": [
+    "resources:chaos",
+    "tasks:craftchaosrune",
+    "tasks:imbuechaosgem",
+    "upgrades:ledgerdemain",
+    "upgrades:probability_space"
+   ]
+  },
+  {
+   "id": "vivification",
+   "base_max": null,
+   "require": "g.tier4>0&&g.anatomy>0&&g.spiritlore>=5",
+   "class_raisers": [
+    "arcanedervish",
+    "bladeweaver",
+    "eldritchknight",
+    "spellblade"
+   ],
+   "nonclass_raisers": [
+    "shadow/upgrades:model_skeleton_body",
+    "shadow/upgrades:siversdemon"
+   ],
+   "downstream_gated_records": [
+    "mod:learning/upgrades:vivificationlearn1",
+    "quests:q_t5vivification",
+    "shadow/upgrades:model_skeleton_body"
+   ]
+  },
+  {
+   "id": "voidlore",
+   "base_max": null,
+   "require": "g.planeslore>=10&&g.tier5>0",
+   "class_raisers": [],
+   "nonclass_raisers": [
+    "tasks:newskies",
+    "tasks:planar_exploration",
+    "upgrades:voidtouch"
+   ],
+   "downstream_gated_records": [
+    "quests:q_t6voidlore",
+    "upgrades:event_horizon",
+    "upgrades:voidtouch"
+   ]
+  },
+  {
+   "id": "heallore",
+   "base_max": null,
+   "require": "g.t_healspell.owned&&g.tier1>0",
+   "class_raisers": [],
+   "nonclass_raisers": [
+    "tasks:medicalpractice"
+   ],
+   "downstream_gated_records": [
+    "furniture:medicalfacility",
+    "mod:learning/upgrades:heallorelearn1",
+    "tasks:medicalpractice"
+   ]
+  },
+  {
+   "id": "shadowlore2",
+   "base_max": null,
+   "require": "g.shadowlore>=10&&g.t_shadowclass>0",
+   "class_raisers": [],
+   "nonclass_raisers": [],
+   "downstream_gated_records": [
+    "shadow/spells:darkfeast",
+    "shadow/spells:gloom",
+    "shadow/spells:terrifyingvisage"
+   ]
+  },
+  {
+   "id": "charms",
+   "base_max": null,
+   "require": "g.enchanting>=5&&g.lore>=10",
+   "class_raisers": [
+    "conjurer",
+    "summoner"
+   ],
+   "nonclass_raisers": [
+    "upgrades:familiarcat"
+   ],
+   "downstream_gated_records": [
+    "classes:enchanter",
+    "tasks:buildemporium"
+   ]
+  },
+  {
+   "id": "bloodlore",
+   "base_max": null,
+   "require": "g.t_bloodclass>0",
+   "class_raisers": [],
+   "nonclass_raisers": [],
+   "downstream_gated_records": [
+    "mod:swordplay/spells:blood_slice",
+    "upgrades:bloodbag"
+   ]
+  },
+  {
+   "id": "astrallore",
+   "base_max": null,
+   "require": "g.planeslore>=10&&g.tier5>0",
+   "class_raisers": [],
+   "nonclass_raisers": [],
+   "downstream_gated_records": [
+    "tasks:starwish",
+    "upgrades:astral_ward"
+   ]
+  },
+  {
+   "id": "concentrate",
+   "base_max": null,
+   "require": "g.t_locale>=2",
+   "class_raisers": [],
+   "nonclass_raisers": [
+    "upgrades:familiarowl",
+    "upgrades:hiddenchamber"
+   ],
+   "downstream_gated_records": [
+    "skills:composure"
+   ]
+  },
+  {
+   "id": "composure",
+   "base_max": null,
+   "require": "g.concentrate>=4",
+   "class_raisers": [],
+   "nonclass_raisers": [
+    "tasks:breathingexercises",
+    "upgrades:forewarned",
+    "upgrades:innerlight",
+    "upgrades:truesight"
+   ],
+   "downstream_gated_records": [
+    "mod:learning/upgrades:composurelearn1"
+   ]
+  },
+  {
+   "id": "hammerlore",
+   "base_max": null,
+   "require": "g.t_hammerclass>0",
+   "class_raisers": [
+    "titan"
+   ],
+   "nonclass_raisers": [
+    "upgrades:artificialmountain",
+    "upgrades:constructquarry",
+    "upgrades:mythicanvil",
+    "upgrades:rockcollection"
+   ],
+   "downstream_gated_records": [
+    "classes:titan"
+   ]
+  },
+  {
+   "id": "mysticism",
+   "base_max": null,
+   "require": "g.lore>=8",
+   "class_raisers": [
+    "adept",
+    "astralseer",
+    "blueadept",
+    "darkadept",
+    "highmage",
+    "jester",
+    "madcap",
+    "mage",
+    "redadept",
+    "savant",
+    "wizard",
+    "wizard2",
+    "wizard3"
+   ],
+   "nonclass_raisers": [
+    "tasks:healthrite"
+   ],
+   "downstream_gated_records": [
+    "skills:divination"
+   ]
+  },
+  {
+   "id": "wizlore",
+   "base_max": null,
+   "require": "(g.t_knowledgeclass+g.tier5)>=2",
+   "class_raisers": [],
+   "nonclass_raisers": [],
+   "downstream_gated_records": []
+  },
+  {
+   "id": "firelore2",
+   "base_max": null,
+   "require": "g.firelore>=10&&g.t_fireclass>0&&g.tier2>0",
+   "class_raisers": [],
+   "nonclass_raisers": [],
+   "downstream_gated_records": []
+  },
+  {
+   "id": "waterlore2",
+   "base_max": null,
+   "require": "g.waterlore>=10&&g.t_waterclass>0&&g.tier2>0",
+   "class_raisers": [],
+   "nonclass_raisers": [],
+   "downstream_gated_records": []
+  },
+  {
+   "id": "airlore2",
+   "base_max": null,
+   "require": "g.airlore>=10&&g.t_airclass>0&&g.tier2>0",
+   "class_raisers": [],
+   "nonclass_raisers": [],
+   "downstream_gated_records": []
+  },
+  {
+   "id": "earthlore2",
+   "base_max": null,
+   "require": "g.earthlore>=10&&g.t_earthclass>0&&g.tier2>0",
+   "class_raisers": [],
+   "nonclass_raisers": [],
+   "downstream_gated_records": []
+  },
+  {
+   "id": "lightlore2",
+   "base_max": null,
+   "require": "g.lightlore>=10&&g.t_lightclass>0&&g.tier2>0",
+   "class_raisers": [],
+   "nonclass_raisers": [],
+   "downstream_gated_records": []
+  },
+  {
+   "id": "spiritlore2",
+   "base_max": null,
+   "require": "g.spiritlore>=10&&g.t_spiritclass>0&&g.tier2>0",
+   "class_raisers": [],
+   "nonclass_raisers": [],
+   "downstream_gated_records": []
+  },
+  {
+   "id": "manalore2",
+   "base_max": null,
+   "require": "g.lore>=20&&g.t_knowledgeclass>0&&g.tier2>0",
+   "class_raisers": [],
+   "nonclass_raisers": [],
+   "downstream_gated_records": []
+  },
+  {
+   "id": "naturelore2",
+   "base_max": null,
+   "require": "g.naturelore>=10&&g.t_natureclass>0&&g.tier2>0",
+   "class_raisers": [],
+   "nonclass_raisers": [],
+   "downstream_gated_records": []
+  },
+  {
+   "id": "undeadmastery",
+   "base_max": null,
+   "require": "g.reanimation>0",
+   "class_raisers": [],
+   "nonclass_raisers": [],
+   "downstream_gated_records": []
+  },
+  {
+   "id": "shademastery",
+   "base_max": null,
+   "require": "g.necromancy>0&&g.t_necroclass>=2",
+   "class_raisers": [],
+   "nonclass_raisers": [],
+   "downstream_gated_records": []
+  }
+ ]
+}

@@ -1,0 +1,47 @@
+[
+  {
+    "path": "data/modules.json",
+    "status": 200,
+    "remote_bytes": 1113,
+    "byte_match": true,
+    "remote_sha256": "e711e984b01e709d39c5be8bb03192e88e760f43955316c4d8efd66c333980fd",
+    "local_sha256": "e711e984b01e709d39c5be8bb03192e88e760f43955316c4d8efd66c333980fd",
+    "json_match": true
+  },
+  {
+    "path": "data/classes.json",
+    "status": 200,
+    "remote_bytes": 21224,
+    "byte_match": true,
+    "remote_sha256": "653d767dc4551fc45983ce21a4960bbaa7f243e48ab2b55e4d306421b26c1dc9",
+    "local_sha256": "653d767dc4551fc45983ce21a4960bbaa7f243e48ab2b55e4d306421b26c1dc9",
+    "json_match": true
+  },
+  {
+    "path": "data/tasks.json",
+    "status": 200,
+    "remote_bytes": 99713,
+    "byte_match": true,
+    "remote_sha256": "01876266070915a953c104ce9d7236b15b2da6afc000dbc92b8d50f8b96a4199",
+    "local_sha256": "01876266070915a953c104ce9d7236b15b2da6afc000dbc92b8d50f8b96a4199",
+    "json_match": true
+  },
+  {
+    "path": "data/hall.json",
+    "status": 200,
+    "remote_bytes": 14325,
+    "byte_match": true,
+    "remote_sha256": "41af477b19279fc3af7aafe356318f3e5c80842351141f165cde4a577ec52ebf",
+    "local_sha256": "41af477b19279fc3af7aafe356318f3e5c80842351141f165cde4a577ec52ebf",
+    "json_match": true
+  },
+  {
+    "path": "data/modules/hallgloss.json",
+    "status": 200,
+    "remote_bytes": 49556,
+    "byte_match": true,
+    "remote_sha256": "43219204577b196c9666fb1838515cfa83d50ec404ded886584f18f991ed1a37",
+    "local_sha256": "43219204577b196c9666fb1838515cfa83d50ec404ded886584f18f991ed1a37",
+    "json_match": true
+  }
+]

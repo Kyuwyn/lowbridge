@@ -1,0 +1,189 @@
+{
+  "$schema": "https://json.schemastore.org/sarif-2.1.0.json",
+  "version": "2.1.0",
+  "runs": [
+    {
+      "tool": {
+        "driver": {
+          "name": "DeepInit",
+          "informationUri": "https://github.com/deepfusionlabs/deep-init",
+          "version": "0.7.2",
+          "rules": [
+            {
+              "id": "deepinit/IF-4",
+              "name": "DocDecisionDrift",
+              "shortDescription": {
+                "text": "Documentation, decision or invariant contradicted by code"
+              },
+              "helpUri": "https://github.com/deepfusionlabs/deep-init/blob/main/skills/deep-init/references/issues.md"
+            },
+            {
+              "id": "deepinit/IF-3a",
+              "name": "ImplicitCoupling",
+              "shortDescription": {
+                "text": "Silent cross-component coupling not checked by any gate"
+              },
+              "helpUri": "https://github.com/deepfusionlabs/deep-init/blob/main/skills/deep-init/references/issues.md"
+            }
+          ]
+        }
+      },
+      "results": [
+        {
+          "ruleId": "deepinit/IF-4",
+          "level": "warning",
+          "message": {
+            "text": "ISS-001: Possible design/code drift. The implementation plan, ADR 0007 and the README say away time advances an activity only to its objective or the next meaningful discovery, and that a discovery can pause it. The engine logs discoveries without pausing. The validator rejects `pause` on events (\"discoveries never stop activity\") and lists `pauseOnReveal` as a removed field, and a test pins the non-pausing behaviour. No ADR records the removal, so anyone who \"fixes\" the engine to match the docs would break tested behaviour."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/engine.ts"
+                },
+                "region": {
+                  "startLine": 1243
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "deepinitBaselineKey/v1": "IF-4:src/engine.ts:GameEngine.reconcile#0"
+          }
+        },
+        {
+          "ruleId": "deepinit/IF-4",
+          "level": "warning",
+          "message": {
+            "text": "ISS-002: Possible stale source of truth. The design plan names `playtest/SIMULATION-REPORT.md` as the one current Foundation figure. That report states 28.63/28.08 min against a 25\u201335 min window, with 113/113 records. `bun run validate` on this run measured 13.00 min (channel-only) and 14.90 min (hollow-only) against a 12\u201320 min target, with 109/109 records. Anyone trusting the designated source gets roughly twice the real pacing."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "playtest/SIMULATION-REPORT.md"
+                },
+                "region": {
+                  "startLine": 7
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "deepinitBaselineKey/v1": "IF-4:playtest/SIMULATION-REPORT.md:<document>#0"
+          }
+        },
+        {
+          "ruleId": "deepinit/IF-4",
+          "level": "warning",
+          "message": {
+            "text": "ISS-003: Possible conflicting rules. Design plan Part E item 4 and \u00a7C call for sustained-tempo Foundation within 45 min, with the clicked time reported beside it, and Circulation open by 27 min. The validator enforces 720\u20131200 s (12\u201320 min) and an 850 s Circulation window on the direct routes, and measures no sustained-only route. `scripts/routes.ts` exits non-zero above 2700 s (45 min). The README's \"about fifteen active minutes\" agrees only with the validator, and the sustained-only figure the design asks for is never produced."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "scripts/validate.ts"
+                },
+                "region": {
+                  "startLine": 30
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "deepinitBaselineKey/v1": "IF-4:scripts/validate.ts:FOUNDATION_CEILING#0"
+          }
+        },
+        {
+          "ruleId": "deepinit/IF-4",
+          "level": "warning",
+          "message": {
+            "text": "ISS-004: Possible unenforced design rule. ADR 0024, the design plan and the implementation plan say three things: the shared module holds `t_` key records shown under Methods; no gate names another module's record id; and the validator runs three key checks. The code differs on each. No `t_` records exist, so keys are only tag counters, and the validator rejects a record whose id equals a tag, so a key record cannot be added as written. Tooltips show the raw tag strings. Ridge and shared gates name opening ids (`cot`, `garden_plot`, `strongbox`, `lean_to`, `jade_slip`). The validator has no carried/read checks, and `t_school_body` and `t_school_earth` are carried but never read. As a result, renaming an opening record silently changes ridge gates."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/engine.ts"
+                },
+                "region": {
+                  "startLine": 177
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "deepinitBaselineKey/v1": "IF-4:src/engine.ts:GameEngine.resolve#0"
+          }
+        },
+        {
+          "ruleId": "deepinit/IF-4",
+          "level": "warning",
+          "message": {
+            "text": "ISS-005: Possible contradiction of a documented invariant. `decodeSave` documents that \"ids the content no longer has are skipped rather than refused\", but that holds only for `items`. The other fields fail on an unknown id: `attuned` is validated against known ids; the running and waiting entries go through `readTask`/`readObjective`; and a saved fight must still name a record with an encounter (`readFight`). When decoding fails, both IndexedDB slots fail, boot falls through to the \"needs attention\" screen, and an exported file of the same journey is refused too. The test for departed ids covers `items` only."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/persistence.ts"
+                },
+                "region": {
+                  "startLine": 199
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "deepinitBaselineKey/v1": "IF-4:src/persistence.ts:decodeSave#0"
+          }
+        },
+        {
+          "ruleId": "deepinit/IF-3a",
+          "level": "note",
+          "message": {
+            "text": "ISS-006: Possible silent cross-component coupling. `src/ui.ts` names `vigor`, `qi`, `life`, `strain`, `rest`, `coin`, `jade_slip`, `home_space`, `foundation` and others directly, and `engine.stat(\"home_space\")` throws on an unknown id. The validator never sees the UI; only the browser smoke test would catch a rename. A content rename would crash rendering, and the ticker would then stop."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "src/ui.ts"
+                },
+                "region": {
+                  "startLine": 907
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "deepinitBaselineKey/v1": "IF-3a:src/ui.ts:createUI#0"
+          }
+        },
+        {
+          "ruleId": "deepinit/IF-4",
+          "level": "warning",
+          "message": {
+            "text": "ISS-007: Possible stale scope. `AGENTS.md`/`CLAUDE.md` describe the current slice as the village to Foundation, with combat, classes and the waystation out of scope, and the implementation plan says \"No \u2026 classes, waystation\". The code ships the ridge chapter with a waystation, a class record and fights. ADR 0026 is accepted for chapter 1 and the ridge, and the README now says the slice has one fight before Foundation and one on the ridge. Agents may refuse or undo in-scope ridge and combat work."
+          },
+          "locations": [
+            {
+              "physicalLocation": {
+                "artifactLocation": {
+                  "uri": "CLAUDE.md"
+                },
+                "region": {
+                  "startLine": 89
+                }
+              }
+            }
+          ],
+          "partialFingerprints": {
+            "deepinitBaselineKey/v1": "IF-4:CLAUDE.md:<document>#0"
+          }
+        }
+      ]
+    }
+  ]
+}

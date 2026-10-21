@@ -1,0 +1,44 @@
+# Lowbridge: project rules for agents
+
+Lowbridge is a browser cultivation incremental (TypeScript, Bun, no runtime deps) inspired by *Arcanum: Theory of Magic*. Read this file first; it tells you which documents bind and which inform.
+
+## Source of truth (binding, in this order)
+
+1. `design/DESIGN-PLAN-2026-10-18.md` (incl. §0 clarifications) and `design/decisions/*.md` (ADRs).
+2. `design/IMPLEMENTATION-PLAN-2026-10-18.md`.
+3. `README.md`: run/test commands, player-facing behaviour of the current slice.
+
+When these disagree with the reference material below, **these win**. The reference describes the inspiration, not Lowbridge.
+
+## Reference material (informative, MUST consult)
+
+`research/arcanum-reference/README.md` is the design-reference wiki for the inspiration game: shell and layout, interaction semantics, data model, progression spine, skills, economy, home/domain, adventure/combat, spells, automation/time, a real T4 mid-game save, and 38 numbered design rules. It supersedes the two older studies in `research/` for anything they overlap on.
+
+Before any of the following, read the matching page and cite the rule numbers (`12-design-rules.md`, e.g. "rule 4, 18") in your plan or ADR:
+
+| Task | Read first |
+|---|---|
+| New or changed screen, tab, tooltip, button state, mobile layout | `01-shell-and-layout.md`, `02-interaction-semantics.md`, `screens/` |
+| New content type, field, requirement expression, save-format change | `03-data-model.md` |
+| Breakthroughs, classes, caps, locks, morality, pacing | `04-progression-spine.md`, `05-skills-and-education.md`, `11-midgame-snapshot-wizrobe.md` |
+| Resources, caps, storage, home, furniture, converters | `06-economy-resources.md`, `07-home-and-domain.md` |
+| Combat, sites, stress, spells, automation, offline time | `08-…`, `09-…`, `10-…` |
+| Any hard number from the inspiration | `data-tables.md` (testing build 0.12.12.9) before `wiki-notes.md` (stable 0.12.0.0); say which version you used |
+| The author's own wording of a mechanic | `glossary-verbatim.md` |
+
+Rules in `12-design-rules.md` are tagged *copy* / *beat*. Diverging from a *copy* rule is allowed but MUST be stated explicitly with the reason, in the ADR or the PR description. Do not rediscover these facts from the live game or source; extend the wiki instead.
+
+## Maintaining the reference
+
+- `data-tables.md`, `save-wizrobe-analysis.json`, `section-texts.json`, `tooltips.json` are **generated**. Do not hand-edit; regenerate from `data-unstable-0.12.12.9.tar.gz` (unpack, load every `*.json`, index records by `id`) and the save, then replace the file.
+- New findings go into the matching numbered page plus, if they change a rule, `12-design-rules.md`. Mark unmeasured claims `[INFERENCE]`.
+- Keep version labels on every number (0.12.0.0 wiki / 0.12.3.1 pinned source / 0.12.12.9 testing).
+- Screenshots live in `research/arcanum-reference/screens/`; name new ones `<section>.webp` or `tip-<kind>-<id>.webp`.
+- The upstream source is MIT (`research/arcanum-study-2026-10-16/UPSTREAM-LICENSE`); Lowbridge is a clean implementation, never a fork. Do not copy upstream code or text into `src/`.
+
+## Working in this repo
+
+- Commands: `bun run dev`, `bun run typecheck`, `bun test`, `bun run validate`, `bun run validate:design`, `bun run build`, `bun run smoke` (see `README.md`).
+- Content is data in `src/data/`; engine in `src/engine.ts`; UI in `src/ui.ts` + `src/style.css`; persistence in `src/persistence.ts`. Follow the existing record vocabulary before adding fields.
+- Scope is the current slice (the village to Foundation). Reference systems that are out of scope (combat, classes, waystation, Hall) are evidence for later slices, not licence to add panels now.
+- `review/` is a frozen package; never modify it.

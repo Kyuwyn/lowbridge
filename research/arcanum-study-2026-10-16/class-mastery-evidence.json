@@ -1,0 +1,650 @@
+{
+  "commit": "a2632d2edf3e07e9168fff81167b11f2792e9197",
+  "scope": "Static extraction of classes from the standard manifest; Hall classes excluded. Not a playthrough or proof of reachability.",
+  "raw_main_class_records": 75,
+  "raw_tier_record_counts": {
+    "t_tier0": 5,
+    "t_tier1": 9,
+    "t_tier2": 12,
+    "t_tier3": 13,
+    "t_tier4": 13,
+    "t_tier5": 8,
+    "t_tier6": 10
+  },
+  "class_source_hashes": [
+    {
+      "path": "data/classes.json",
+      "sha256": "653d767dc4551fc45983ce21a4960bbaa7f243e48ab2b55e4d306421b26c1dc9"
+    },
+    {
+      "path": "data/modules/puppeteer.json",
+      "sha256": "5a7f541005731767d5e959c36fc71fe19bdb35f8d0ee84099eda090f0203f939"
+    },
+    {
+      "path": "data/modules/shian.json",
+      "sha256": "e535466be1dfa9a4e9d2289c08da95402513264bca57979c270ae736606918e2"
+    },
+    {
+      "path": "data/modules/duelist.json",
+      "sha256": "e7c1c5c0a8f3c417b387534a0f8d09fd4e98f21ba83bed92e1fc589110bc0d14"
+    },
+    {
+      "path": "data/modules/swordplay.json",
+      "sha256": "ce6daddc76eb9945f1ffcb0f3d7b6619e9bd87a41f01f311d541e6b72a54a4bd"
+    },
+    {
+      "path": "data/modules/classline/shadow.json",
+      "sha256": "faa46613e97637889096134d7d18e571a41bdb0a5cb95a8e4fe970dfbcf93bb2"
+    },
+    {
+      "path": "data/modules/pyromancer.json",
+      "sha256": "cddbce4f23359f6c5fe03ce66fb38be1fa697ebad144788a12d42e4523d3b97b"
+    },
+    {
+      "path": "data/modules/priest.json",
+      "sha256": "6c395edb29e4ea1eff9402f647f4568fe7d731856567432c485a7d2bff5d45ef"
+    }
+  ],
+  "selected_classes": [
+    {
+      "source": "data/classes.json",
+      "id_line": 213,
+      "id": "magician",
+      "tags": "t_tier1,t_manaclass,t_knowledgeclass",
+      "desc": "Magic in its purest form.",
+      "actdesc": "Pursue the path of pure magic.",
+      "require": "g.t1unlocker>0&&g.lore>=10",
+      "cost": {
+        "research": 500,
+        "codices": 2
+      },
+      "mod": {
+        "research.max": 100,
+        "arcana.rate": 0.001,
+        "mana.max": 2,
+        "mana.rate": 0.4,
+        "mysticism.mod.mana.rate": 0.05,
+        "lore.max": 1,
+        "astronomy.max": 1,
+        "languages.max": 1
+      },
+      "sortOrder": 100
+    },
+    {
+      "source": "data/classes.json",
+      "id_line": 304,
+      "id": "battlemage",
+      "name": "battle mage",
+      "tags": "t_tier2,t_swordclass,t_manaclass",
+      "actdesc": "Pursue the path of battle.",
+      "require": "g.t2unlocker>0&&g.weaponlore>=6&&g.tier2==0",
+      "mod": {
+        "mana.max": 4,
+        "mana.rate": 0.5,
+        "firelore.max": 2,
+        "earthlore.max": 1
+      },
+      "sortOrder": 151
+    },
+    {
+      "source": "data/classes.json",
+      "id_line": 370,
+      "id": "alchemist",
+      "tags": "t_tier2,t_bloodclass,t_potionclass,t_craftingclass",
+      "desc": "An alchemist uses magical knowledge to craft wonders.",
+      "require": "g.t2unlocker>0&&g.potions>=4&&g.alchemy>=5",
+      "cost": {
+        "managem": 5,
+        "firegem": 2,
+        "watergem": 2,
+        "earthgem": 2
+      },
+      "mod": {
+        "research.max": 100,
+        "crafting.max": 3,
+        "potions.max": 3,
+        "potionessence.rate": 0.00028,
+        "alchemy.max": 3,
+        "lore.max": 1
+      },
+      "sortOrder": 152
+    },
+    {
+      "source": "data/classes.json",
+      "id_line": 448,
+      "id": "titan",
+      "desc": "A mantle of metal and stone.",
+      "tags": "t_tier6,t_earthclass,t_hammerclass",
+      "actdesc": "An unstoppable force of nature, a Titan is Will incarnate.",
+      "require": "g.t6unlocker>0&&g.t_earthclass>0&&g.hammerlore>=10&&g.geosculpting>=10&&g.tier6==0",
+      "cost": {
+        "earthgem": 100,
+        "earthrune": 20
+      },
+      "mod": {
+        "earthlore.max": 3,
+        "player.defense": 30,
+        "stamina.max": "20%",
+        "hammerlore.max": 3,
+        "earthspire.mod.space.max": 100
+      },
+      "flavor": "When in good moods, Titans sculpted mountains. In bad ones, nations became craters.",
+      "sortOrder": 350
+    },
+    {
+      "source": "data/classes.json",
+      "id_line": 468,
+      "id": "hydromancer",
+      "desc": "Master of water.",
+      "tags": "t_tier2,t_waterclass",
+      "actdesc": "A mage specialising in water manipulation and adaptability.",
+      "require": "g.t2unlocker>0&&g.waterlore>=10",
+      "cost": {
+        "watergem": 10
+      },
+      "mod": {
+        "waterlore.max": 2,
+        "dodge": "10%",
+        "mana.max": 2
+      },
+      "flavor": "",
+      "sortOrder": 155
+    },
+    {
+      "source": "data/classes.json",
+      "id_line": 485,
+      "id": "windmage",
+      "name": "wind mage",
+      "desc": "To walk on the wind.",
+      "tags": "t_tier2,t_airclass",
+      "actdesc": "A mage specialising in air manipulation and intuition.",
+      "require": "g.t2unlocker>0&&g.airlore>=10",
+      "cost": {
+        "airgem": 10
+      },
+      "mod": {
+        "airlore.max": 2,
+        "dodge": "10%",
+        "mana.max": 2
+      },
+      "flavor": "There's a storm coming.",
+      "sortOrder": 156
+    },
+    {
+      "source": "data/classes.json",
+      "id_line": 503,
+      "id": "stormcaller",
+      "desc": "Harness the violence of natural forces.",
+      "require": "(g.t_waterclass>0||g.t_airclass>0)&&g.t3unlocker>0",
+      "tags": "t_tier3,t_waterclass,t_airclass",
+      "cost": {
+        "airgem": 20,
+        "watergem": 20
+      },
+      "mod": {
+        "lore.max": 1,
+        "mana.max": 2,
+        "airlore.max": 3,
+        "waterlore.max": 3
+      },
+      "flavor": "I am the storm.",
+      "sortOrder": 202
+    },
+    {
+      "source": "data/classes.json",
+      "id_line": 625,
+      "id": "mage",
+      "desc": "Member of an arcane order.",
+      "tags": "t_tier2,t_manaclass,t_knowledgeclass",
+      "require": "g.t2unlocker>0&&g.lore>=14",
+      "cost": {
+        "research": 1000,
+        "codices": 5
+      },
+      "mod": {
+        "research.max": 40,
+        "firelore.max": 1,
+        "mysticism.max": 2,
+        "enchanting.max": 1,
+        "lore.max": 2,
+        "mana.max": 3
+      },
+      "sortOrder": 158
+    },
+    {
+      "source": "data/classes.json",
+      "id_line": 644,
+      "id": "highmage",
+      "name": "high mage",
+      "desc": "Elite of an arcane order.",
+      "tags": "t_tier3,t_manaclass,t_knowledgeclass",
+      "require": "g.t3unlocker>0&&g.lore>=18",
+      "cost": {
+        "research": 2000,
+        "tomes": 5
+      },
+      "mod": {
+        "research.max": 50,
+        "firelore.max": 1,
+        "mysticism.max": 2,
+        "alchemy.max": 1,
+        "spellcraft.max": 2,
+        "crafting.max": 1,
+        "lore.max": 2
+      },
+      "sortOrder": 205
+    },
+    {
+      "source": "data/classes.json",
+      "id_line": 720,
+      "id": "wizard",
+      "desc": "Raw magic power.",
+      "tags": "t_tier4,t_manaclass,t_knowledgeclass",
+      "require": "g.t4unlocker>0&&g.lore>=25",
+      "cost": {
+        "research": 6000,
+        "tomes": 15,
+        "runestones": 5
+      },
+      "mod": {
+        "languages.max": 2,
+        "conjuration.max": 1,
+        "crafting.max": 1,
+        "lore.max": 3,
+        "spellcraft.max": 3,
+        "mana.max": 4,
+        "mana.rate": "5%",
+        "mysticism.max": 1,
+        "spelllist.max": 5
+      },
+      "flavor": "'Do not take me for some conjurer of cheap tricks.'",
+      "sortOrder": 254
+    },
+    {
+      "source": "data/classes.json",
+      "id_line": 874,
+      "id": "c_avatar",
+      "name": "avatar",
+      "desc": "An incarnation of raw, elemental forces.",
+      "tags": "t_tier6,t_elementalclass",
+      "require": "g.t6unlocker>0&&(g.t_elementalclass+g.t_natureclass+g.heresiarch+g.destined)>=2",
+      "cost": {
+        "sindel": 3,
+        "managem": 70,
+        "airgem": 40,
+        "earthgem": 40,
+        "firegem": 40,
+        "watergem": 40
+      },
+      "mod": {
+        "airlore.max": 2,
+        "earthlore.max": 3,
+        "waterlore.max": 2,
+        "firelore.max": 1
+      },
+      "flavor": "'I am the flood and the tempest, the whisper-wind and the inferno'.",
+      "sortOrder": 353
+    },
+    {
+      "source": "data/modules/duelist.json",
+      "id_line": 84,
+      "id": "duelist",
+      "tags": "t_tier3,t_duelingclass,t_swordclass",
+      "desc": "Master of one-on-one combat, the speed of your spellcasting is matched only by your rapier.",
+      "require": "g.t3unlocker>0&&(g.t_swordclass>0||g.redadept>0||g.t_chaosclass>0)&&g.tier3==0",
+      "mod": {
+        "duelingdmg": 5,
+        "dueling_lessons.max": 3,
+        "sworddmg": 5,
+        "self.chaincast": 0.5,
+        "spelldmg": -10
+      },
+      "sortOrder": 209
+    },
+    {
+      "source": "data/modules/duelist.json",
+      "id_line": 98,
+      "id": "rune_fencer",
+      "name": "rune fencer",
+      "tags": "t_tier4,t_duelingclass,t_swordclass",
+      "desc": "Sharp wit, sharper blade and some quick spells as backup, make for a formidable opponent.",
+      "require": "g.t4unlocker>0&&(g.t_swordclass>=2||g.duelist>0)&&g.tier4==0",
+      "cost": {
+        "airgem": 10,
+        "firegem": 5,
+        "earthgem": 5,
+        "watergem": 5
+      },
+      "mod": {
+        "duelingdmg": 10,
+        "dueling_lessons.max": 5,
+        "runicdmg": 5,
+        "sworddmg": 10,
+        "self.chaincast": 0.5,
+        "spelldmg": -10
+      },
+      "sortOrder": 257
+    },
+    {
+      "source": "data/modules/swordplay.json",
+      "id_line": 189,
+      "id": "spellblade",
+      "name": "spell blade",
+      "tags": "t_tier3,t_swordclass",
+      "desc": "A combat specialist, melding sorcery with traditional martial techniques.",
+      "require": "g.t3unlocker>0&&g.enchanting>=7&&g.weaponlore>=8&&g.tier3==0",
+      "mod": {
+        "sworddmg": 3,
+        "player.speed": 1,
+        "player.tohit": 1,
+        "history.max": 1,
+        "enchanting.max": 2,
+        "bladelore.max": 2,
+        "blade_spellbook.max": 1,
+        "anatomy.max": 1,
+        "arcanebody2.max": 1,
+        "vivification.max": 1
+      },
+      "sortOrder": 212
+    },
+    {
+      "source": "data/modules/classline/shadow.json",
+      "id_line": 6,
+      "id": "witch",
+      "actdesc": "Enter into the practice of witchcraft.",
+      "flavor": "'What is't you do?' 'A deed without a name'",
+      "tags": "t_tier1,t_shadowclass,t_demonclass,t_potionclass",
+      "require": "g.t1unlocker>0&&g.animals>=2&&g.potions>=3&&g.tier1==0",
+      "cost": {
+        "arcana": 13
+      },
+      "mod": {
+        "research.max": 10,
+        "demonology.max": 2,
+        "potions.max": 2,
+        "spiritlore.max": 2
+      },
+      "sortOrder": 106
+    },
+    {
+      "source": "data/modules/classline/shadow.json",
+      "id_line": 80,
+      "id": "archlock",
+      "desc": "Master of demons and demonic magic.",
+      "flavor": "In the War of the Locks the Seven raged for Power Absolute, and Dhrune trembled in their wake.",
+      "tags": "t_tier5,t_shadowclass,t_demonclass,t_summonclass",
+      "require": "g.t5unlocker>0&&g.warlock>0&&g.demonology>=12&&g.evil3>0",
+      "cost": {
+        "arcana": 25
+      },
+      "mod": {
+        "lore.max": 2,
+        "firelore.max": 3,
+        "demonology.max": 5
+      },
+      "sortOrder": 303
+    },
+    {
+      "source": "data/modules/classline/shadow.json",
+      "id_line": 96,
+      "id": "deathlock",
+      "name": "death lock",
+      "desc": "An unholy synthesis of wizardry and demonology.",
+      "flavor": "Narz, Bodias, Vezial. Even among the Archlocks, some names stood in abject terror.",
+      "tags": "t_tier6,t_shadowclass,t_demonclass,t_summonclass",
+      "require": "g.t6unlocker>0&&g.demonology>=19&&g.evil3>0",
+      "cost": {
+        "arcana": 60,
+        "firerune": 10
+      },
+      "mod": {
+        "earthlore.max": 2,
+        "firelore.max": 3,
+        "shadowlore.max": 3,
+        "demonology.max": 5
+      },
+      "sortOrder": 354
+    }
+  ],
+  "selected_quests": [
+    {
+      "id": "t_0",
+      "name": "Tier 0 - Solitary Magic",
+      "desc": "Some say the study of magic doesn't truly begin until apprenticeship ends. People say a lot of things.",
+      "wizardtier": true,
+      "max": 1,
+      "require": "g.neophyte>0",
+      "need": "false",
+      "needtext": "Will be acquired with your next class advancement.",
+      "lock": [
+        "mustylibrary"
+      ],
+      "mod": {
+        "research.max": 15,
+        "buyscroll.result.scrolls": 1,
+        "buyscroll.cost.gold": 20,
+        "player.hp.max": 10,
+        "player.tohit": 1
+      },
+      "group": "advancement"
+    },
+    {
+      "id": "t_1",
+      "name": "Tier 1 - Professional Magick",
+      "wizardtier": true,
+      "max": 1,
+      "desc": "Every province has its handful of runaway apprentices and failed Adepts. It's not uncommon for thieves and rangers to know a spell or two. They are nothing compared to the talents of a true professional.",
+      "require": "g.tier0>0",
+      "need": "false",
+      "needtext": "Will be acquired with your next class advancement.",
+      "lock": [
+        "prestidigitation"
+      ],
+      "mod": {
+        "crafting.max": 1,
+        "arcanebody.max": 1,
+        "occultendure.max": 1,
+        "crystalmind.max": 1,
+        "buyscroll.result.scrolls": 1,
+        "buyscroll.cost.gold": 30,
+        "sublore.max": 10
+      },
+      "group": "advancement"
+    },
+    {
+      "id": "t_2",
+      "name": "Tier 2 - Arcane Ascendant",
+      "wizardtier": true,
+      "max": 1,
+      "desc": "The masses of arcane dabblers never reach such heights.",
+      "require": "g.tier1>0",
+      "need": "false",
+      "needtext": "Will be acquired with your next class advancement.",
+      "mod": {
+        "lore.max": 2,
+        "arcanebody.max": 1,
+        "occultendure.max": 1,
+        "crystalmind.max": 1,
+        "buyscroll.result.scrolls": 1,
+        "buyscroll.cost.gold": 40,
+        "sublore.max": 10
+      },
+      "group": "advancement"
+    },
+    {
+      "id": "t_3",
+      "name": "Tier 3 - Magical Mastery",
+      "wizardtier": true,
+      "max": 1,
+      "desc": "You are a master of your field of magic.",
+      "require": "g.tier2>0",
+      "need": "false",
+      "needtext": "Will be acquired with your next class advancement.",
+      "mod": {
+        "lore.max": 3,
+        "crafting.max": 2,
+        "arcanebody.max": 1,
+        "occultendure.max": 1,
+        "crystalmind.max": 1,
+        "buyscroll.result.scrolls": 1,
+        "buyscroll.cost.gold": 50,
+        "sublore.max": 10
+      },
+      "group": "advancement"
+    },
+    {
+      "id": "t1unlocker",
+      "name": "Mana Proficiency",
+      "desc": "Despite having just recently graduated, your thirst for knowledge knowns no end. You are now proficient in magic use.",
+      "require": "g.tier0>0",
+      "need": "g.t1quest>=4",
+      "needtext": "Complete at least 4 Tier 1 Quests. Necessary for your next class advancement.",
+      "max": 1,
+      "cost": {
+        "research": 250,
+        "codices": 5,
+        "gold": 300,
+        "gems": 2
+      },
+      "result": {
+        "fame": 2
+      },
+      "lock": "t1quest",
+      "group": "advancement"
+    },
+    {
+      "id": "t2unlocker",
+      "name": "Arcane Expertise",
+      "desc": "Surpassing even most professional mages, your arcane prowess is regarded as remarkable.",
+      "require": "g.tier1>0",
+      "need": "g.t2quest>=4",
+      "needtext": "Complete at least 4 Tier 2 Quests. Necessary for your next class advancement.",
+      "max": 1,
+      "cost": {
+        "research": 850,
+        "tomes": 1,
+        "gold": 1000,
+        "gems": 5
+      },
+      "result": {
+        "fame": 3
+      },
+      "lock": "t2quest",
+      "group": "advancement"
+    }
+  ],
+  "master_of_tag_labels": [
+    {
+      "id": "t_chaosclass",
+      "name": "master of chaos"
+    },
+    {
+      "id": "t_lightclass",
+      "name": "master of light"
+    },
+    {
+      "id": "t_natureclass",
+      "name": "master of nature"
+    },
+    {
+      "id": "t_earthclass",
+      "name": "master of earth"
+    },
+    {
+      "id": "t_waterclass",
+      "name": "master of water"
+    },
+    {
+      "id": "t_airclass",
+      "name": "master of air"
+    },
+    {
+      "id": "t_fireclass",
+      "name": "master of fire"
+    },
+    {
+      "id": "t_elementalclass",
+      "name": "master of elements"
+    },
+    {
+      "id": "t_divinationclass",
+      "name": "master of divination"
+    },
+    {
+      "id": "t_manaclass",
+      "name": "master of the arcane"
+    },
+    {
+      "id": "t_knowledgeclass",
+      "name": "master of knowledge"
+    },
+    {
+      "id": "t_shadowclass",
+      "name": "master of shadow"
+    },
+    {
+      "id": "t_demonclass",
+      "name": "master of demonology"
+    },
+    {
+      "id": "t_healingclass",
+      "name": "master of healing"
+    },
+    {
+      "id": "t_necroclass",
+      "name": "master of necromancy"
+    },
+    {
+      "id": "t_spiritclass",
+      "name": "master of spirits"
+    },
+    {
+      "id": "t_swordclass",
+      "name": "master of swords"
+    },
+    {
+      "id": "t_duelingclass",
+      "name": "master of duels"
+    },
+    {
+      "id": "t_hammerclass",
+      "name": "master of hammers"
+    },
+    {
+      "id": "t_spearclass",
+      "name": "master of spears"
+    },
+    {
+      "id": "t_bloodclass",
+      "name": "master of blood"
+    },
+    {
+      "id": "t_summonclass",
+      "name": "master of summoning"
+    },
+    {
+      "id": "t_minionclass",
+      "name": "master of minions"
+    },
+    {
+      "id": "t_potionclass",
+      "name": "master of potions"
+    },
+    {
+      "id": "t_craftingclass",
+      "name": "master of crafting"
+    },
+    {
+      "id": "t_enchantingclass",
+      "name": "master of enchanting"
+    },
+    {
+      "id": "t_mechaclass",
+      "name": "master of mechanics"
+    },
+    {
+      "id": "t_shapeshiftclass",
+      "name": "master of forms"
+    }
+  ]
+}

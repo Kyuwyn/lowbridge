@@ -1,0 +1,378 @@
+[
+ {
+  "id": "smith_work",
+  "at": {
+   "20": {
+    "run.stamina": -0.1
+   },
+   "50": {
+    "run.stamina": -0.1
+   }
+  },
+  "every": null
+ },
+ {
+  "id": "chores",
+  "at": {
+   "5": {
+    "result.gold": 1
+   },
+   "25": {
+    "result.gold": 1
+   },
+   "500": {
+    "result.virtue": -0.3
+   }
+  },
+  "every": null
+ },
+ {
+  "id": "study",
+  "at": null,
+  "every": {
+   "100": {
+    "effect.research": "0.05:100"
+   }
+  }
+ },
+ {
+  "id": "errands",
+  "at": {
+   "10": {
+    "effect.gold": 0.1
+   },
+   "100": {
+    "effect.gold": 0.1
+   },
+   "150": {
+    "effect.virtue": -0.1
+   }
+  },
+  "every": null
+ },
+ {
+  "id": "prestidigitation",
+  "at": null,
+  "every": {
+   "10": {
+    "effect.gold": "0.01:10"
+   }
+  }
+ },
+ {
+  "id": "thievery",
+  "at": {
+   "5": {
+    "result.gold": 1
+   },
+   "15": {
+    "result.gold": 2
+   },
+   "50": {
+    "result.gold": 3
+   },
+   "150": {
+    "result.gold": 5
+   }
+  },
+  "every": null
+ },
+ {
+  "id": "service",
+  "at": {
+   "150": {
+    "effect.gold": 0.3
+   },
+   "600": {
+    "effect.gold": 0.6
+   },
+   "1200": {
+    "effect.gold": 1
+   }
+  },
+  "every": null
+ },
+ {
+  "id": "tendanimals",
+  "at": {
+   "25": {
+    "effect.animals.exp": 0.1
+   },
+   "300": {
+    "effect.animals.exp": 0.2
+   },
+   "1000": {
+    "effect.animals.exp": 0.3
+   }
+  },
+  "every": null
+ },
+ {
+  "id": "act_garden",
+  "at": {
+   "100": {
+    "effect.herbs": 0.1
+   },
+   "1200": {
+    "effect.herbs": 0.2
+   },
+   "5000": {
+    "effect.research": 0.1
+   }
+  },
+  "every": null
+ },
+ {
+  "id": "act_scry",
+  "at": {
+   "60": {
+    "result.research": 10
+   },
+   "240": {
+    "result.research": 20,
+    "result.arcana": 0.25
+   },
+   "600": {
+    "result.research": 20,
+    "result.arcana": 0.5
+   }
+  },
+  "every": null
+ },
+ {
+  "id": "act_concoct",
+  "at": {
+   "30": {
+    "effect.research": 0.05
+   },
+   "120": {
+    "effect.research": 0.05,
+    "result.gold": 0.5
+   },
+   "500": {
+    "effect.research": 0.1,
+    "effect.potions.max": 0.0001
+   }
+  },
+  "every": null
+ },
+ {
+  "id": "act_element",
+  "at": {
+   "30": {
+    "effect.research": 0.05,
+    "effect.arcana": 0.001,
+    "effect.elemental.exp": 0.2
+   },
+   "120": {
+    "effect.research": 0.05,
+    "effect.elemental.exp": 0.3,
+    "effect.elemental.rate": 0.01
+   },
+   "500": {
+    "effect.research": 0.2,
+    "effect.arcana": 0.001
+   }
+  },
+  "every": null
+ },
+ {
+  "id": "act_mine",
+  "at": {
+   "20": {
+    "effect.gold.min": 0.3,
+    "effect.gold.max": 0.4,
+    "effect.gems": 0.05
+   },
+   "150": {
+    "effect.gold.min": 0.4,
+    "effect.gold.max": 0.6,
+    "effect.gems": 0.05
+   },
+   "550": {
+    "effect.gold.min": 0.5,
+    "effect.gold.max": 0.8
+   },
+   "2000": {
+    "effect.gold.min": 0.8,
+    "effect.gold.max": 0.5,
+    "effect.gems": 0.15
+   }
+  },
+  "every": null
+ },
+ {
+  "id": "dreamweaver",
+  "at": {
+   "500": {
+    "effect.dreams": 0.0002
+   },
+   "2000": {
+    "effect.dreams": 0.0002
+   },
+   "5000": {
+    "effect.dreams": 0.0002
+   }
+  },
+  "every": null
+ },
+ {
+  "id": "spingold",
+  "at": {
+   "15": {
+    "effect.gold": 0.25
+   },
+   "60": {
+    "effect.gold": 0.5
+   },
+   "120": {
+    "effect.gold": 0.75
+   }
+  },
+  "every": null
+ },
+ {
+  "id": "paidseance",
+  "at": {
+   "15": {
+    "effect.gold": 0.5
+   },
+   "30": {
+    "effect.gold": 0.5
+   },
+   "60": {
+    "effect.gold": 0.5
+   },
+   "90": {
+    "effect.gold": 0.5
+   },
+   "120": {
+    "effect.gold": 0.5
+   }
+  },
+  "every": null
+ },
+ {
+  "id": "treatailments",
+  "at": {
+   "5": {
+    "result.gold": 1
+   },
+   "15": {
+    "result.gold": 2
+   },
+   "50": {
+    "result.gold": 2
+   },
+   "150": {
+    "result.gold": 3
+   }
+  },
+  "every": null
+ },
+ {
+  "id": "readpalms",
+  "at": {
+   "5": {
+    "result.gold": 1
+   },
+   "15": {
+    "result.gold": 2
+   },
+   "30": {
+    "result.gold": 2.5
+   },
+   "60": {
+    "result.gold": 3
+   }
+  },
+  "every": null
+ },
+ {
+  "id": "magicadvice",
+  "at": {
+   "50": {
+    "result.gold": 0.3
+   },
+   "150": {
+    "result.gold": 0.5
+   }
+  },
+  "every": null
+ },
+ {
+  "id": "pace",
+  "at": {
+   "30": {
+    "effect.research": 0.05
+   },
+   "120": {
+    "effect.research": 0.1,
+    "effect.arcana": 0.01
+   },
+   "500": {
+    "effect.research": 0.2,
+    "effect.arcana": 0.01
+   }
+  },
+  "every": null
+ },
+ {
+  "id": "terraform",
+  "at": {
+   "10": {
+    "effect.gems.max": 0.0002,
+    "effect.prismaticgems.max": 0.0002
+   },
+   "50": {
+    "effect.earthgem": 0.01
+   },
+   "100": {
+    "effect.gems.max": 0.0002,
+    "effect.prismaticgems.max": 0.0002
+   },
+   "250": {
+    "effect.earthgem": 0.01
+   }
+  },
+  "every": null
+ },
+ {
+  "id": "makeamends",
+  "at": {
+   "50": {
+    "run.stamina": 0.3,
+    "run.hp": 0.3,
+    "run.gold": 0.2,
+    "effect.evilamt": -0.4
+   },
+   "150": {
+    "run.stamina": 0.3,
+    "run.hp": 0.3,
+    "run.gold": 0.2,
+    "effect.evilamt": -0.4
+   }
+  },
+  "every": null
+ },
+ {
+  "id": "act_spy",
+  "at": {
+   "100": {
+    "effect.gems": 0.01,
+    "effect.lore.exp": 0.5,
+    "effect.scrying.exp": 0.5
+   },
+   "1200": {
+    "effect.gems": 0.02,
+    "effect.lore.exp": 0.5,
+    "effect.scrying.exp": 0.5
+   },
+   "5000": {
+    "effect.research": 0.1,
+    "effect.gems": 0.02
+   }
+  },
+  "every": null
+ }
+]

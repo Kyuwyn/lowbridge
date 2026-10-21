@@ -1,0 +1,20 @@
+{
+  "name": "lowbridge",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun scripts/serve.ts",
+    "build": "bun scripts/build.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "bun test",
+    "validate": "bun scripts/validate.ts",
+    "validate:design": "python3 design/validation/opening-sim.py && python3 design/validation/b4-gates.py",
+    "smoke": "bun scripts/browser-smoke.ts"
+  },
+  "devDependencies": {
+    "@types/bun": "1.4.3",
+    "playwright": "1.64.1",
+    "typescript": "7.0.2"
+  }
+}

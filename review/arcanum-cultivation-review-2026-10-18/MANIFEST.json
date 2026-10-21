@@ -1,0 +1,295 @@
+{
+  "snapshot_date": "2026-10-18",
+  "accepted_through": "Q123",
+  "source_file_count": 42,
+  "files": [
+    {
+      "path": "README.md",
+      "bytes": 3643,
+      "sha256": "5808567737d8bb371de93494d22dba4849493840fe951040acd2d910188244fd",
+      "unchanged_source_copy": false
+    },
+    {
+      "path": "REVIEW-REQUEST.md",
+      "bytes": 2735,
+      "sha256": "88b06946031d4c2736849b86100ab389931b8863e4dcd8cb963ac0582c521599",
+      "unchanged_source_copy": false
+    },
+    {
+      "path": "design/BRIEF.md",
+      "bytes": 48227,
+      "sha256": "067a575eeb81b7abad4a4f23d1b9147d915e49049bae303fe2999336d3d5d975",
+      "unchanged_source_copy": true
+    },
+    {
+      "path": "design/CAMPAIGN-DRAFT.md",
+      "bytes": 11303,
+      "sha256": "cea70181e6c62770c73c4e6d0baf0976f22437ac989db815878b4b20efa75c69",
+      "unchanged_source_copy": true
+    },
+    {
+      "path": "design/CAMPAIGN-OUTLINE.md",
+      "bytes": 47742,
+      "sha256": "cc00ed97924162f6f9685743bada09ee4fbf954d14f5c03a64d3d75a452d2881",
+      "unchanged_source_copy": true
+    },
+    {
+      "path": "design/CULTIVATION-CLASS-MAP.md",
+      "bytes": 25047,
+      "sha256": "f1f08b0b092f673107c4a91e2a140e8dc1346e3bda1da5848ee9fef08d5209d5",
+      "unchanged_source_copy": true
+    },
+    {
+      "path": "design/DESIGN-CHECKPOINT.md",
+      "bytes": 4201,
+      "sha256": "24fbedc82ec4531c8fe7ae6a1a24edb52ab7ee80ac8126702696e62728c6965f",
+      "unchanged_source_copy": true
+    },
+    {
+      "path": "design/FOURTH-BREAKTHROUGH-DRAFT.md",
+      "bytes": 79621,
+      "sha256": "c24dc93bc1493db2343a9bff105f5c5869d57a8b47a5ed4895b0bb9253b18f7e",
+      "unchanged_source_copy": true
+    },
+    {
+      "path": "design/GLOSSARY.md",
+      "bytes": 47160,
+      "sha256": "c1626486059c437d2204c6df71c97a07a239842e7bb21c06f4a43e84674aafca",
+      "unchanged_source_copy": true
+    },
+    {
+      "path": "design/HOME-DRAFT.md",
+      "bytes": 4421,
+      "sha256": "47d214366733f0e67ed12799f2b6c71ff15ebe642933a8028d8bb718c5d7cfe8",
+      "unchanged_source_copy": true
+    },
+    {
+      "path": "design/OPENING-DRAFT.md",
+      "bytes": 15453,
+      "sha256": "8e4ca99a90836ee283b3ad151a6e5ba1b403c429752a847e31d299d2a9d9cf08",
+      "unchanged_source_copy": true
+    },
+    {
+      "path": "design/PACING-DRAFT.md",
+      "bytes": 27623,
+      "sha256": "b71c4205185b52411283d158fde961682609890761fd3166b6b11e48c26e58ae",
+      "unchanged_source_copy": true
+    },
+    {
+      "path": "design/PACING-PAPER-BUDGET.md",
+      "bytes": 17043,
+      "sha256": "ea4e2bf6247393904390119dd6fe75b2f4b30771ea7934089e43f7346f399cbc",
+      "unchanged_source_copy": true
+    },
+    {
+      "path": "design/PATHS-DRAFT.md",
+      "bytes": 9849,
+      "sha256": "58b2a4fa714cad37a29c8775ec3feafd19c5c0fdfba78370b2b32364935be512",
+      "unchanged_source_copy": true
+    },
+    {
+      "path": "design/SECOND-BREAKTHROUGH-DRAFT.md",
+      "bytes": 34902,
+      "sha256": "55fd86719671eaea8d0588510a77e56d69d26508e8f2ed4708e1254b2486a29c",
+      "unchanged_source_copy": true
+    },
+    {
+      "path": "design/THIRD-BREAKTHROUGH-DRAFT.md",
+      "bytes": 38415,
+      "sha256": "73ff2dd9d6ef34b26aef801d0a3c24b7a7e2c00277672d064419447d38b2e690",
+      "unchanged_source_copy": true
+    },
+    {
+      "path": "design/decisions/0001-campaign-identity.md",
+      "bytes": 5305,
+      "sha256": "e32c2f7371567bd719d517260eb623ab3915915c402c36d5f78c614d097b917c",
+      "unchanged_source_copy": true
+    },
+    {
+      "path": "design/decisions/0002-lifespan-and-retries.md",
+      "bytes": 8187,
+      "sha256": "8a624979ee5447d0b8202d87f21a9d7d186c41a13930990d27368a0d39c36918",
+      "unchanged_source_copy": true
+    },
+    {
+      "path": "design/decisions/0003-opening-anchors.md",
+      "bytes": 5996,
+      "sha256": "4494a143f80368ce93ad1d30bbb7617680fa48d324b5f226605003bee93882a1",
+      "unchanged_source_copy": true
+    },
+    {
+      "path": "design/decisions/0004-wider-world-and-paths.md",
+      "bytes": 4295,
+      "sha256": "3f5c9cddfdd1f3963833f02072e49731fb81478e7098e2f220afd822df244ecb",
+      "unchanged_source_copy": true
+    },
+    {
+      "path": "design/decisions/0005-campaign-progression.md",
+      "bytes": 4565,
+      "sha256": "af331507d16691fee9cc026f526ed228b5ee46ab5881614bbaf7ead062ca9a05",
+      "unchanged_source_copy": true
+    },
+    {
+      "path": "design/decisions/0006-world-and-residence.md",
+      "bytes": 3795,
+      "sha256": "42b6ccc983416cd63e74fd9403538b53db289cb870ad6fa7a824071cb14a1ce6",
+      "unchanged_source_copy": true
+    },
+    {
+      "path": "design/decisions/0007-away-time-and-acceleration.md",
+      "bytes": 4820,
+      "sha256": "b738e7c7e1bf4b1245f8f2e166e8b80dd6551b9c282d50de6f4e6efacb8c3bae",
+      "unchanged_source_copy": true
+    },
+    {
+      "path": "design/decisions/0008-optional-combat.md",
+      "bytes": 2710,
+      "sha256": "91fc81f6e150683e9deb597603e5cb3b9524eeead1a52cc8e62f9603dc4f1348",
+      "unchanged_source_copy": true
+    },
+    {
+      "path": "design/decisions/0009-work-and-crafting-resources.md",
+      "bytes": 2546,
+      "sha256": "60aab8f10a35ca3fbb9f73e9142811be7e15ab3aacfa2b3c9cc64835bbecc81b",
+      "unchanged_source_copy": true
+    },
+    {
+      "path": "design/decisions/0010-sects-and-relationships.md",
+      "bytes": 2458,
+      "sha256": "2c15476272972ffb6da056c345c66bc1d151a96af64b09854ff57b00349065d9",
+      "unchanged_source_copy": true
+    },
+    {
+      "path": "design/decisions/0011-presentation-and-platform.md",
+      "bytes": 1544,
+      "sha256": "d647a5070797dda3d2585caf26ea84bcd2a4339e7e618076506623afa8220ed4",
+      "unchanged_source_copy": true
+    },
+    {
+      "path": "design/decisions/0012-second-breakthrough-arc.md",
+      "bytes": 11219,
+      "sha256": "b0722012139053e8f4955dd3f9065642b9f7087e3484f8bd9889500b7f09748b",
+      "unchanged_source_copy": true
+    },
+    {
+      "path": "design/decisions/0013-knowledge-and-practice.md",
+      "bytes": 1806,
+      "sha256": "7d85ad13f4dc21ea2c14225dd793c2f8be2698931564de38202e1b38f8d458c7",
+      "unchanged_source_copy": true
+    },
+    {
+      "path": "design/decisions/0014-early-class-advancements.md",
+      "bytes": 3146,
+      "sha256": "a48bebce863d7ee55b63e212ace88102128257f0668992d886a92332d8db5c87",
+      "unchanged_source_copy": true
+    },
+    {
+      "path": "design/decisions/0015-cumulative-class-masteries.md",
+      "bytes": 2579,
+      "sha256": "481a58795bf270ccabc1bf45ad3739f9c1ff6e7e3c84cb66ba81c572155cd20c",
+      "unchanged_source_copy": true
+    },
+    {
+      "path": "design/decisions/0016-third-breakthrough-classes.md",
+      "bytes": 10509,
+      "sha256": "12c9325e30b587b752458b75c380aafaaf0b86dcec5879f1e55f35c08d761b5c",
+      "unchanged_source_copy": true
+    },
+    {
+      "path": "design/decisions/0017-fourth-breakthrough-choice-breadth.md",
+      "bytes": 9982,
+      "sha256": "7357f3c9cd7f2749766f21d4b747beb4c790df9de1b62043e4d65659e8710464",
+      "unchanged_source_copy": true
+    },
+    {
+      "path": "design/decisions/0018-first-defining-trial.md",
+      "bytes": 16598,
+      "sha256": "cae26ea32a71c5dae1849ebd72bc116ab08100415c781e41aa4d684122270b19",
+      "unchanged_source_copy": true
+    },
+    {
+      "path": "design/decisions/0019-early-campaign-pacing.md",
+      "bytes": 6937,
+      "sha256": "d6732fb5745452966f368a3ed3b990c99e981fa7b11365cc3923c89bb07679df",
+      "unchanged_source_copy": true
+    },
+    {
+      "path": "research/arcanum-study-2026-10-16/CLASS-MASTERY-STUDY.md",
+      "bytes": 13582,
+      "sha256": "cd2f0dc0cfd1643eb965ff1ba6810f4574535020b5839284645fea00d2fa6f23",
+      "unchanged_source_copy": true
+    },
+    {
+      "path": "research/arcanum-study-2026-10-16/STUDY.md",
+      "bytes": 15384,
+      "sha256": "235d62e70e81bb6ae4e1a2cae6fc98a457fbd908c1de349bc6838676626a4b0f",
+      "unchanged_source_copy": true
+    },
+    {
+      "path": "research/arcanum-study-2026-10-16/UPSTREAM-LICENSE",
+      "bytes": 1090,
+      "sha256": "2ea8103be8ae1207417724f39e08575acecb2d81c74b6d3bf13b13bc2482d955",
+      "unchanged_source_copy": true
+    },
+    {
+      "path": "research/arcanum-study-2026-10-16/class-mastery-evidence.json",
+      "bytes": 17749,
+      "sha256": "f50443eac7ac8ce6f8f9c031b648d7ed25800cdfa16b76f4aa0778456a7d4e0e",
+      "unchanged_source_copy": true
+    },
+    {
+      "path": "research/arcanum-study-2026-10-16/content-census.json",
+      "bytes": 8109,
+      "sha256": "72ed4a171961ec8cadadce938e1b86e683f0863129ec68992c4bd9a3fbfb1ed2",
+      "unchanged_source_copy": true
+    },
+    {
+      "path": "research/arcanum-study-2026-10-16/count-content.py",
+      "bytes": 5519,
+      "sha256": "14f4cf5e0a41e4ca70747dc677e74a9d30b05c21c55d46966c5a9a074dcb8421",
+      "unchanged_source_copy": true
+    },
+    {
+      "path": "research/arcanum-study-2026-10-16/deployment-check.json",
+      "bytes": 1567,
+      "sha256": "58fe3ccf074867fb092851096c3effc5279bfe9b5db64252d592ab1f30437dff",
+      "unchanged_source_copy": true
+    },
+    {
+      "path": "research/arcanum-study-2026-10-16/snapshot.json",
+      "bytes": 291,
+      "sha256": "43a0cc7f1f555d8bdb718b32212070ac26250fd36e37b0dd71717574590838bc",
+      "unchanged_source_copy": true
+    },
+    {
+      "path": "research/arcanum-study-2026-10-16/source-metrics.json",
+      "bytes": 2464,
+      "sha256": "ae7ba0c67b92b67ec156e570bc697ef11af63ee1b3995c88a434e1b8be2e9e59",
+      "unchanged_source_copy": true
+    },
+    {
+      "path": "support/pacing-model/README.md",
+      "bytes": 1434,
+      "sha256": "ac7e377b89146fb5b5f7935615b38aef1f036b51ae643ac21185ab50bc8a0522",
+      "unchanged_source_copy": false
+    },
+    {
+      "path": "support/pacing-model/pacing-model.py",
+      "bytes": 5427,
+      "sha256": "faf02cf29592cfef4c0e62de69c710c3ead6ec8d7b757bd01e695b9700be26da",
+      "unchanged_source_copy": false
+    },
+    {
+      "path": "support/pacing-model/recorded-results.json",
+      "bytes": 13960,
+      "sha256": "222dc5576a379c51b2f0e0f037247f55b22a39859de9340192692cb2a74a4f6d",
+      "unchanged_source_copy": false
+    },
+    {
+      "path": "support/pacing-model/recorded-visit-sensitivity.json",
+      "bytes": 2685,
+      "sha256": "a0cfb72bdda3a4430925753e52ca9c0cf0560ae54b126fce25ab4d02ab5445d5",
+      "unchanged_source_copy": false
+    }
+  ]
+}

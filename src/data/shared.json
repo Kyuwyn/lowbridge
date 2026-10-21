@@ -1,0 +1,179 @@
+[
+  {
+    "id": "coin", "name": "Coin", "kind": "resource", "group": "Resources",
+    "desc": "Wages from the mill and the ferry road. Twenty is all a loose purse carries.",
+    "flavor": "Counted twice on the way home, as everyone in Lowbridge counts it.",
+    "initial": { "value": 0, "max": 20 }
+  },
+  {
+    "id": "herbs", "name": "Herbs", "kind": "resource", "group": "Resources",
+    "desc": "Clean bundles for Granny Shu's stall, and the ten the Foundation sitting burns.",
+    "initial": { "value": 0, "max": 12 }
+  },
+  {
+    "id": "timber", "name": "Timber", "kind": "resource", "group": "Resources",
+    "desc": "Straight lengths for racks, frames and a roof of your own. Six is a full stack without a shed.",
+    "require": "g.field_kit > 0", "initial": { "value": 0, "max": 6 }
+  },
+  {
+    "id": "stone", "name": "Channel stone", "kind": "resource", "group": "Resources",
+    "desc": "Water-set stones that keep the shape the stream gave them.",
+    "require": "g.channel_observe > 0", "initial": { "value": 0, "max": 8 }
+  },
+  {
+    "id": "qi", "name": "Qi", "kind": "resource", "group": "Resources",
+    "desc": "A reservoir gathered by the slip's breath method. Techniques spend it; the Foundation attempt wants it full and does not take it.",
+    "require": "g.jade_slip > 0", "initial": { "value": 0, "max": 2, "open": false }
+  },
+  {
+    "id": "attune_slots", "name": "Attunement", "kind": "resource", "group": "Resources",
+    "desc": "Methods held ready in the mind. Attuning a technique fills one place, and a technique must be held before it can be used.",
+    "flavor": "You can remember reading a method and still be unable to use it.",
+    "require": "g.jade_slip > 0", "initial": { "max": 1, "open": true }
+  },
+  {
+    "id": "vigor", "name": "Vigor", "kind": "resource", "group": "Resources",
+    "desc": "Strength for the day's chores. It comes back on its own whether you are busy or idle, and quicker still if you lie down to it.",
+    "initial": { "value": 10, "max": 10, "rate": 0.2 }
+  },
+  {
+    "id": "strain", "name": "Strain", "kind": "resource", "group": "Resources",
+    "desc": "How much broken ground the body will take before it must turn back. Ridge outings draw it down; it returns slowly, busy or idle.",
+    "require": "g.foundation > 0", "initial": { "value": 10, "max": 10, "rate": 0.02, "open": false }
+  },
+  {
+    "id": "life", "name": "Life", "kind": "resource", "group": "Resources",
+    "desc": "What a blow takes before the body gives way. Only a fight draws on it; it returns slowly on its own, busy or idle, and Circulation deepens it.",
+    "flavor": "Nobody in Lowbridge counts it until somebody swings at them.",
+    "require": "g.circulation.open > 0", "initial": { "value": 6, "max": 6, "rate": 0.02 }
+  },
+  {
+    "id": "strike", "name": "Strike", "kind": "resource", "group": "Combat",
+    "desc": "What a blow of yours carries. A strike lands for what it has over the other's guard.",
+    "require": "g.circulation.open > 0", "initial": { "value": 0, "max": 1 }
+  },
+  {
+    "id": "guard", "name": "Guard", "kind": "resource", "group": "Combat",
+    "desc": "What a blow against you is turned by. Their strike lands for what it has over it.",
+    "require": "g.circulation.open > 0", "initial": { "value": 0, "max": 0 }
+  },
+  {
+    "id": "speed", "name": "Speed", "kind": "resource", "group": "Combat",
+    "desc": "How often you swing. In a fight your readiness fills by your Speed each second, and you swing each time it reaches five: at Speed 1, every five seconds.",
+    "require": "g.circulation.open > 0", "initial": { "value": 0, "max": 1 }
+  },
+  {
+    "id": "hit", "name": "Hit", "kind": "resource", "group": "Combat",
+    "desc": "Your chance, in percent, to put a swing where you meant it. The other's Dodge takes its share of what remains.",
+    "require": "g.circulation.open > 0", "initial": { "value": 0, "max": 80 }
+  },
+  {
+    "id": "dodge", "name": "Dodge", "kind": "resource", "group": "Combat",
+    "desc": "Your chance, in percent, to be elsewhere when a swing arrives. Nobody slips more than three in five.",
+    "require": "g.circulation.open > 0", "initial": { "value": 0, "max": 5 }
+  },
+  {
+    "id": "marrow_herbs", "name": "Marrow herbs", "kind": "resource", "group": "Resources",
+    "desc": "Bitter roots from the disturbed ground around the survey marker. The Body bill wants twelve, more than a new store holds.",
+    "require": "g.body_teaching > 0", "initial": { "value": 0, "max": 10 }
+  },
+  {
+    "id": "whetstone_grit", "name": "Whetstone grit", "kind": "resource", "group": "Resources",
+    "desc": "Fine grit cut from the inscription face. The Sword bill wants twelve, more than a new store holds.",
+    "require": "g.sword_teaching > 0", "initial": { "value": 0, "max": 10 }
+  },
+  {
+    "id": "veined_ore", "name": "Veined ore", "kind": "resource", "group": "Resources",
+    "desc": "Ore that keeps the grain of the ground it came from. The Earth bill wants twelve, more than a new store holds.",
+    "require": "g.earth_teaching > 0", "initial": { "value": 0, "max": 10 }
+  },
+  {
+    "id": "inked_tokens", "name": "Inked tokens", "kind": "resource", "group": "Resources",
+    "desc": "Counters that hold a layout once it has been tested. The Formation bill wants twelve, more than a new store holds.",
+    "require": "g.formation_teaching > 0", "initial": { "value": 0, "max": 10 }
+  },
+  {
+    "id": "home_space", "name": "Home space", "kind": "resource", "group": "Home",
+    "desc": "Spans of floor already in use. Arrangements come with you when the home grows.",
+    "initial": { "max": 2 }
+  },
+  {
+    "id": "coin_earned", "name": "Coin earned", "kind": "resource", "group": "Ledger",
+    "desc": "Every wage paid since you came to Lowbridge, raises included. Trades and bounties are not wages.",
+    "initial": { "value": 0, "max": 1000000000000 }
+  },
+  {
+    "id": "lore", "name": "Lore", "kind": "family", "group": "Families",
+    "desc": "The slip's surviving characters, and how many of them you can read.",
+    "flavor": "Three leaves of twelve, and the cracks take a little more each year.",
+    "require": "g.jade_slip > 0",
+    "initial": { "value": 0, "max": 5, "open": false },
+    "perLevel": { "fragment_notes.rate": 0.1, "inscription_face.rate": 0.05, "fixed_layout.rate": 0.05, "body_teaching.discount": 0.05, "sword_teaching.discount": 0.05, "earth_teaching.discount": 0.05, "formation_teaching.discount": 0.05 },
+    "events": [{ "id": "lore_hand_found", "when": "g.lore >= 1",
+      "text": "The carver's hand sorts itself out under your brush. Proper tools would let you go where the characters point." }]
+  },
+  {
+    "id": "qi_sense", "name": "Qi Sense", "kind": "family", "group": "Families",
+    "desc": "Feeling where qi gathers and where it runs. Each level widens the reservoir and sharpens a held method.",
+    "require": "g.jade_slip > 0",
+    "initial": { "value": 0, "max": 5, "open": false },
+    "perLevel": { "qi.max": 1, "qi.rate": 0.0005, "channel_observe.rate": 0.05, "fernhollow_observe.rate": 0.05, "sit_fernhollow.rate": 0.05, "steady_breath.yield": 1 },
+    "at": { "3": { "qi.discount": 0.1 } },
+    "events": [{ "id": "qi_first_felt", "when": "g.qi_sense >= 1",
+      "text": "Something that is not air moves under the breath, and it pulls two ways: toward the broken channel beyond the barns, and upstream to a hollow of ferns." },
+      { "id": "qi_hollow_within_reach", "when": "g.qi_sense >= 2",
+        "text": "The faint pull from upstream has a shape now. Fernhollow can be sat in." }]
+  },
+  {
+    "id": "circulation", "name": "Circulation", "kind": "family", "group": "Families",
+    "desc": "The slip's method, made whole enough to move qi through the body. Each level also deepens Life by two and adds one to Strike and Guard.",
+    "require": "g.jade_slip > 0",
+    "need": "g.channel_arrangement > 0 || g.sit_fernhollow.reps >= 3",
+    "needtext": "Channel stones set in the floor, or three dusks sat in Fernhollow.",
+    "initial": { "value": 0, "max": 5, "open": false },
+    "perLevel": { "vigor.max": 2, "vigor.rate": 0.01, "marrow_herbs.max": 2, "settling.rate": 0.05, "direction_body.rate": 0.02, "cross_body.rate": 0.01, "life.max": 2, "strike.max": 1, "guard.max": 1, "hit.max": 2, "dodge.max": 1 },
+    "events": [{ "id": "turn_holds", "when": "g.circulation >= 2",
+      "text": "The turn holds on its own for a breath. The method is whole enough to settle." }]
+  },
+  {
+    "id": "herbcraft", "name": "Herb Lore", "kind": "family", "group": "Families",
+    "desc": "Granny Shu's eye for a good bundle and a bad one.",
+    "require": "g.shu_apprentice > 0",
+    "initial": { "value": 0, "max": 5, "open": false },
+    "perLevel": { "herbs.max": 2, "rack_tending.rate": 0.05, "survey_marker.rate": 0.05, "trade_marrow_herbs.yield": 1 },
+    "at": { "2": { "herbs.discount": 0.1 } }
+  },
+  {
+    "id": "labour", "name": "Labour", "kind": "family", "group": "Families",
+    "desc": "Sacks, timber and freight harden the back and teach it to pace itself.",
+    "initial": { "value": 0, "max": 5 },
+    "perLevel": { "vigor.max": 1, "vigor.rate": 0.005, "timber.max": 1, "mill_shift.rate": 0.05 },
+    "at": { "3": { "vigor.discount": 0.1 } }
+  },
+  {
+    "id": "stonework", "name": "Stone Sense", "kind": "family", "group": "Families",
+    "desc": "How a stone sits in moving water, and where it will sit again.",
+    "require": "g.channel_observe > 0",
+    "initial": { "value": 0, "max": 5 },
+    "perLevel": { "stone.max": 2, "channel_exercise.rate": 0.05, "clear_channel.rate": 0.1, "stable_point.rate": 0.05 },
+    "at": { "2": { "stone.discount": 0.1 } }
+  },
+  {
+    "id": "composure", "name": "Composure", "kind": "family", "group": "Families",
+    "desc": "Stillness that outlasts the sitting.",
+    "require": "g.fernhollow_observe > 0 || g.jade_slip > 0",
+    "initial": { "value": 0, "max": 5 },
+    "perLevel": { "qi.rate": 0.002, "breath_gathering.rate": 0.05, "strain.max": 1, "strain.rate": 0.002 },
+    "at": { "2": { "strain.discount": 0.1 } }
+  },
+  {
+    "id": "foundation", "name": "Foundation", "kind": "flag", "group": "Milestones",
+    "desc": "The reconstructed method holds without you watching it.",
+    "require": "g.foundation > 0", "initial": { "value": 0, "max": 1 }
+  },
+  {
+    "id": "faint_trace", "name": "Faint trace", "kind": "flag", "group": "Discoveries",
+    "desc": "A thread kept through stillness. It stays distinct from the channel's flow pattern.",
+    "require": "g.faint_trace > 0", "initial": { "value": 0, "max": 1 }
+  }
+]

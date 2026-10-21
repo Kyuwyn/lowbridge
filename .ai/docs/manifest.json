@@ -1,0 +1,147 @@
+{
+  "schema_version": 5,
+  "deepinit_version": "0.7.2",
+  "run_id": "deepinit-20261021T205954Z",
+  "generated": "2026-10-21T21:25:17Z",
+  "canonical": "claude",
+  "root_lean_file": "CLAUDE.md",
+  "nested_lean_files": [
+    "src/data/CLAUDE.md",
+    "scripts/CLAUDE.md",
+    "tests/CLAUDE.md"
+  ],
+  "agents_export": {
+    "emitted": true,
+    "reason": "cross_tool_detected",
+    "cross_tool_consumers": [
+      "codex"
+    ],
+    "file": "AGENTS.md"
+  },
+  "components": {
+    "engine": {
+      "doc": ".ai/docs/components/engine.md",
+      "files": [
+        "src/engine.ts",
+        "src/expression.ts",
+        "src/types.ts"
+      ],
+      "content_hash": "sha256:21dbfde19ca3f70209576fb4ca346e15f91dbb9d76cff457ddde190594057587",
+      "interface_hash": "sha256:e8c1a62e021b1a12d7733fbe24d6061f393a2298a2f9b9fe306f1002a9911ead",
+      "verified_at": "2026-10-21T21:25:17Z",
+      "criticality": "Core"
+    },
+    "content": {
+      "doc": ".ai/docs/components/content.md",
+      "files": [
+        "src/content.ts",
+        "src/data/shared.json",
+        "src/data/opening.json",
+        "src/data/ridge.json"
+      ],
+      "content_hash": "sha256:a2b3986ad686ae2e81971fed1dd818c38872c2aa3469618423d214d2c0b1d145",
+      "interface_hash": "sha256:ba534f5827746c81cdfb76e5fc597ea953db4bf3669902b70a21c7db59e0469f",
+      "verified_at": "2026-10-21T21:25:17Z",
+      "criticality": "Core"
+    },
+    "persistence": {
+      "doc": ".ai/docs/components/persistence.md",
+      "files": [
+        "src/persistence.ts"
+      ],
+      "content_hash": "sha256:5908242bb0c5e0782973170e30ff2449aa368a45e8ec5a6513fb0d0eac998e94",
+      "interface_hash": "sha256:22ea34a1ad2257107f41c9d0cd3935b57a1850aa9d0e48ed0decf595aab93f9a",
+      "verified_at": "2026-10-21T21:25:17Z",
+      "criticality": "Core"
+    },
+    "ui": {
+      "doc": ".ai/docs/components/ui.md",
+      "files": [
+        "src/main.ts",
+        "src/ui.ts",
+        "src/style.css",
+        "index.html"
+      ],
+      "content_hash": "sha256:0ad2d0483a260ecd4f6609606773e9d66c2036eddf893cec840d24a8d560dcfb",
+      "interface_hash": "sha256:2d493a229cd52367a4d1a6181db1b963df759a83a3cfa45811b613dd325b5c44",
+      "verified_at": "2026-10-21T21:25:17Z",
+      "criticality": "Supporting"
+    },
+    "tooling": {
+      "doc": ".ai/docs/components/tooling.md",
+      "files": [
+        "scripts/validate.ts",
+        "scripts/routes.ts",
+        "scripts/browser-smoke.ts",
+        "scripts/build.ts",
+        "scripts/serve.ts",
+        "design/validation/opening-sim.py",
+        "design/validation/b4-gates.py"
+      ],
+      "content_hash": "sha256:aaa5dd862494f8826c71fd4edb5057bb8f9c48867eba66a89610db9f62f6fb17",
+      "interface_hash": "sha256:43156e0de855a9ecdcdf5735e39d305562b5e5d0a2626c17744cbadd4ae2f8c2",
+      "verified_at": "2026-10-21T21:25:17Z",
+      "criticality": "Core"
+    },
+    "tests": {
+      "doc": ".ai/docs/components/tests.md",
+      "files": [
+        "tests/content.test.ts",
+        "tests/engine.test.ts",
+        "tests/persistence.test.ts",
+        "tests/fixtures/v5-save.json",
+        "tests/fixtures/village.json",
+        "tests/fixtures/worlds.ts"
+      ],
+      "content_hash": "sha256:6daab5fc3c853f7cb58ff18618c6178111418f91f4e5f4d8ddea2f91c952229f",
+      "interface_hash": "sha256:e10d25a39052bd7455b5e72ec08e424863118d209ec89f8adc23ee8fd7685a0b",
+      "verified_at": "2026-10-21T21:25:17Z",
+      "criticality": "Supporting"
+    }
+  },
+  "deep_docs": [
+    "decisions.md",
+    "technical-dependencies.md",
+    "data-layer.md",
+    "domain-model.md",
+    "functional-workflows.md",
+    "cross-references.md",
+    "shared-state-conflicts.md",
+    "git-intelligence.md",
+    "issues.md"
+  ],
+  "issues": {
+    "ledger": ".ai/docs/issues.md",
+    "sarif": ".ai/deepinit.sarif",
+    "baseline": ".ai/docs/.issue_baseline.json",
+    "counts": {
+      "open": 7,
+      "resolved": 0,
+      "regressed": 0,
+      "by_severity": {
+        "Medium": 5,
+        "High": 1,
+        "Low": 1
+      }
+    },
+    "refuted": 4
+  },
+  "report": ".ai/report.html",
+  "dashboard": ".ai/dashboard.html",
+  "viewer": ".ai/docs-viewer.html",
+  "lean_budget": {
+    "root": 100
+  },
+  "git": {
+    "available": false,
+    "reason": "no commits yet; churn, bus factor and risk metrics omitted"
+  },
+  "database": {
+    "detected": false
+  },
+  "checks": {
+    "typecheck": "pass",
+    "test": "84/84",
+    "validate": "pass"
+  }
+}

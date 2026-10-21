@@ -1,0 +1,71 @@
+{
+  "version": 1,
+  "generated": "2026-10-21T21:25:17Z",
+  "run_id": "deepinit-20261021T205954Z",
+  "accepted": [],
+  "known": [
+    {
+      "id": "ISS-001",
+      "match_key": "IF-4:src/engine.ts:GameEngine.reconcile#0",
+      "family": "IF-4",
+      "severity": "Medium",
+      "lifecycle": "open",
+      "baseline": "new",
+      "first_seen_run": "deepinit-20261021T205954Z"
+    },
+    {
+      "id": "ISS-002",
+      "match_key": "IF-4:playtest/SIMULATION-REPORT.md:<document>#0",
+      "family": "IF-4",
+      "severity": "Medium",
+      "lifecycle": "open",
+      "baseline": "new",
+      "first_seen_run": "deepinit-20261021T205954Z"
+    },
+    {
+      "id": "ISS-003",
+      "match_key": "IF-4:scripts/validate.ts:FOUNDATION_CEILING#0",
+      "family": "IF-4",
+      "severity": "Medium",
+      "lifecycle": "open",
+      "baseline": "new",
+      "first_seen_run": "deepinit-20261021T205954Z"
+    },
+    {
+      "id": "ISS-004",
+      "match_key": "IF-4:src/engine.ts:GameEngine.resolve#0",
+      "family": "IF-4",
+      "severity": "Medium",
+      "lifecycle": "open",
+      "baseline": "new",
+      "first_seen_run": "deepinit-20261021T205954Z"
+    },
+    {
+      "id": "ISS-005",
+      "match_key": "IF-4:src/persistence.ts:decodeSave#0",
+      "family": "IF-4",
+      "severity": "High",
+      "lifecycle": "open",
+      "baseline": "new",
+      "first_seen_run": "deepinit-20261021T205954Z"
+    },
+    {
+      "id": "ISS-006",
+      "match_key": "IF-3a:src/ui.ts:createUI#0",
+      "family": "IF-3a",
+      "severity": "Low",
+      "lifecycle": "open",
+      "baseline": "new",
+      "first_seen_run": "deepinit-20261021T205954Z"
+    },
+    {
+      "id": "ISS-007",
+      "match_key": "IF-4:CLAUDE.md:<document>#0",
+      "family": "IF-4",
+      "severity": "Medium",
+      "lifecycle": "open",
+      "baseline": "new",
+      "first_seen_run": "deepinit-20261021T205954Z"
+    }
+  ]
+}

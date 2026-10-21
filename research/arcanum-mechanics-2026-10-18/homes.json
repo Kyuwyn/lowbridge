@@ -1,0 +1,592 @@
+[
+ {
+  "id": "alcove",
+  "name": null,
+  "require": "apprentice",
+  "cost": null,
+  "mod": {
+   "space.max": 5
+  },
+  "disable": null
+ },
+ {
+  "id": "earthspire",
+  "name": "earthen spire",
+  "require": "g.geosculpting>=5",
+  "cost": null,
+  "mod": {
+   "space.max": 150,
+   "minions.max": 10,
+   "earthlore.mod.earth.max": 1,
+   "geosculpting.mod.player.defense": 0.2,
+   "earth.max": 5,
+   "earth.rate": 0.5
+  },
+  "disable": null
+ },
+ {
+  "id": "atticbedroom",
+  "name": "Attic Bedroom",
+  "require": "neophyte",
+  "cost": null,
+  "mod": {
+   "space.max": 10
+  },
+  "disable": null
+ },
+ {
+  "id": "innroom",
+  "name": "Lodge at Inn",
+  "require": "tier0",
+  "cost": null,
+  "mod": {
+   "space.max": 12,
+   "gold.rate": -0.25
+  },
+  "disable": null
+ },
+ {
+  "id": "hut",
+  "name": null,
+  "require": "tier0",
+  "cost": null,
+  "mod": {
+   "space.max": 15
+  },
+  "disable": "innroom"
+ },
+ {
+  "id": "camp",
+  "name": null,
+  "require": "g.tier0>0&&g.naturelore>=5",
+  "cost": null,
+  "mod": {
+   "space.max": 14,
+   "lore.rate": -0.1,
+   "research.rate": -0.1,
+   "naturelore.mod.nature.max": 0.25
+  },
+  "disable": "innroom"
+ },
+ {
+  "id": "wagon",
+  "name": "tinker's wagon",
+  "require": "g.tier0>0&&g.naturelore>=5",
+  "cost": null,
+  "mod": {
+   "space.max": 12,
+   "naturelore.mod.minions.max": 0.2,
+   "animals.mod.steed.mod.dist": 2,
+   "inv.max": 5,
+   "gold.max": 100,
+   "mule.mod.inv.max": 2,
+   "mule.mod.gold.max": 50
+  },
+  "disable": "innroom"
+ },
+ {
+  "id": "cottage",
+  "name": null,
+  "require": "tier0",
+  "cost": null,
+  "mod": {
+   "space.max": 20,
+   "minions.max": 1
+  },
+  "disable": "innroom"
+ },
+ {
+  "id": "house",
+  "name": null,
+  "require": "g.tier0>0&&g.arcana.max>=8",
+  "cost": null,
+  "mod": {
+   "space.max": 30,
+   "minions.max": 3
+  },
+  "disable": "innroom"
+ },
+ {
+  "id": "shop",
+  "name": null,
+  "require": "g.tier1>0&&g.crafting>=9",
+  "cost": null,
+  "mod": {
+   "space.max": 25,
+   "minions.max": 2,
+   "magicgems.max": 1,
+   "gold.rate": 0.2,
+   "gold.max": 25,
+   "nature.rate": "-5%",
+   "arcana.rate": -0.002
+  },
+  "disable": null
+ },
+ {
+  "id": "inn",
+  "name": null,
+  "require": "g.tier1>0&&g.languages>=7",
+  "cost": null,
+  "mod": {
+   "space.max": 50,
+   "minions.max": 5,
+   "research.rate": -0.5,
+   "gold.max": 40,
+   "gold.rate": 0.4,
+   "arcana.rate": -0.001
+  },
+  "disable": null
+ },
+ {
+  "id": "lodge",
+  "name": null,
+  "require": "g.tier1>0&&g.naturelore>=7",
+  "cost": null,
+  "mod": {
+   "space.max": 30,
+   "minions.max": 5,
+   "nature.max": 1,
+   "nature.rate": 0.1
+  },
+  "disable": null
+ },
+ {
+  "id": "gabledhouse",
+  "name": "gabled mansion",
+  "require": "g.tier1>0&&g.arcana>=10",
+  "cost": null,
+  "mod": {
+   "space.max": 65,
+   "minions.max": 5
+  },
+  "disable": null
+ },
+ {
+  "id": "halftimber",
+  "name": "half-timber house",
+  "require": "g.tier1>0&&g.arcana>=10",
+  "cost": null,
+  "mod": {
+   "space.max": 75,
+   "minions.max": 7
+  },
+  "disable": null
+ },
+ {
+  "id": "cave",
+  "name": null,
+  "require": "g.tier0>0&&(g.shadow+g.earth+g.nature)>0",
+  "cost": null,
+  "mod": {
+   "space.max": 25,
+   "minions.max": 2,
+   "research.rate": -0.5,
+   "earthlore.mod.earth.max": 0.5,
+   "shadowlore.mod.shadow.max": 0.25,
+   "light.max": -2,
+   "light.rate": "-2%"
+  },
+  "disable": null
+ },
+ {
+  "id": "pavilion",
+  "name": null,
+  "require": "t_divinationclass",
+  "cost": null,
+  "mod": {
+   "space.max": 50,
+   "minions.max": 3,
+   "light.rate": 0.1,
+   "air.rate": 0.1,
+   "mana.rate": 0.1,
+   "shadow.max": -1,
+   "shadow.rate": "-5%"
+  },
+  "disable": null
+ },
+ {
+  "id": "hauntedmanse",
+  "name": "haunted manse",
+  "require": "g.hauntedmanor>0&&g.tier0>0",
+  "cost": null,
+  "mod": {
+   "space.max": 75,
+   "spiritlore.mod.spirit.max": 0.25,
+   "shadow.rate": 0.1,
+   "demonology.mod.minions.max": 1
+  },
+  "disable": null
+ },
+ {
+  "id": "ancientruins",
+  "name": "ancient ruins",
+  "require": "g.spirit>=15&&g.arcana>=12&&g.tier2>0",
+  "cost": null,
+  "mod": {
+   "space.max": 110,
+   "minions.max": 10,
+   "craftrune.cost.tomes": "-50%",
+   "craftrune.cost.managem": "-50%",
+   "demonology.mod.arcana.max": 0.4,
+   "spiritlore.mod.spirit.max": 0.5
+  },
+  "disable": null
+ },
+ {
+  "id": "tower",
+  "name": null,
+  "require": "g.t_knowledgeclass>0&&g.arcana>=20",
+  "cost": null,
+  "mod": {
+   "space.max": 55,
+   "minions.max": 5,
+   "airlore.mod.air.max": 0.25
+  },
+  "disable": null
+ },
+ {
+  "id": "lighthouse",
+  "name": null,
+  "require": "(g.t_knowledgeclass+g.t_elementalclass+g.t_airclass+g.t_waterclass)>0&&g.arcana>=20",
+  "cost": null,
+  "mod": {
+   "space.max": 80,
+   "minions.max": 5,
+   "waterlore.mod.water.max": 0.25,
+   "lightlore.mod.light.max": 0.5
+  },
+  "disable": null
+ },
+ {
+  "id": "cataract",
+  "name": null,
+  "require": "g.excavatewaterfall>0",
+  "cost": null,
+  "mod": {
+   "space.max": 330,
+   "minions.max": 4,
+   "research.rate": "-10%",
+   "waterlore.mod.water.max": 1
+  },
+  "disable": null
+ },
+ {
+  "id": "citadel",
+  "name": null,
+  "require": "(g.t_knowledgeclass+g.t_swordclass+g.t_hammerclass)>0&&g.arcana>=20",
+  "cost": null,
+  "mod": {
+   "space.max": 60,
+   "minions.max": 15,
+   "nature.max": -1,
+   "nature.rate": "-5%"
+  },
+  "disable": null
+ },
+ {
+  "id": "academy",
+  "name": null,
+  "require": "g.research>=400&&g.t_knowledgeclass>0",
+  "cost": null,
+  "mod": {
+   "space.max": 75,
+   "minions.max": 20,
+   "research.max": 50,
+   "research.rate": 0.4
+  },
+  "disable": null
+ },
+ {
+  "id": "temple",
+  "name": null,
+  "require": "(g.t_divinationclass+g.t_lightclass)>0",
+  "cost": null,
+  "mod": {
+   "space.max": 60,
+   "composure.mod.stress.rate": -0.01,
+   "virtue.rate": 0.001,
+   "arcana.rate": 0.001,
+   "minions.max": 8,
+   "lightlore.mod.light.max": 0.6,
+   "shadow.max": -3,
+   "shadow.rate": "-10%"
+  },
+  "disable": null
+ },
+ {
+  "id": "magetower",
+  "name": "mage tower",
+  "require": "g.tier4>0&&g.t_knowledgeclass>=2",
+  "cost": null,
+  "mod": {
+   "space.max": 420,
+   "minions.max": 10,
+   "mysticism.mod.prismatic.rate": 0.01,
+   "prismatic.rate": 0.05,
+   "history.mod.arcana.max": 0.9,
+   "arcana.rate": 0.0001
+  },
+  "disable": null
+ },
+ {
+  "id": "home_idrasil_sapling",
+  "name": "idrasil sapling",
+  "require": "g.idrasilgrow1>0",
+  "cost": null,
+  "mod": {
+   "space.max": 300,
+   "minions.max": 10,
+   "naturelore.mod.nature.max": "0.5",
+   "airlore.mod.air.max": 0.1,
+   "fire.rate": "-3%"
+  },
+  "disable": null
+ },
+ {
+  "id": "palace",
+  "name": null,
+  "require": "g.palacerestoration>0",
+  "cost": null,
+  "mod": {
+   "space.max": 400,
+   "gold.mod.stress.rate": -4e-06,
+   "stress.rate": -0.05,
+   "magicadvice.result.gold": 0.65,
+   "research.rate": -0.5
+  },
+  "disable": null
+ },
+ {
+  "id": "castle",
+  "name": null,
+  "require": "g.castlerestoration>0",
+  "cost": null,
+  "mod": {
+   "space.max": 400,
+   "minions.max": 30,
+   "hall_quest.run": {
+    "hp": "-50%",
+    "stamina": "-50%"
+   },
+   "earthlore.mod.earth.max": 0.1,
+   "earth.rate": 0.1
+  },
+  "disable": null
+ },
+ {
+  "id": "cove",
+  "name": null,
+  "require": "g.tier3>0&&(g.t_elementalclass+g.t_waterclass*2)>=2",
+  "cost": null,
+  "mod": {
+   "space.max": 300,
+   "minions.max": 20,
+   "airlore.mod.air.max": 0.25,
+   "waterlore.mod.water.max": 0.5,
+   "water.max": 2,
+   "water.rate": 0.1
+  },
+  "disable": null
+ },
+ {
+  "id": "cavern",
+  "name": null,
+  "require": "g.tier2>0&&g.earthlore>=10",
+  "cost": null,
+  "mod": {
+   "space.max": 200,
+   "minions.max": 20,
+   "research.rate": -0.5,
+   "earth.rate": 0.2,
+   "earthlore.mod.earth.max": 0.5,
+   "shadow.max": 3,
+   "shadow.rate": 0.2,
+   "demonology.mod.arcana.max": 0.4,
+   "light.max": -3,
+   "light.rate": "-10%"
+  },
+  "disable": null
+ },
+ {
+  "id": "grove",
+  "name": "Enchanted Grove",
+  "require": "g.tier3>0&&(g.t_enchantingclass+g.t_natureclass)>0",
+  "cost": null,
+  "mod": {
+   "space.max": 320,
+   "minions.max": 20,
+   "naturelore.mod.nature.max": 0.5,
+   "enchanting.mod.enchantslots.max": 1
+  },
+  "disable": null
+ },
+ {
+  "id": "island",
+  "name": "Shrouded Isle",
+  "require": "g.tier3>0&&(g.t_enchantingclass+g.t_elementalclass+g.t_spiritclass)>0",
+  "cost": null,
+  "mod": {
+   "space.max": 320,
+   "minions.max": 25,
+   "waterlore.mod.water.max": 0.5,
+   "airlore.mod.air.max": 0.5,
+   "water.rate": 0.1,
+   "air.rate": 0.05
+  },
+  "disable": null
+ },
+ {
+  "id": "facemuseum",
+  "name": "Museum of Faces",
+  "require": "g.tier3>0&&g.trickery>=13",
+  "cost": null,
+  "mod": {
+   "space.max": 300,
+   "chaosgem.mod.chaos.max": "0.01",
+   "chaosrune.mod.research.max": "1%",
+   "facecollect.length": -2
+  },
+  "disable": null
+ },
+ {
+  "id": "home_idrasil_sprout",
+  "name": "idrasil sprout",
+  "require": "g.tier2>0&&g.nature>=8&&g.arcana>=8",
+  "cost": null,
+  "mod": {
+   "space.max": 150,
+   "minions.max": 5,
+   "naturelore.mod.nature.max": "0.25",
+   "airlore.mod.air.max": 0.05,
+   "fire.rate": "-3%"
+  },
+  "disable": null
+ },
+ {
+  "id": "home_idrasil_tree",
+  "name": "idrasil tree",
+  "require": "g.idrasilgrow2>0",
+  "cost": null,
+  "mod": {
+   "space.max": 400,
+   "minions.max": 20,
+   "naturelore.mod.nature.max": "1",
+   "airlore.mod.air.max": 0.2,
+   "fire.rate": "-3%"
+  },
+  "disable": null
+ },
+ {
+  "id": "home_collective",
+  "name": "collective",
+  "require": "g.foundcollective>0",
+  "cost": null,
+  "mod": {
+   "space.max": 150,
+   "minions.max": 10,
+   "allies.max": 10,
+   "charms.mod": {
+    "minions.max": "5%",
+    "allies.max": 1
+   },
+   "summoning.mod": {
+    "minions.max": 1.5,
+    "allies.max": 1
+   },
+   "animals.mod.minions.max": 0.1,
+   "magicbeasts.mod.allies.max": 0.25
+  },
+  "disable": null
+ },
+ {
+  "id": "home_caravan",
+  "name": "caravan",
+  "require": "g.establishcaravan>0",
+  "cost": null,
+  "mod": {
+   "space.max": 150,
+   "inv.max": 30,
+   "gold.max": 100,
+   "allies.max": 8,
+   "minions.max": 8,
+   "animals.mod.steed.mod.dist": 2,
+   "magicbeasts.mod.steed.mod.dist": 2,
+   "steed.mod": {
+    "dist": 50,
+    "inv.max": 20,
+    "gold.max": 50
+   }
+  },
+  "disable": null
+ },
+ {
+  "id": "home_emporium",
+  "name": "emporium",
+  "require": "g.buildemporium>0",
+  "cost": null,
+  "mod": {
+   "space.max": 150,
+   "gold": {
+    "max": 1000,
+    "rate": 2.5
+   },
+   "gems": {
+    "max": 10,
+    "rate": 0.01
+   },
+   "magicgems.max": 3,
+   "minions.max": 10,
+   "arcana.rate": -0.001,
+   "shopkeeping.mod": {
+    "gold": {
+     "max": 10,
+     "rate": 0.01
+    },
+    "gems": {
+     "max": 1,
+     "rate": 0.001
+    }
+   },
+   "t_bulk_sale_task.result.gold": "15%"
+  },
+  "disable": null
+ },
+ {
+  "id": "home_waterfall",
+  "name": "waterfall",
+  "require": "g.water>=6&&g.naturelore>=6&&g.tier1>0",
+  "cost": null,
+  "mod": {
+   "space.max": 50,
+   "minions.max": 2,
+   "research.rate": "-5%",
+   "waterlore.mod.water.max": 0.5,
+   "lightlore.rate": -0.4
+  },
+  "disable": null
+ },
+ {
+  "id": "ruinedpalace",
+  "name": "mouldering palace",
+  "require": "g.tier2>0",
+  "cost": null,
+  "mod": {
+   "space.max": 150,
+   "stress.rate": -0.025,
+   "research.rate": -0.5
+  },
+  "disable": null
+ },
+ {
+  "id": "ruinedcastle",
+  "name": "crumbling castle",
+  "require": "g.tier2>0",
+  "cost": null,
+  "mod": {
+   "space.max": 150,
+   "minions.max": 10,
+   "earth.rate": 0.1
+  },
+  "disable": null
+ }
+]

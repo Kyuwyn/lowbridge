@@ -1,0 +1,684 @@
+{
+  "focused": {
+    "stages": [
+      {
+        "stage": 1,
+        "hours": 8.0,
+        "cumulative": 8.0,
+        "age_at_one_hour_per_sixth_year": 19.333
+      },
+      {
+        "stage": 2,
+        "hours": 20.35,
+        "cumulative": 28.35,
+        "age_at_one_hour_per_sixth_year": 22.725
+      },
+      {
+        "stage": 3,
+        "hours": 12.55,
+        "cumulative": 40.9,
+        "age_at_one_hour_per_sixth_year": 24.817
+      },
+      {
+        "stage": 4,
+        "hours": 35.2,
+        "cumulative": 76.1,
+        "age_at_one_hour_per_sixth_year": 30.683
+      }
+    ],
+    "hours": 76.1,
+    "runs": [
+      {
+        "interval_hours": 12,
+        "cap_hours": 48,
+        "checkpoint_hours": {
+          "1": 24.067,
+          "2": 36.033,
+          "3": 48.167,
+          "4": 84.033
+        },
+        "completion_days": 3.501,
+        "visits": 8,
+        "decisions": 66,
+        "max_decisions_in_visit": 10,
+        "bank_at_finish": 7.933,
+        "cap_loss": 0.0
+      },
+      {
+        "interval_hours": 12,
+        "cap_hours": 72,
+        "checkpoint_hours": {
+          "1": 24.067,
+          "2": 36.033,
+          "3": 48.167,
+          "4": 84.033
+        },
+        "completion_days": 3.501,
+        "visits": 8,
+        "decisions": 66,
+        "max_decisions_in_visit": 10,
+        "bank_at_finish": 7.933,
+        "cap_loss": 0.0
+      },
+      {
+        "interval_hours": 8,
+        "cap_hours": 48,
+        "checkpoint_hours": {
+          "1": 16.067,
+          "2": 32.033,
+          "3": 48.133,
+          "4": 76.1
+        },
+        "completion_days": 3.171,
+        "visits": 10,
+        "decisions": 66,
+        "max_decisions_in_visit": 10,
+        "bank_at_finish": 0.0,
+        "cap_loss": 0.0
+      },
+      {
+        "interval_hours": 8,
+        "cap_hours": 72,
+        "checkpoint_hours": {
+          "1": 16.067,
+          "2": 32.033,
+          "3": 48.133,
+          "4": 76.1
+        },
+        "completion_days": 3.171,
+        "visits": 10,
+        "decisions": 66,
+        "max_decisions_in_visit": 10,
+        "bank_at_finish": 0.0,
+        "cap_loss": 0.0
+      }
+    ],
+    "tasks": [
+      {
+        "key": "fragment_qi",
+        "h": 0.05,
+        "stage": 1,
+        "checkpoint": false
+      },
+      {
+        "key": "perception",
+        "h": 0.5,
+        "stage": 1,
+        "checkpoint": false
+      },
+      {
+        "key": "earn_opening_gear",
+        "h": 0.25,
+        "stage": 1,
+        "checkpoint": false
+      },
+      {
+        "key": "channel_observation",
+        "h": 0.1,
+        "stage": 1,
+        "checkpoint": false
+      },
+      {
+        "key": "channel_arrangement_learning",
+        "h": 1,
+        "stage": 1,
+        "checkpoint": false
+      },
+      {
+        "key": "initial_method_practice",
+        "h": 2,
+        "stage": 1,
+        "checkpoint": false
+      },
+      {
+        "key": "followup_observation",
+        "h": 0.1,
+        "stage": 1,
+        "checkpoint": false
+      },
+      {
+        "key": "reconstructed_method",
+        "h": 3.75,
+        "stage": 1,
+        "checkpoint": false
+      },
+      {
+        "key": "foundation",
+        "h": 0.25,
+        "stage": 1,
+        "checkpoint": true
+      },
+      {
+        "key": "body_teaching",
+        "h": 8,
+        "stage": 2,
+        "checkpoint": false
+      },
+      {
+        "key": "marker_and_load_finding",
+        "h": 0.1,
+        "stage": 2,
+        "checkpoint": false
+      },
+      {
+        "key": "body_practice",
+        "h": 12,
+        "stage": 2,
+        "checkpoint": false
+      },
+      {
+        "key": "body_breakthrough",
+        "h": 0.25,
+        "stage": 2,
+        "checkpoint": true
+      },
+      {
+        "key": "crossing_and_service_access",
+        "h": 0.1,
+        "stage": 3,
+        "checkpoint": false
+      },
+      {
+        "key": "iron_teaching",
+        "h": 0.25,
+        "stage": 3,
+        "checkpoint": false
+      },
+      {
+        "key": "earn_missing_third_gear",
+        "h": 2,
+        "stage": 3,
+        "checkpoint": false
+      },
+      {
+        "key": "training_setup",
+        "h": 0.03,
+        "stage": 3,
+        "checkpoint": false
+      },
+      {
+        "key": "iron_practice",
+        "h": 10,
+        "stage": 3,
+        "checkpoint": false
+      },
+      {
+        "key": "chime",
+        "h": 0.03,
+        "stage": 3,
+        "checkpoint": false
+      },
+      {
+        "key": "survey_spur",
+        "h": 0.08,
+        "stage": 3,
+        "checkpoint": false
+      },
+      {
+        "key": "local_travel",
+        "h": 0.02,
+        "stage": 3,
+        "checkpoint": false
+      },
+      {
+        "key": "iron_breakthrough",
+        "h": 0.04,
+        "stage": 3,
+        "checkpoint": true
+      },
+      {
+        "key": "first_basin_journey",
+        "h": 0.25,
+        "stage": 4,
+        "checkpoint": false
+      },
+      {
+        "key": "outer_observation",
+        "h": 0.25,
+        "stage": 4,
+        "checkpoint": false
+      },
+      {
+        "key": "report_and_control_lesson",
+        "h": 0.25,
+        "stage": 4,
+        "checkpoint": false
+      },
+      {
+        "key": "gentle_control",
+        "h": 6,
+        "stage": 4,
+        "checkpoint": false
+      },
+      {
+        "key": "deeper_site_and_shelter",
+        "h": 0.25,
+        "stage": 4,
+        "checkpoint": false
+      },
+      {
+        "key": "jade_teaching",
+        "h": 6,
+        "stage": 4,
+        "checkpoint": false
+      },
+      {
+        "key": "reinforced_adaptation",
+        "h": 4,
+        "stage": 4,
+        "checkpoint": false
+      },
+      {
+        "key": "jade_practice",
+        "h": 10,
+        "stage": 4,
+        "checkpoint": false
+      },
+      {
+        "key": "trial_setup",
+        "h": 0.1,
+        "stage": 4,
+        "checkpoint": false
+      },
+      {
+        "key": "intake",
+        "h": 0.1,
+        "stage": 4,
+        "checkpoint": false
+      },
+      {
+        "key": "slow_settling",
+        "h": 8,
+        "stage": 4,
+        "checkpoint": true
+      }
+    ]
+  },
+  "curious": {
+    "stages": [
+      {
+        "stage": 1,
+        "hours": 8.0,
+        "cumulative": 8.0,
+        "age_at_one_hour_per_sixth_year": 19.333
+      },
+      {
+        "stage": 2,
+        "hours": 24.2,
+        "cumulative": 32.2,
+        "age_at_one_hour_per_sixth_year": 23.367
+      },
+      {
+        "stage": 3,
+        "hours": 19.5,
+        "cumulative": 51.7,
+        "age_at_one_hour_per_sixth_year": 26.617
+      },
+      {
+        "stage": 4,
+        "hours": 28.75,
+        "cumulative": 80.45,
+        "age_at_one_hour_per_sixth_year": 31.408
+      }
+    ],
+    "hours": 80.45,
+    "runs": [
+      {
+        "interval_hours": 12,
+        "cap_hours": 48,
+        "checkpoint_hours": {
+          "1": 24.067,
+          "2": 48.033,
+          "3": 84.067,
+          "4": 108.067
+        },
+        "completion_days": 4.503,
+        "visits": 10,
+        "decisions": 88,
+        "max_decisions_in_visit": 10,
+        "bank_at_finish": 27.617,
+        "cap_loss": 0.0
+      },
+      {
+        "interval_hours": 12,
+        "cap_hours": 72,
+        "checkpoint_hours": {
+          "1": 24.067,
+          "2": 48.033,
+          "3": 84.067,
+          "4": 108.067
+        },
+        "completion_days": 4.503,
+        "visits": 10,
+        "decisions": 88,
+        "max_decisions_in_visit": 10,
+        "bank_at_finish": 27.617,
+        "cap_loss": 0.0
+      },
+      {
+        "interval_hours": 8,
+        "cap_hours": 48,
+        "checkpoint_hours": {
+          "1": 16.067,
+          "2": 32.2,
+          "3": 64.033,
+          "4": 80.45
+        },
+        "completion_days": 3.352,
+        "visits": 11,
+        "decisions": 87,
+        "max_decisions_in_visit": 10,
+        "bank_at_finish": 0.0,
+        "cap_loss": 0.0
+      },
+      {
+        "interval_hours": 8,
+        "cap_hours": 72,
+        "checkpoint_hours": {
+          "1": 16.067,
+          "2": 32.2,
+          "3": 64.033,
+          "4": 80.45
+        },
+        "completion_days": 3.352,
+        "visits": 11,
+        "decisions": 87,
+        "max_decisions_in_visit": 10,
+        "bank_at_finish": 0.0,
+        "cap_loss": 0.0
+      }
+    ],
+    "tasks": [
+      {
+        "key": "fragment_qi",
+        "h": 0.05,
+        "stage": 1,
+        "checkpoint": false
+      },
+      {
+        "key": "perception",
+        "h": 0.5,
+        "stage": 1,
+        "checkpoint": false
+      },
+      {
+        "key": "earn_opening_gear",
+        "h": 0.25,
+        "stage": 1,
+        "checkpoint": false
+      },
+      {
+        "key": "channel_observation",
+        "h": 0.1,
+        "stage": 1,
+        "checkpoint": false
+      },
+      {
+        "key": "channel_arrangement_learning",
+        "h": 1,
+        "stage": 1,
+        "checkpoint": false
+      },
+      {
+        "key": "initial_method_practice",
+        "h": 2,
+        "stage": 1,
+        "checkpoint": false
+      },
+      {
+        "key": "followup_observation",
+        "h": 0.1,
+        "stage": 1,
+        "checkpoint": false
+      },
+      {
+        "key": "reconstructed_method",
+        "h": 3.75,
+        "stage": 1,
+        "checkpoint": false
+      },
+      {
+        "key": "foundation",
+        "h": 0.25,
+        "stage": 1,
+        "checkpoint": true
+      },
+      {
+        "key": "missing_hollow_perception",
+        "h": 2,
+        "stage": 2,
+        "checkpoint": false
+      },
+      {
+        "key": "hollow_observation",
+        "h": 0.1,
+        "stage": 2,
+        "checkpoint": false
+      },
+      {
+        "key": "attention_exercise",
+        "h": 1,
+        "stage": 2,
+        "checkpoint": false
+      },
+      {
+        "key": "earn_intro_blade",
+        "h": 0.25,
+        "stage": 2,
+        "checkpoint": false
+      },
+      {
+        "key": "sword_intro_only",
+        "h": 0.5,
+        "stage": 2,
+        "checkpoint": false
+      },
+      {
+        "key": "body_teaching",
+        "h": 8,
+        "stage": 2,
+        "checkpoint": false
+      },
+      {
+        "key": "marker_and_load_finding",
+        "h": 0.1,
+        "stage": 2,
+        "checkpoint": false
+      },
+      {
+        "key": "body_practice",
+        "h": 12,
+        "stage": 2,
+        "checkpoint": false
+      },
+      {
+        "key": "body_breakthrough",
+        "h": 0.25,
+        "stage": 2,
+        "checkpoint": true
+      },
+      {
+        "key": "crossing_and_service_access",
+        "h": 0.1,
+        "stage": 3,
+        "checkpoint": false
+      },
+      {
+        "key": "iron_teaching",
+        "h": 0.25,
+        "stage": 3,
+        "checkpoint": false
+      },
+      {
+        "key": "earn_study_space",
+        "h": 2,
+        "stage": 3,
+        "checkpoint": false
+      },
+      {
+        "key": "adapt_study_space",
+        "h": 0.1,
+        "stage": 3,
+        "checkpoint": false
+      },
+      {
+        "key": "earn_missing_third_gear",
+        "h": 2,
+        "stage": 3,
+        "checkpoint": false
+      },
+      {
+        "key": "training_setup",
+        "h": 0.03,
+        "stage": 3,
+        "checkpoint": false
+      },
+      {
+        "key": "iron_practice",
+        "h": 8,
+        "stage": 3,
+        "checkpoint": false
+      },
+      {
+        "key": "chime",
+        "h": 0.03,
+        "stage": 3,
+        "checkpoint": false
+      },
+      {
+        "key": "survey_spur",
+        "h": 0.08,
+        "stage": 3,
+        "checkpoint": false
+      },
+      {
+        "key": "local_travel",
+        "h": 0.02,
+        "stage": 3,
+        "checkpoint": false
+      },
+      {
+        "key": "first_basin_journey",
+        "h": 0.25,
+        "stage": 3,
+        "checkpoint": false
+      },
+      {
+        "key": "outer_observation",
+        "h": 0.25,
+        "stage": 3,
+        "checkpoint": false
+      },
+      {
+        "key": "report_and_control_lesson",
+        "h": 0.25,
+        "stage": 3,
+        "checkpoint": false
+      },
+      {
+        "key": "gentle_control",
+        "h": 6,
+        "stage": 3,
+        "checkpoint": false
+      },
+      {
+        "key": "return_from_early_visit",
+        "h": 0.1,
+        "stage": 3,
+        "checkpoint": false
+      },
+      {
+        "key": "iron_breakthrough",
+        "h": 0.04,
+        "stage": 3,
+        "checkpoint": true
+      },
+      {
+        "key": "return_to_basin",
+        "h": 0.1,
+        "stage": 4,
+        "checkpoint": false
+      },
+      {
+        "key": "deeper_site_and_shelter",
+        "h": 0.25,
+        "stage": 4,
+        "checkpoint": false
+      },
+      {
+        "key": "jade_teaching",
+        "h": 6,
+        "stage": 4,
+        "checkpoint": false
+      },
+      {
+        "key": "reinforced_adaptation",
+        "h": 4,
+        "stage": 4,
+        "checkpoint": false
+      },
+      {
+        "key": "jade_practice",
+        "h": 10,
+        "stage": 4,
+        "checkpoint": false
+      },
+      {
+        "key": "trial_setup",
+        "h": 0.1,
+        "stage": 4,
+        "checkpoint": false
+      },
+      {
+        "key": "intake",
+        "h": 0.1,
+        "stage": 4,
+        "checkpoint": false
+      },
+      {
+        "key": "controlled_withdrawal",
+        "h": 0.1,
+        "stage": 4,
+        "checkpoint": false
+      },
+      {
+        "key": "retry_intake",
+        "h": 0.1,
+        "stage": 4,
+        "checkpoint": false
+      },
+      {
+        "key": "slow_settling",
+        "h": 8,
+        "stage": 4,
+        "checkpoint": true
+      }
+    ]
+  },
+  "reserve_checks": [
+    {
+      "stage": 1,
+      "cumulative_reserve_hours": 1.1,
+      "age": 19.517,
+      "unextended_margin": 60.483
+    },
+    {
+      "stage": 2,
+      "cumulative_reserve_hours": 1.6,
+      "age": 23.633,
+      "unextended_margin": 56.367
+    },
+    {
+      "stage": 3,
+      "cumulative_reserve_hours": 1.9500000000000002,
+      "age": 26.942,
+      "unextended_margin": 53.058
+    },
+    {
+      "stage": 4,
+      "cumulative_reserve_hours": 2.2,
+      "age": 31.775,
+      "unextended_margin": 48.225
+    }
+  ]
+}

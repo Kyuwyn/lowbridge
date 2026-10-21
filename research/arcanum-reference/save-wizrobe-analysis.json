@@ -1,0 +1,654 @@
+{
+ "version": "unstable 0.12.12.9",
+ "name": "Wizrobe",
+ "lastUpdate": 1792443984193,
+ "classes": [
+  "apprentice",
+  "falconer",
+  "adept",
+  "warden",
+  "shapechanger",
+  "druid",
+  "protean"
+ ],
+ "titles": [
+  "Waif",
+  "Apprentice",
+  "Falconer",
+  "Certified",
+  "Master Of The Cellar",
+  "Adept",
+  "Warden",
+  "Goblin Slayer",
+  "Shapechanger",
+  "Historian",
+  "Mountaineer",
+  "Spider Slayer",
+  "Druid",
+  "Mark Of Ages",
+  "Protean"
+ ],
+ "level": 28,
+ "player": {
+  "level": 28,
+  "exp": 1043.6278980580441,
+  "stamina": 76.30239999999999,
+  "hp": 302.08000000000004,
+  "barrier": 70,
+  "tohit": 1,
+  "fame": 28.299999999999997,
+  "virtue": 49.69999999999993,
+  "breath": 16.029411764705884,
+  "evilamt": -3
+ },
+ "slots": {
+  "rest": "rest",
+  "bed": "fourposter",
+  "mount": "flyingcarpet",
+  "home": "home_idrasil_sapling",
+  "bodyplan": "bearshape",
+  "leisure": "naturecamprest",
+  "companion": "wolfcomp"
+ },
+ "runner": {
+  "max": 1,
+  "waiting": [
+   "spiritanatomy"
+  ],
+  "actives": [
+   "rest",
+   "naturelore",
+   "craftgem"
+  ]
+ },
+ "spellbar": {
+  "bars": [
+   {
+    "slots": [
+     "mk_spirit",
+     "poisonnettle",
+     "magicmissile",
+     "vinewhip",
+     "mk_spider",
+     "mk_shrooms",
+     null,
+     null,
+     null,
+     null
+    ]
+   }
+  ],
+  "index": 0,
+  "max": 1
+ },
+ "resources": {
+  "research": {
+   "val": 875.5091561877979,
+   "data_base_max": 10
+  },
+  "arcana": {
+   "val": 99.80665130958721,
+   "data_base_max": 0
+  },
+  "scrolls": {
+   "val": 98.71114498632566,
+   "data_base_max": 10
+  },
+  "codices": {
+   "val": 56.015938005726724,
+   "data_base_max": 10
+  },
+  "gems": {
+   "val": 110.12997176470925,
+   "data_base_max": 5
+  },
+  "managem": {
+   "val": 0.9946500000000285,
+   "data_base_max": 2
+  },
+  "watergem": {
+   "val": 21.015703476076403,
+   "data_base_max": 2
+  },
+  "naturegem": {
+   "val": 7.84147045178463,
+   "data_base_max": 2
+  },
+  "earthgem": {
+   "val": 29.957434801864252,
+   "data_base_max": 2
+  },
+  "shadowgem": {
+   "val": null,
+   "data_base_max": 2
+  },
+  "lightgem": {
+   "val": 12.998675000000077,
+   "data_base_max": 2
+  },
+  "herbs": {
+   "val": 175,
+   "data_base_max": 10
+  },
+  "space": {
+   "val": null,
+   "data_base_max": 0
+  },
+  "vigor": {
+   "val": 71.5,
+   "data_base_max": 10
+  },
+  "mana": {
+   "val": 16.21036000000001,
+   "data_base_max": 0
+  },
+  "fire": {
+   "val": 9,
+   "data_base_max": 0
+  },
+  "air": {
+   "val": 16.400000000000002,
+   "data_base_max": 0
+  },
+  "earth": {
+   "val": 14.3,
+   "data_base_max": 0
+  },
+  "water": {
+   "val": 18.75,
+   "data_base_max": 0
+  },
+  "nature": {
+   "val": 44.5,
+   "data_base_max": 0
+  },
+  "shadow": {
+   "val": 18.200000000000003,
+   "data_base_max": 0
+  },
+  "spirit": {
+   "val": 15.4,
+   "data_base_max": 0
+  },
+  "iron": {
+   "val": 9,
+   "data_base_max": 50
+  },
+  "leather": {
+   "val": 32,
+   "data_base_max": 50
+  },
+  "cotton": {
+   "val": 40,
+   "data_base_max": 50
+  },
+  "gold": {
+   "val": 1075.6008474076468,
+   "data_base_max": 5
+  },
+  "runestones": {
+   "val": 15,
+   "data_base_max": 10
+  },
+  "spiritgem": {
+   "val": 0.03600000000000014,
+   "data_base_max": 2
+  },
+  "light": {
+   "val": 13.8,
+   "data_base_max": 0
+  },
+  "tomes": {
+   "val": 25.228391036409487,
+   "data_base_max": 5
+  },
+  "firegem": {
+   "val": 4.691196333598301,
+   "data_base_max": 2
+  },
+  "airgem": {
+   "val": 2.662900723060652,
+   "data_base_max": 2
+  },
+  "bloodgem": {
+   "val": 66.77019999999887,
+   "data_base_max": 2
+  },
+  "ichor": {
+   "val": 4.778282499998323,
+   "data_base_max": 5
+  },
+  "potionessence": {
+   "val": 3,
+   "data_base_max": 3
+  },
+  "puppets": {
+   "val": 3,
+   "data_base_max": 20
+  },
+  "machinae": {
+   "val": 2,
+   "data_base_max": 20
+  },
+  "domain_happiness": {
+   "val": 200,
+   "data_base_max": 100
+  },
+  "debt": {
+   "val": 0.010294444203638658,
+   "data_base_max": 500
+  },
+  "quicksteel": {
+   "val": 25.70192781539336,
+   "data_base_max": 50
+  },
+  "serpentskin": {
+   "val": 29.990032776573084,
+   "data_base_max": 50
+  },
+  "rubies": {
+   "val": 20.29779683838766,
+   "data_base_max": 50
+  },
+  "tempus": {
+   "val": 8,
+   "data_base_max": 0
+  },
+  "spidersilk": {
+   "val": 33.54379900361353,
+   "data_base_max": 50
+  },
+  "offlinetime": {
+   "val": 8384.801000000005,
+   "data_base_max": 3600
+  }
+ },
+ "skills": {
+  "crafting": {
+   "level": 19,
+   "ex": null,
+   "data_base_max": 5
+  },
+  "lore": {
+   "level": 20,
+   "ex": null,
+   "data_base_max": 5
+  },
+  "spellcraft": {
+   "level": 5,
+   "ex": null,
+   "data_base_max": 1
+  },
+  "concentrate": {
+   "level": 5,
+   "ex": 84.26994399999998,
+   "data_base_max": 5
+  },
+  "composure": {
+   "level": 7,
+   "ex": 146.74459179999997,
+   "data_base_max": 5
+  },
+  "trickery": {
+   "level": 11,
+   "ex": 74.96663300000013,
+   "data_base_max": 5
+  },
+  "conjuration": {
+   "level": 5,
+   "ex": 44.02243999999989,
+   "data_base_max": 5
+  },
+  "runelore": {
+   "level": 6,
+   "ex": null,
+   "data_base_max": 5
+  },
+  "animals": {
+   "level": 21,
+   "ex": null,
+   "data_base_max": 5
+  },
+  "magicbeasts": {
+   "level": 10,
+   "ex": null,
+   "data_base_max": 5
+  },
+  "charms": {
+   "level": 6,
+   "ex": 23.908670100000013,
+   "data_base_max": 5
+  },
+  "herbalism": {
+   "level": 15,
+   "ex": null,
+   "data_base_max": 5
+  },
+  "weaving": {
+   "level": 5,
+   "ex": null,
+   "data_base_max": 5
+  },
+  "languages": {
+   "level": 12,
+   "ex": 146.22577420000025,
+   "data_base_max": 5
+  },
+  "history": {
+   "level": 11,
+   "ex": null,
+   "data_base_max": 5
+  },
+  "anatomy": {
+   "level": 18,
+   "ex": null,
+   "data_base_max": 5
+  },
+  "vivification": {
+   "level": 5,
+   "ex": null,
+   "data_base_max": 5
+  },
+  "summoning": {
+   "level": 11,
+   "ex": null,
+   "data_base_max": 5
+  },
+  "divination": {
+   "level": 10,
+   "ex": null,
+   "data_base_max": 1
+  },
+  "lightlore": {
+   "level": 10,
+   "ex": 370.984307900008,
+   "data_base_max": 1
+  },
+  "shadowlore": {
+   "level": 14,
+   "ex": 157.0038807000014,
+   "data_base_max": 1
+  },
+  "spiritlore": {
+   "level": 8,
+   "ex": 591.9679160757007,
+   "data_base_max": 1
+  },
+  "firelore": {
+   "level": 9,
+   "ex": null,
+   "data_base_max": 1
+  },
+  "earthlore": {
+   "level": 13,
+   "ex": 406.8594163000066,
+   "data_base_max": 1
+  },
+  "waterlore": {
+   "level": 15,
+   "ex": 109.30121009999961,
+   "data_base_max": 1
+  },
+  "airlore": {
+   "level": 14,
+   "ex": 248.44838180000392,
+   "data_base_max": 1
+  },
+  "naturelore": {
+   "level": 25,
+   "ex": 499.4306590000044,
+   "data_base_max": 1
+  },
+  "potions": {
+   "level": 11,
+   "ex": 93.3700139999996,
+   "data_base_max": 5
+  },
+  "enchanting": {
+   "level": 7,
+   "ex": 74.99043600000006,
+   "data_base_max": 5
+  },
+  "alchemy": {
+   "level": 8,
+   "ex": null,
+   "data_base_max": 1
+  },
+  "astronomy": {
+   "level": 18,
+   "ex": null,
+   "data_base_max": 5
+  },
+  "mysticism": {
+   "level": 6,
+   "ex": 6.150785500000002,
+   "data_base_max": 5
+  },
+  "planeslore": {
+   "level": 7,
+   "ex": null,
+   "data_base_max": 1
+  },
+  "chronomancy": {
+   "level": 7,
+   "ex": 74.48141800000006,
+   "data_base_max": 1
+  },
+  "scrying": {
+   "level": 7,
+   "ex": 32.097110099999995,
+   "data_base_max": 5
+  },
+  "heallore": {
+   "level": 6,
+   "ex": null,
+   "data_base_max": 5
+  },
+  "puppetry": {
+   "level": 8,
+   "ex": null,
+   "data_base_max": 5
+  },
+  "magicalanimation": {
+   "level": 6,
+   "ex": null,
+   "data_base_max": 5
+  },
+  "machinacreation": {
+   "level": 5,
+   "ex": null,
+   "data_base_max": 5
+  },
+  "citynavigation": {
+   "level": 8,
+   "ex": null,
+   "data_base_max": 5
+  },
+  "shopkeeping": {
+   "level": 9,
+   "ex": null,
+   "data_base_max": 5
+  },
+  "debitomancy": {
+   "level": 6,
+   "ex": null,
+   "data_base_max": 5
+  },
+  "weaponlore": {
+   "level": 8,
+   "ex": null,
+   "data_base_max": 5
+  },
+  "naturelore2": {
+   "level": 6,
+   "ex": null,
+   "data_base_max": 5
+  }
+ },
+ "quests_done": [
+  "neophyte",
+  "t0unlocker",
+  "q_t0mustylibrary",
+  "q_t0mount",
+  "q_t0arcanaaction",
+  "q_t0spells",
+  "t1unlocker",
+  "q_t1mana",
+  "q_t1explore",
+  "q_t1house",
+  "q_t1loom",
+  "q_t1equip",
+  "t2unlocker",
+  "q_t2explore",
+  "q_t2enchanting",
+  "q_t2potion",
+  "q_t2shopkeeping",
+  "t3unlocker",
+  "q_t3combat_spider",
+  "q_t3combat_gorborung",
+  "q_t3books",
+  "q_t3study",
+  "t4unlocker",
+  "q_t4books",
+  "q_t4combat",
+  "q_t4explore",
+  "q_t4chronomancy",
+  "q_t4spellcraft",
+  "q_t4rune",
+  "q_t5vivification"
+ ],
+ "quests_visible_not_done": [
+  "t_0",
+  "t_1",
+  "q_t1combat",
+  "t_2",
+  "t_3",
+  "q_t2combat",
+  "q_t2morality",
+  "q_t3explore",
+  "t_4",
+  "t_5",
+  "t5unlocker",
+  "q_t5combat_plane",
+  "q_t5combat_desilla",
+  "q_t5frosted",
+  "q_t5nexus"
+ ],
+ "homes_owned": [
+  "atticbedroom",
+  "camp",
+  "home_waterfall",
+  "wildcamp",
+  "home_idrasil_sprout",
+  "home_idrasil_sapling"
+ ],
+ "dungeons_cleared": {
+  "Stony Hills": 1,
+  "Treffil Woods edges": 1,
+  "Stony Hills Caves": 1,
+  "Under Den": 1,
+  "Arag Heights": 1,
+  "Goblin Camp": 1,
+  "Arag Wastes": 1,
+  "Orc Camp": 1,
+  "Elemental Rift": 4,
+  "Skittering Caverns": 1,
+  "Ogre Cavern": 1,
+  "Mount Gorborung": 1,
+  "Veldran's Storehouse": 1,
+  "Seredite Temple": 1,
+  "Veldran's Wreck": 1,
+  "training grounds": 1,
+  "reedburgh city first ring sewer": 1
+ },
+ "locales_cleared": {
+  "musty library": 4,
+  "lillit's spring": 2,
+  "eryl eyot": 2,
+  "Explore Treffil Wood": 4,
+  "Stony Hills spelunking": 1,
+  "pidwig's cove": 2,
+  "rithel": 1,
+  "Ruined Crypt": 1,
+  "Genezereth": 2,
+  "hall of ages": 1,
+  "Village fields": 1,
+  "reedburgh Markets": 1,
+  "reedburgh Gymnasium": 1
+ },
+ "upgrades_owned_count": 218,
+ "furniture_owned": {
+  "small chest": 1,
+  "iron chest": 1,
+  "writing desk": 1,
+  "pedestal": 1,
+  "scroll loom": 3,
+  "fourposter": 1,
+  "vault": 1,
+  "treasure room": 1,
+  "enchanting table": 1,
+  "menagerie": 1,
+  "arcane archive": 2,
+  "personal study": 1,
+  "workshop": 1,
+  "binding circle": 1,
+  "Codex Loom": 3,
+  "Tome Loom": 1,
+  "Guard Post": 1,
+  "clepsydra": 1,
+  "garden": 1,
+  "library": 1,
+  "Archers' Tower": 1
+ },
+ "spells_known": [
+  "lesser obscuring shadows",
+  "poison nettles",
+  "lesser whirling step",
+  "whirling step",
+  "magic missile",
+  "Call Spirit",
+  "vine whip",
+  "summon spider",
+  "natural instinct",
+  "guided strike",
+  "stone skin",
+  "iron skin",
+  "steel skin",
+  "calming murmurs",
+  "soothing breeze",
+  "lesser life's bloom",
+  "lesser etherealness",
+  "secondary growth"
+ ],
+ "counts_by_type": {
+  "?": 53,
+  "quests": 45,
+  "rares": 47,
+  "equipslots": 17,
+  "stressors": 5,
+  "locales": 24,
+  "encounters": 113,
+  "sections": 14,
+  "enchants": 48,
+  "classes": 38,
+  "events": 17,
+  "dungeons": 34,
+  "monsters": 112,
+  "spells": 340,
+  "player": 10,
+  "skills": 69,
+  "furniture": 81,
+  "homes": 23,
+  "tasks": 405,
+  "upgrades": 279,
+  "resources": 45,
+  "clashes": 8,
+  "zones": 4,
+  "invaders": 16,
+  "items": 4,
+  "materials": 22,
+  "armors": 48,
+  "weapons": 27,
+  "potions": 37
+ }
+}

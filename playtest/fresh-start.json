@@ -1,0 +1,49 @@
+{
+  "format": "lowbridge-save",
+  "version": 6,
+  "savedAt": 1792364600000,
+  "activitySeconds": 0,
+  "wallRemainder": 0,
+  "bank": 0,
+  "items": {
+    "coin": {
+      "seen": true
+    },
+    "herbs": {
+      "seen": true
+    },
+    "vigor": {
+      "seen": true
+    },
+    "home_space": {
+      "seen": true
+    },
+    "coin_earned": {
+      "seen": true
+    },
+    "labour": {
+      "seen": true
+    },
+    "mill_work": {
+      "seen": true
+    },
+    "sort_herbs": {
+      "seen": true
+    },
+    "rest": {
+      "seen": true
+    },
+    "hayloft": {
+      "seen": true
+    },
+    "lean_to": {
+      "seen": true
+    }
+  },
+  "active": null,
+  "waiting": [],
+  "attuned": [],
+  "events": [],
+  "capHits": [],
+  "log": []
+}

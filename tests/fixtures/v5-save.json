@@ -1,0 +1,21 @@
+{
+  "_note": "A save in the format before derived fields were rebuilt on load. Trimmed to what the version check reads, because nothing past that check ever runs on it.",
+  "format": "lowbridge-save",
+  "version": 5,
+  "savedAt": 1000,
+  "state": {
+    "stats": {
+      "coin": { "value": 7, "max": 14, "exp": 0, "rate": 0, "reps": 0, "open": true, "length": 0, "yield": 0, "discount": 0, "ticks": 0, "started": false, "paid": false },
+      "lore": { "value": 2, "max": 4, "exp": 30, "rate": 1, "reps": 0, "open": true, "length": 0, "yield": 0, "discount": 0, "ticks": 0, "started": false, "paid": false }
+    },
+    "active": null,
+    "waiting": [],
+    "activitySeconds": 180,
+    "visibleIds": ["coin", "lore"],
+    "eventIds": [],
+    "capHits": [],
+    "log": [],
+    "wallRemainder": 0,
+    "bank": { "seconds": 0, "cap": 3600 }
+  }
+}

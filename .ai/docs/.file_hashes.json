@@ -1,0 +1,176 @@
+{
+  "version": 1,
+  "generated": "2026-10-21T21:25:17Z",
+  "run_id": "deepinit-20261021T205954Z",
+  "components": {
+    "engine": {
+      "content_hash": "sha256:21dbfde19ca3f70209576fb4ca346e15f91dbb9d76cff457ddde190594057587",
+      "interface_hash": "sha256:e8c1a62e021b1a12d7733fbe24d6061f393a2298a2f9b9fe306f1002a9911ead",
+      "files": [
+        "src/engine.ts",
+        "src/expression.ts",
+        "src/types.ts"
+      ],
+      "last_analyzed": "2026-10-21T21:25:17Z"
+    },
+    "content": {
+      "content_hash": "sha256:a2b3986ad686ae2e81971fed1dd818c38872c2aa3469618423d214d2c0b1d145",
+      "interface_hash": "sha256:ba534f5827746c81cdfb76e5fc597ea953db4bf3669902b70a21c7db59e0469f",
+      "files": [
+        "src/content.ts",
+        "src/data/shared.json",
+        "src/data/opening.json",
+        "src/data/ridge.json"
+      ],
+      "last_analyzed": "2026-10-21T21:25:17Z"
+    },
+    "persistence": {
+      "content_hash": "sha256:5908242bb0c5e0782973170e30ff2449aa368a45e8ec5a6513fb0d0eac998e94",
+      "interface_hash": "sha256:22ea34a1ad2257107f41c9d0cd3935b57a1850aa9d0e48ed0decf595aab93f9a",
+      "files": [
+        "src/persistence.ts"
+      ],
+      "last_analyzed": "2026-10-21T21:25:17Z"
+    },
+    "ui": {
+      "content_hash": "sha256:0ad2d0483a260ecd4f6609606773e9d66c2036eddf893cec840d24a8d560dcfb",
+      "interface_hash": "sha256:2d493a229cd52367a4d1a6181db1b963df759a83a3cfa45811b613dd325b5c44",
+      "files": [
+        "src/main.ts",
+        "src/ui.ts",
+        "src/style.css",
+        "index.html"
+      ],
+      "last_analyzed": "2026-10-21T21:25:17Z"
+    },
+    "tooling": {
+      "content_hash": "sha256:aaa5dd862494f8826c71fd4edb5057bb8f9c48867eba66a89610db9f62f6fb17",
+      "interface_hash": "sha256:43156e0de855a9ecdcdf5735e39d305562b5e5d0a2626c17744cbadd4ae2f8c2",
+      "files": [
+        "scripts/validate.ts",
+        "scripts/routes.ts",
+        "scripts/browser-smoke.ts",
+        "scripts/build.ts",
+        "scripts/serve.ts",
+        "design/validation/opening-sim.py",
+        "design/validation/b4-gates.py"
+      ],
+      "last_analyzed": "2026-10-21T21:25:17Z"
+    },
+    "tests": {
+      "content_hash": "sha256:6daab5fc3c853f7cb58ff18618c6178111418f91f4e5f4d8ddea2f91c952229f",
+      "interface_hash": "sha256:e10d25a39052bd7455b5e72ec08e424863118d209ec89f8adc23ee8fd7685a0b",
+      "files": [
+        "tests/content.test.ts",
+        "tests/engine.test.ts",
+        "tests/persistence.test.ts",
+        "tests/fixtures/v5-save.json",
+        "tests/fixtures/village.json",
+        "tests/fixtures/worlds.ts"
+      ],
+      "last_analyzed": "2026-10-21T21:25:17Z"
+    }
+  },
+  "files": {
+    "src/engine.ts": {
+      "sha256": "efcdebb55582ad5546cef611a8a1cc802f6ea32a03f4dc8626ce47ad9bc98fea",
+      "component": "engine"
+    },
+    "src/expression.ts": {
+      "sha256": "4c2c4312c005fde4dc3dd5312f047e70b8726493096f77e3e7e7f3f6ec59c42a",
+      "component": "engine"
+    },
+    "src/types.ts": {
+      "sha256": "b07b3d729e668dbab8a1ba29fcc242fab865ef232a184fc6e29fe4dace915273",
+      "component": "engine"
+    },
+    "src/content.ts": {
+      "sha256": "08e59d6027b582fdc51208922f4219237a46a7307901df1053ac02836ce964b2",
+      "component": "content"
+    },
+    "src/data/shared.json": {
+      "sha256": "f991c63c730f06b0c6c0ab4a35043a7c46d079d768104dbc4ce9345dff002588",
+      "component": "content"
+    },
+    "src/data/opening.json": {
+      "sha256": "29460c462eb4d6c3e1b33ed7dd87f4581e4d54cdda4b25aba836abfd6caf0fe9",
+      "component": "content"
+    },
+    "src/data/ridge.json": {
+      "sha256": "0606988f290ae8df1edce5c8254a0aea396d7ae79b7aec11519ce2c504fb44f3",
+      "component": "content"
+    },
+    "src/persistence.ts": {
+      "sha256": "d7b8b1d3acb1c42882eb9e7996fa4f0f593b9529f6bf155f07f6026eea27e7e8",
+      "component": "persistence"
+    },
+    "src/main.ts": {
+      "sha256": "131903311f3305a687102c0d7e99bccb35548bb3cf2e8f7993943b18331e1a70",
+      "component": "ui"
+    },
+    "src/ui.ts": {
+      "sha256": "293d1c9738e8b132dc11cd0e82060e56ec6499f9b0422dc56ea6417d0fc106bd",
+      "component": "ui"
+    },
+    "src/style.css": {
+      "sha256": "57758483087349bae197a9b090c15ad65d302fe8afc052695bc3c07cee08ea25",
+      "component": "ui"
+    },
+    "index.html": {
+      "sha256": "e8ef175a3f8605328dc0eddc8a49abd29ba296ca152e6228a6ea8d94412edbc1",
+      "component": "ui"
+    },
+    "scripts/validate.ts": {
+      "sha256": "d4863427b94a10e2bc42f3b82a75873a49237ebd5399c7cecf65549f6b486936",
+      "component": "tooling"
+    },
+    "scripts/routes.ts": {
+      "sha256": "facccbd71d2ba8b47fe74507a17180568381f37b02d391265ad6a943134608e7",
+      "component": "tooling"
+    },
+    "scripts/browser-smoke.ts": {
+      "sha256": "0f089b7d5dc012d840b424ccc406ec7e57c6080440193a382e69a853fafc4f8f",
+      "component": "tooling"
+    },
+    "scripts/build.ts": {
+      "sha256": "b1d9c7314b2f0ac85153fcfaefd46d6571722d1b4bbbbbf7a673a04f22a291ba",
+      "component": "tooling"
+    },
+    "scripts/serve.ts": {
+      "sha256": "d19c1d331fc14cf7f1d28af1919836950ddcdbd427f588d332f0999689edfa6d",
+      "component": "tooling"
+    },
+    "design/validation/opening-sim.py": {
+      "sha256": "8ab7b170a315d353e7b5f1197967d9422d64cba1227de3c2d1ec5f63501766eb",
+      "component": "tooling"
+    },
+    "design/validation/b4-gates.py": {
+      "sha256": "e34385d9502cf167874eaea0581fd45c64ff62bedb085d2a871ec3c9d20ea968",
+      "component": "tooling"
+    },
+    "tests/content.test.ts": {
+      "sha256": "438c11a7f043ed8890fb5a646bcd0f3e643ad50a09aa07d370e3be9fa4be9620",
+      "component": "tests"
+    },
+    "tests/engine.test.ts": {
+      "sha256": "2cfda98aaba34248d5831b421c7cf68a1f80bfb99fcc0a8d57baec7d7770266f",
+      "component": "tests"
+    },
+    "tests/persistence.test.ts": {
+      "sha256": "019edd4ee9d1c4a2ba7b8200648d16e9ed4a7296ff15d5bb862b8ad6d20517bc",
+      "component": "tests"
+    },
+    "tests/fixtures/v5-save.json": {
+      "sha256": "a4d965306a6d4afbef14b03e7d47a863d8ba8af0c73f1f8c1586e77be21808a5",
+      "component": "tests"
+    },
+    "tests/fixtures/village.json": {
+      "sha256": "49170f965ad3c867153fe7c3e08f38e6051eab93f4d4989e325164bcbc716801",
+      "component": "tests"
+    },
+    "tests/fixtures/worlds.ts": {
+      "sha256": "d0e3a384ae8b8c26371e85bce103e02a892a70462e78a85ddd27ccf46bbb4e3f",
+      "component": "tests"
+    }
+  }
+}

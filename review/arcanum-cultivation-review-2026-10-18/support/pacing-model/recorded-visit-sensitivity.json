@@ -1,0 +1,134 @@
+[
+  {
+    "session_minutes": 5,
+    "interval_hours": 12,
+    "route": "focused",
+    "foundation_hours": 36.033,
+    "B2_hours": 48.067,
+    "B3_hours": 84.067,
+    "B4_hours": 132.033,
+    "days": 5.501,
+    "lost": 15.917
+  },
+  {
+    "session_minutes": 5,
+    "interval_hours": 12,
+    "route": "curious",
+    "foundation_hours": 36.033,
+    "B2_hours": 72.05,
+    "B3_hours": 132.123,
+    "B4_hours": 180.033,
+    "days": 7.501,
+    "lost": 59.567
+  },
+  {
+    "session_minutes": 5,
+    "interval_hours": 8,
+    "route": "focused",
+    "foundation_hours": 24.033,
+    "B2_hours": 32.067,
+    "B3_hours": 56.067,
+    "B4_hours": 88.033,
+    "days": 3.668,
+    "lost": 0.0
+  },
+  {
+    "session_minutes": 5,
+    "interval_hours": 8,
+    "route": "curious",
+    "foundation_hours": 24.033,
+    "B2_hours": 48.05,
+    "B3_hours": 96.033,
+    "B4_hours": 128.017,
+    "days": 5.334,
+    "lost": 3.967
+  },
+  {
+    "session_minutes": 10,
+    "interval_hours": 12,
+    "route": "focused",
+    "foundation_hours": 24.067,
+    "B2_hours": 36.033,
+    "B3_hours": 48.167,
+    "B4_hours": 84.033,
+    "days": 3.501,
+    "lost": 0.0
+  },
+  {
+    "session_minutes": 10,
+    "interval_hours": 12,
+    "route": "curious",
+    "foundation_hours": 24.067,
+    "B2_hours": 48.033,
+    "B3_hours": 84.067,
+    "B4_hours": 108.067,
+    "days": 4.503,
+    "lost": 0.0
+  },
+  {
+    "session_minutes": 10,
+    "interval_hours": 8,
+    "route": "focused",
+    "foundation_hours": 16.067,
+    "B2_hours": 32.033,
+    "B3_hours": 48.133,
+    "B4_hours": 76.1,
+    "days": 3.171,
+    "lost": 0.0
+  },
+  {
+    "session_minutes": 10,
+    "interval_hours": 8,
+    "route": "curious",
+    "foundation_hours": 16.067,
+    "B2_hours": 32.2,
+    "B3_hours": 64.033,
+    "B4_hours": 80.45,
+    "days": 3.352,
+    "lost": 0.0
+  },
+  {
+    "session_minutes": 15,
+    "interval_hours": 12,
+    "route": "focused",
+    "foundation_hours": 12.233,
+    "B2_hours": 36.033,
+    "B3_hours": 48.133,
+    "B4_hours": 76.1,
+    "days": 3.171,
+    "lost": 0.0
+  },
+  {
+    "session_minutes": 15,
+    "interval_hours": 12,
+    "route": "curious",
+    "foundation_hours": 12.233,
+    "B2_hours": 36.033,
+    "B3_hours": 60.1,
+    "B4_hours": 84.1,
+    "days": 3.504,
+    "lost": 0.0
+  },
+  {
+    "session_minutes": 15,
+    "interval_hours": 8,
+    "route": "focused",
+    "foundation_hours": 8.233,
+    "B2_hours": 32.033,
+    "B3_hours": 48.133,
+    "B4_hours": 76.1,
+    "days": 3.171,
+    "lost": 0.0
+  },
+  {
+    "session_minutes": 15,
+    "interval_hours": 8,
+    "route": "curious",
+    "foundation_hours": 8.233,
+    "B2_hours": 32.2,
+    "B3_hours": 56.067,
+    "B4_hours": 80.45,
+    "days": 3.352,
+    "lost": 0.0
+  }
+]
