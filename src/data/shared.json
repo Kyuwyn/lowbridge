@@ -95,6 +95,36 @@
     "require": "g.formation_teaching > 0", "initial": { "value": 0, "max": 10 }
   },
   {
+    "id": "walking_staff", "name": "Walking staff", "kind": "resource", "group": "Preparations",
+    "desc": "A porter's staff cut to your height and kept by the door. While you carry it, everything that draws on Strain draws a fifth less.",
+    "require": "g.foundation > 0", "initial": { "value": 0, "max": 1 }, "mod": { "strain.discount": 0.2 }
+  },
+  {
+    "id": "herb_poultice", "name": "Herb poultice", "kind": "resource", "group": "Preparations",
+    "desc": "Bruised herbs in a cloth, three to a batch. Bound on, one gives five Vigor back. Three keep.",
+    "require": "g.foundation > 0", "initial": { "value": 0, "max": 3 }
+  },
+  {
+    "id": "marrow_tonic", "name": "Marrow tonic", "kind": "resource", "group": "Preparations",
+    "desc": "Marrow herbs steeped bitter. Drunk, one gives four of Life and two of Strain back. Three keep.",
+    "require": "g.body_teaching > 0", "initial": { "value": 0, "max": 3 }
+  },
+  {
+    "id": "honed_edge", "name": "Honed edge", "kind": "resource", "group": "Preparations",
+    "desc": "A working blade brought to a true edge on whetstone grit. While you carry it, Strike reaches two higher.",
+    "require": "g.sword_teaching > 0", "initial": { "value": 0, "max": 1 }, "mod": { "strike.max": 2 }
+  },
+  {
+    "id": "weighted_stakes", "name": "Weighted stakes", "kind": "resource", "group": "Preparations",
+    "desc": "Survey stakes shod with veined ore, which hold a footing the ground would rather not give. While you carry them, Guard reaches one higher and Strain two.",
+    "require": "g.earth_teaching > 0", "initial": { "value": 0, "max": 1 }, "mod": { "guard.max": 1, "strain.max": 2 }
+  },
+  {
+    "id": "warding_strip", "name": "Warding strip", "kind": "resource", "group": "Preparations",
+    "desc": "Inked tokens sewn into a strip worn at the wrist, a fixed layout that travels. While you wear it, Dodge reaches ten higher.",
+    "require": "g.formation_teaching > 0", "initial": { "value": 0, "max": 1 }, "mod": { "dodge.max": 10 }
+  },
+  {
     "id": "home_space", "name": "Home space", "kind": "resource", "group": "Home",
     "desc": "Spans of floor already in use. Arrangements come with you when the home grows.",
     "initial": { "max": 2 }

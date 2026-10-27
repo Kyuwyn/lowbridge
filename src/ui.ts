@@ -23,11 +23,11 @@ export interface ReturnSummary {
   before: Record<string, number>;
 }
 
-type Tab = "tasks" | "fight" | "techniques" | "home" | "character";
+type Tab = "tasks" | "fight" | "techniques" | "home" | "craft" | "character";
 type Mode = "instant" | "timed" | "continuous";
 const tabs: { id: Tab; name: string }[] = [
   { id: "tasks", name: "Tasks" }, { id: "fight", name: "Fight" }, { id: "techniques", name: "Techniques" },
-  { id: "home", name: "Home" }, { id: "character", name: "Character" },
+  { id: "home", name: "Home" }, { id: "craft", name: "Craft" }, { id: "character", name: "Character" },
 ];
 const groups: { id: string; title: string; tab: Tab; matches(record: GameRecord): boolean }[] = [
   { id: "work", title: "Village work", tab: "tasks", matches: record => record.group === "Work" },
@@ -40,6 +40,8 @@ const groups: { id: string; title: string; tab: Tab; matches(record: GameRecord)
   { id: "techniques", title: "Techniques", tab: "techniques", matches: record => record.kind === "technique" },
   { id: "shelter", title: "Shelter", tab: "home", matches: record => record.group === "Home" && record.kind === "home" },
   { id: "arrangements", title: "Arrangements", tab: "home", matches: record => record.group === "Home" && record.kind === "arrangement" },
+  { id: "workbench", title: "Workbench", tab: "craft", matches: record => record.kind === "recipe" },
+  { id: "preparations", title: "Preparations", tab: "craft", matches: record => record.kind === "preparation" },
 ];
 const notActions = new Set(["resource", "family", "flag", "breakthrough", "lead"]);
 const bodyIds = ["vigor", "qi", "life", "strain"];
@@ -143,6 +145,7 @@ const journalKinds: Record<LogEntry["kind"], string> = {
 };
 /** Where a record's primary cell lives; practice is mirrored under its knowledge on Character as well. */
 function recordTab(record: GameRecord): Tab {
+  if (record.kind === "recipe" || record.kind === "preparation") return "craft";
   return record.group === "Home" ? "home" : record.kind === "technique" ? "techniques" : "tasks";
 }
 const seenDiscoveryKey = "lowbridge.ui.seenDiscovery";
@@ -201,6 +204,7 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
           <section class="panel ledger"><div class="panel-heading"><h2>Resources</h2><span>Held / max</span></div>
             <details class="ledger-section" open><summary><h3>Currency</h3></summary><div data-ui="currency"></div></details>
             <details class="ledger-section" open><summary><h3>Materials</h3></summary><div data-ui="materials"></div></details>
+            <details class="ledger-section" open data-ui="preparations-panel" hidden><summary><h3>Preparations</h3></summary><div data-ui="preparations"></div></details>
             <details class="ledger-section" open data-ui="families-panel" hidden><summary><h3>Knowledge <span>Level / limit</span></h3></summary><div class="family-list" data-ui="families"></div></details>
           </section>
           <section class="panel location-panel"><div class="panel-heading"><h2 data-ui="location-place"></h2></div><p data-ui="location-text"></p></section>
@@ -381,7 +385,7 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
     ui("tabs").append(button); ui("tab-panels").append(panel); tabViews.set(tab.id, { button, count, badge, panel });
   }
   const tasksPanel = tabViews.get("tasks")!.panel, techniquesPanel = tabViews.get("techniques")!.panel;
-  const homePanel = tabViews.get("home")!.panel, characterPanel = tabViews.get("character")!.panel;
+  const homePanel = tabViews.get("home")!.panel, characterPanel = tabViews.get("character")!.panel, craftPanel = tabViews.get("craft")!.panel;
   /** The Fight view: both sides with Life and readiness, the odds while it runs, and the blow-by-blow. */
   function fightSide(className: string) {
     const root = element("section", `fight-side ${className}`), name = element("h3", "fight-name");
@@ -414,6 +418,9 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
   }
   const techniqueHead = viewHead(techniquesPanel, "Techniques", "What the method can do on command. Only an attuned technique is ready to use; attunement holds it in mind, and there is room for only so many.", "Attuned", "attune-count");
   const homeHead = viewHead(homePanel, "", "Installed arrangements move with you; those you take down are not refunded.", "Floor spans", "home-floor");
+  const craftIntro = element("div", "view-intro");
+  craftIntro.append(element("h2", "", "Craft"), element("p", "", "What the workbench turns materials into. A recipe holds the activity slot while it runs and stops when what it makes is kept; a preparation is taken on the instant. What you have made is listed under Preparations on the left."));
+  craftPanel.append(craftIntro);
   const places = element("section", "places"); places.dataset.ui = "places";
   const placeList = element("ul", "place-list");
   places.append(element("h3", "", "Places"), placeList); homePanel.append(places);
@@ -603,9 +610,9 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
   const cells = groupViews.flatMap(view => view.cells);
   // Owned purchases and completed one-off visits leave the working grid for a closed Done group at the end of their tab.
   const doneGroups = new Map<Tab, GroupView>();
-  for (const tab of ["tasks", "home"] as const) doneGroups.set(tab, makeGroup(`done-${tab}`, "Done", tab, false));
+  for (const tab of ["tasks", "home", "craft"] as const) doneGroups.set(tab, makeGroup(`done-${tab}`, "Done", tab, false));
   function doneWith(record: GameRecord, stat: Stat): boolean {
-    return (record.kind === "purchase" || record.kind === "site" || record.kind === "class" || record.kind === "teaching") && (stat.value >= stat.max || stat.reps >= stat.max);
+    return (record.kind === "purchase" || record.kind === "site" || record.kind === "class" || record.kind === "teaching" || record.kind === "recipe") && (stat.value >= stat.max || stat.reps >= stat.max);
   }
 
   function createCell(record: GameRecord, grid: HTMLElement, tab: Tab) {
@@ -766,8 +773,8 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
     return { record, cell, tab, update };
   }
 
-  const ledgerRows = engine.records.filter(record => record.kind === "resource" && record.group === "Resources").map(record => {
-    const body = bodyIds.includes(record.id);
+  const ledgerRows = engine.records.filter(record => record.kind === "resource" && (record.group === "Resources" || record.group === "Preparations")).map(record => {
+    const body = bodyIds.includes(record.id), preparation = record.group === "Preparations";
     const row = element("div", body ? "resource-row body-row" : "resource-row"); row.dataset.resource = record.id;
     const heading = element("div", "resource-heading"), amount = element("span", "resource-value numeric");
     heading.append(element("span", "resource-name", record.name ?? record.id), amount);
@@ -789,8 +796,8 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
         render();
       }
     });
-    ui(body ? "body" : record.id === "coin" ? "currency" : "materials").append(row);
-    return { record, body, row, amount, bar, note, detail, tipFlow };
+    ui(preparation ? "preparations" : body ? "body" : record.id === "coin" ? "currency" : "materials").append(row);
+    return { record, body, preparation, row, amount, bar, note, detail, tipFlow };
   });
   const familyRows = engine.records.filter(record => record.kind === "family").map(record => {
     const row = element("div", "family-row"); row.dataset.family = record.id;
@@ -1175,8 +1182,10 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
     }
     setText(homeHead.heading, homeName); setText(homeHead.value, `${number(homeSpace.value)} / ${number(homeSpace.max)}`);
     syncPips(homeHead.pips, homeSpace.value, homeSpace.max, "gauge-pip");
+    let visiblePreparations = 0;
     for (const view of ledgerRows) {
       const stat = engine.stat(view.record.id); view.row.hidden = !engine.visible(view.record.id);
+      if (view.preparation && !view.row.hidden) visiblePreparations++;
       setText(view.amount, `${held(stat.value)} / ${number(stat.max)}`); view.bar.update(stat.value, stat.max);
       const capped = stat.value >= stat.max; view.row.classList.toggle("at-cap", capped);
       view.row.classList.toggle("is-filtering", filterResource === view.record.id); view.row.setAttribute("aria-pressed", String(filterResource === view.record.id));
@@ -1187,6 +1196,7 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
       const before = previous.get(view.record.id); previous.set(view.record.id, stat.value);
       if (!view.body && before !== undefined && stat.value > before + 1e-9) pulse(view.row, "tick-up", 600);
     }
+    ui("preparations-panel").hidden = visiblePreparations === 0;
     let visibleFamilies = 0;
     for (const view of familyRows) {
       const stat = engine.stat(view.record.id); view.row.hidden = !engine.visible(view.record.id); if (view.row.hidden) continue;
@@ -1223,14 +1233,16 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
     const apprenticed = current("shu_apprentice") > 0;
     // The spellbook opens with the first technique the method makes available.
     const techniquesVisible = cells.some(cell => cell.tab === "techniques" && !cell.cell.hidden);
+    const craftVisible = cells.some(cell => cell.tab === "craft" && !cell.cell.hidden);
     // How many methods are held ready, of how many can be; absent until the content defines attunement at all.
     const slots = engine.records.some(record => record.id === "attune_slots") ? engine.stat("attune_slots") : undefined;
     techniqueHead.gauge.hidden = !slots;
     if (slots) { setText(techniqueHead.value, `${number(slots.value)} / ${number(slots.max)}`); syncPips(techniqueHead.pips, slots.value, slots.max, "gauge-pip"); }
     tabViews.get("techniques")!.button.hidden = !techniquesVisible;
     tabViews.get("home")!.button.hidden = !apprenticed;
-    if ((selectedTab === "techniques" && !techniquesVisible) || (selectedTab === "home" && !apprenticed)) selectedTab = "tasks";
-    for (const id of ["techniques", "home"] as const) {
+    tabViews.get("craft")!.button.hidden = !craftVisible;
+    if ((selectedTab === "techniques" && !techniquesVisible) || (selectedTab === "home" && !apprenticed) || (selectedTab === "craft" && !craftVisible)) selectedTab = "tasks";
+    for (const id of ["techniques", "home", "craft"] as const) {
       const shown = !tabViews.get(id)!.button.hidden;
       if (shown && tabShown.get(id) === false && selectedTab !== id) unseenTabs.add(id);
       tabShown.set(id, shown);

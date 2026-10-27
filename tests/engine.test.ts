@@ -488,6 +488,56 @@ describe("instant actions alongside sustained work", () => {
   });
 });
 
+describe("recipes and preparations", () => {
+  /** The fight world plus a bench: a dose recipe, the drink that spends it, and a kit piece that raises Strike. */
+  const bench = (): GameEngine => new GameEngine([
+    ...encounter(),
+    { id: "herbs", kind: "resource", initial: { value: 9, max: 12 } },
+    { id: "tonic", kind: "resource", initial: { value: 0, max: 2 } },
+    { id: "edge", kind: "resource", initial: { value: 0, max: 1 }, mod: { "strike.max": 2 } },
+    { id: "work", kind: "task", length: "continuous", effect: { coin: 1 } },
+    { id: "brew", name: "Brew", kind: "recipe", length: 10, cost: { herbs: 3 }, fill: "tonic", result: { tonic: 1 } },
+    { id: "drink", kind: "preparation", cost: { tonic: 1 }, result: { life: 4 } },
+    { id: "hone", kind: "recipe", length: 10, cost: { herbs: 3 }, max: 1, result: { edge: 1 } },
+  ]);
+
+  test("a dose recipe fills its store, then refuses", () => {
+    const game = bench();
+    run(game, "brew", 10);
+    expect(game.stat("tonic").value).toBe(1);
+    expect(game.stat("herbs").value).toBe(6);
+    expect(game.stat("brew").reps).toBe(1);
+    run(game, "brew", 10);
+    expect(game.stat("tonic").value).toBe(2);
+    const refused = game.start("brew");
+    expect(refused.ok).toBe(false);
+    expect(refused.reason).toContain("is already full");
+  });
+
+  test("a preparation spends a dose on the instant and leaves the running activity alone", () => {
+    const game = bench();
+    run(game, "brew", 10); run(game, "brew", 10);
+    game.stat("life").value = 2;
+    run(game, "work", 4.25);
+    const active = structuredClone(game.state.active);
+    expect(game.start("drink").ok).toBe(true);
+    expect(game.state.active).toEqual(active);
+    expect(game.stat("tonic").value).toBe(1);
+    expect(game.stat("life").value).toBe(6);
+    expect(game.state.wallRemainder).toBeCloseTo(0.25);
+  });
+
+  test("a made kit piece raises the fight stat it names", () => {
+    const game = bench();
+    const strike = game.stat("strike").max, before = game.fight("bandit").you.strike;
+    run(game, "hone", 10);
+    expect(game.stat("edge").value).toBe(1);
+    expect(game.stat("strike").max).toBe(strike + 2);
+    expect(game.fight("bandit").you.strike).toBe(before + 2);
+    expect(game.availability("hone").ok).toBe(false);
+  });
+});
+
 describe("waiting list, idle income and home places", () => {
   test("idle seconds earn passive rates up to the cap", () => {
     const game = new GameEngine(reservoir());

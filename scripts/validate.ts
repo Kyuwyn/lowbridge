@@ -22,7 +22,7 @@ export interface ValidationReport {
 const statFields = new Set(["value", "max", "exp", "rate", "reps", "open", "length", "yield", "discount", "ticks", "started", "paid"]);
 const derivedFields = new Set<string>(DERIVED_FIELDS);
 const passiveKinds = new Set(["resource", "family", "flag", "lead"]);
-const kinds = new Set<string>(["resource", "family", "task", "site", "arrangement", "home", "class", "breakthrough", "teaching", "recipe", "technique", "purchase", "flag", "lead"]);
+const kinds = new Set<string>(["resource", "family", "task", "site", "arrangement", "home", "class", "breakthrough", "teaching", "recipe", "preparation", "technique", "purchase", "flag", "lead"]);
 /** The whole record vocabulary; anything else in the JSON is a typo or a field the engine dropped. */
 const recordFields = new Set(["id", "kind", "name", "desc", "flavor", "group", "tags", "require", "need", "needtext", "initial", "max",
   "buy", "cost", "length", "run", "effect", "result", "mod", "perLevel", "onStart", "at", "every", "fill", "lock", "enable", "warn",
@@ -204,6 +204,10 @@ export function validateGrammar(records: GameRecord[]): string[] {
       if ([LIFE, ...FIGHT_STATS].some(id => byId.get(id)?.kind !== "resource")) errors.push(`a fight needs the resource records ${[LIFE, ...FIGHT_STATS].join(", ")}`);
     }
     if (record.held !== undefined && !(record.kind === "technique" && record.attune)) errors.push(`${record.id}: held modifiers belong only to a technique that is attuned`);
+    if (record.kind === "recipe" && typeof record.length !== "number") errors.push(`${record.id}: a recipe is worked over time at the bench, so it needs a length in seconds`);
+    if (record.kind === "recipe" && record.max === undefined && record.fill === undefined) errors.push(`${record.id}: a recipe stops at a max or when the store it fills is full`);
+    if (record.kind === "preparation" && record.length !== undefined) errors.push(`${record.id}: a preparation is taken on the instant`);
+    if (record.kind === "preparation" && !Object.keys(record.cost ?? {}).length) errors.push(`${record.id}: a preparation spends a dose, so it needs a cost`);
     if (typeof record.length === "number" && (record.length <= 0 || record.length > 7200)) errors.push(`${record.id}: ordinary task duration must be within 1-7200 seconds`);
     if (record.kind === "breakthrough" && !record.breakthrough) errors.push(`${record.id}: breakthrough has no mandatory core metadata`);
     if (record.breakthrough && (record.breakthrough.required < 0 || record.breakthrough.required > record.breakthrough.pointers.length)) errors.push(`${record.id}: invalid supporting pointer count`);

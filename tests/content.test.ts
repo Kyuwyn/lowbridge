@@ -80,6 +80,13 @@ describe("the record vocabulary", () => {
     expect(complains(spoiled("bandit", record => { record.held = { "strike.max": 1 }; }, encounter()), "held modifiers belong only to a technique that is attuned")).toBe(true);
   });
 
+  test("a recipe is timed and bounded; a preparation is instant and spends a dose", () => {
+    expect(complains(validateGrammar(changed("craft_herb_poultice", record => { delete record.length; })), "needs a length in seconds")).toBe(true);
+    expect(complains(validateGrammar(changed("craft_walking_staff", record => { delete record.max; })), "stops at a max or when the store it fills is full")).toBe(true);
+    expect(complains(validateGrammar(changed("take_herb_poultice", record => { record.length = 5; })), "taken on the instant")).toBe(true);
+    expect(complains(validateGrammar(changed("take_herb_poultice", record => { delete record.cost; })), "spends a dose, so it needs a cost")).toBe(true);
+  });
+
   test("the sample village and the live content are both written in that vocabulary", () => {
     expect(validateGrammar(villageRecords)).toEqual([]);
     expect(validateGrammar(records)).toEqual([]);

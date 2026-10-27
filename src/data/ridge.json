@@ -435,5 +435,67 @@
     "desc": "Fills the place you study. Copying the slip goes half again as fast, and Lore can reach one level further.",
     "require": "g.cottage > 0",
     "buy": { "coin": 25, "timber": 3 }, "mod": { "fragment_notes.rate": 0.5, "lore.max": 1 }, "max": 1
+  },
+  {
+    "id": "workbench", "name": "Workbench", "kind": "arrangement", "group": "Home",
+    "desc": "One span of floor under the window: a bench, a vice and a mortar, with room to stack two more timber. What it makes is worked on the Craft tab; each recipe holds the activity slot while it runs.",
+    "require": "g.foundation > 0", "need": "g.coin >= 20 && g.timber >= 4 && g.home_space.max - g.home_space >= 1",
+    "needtext": "Twenty coin, four timber and one free span of floor.",
+    "buy": { "coin": 20, "timber": 4 }, "space": 1, "mod": { "timber.max": 2 }, "max": 1
+  },
+  {
+    "id": "craft_walking_staff", "name": "Cut a walking staff", "kind": "recipe", "group": "Craft",
+    "desc": "A minute at the bench shaping four timber into a staff. Five coin for the ferrule.",
+    "require": "g.foundation > 0", "need": "g.workbench > 0 && g.timber >= 4 && g.coin >= 5",
+    "needtext": "A workbench, four timber and five coin.",
+    "cost": { "timber": 4, "coin": 5 }, "length": 60, "max": 1, "result": { "walking_staff": 1 }
+  },
+  {
+    "id": "craft_herb_poultice", "name": "Make a poultice", "kind": "recipe", "group": "Craft",
+    "desc": "Half a minute bruising three bundles into a poultice. Quicker after the fifth; stops when three are kept.",
+    "require": "g.foundation > 0", "need": "g.workbench > 0 && g.herbs >= 3", "needtext": "A workbench and three bundles of herbs.",
+    "cost": { "herbs": 3 }, "length": 30, "fill": "herb_poultice", "result": { "herb_poultice": 1 },
+    "at": { "5": { "craft_herb_poultice.length": -10 } }
+  },
+  {
+    "id": "craft_marrow_tonic", "name": "Steep a marrow tonic", "kind": "recipe", "group": "Craft",
+    "desc": "Three-quarters of a minute steeping two marrow herbs with a bundle of ordinary ones. Quicker after the fifth; stops when three are kept.",
+    "require": "g.body_teaching > 0", "need": "g.workbench > 0 && g.marrow_herbs >= 2 && g.herbs >= 1",
+    "needtext": "A workbench, two marrow herbs and a bundle of herbs.",
+    "cost": { "marrow_herbs": 2, "herbs": 1 }, "length": 45, "fill": "marrow_tonic", "result": { "marrow_tonic": 1 },
+    "at": { "5": { "craft_marrow_tonic.length": -10 } }
+  },
+  {
+    "id": "craft_honed_edge", "name": "Hone an edge", "kind": "recipe", "group": "Craft",
+    "desc": "A minute drawing a working blade across three measures of grit, with a timber grip and eight coin for the steel.",
+    "require": "g.sword_teaching > 0", "need": "g.workbench > 0 && g.whetstone_grit >= 3 && g.timber >= 1 && g.coin >= 8",
+    "needtext": "A workbench, three measures of whetstone grit, one timber and eight coin.",
+    "cost": { "whetstone_grit": 3, "timber": 1, "coin": 8 }, "length": 60, "max": 1, "result": { "honed_edge": 1 }
+  },
+  {
+    "id": "craft_weighted_stakes", "name": "Shoe the survey stakes", "kind": "recipe", "group": "Craft",
+    "desc": "A minute setting three pieces of veined ore into two timber stakes, with eight coin for the binding.",
+    "require": "g.earth_teaching > 0", "need": "g.workbench > 0 && g.veined_ore >= 3 && g.timber >= 2 && g.coin >= 8",
+    "needtext": "A workbench, three pieces of veined ore, two timber and eight coin.",
+    "cost": { "veined_ore": 3, "timber": 2, "coin": 8 }, "length": 60, "max": 1, "result": { "weighted_stakes": 1 }
+  },
+  {
+    "id": "craft_warding_strip", "name": "Sew a warding strip", "kind": "recipe", "group": "Craft",
+    "desc": "A minute sewing three inked tokens onto a strip, fixed with a bundle of herbs and eight coin of thread.",
+    "require": "g.formation_teaching > 0", "need": "g.workbench > 0 && g.inked_tokens >= 3 && g.herbs >= 1 && g.coin >= 8",
+    "needtext": "A workbench, three inked tokens, a bundle of herbs and eight coin.",
+    "cost": { "inked_tokens": 3, "herbs": 1, "coin": 8 }, "length": 60, "max": 1, "result": { "warding_strip": 1 }
+  },
+  {
+    "id": "take_herb_poultice", "name": "Bind on a poultice", "kind": "preparation", "group": "Craft",
+    "desc": "One poultice for five Vigor, on the instant, while anything else runs.",
+    "require": "g.foundation > 0", "need": "g.herb_poultice >= 1", "needtext": "A poultice kept at the bench.",
+    "cost": { "herb_poultice": 1 }, "result": { "vigor": 5 }
+  },
+  {
+    "id": "take_marrow_tonic", "name": "Drink a marrow tonic", "kind": "preparation", "group": "Craft",
+    "desc": "One tonic for four of Life and two of Strain, on the instant. Life matters only when somebody swings at you.",
+    "require": "g.body_teaching > 0", "need": "g.marrow_tonic >= 1", "needtext": "A tonic kept at the bench.",
+    "cost": { "marrow_tonic": 1 }, "result": { "life": 4, "strain": 2 }
   }
 ]

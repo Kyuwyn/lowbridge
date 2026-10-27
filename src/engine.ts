@@ -37,7 +37,7 @@ const derivedFields = new Set<string>(DERIVED_FIELDS);
 const countedStores = new Set([HOME_SPACE, ATTUNE_SLOTS]);
 const shown = (amount: number): number => Math.round(amount * 100) / 100;
 const passiveKinds = new Set(["resource", "family", "flag", "lead"]);
-const oneShotKinds = new Set(["purchase", "arrangement", "home", "class", "breakthrough", "teaching", "recipe"]);
+const oneShotKinds = new Set(["purchase", "arrangement", "home", "class", "breakthrough", "teaching"]);
 const clone = <T>(value: T): T => structuredClone(value);
 /** A record name inside a sentence: "through a larger coin pouch", not "through A larger coin pouch". */
 const inSentence = (name: string): string => name.replace(/^(A|An|The) /, article => article.toLowerCase());
@@ -1723,10 +1723,10 @@ function pickDerived(initial: Partial<Stat> | undefined): Partial<Pick<Stat, Der
 function kindLabel(record: GameRecord): string {
   if (record.encounter) return "Fight";
   if (record.length === "continuous") return "Practice";
-  if (typeof record.length === "number") return record.kind === "site" ? "Outing" : "Timed task";
+  if (typeof record.length === "number") return record.kind === "site" ? "Outing" : record.kind === "recipe" ? "Recipe" : "Timed task";
   return { resource: "Store", family: "Knowledge", flag: "State", lead: "Lead", purchase: "Purchase", arrangement: "Arrangement",
-    home: "Home", class: "Standing", breakthrough: "Breakthrough", teaching: "Teaching", recipe: "Recipe", technique: "Technique",
-    task: "Chore", site: "Place" }[record.kind] ?? record.kind;
+    home: "Home", class: "Standing", breakthrough: "Breakthrough", teaching: "Teaching", recipe: "Recipe", preparation: "Preparation",
+    technique: "Technique", task: "Chore", site: "Place" }[record.kind] ?? record.kind;
 }
 
 /** Trickles are real: a per-level 0.002 must not round away to "0" on the card that sells it. */

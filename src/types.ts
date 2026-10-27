@@ -1,7 +1,8 @@
 /** Content is declarative; expression strings are interpreted by expression.ts. */
 export type Expression = string;
 export type Changes = Record<string, number | Expression>;
-export type RecordKind = "resource" | "family" | "task" | "site" | "arrangement" | "home" | "class" | "breakthrough" | "teaching" | "recipe" | "technique" | "purchase" | "flag" | "lead";
+/** `recipe`: a timed run at the workbench that fills a store. `preparation`: an instant action spending a dose from a store. */
+export type RecordKind = "resource" | "family" | "task" | "site" | "arrangement" | "home" | "class" | "breakthrough" | "teaching" | "recipe" | "preparation" | "technique" | "purchase" | "flag" | "lead";
 
 /**
  * Six of these fields are derived: `recompute` rebuilds `max`, `rate`, `open`, `length`, `yield`

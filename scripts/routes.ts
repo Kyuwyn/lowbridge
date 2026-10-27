@@ -457,6 +457,18 @@ export function runRidgeCoverage(records: GameRecord[] = sourceRecords, start = 
     enough: { ...options.enough, ridge_bandit: engine => !engine.fight("ridge_bandit").likely, sparring_bout: "g.sparring_bout.reps >= 1" },
     // The bout is won without a blow taken, so the deliberate bandit loss after the study still starts at full Life.
     prelude: ["sparring_bout", "ridge_outskirts", "fragment_notes", "sort_herbs", "sort_herbs", "sort_herbs", "ridge_bandit"],
+  }),
+  // The bench needs a span the Lean-to no longer has, so the cottage comes first; every teaching is read so each line's piece is made.
+  runRoute("ridge-workbench", {
+    ...options,
+    preferences: { ...options.preferences!, prefer: ["waystation_work", "scrape_whetstone_grit", "pry_veined_ore", "ink_tokens", ...options.preferences!.prefer] },
+    enough: { ...options.enough, scrape_whetstone_grit: "g.whetstone_grit >= 3", pry_veined_ore: "g.veined_ore >= 3", ink_tokens: "g.inked_tokens >= 3" },
+    afterFoundation: ["waystation_work", "trade_marrow_herbs", "coffer", "cottage", "workbench",
+      "craft_walking_staff", "craft_herb_poultice", "take_herb_poultice", "craft_marrow_tonic", "take_marrow_tonic",
+      "sword_teaching", "inscription_face", "craft_honed_edge",
+      "earth_teaching", "stable_point", "craft_weighted_stakes",
+      "formation_teaching", "fixed_layout", "craft_warding_strip"],
+    maxActions: 4000, maxSeconds: 36000,
   })];
 }
 
