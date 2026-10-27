@@ -732,8 +732,9 @@ describe("encounters, boosts and discounts", () => {
 
   test("a fight is swung out second by second: a loss empties Life and spends the preparation, a win completes it", () => {
     const lost = new GameEngine(encounter());
+    // Every swing lands and both swing each second, you first: he fells you on the third second and you never fell him.
     expect(lost.fight("bandit")).toMatchObject({ you: { strike: 2, guard: 1, speed: 5, hit: 100, dodge: 0 }, yourChance: 1, foeChance: 1,
-      yourDamage: 1, foeDamage: 2, winSeconds: 4, loseSeconds: 3, limit: 10, likely: false });
+      yourDamage: 1, foeDamage: 2, winSeconds: Infinity, loseSeconds: 3, limit: 10, likely: false });
     expect(lost.start("bandit").ok).toBe(true);
     lost.advance(3);
     expect(lost.state.active).toBeNull();
@@ -750,7 +751,7 @@ describe("encounters, boosts and discounts", () => {
     const won = new GameEngine(encounter());
     won.stat("might").value = 2;
     won.recompute();
-    expect(won.fight("bandit")).toMatchObject({ yourDamage: 3, foeDamage: 1, winSeconds: 2, likely: true });
+    expect(won.fight("bandit")).toMatchObject({ yourDamage: 3, foeDamage: 1, winSeconds: 2, loseSeconds: Infinity, likely: true });
     won.start("bandit");
     won.advance(2);
     expect(won.state.active).toBeNull();
@@ -777,7 +778,10 @@ describe("encounters, boosts and discounts", () => {
       : record.id === "bandit" ? { ...record, encounter: { ...record.encounter!, foe: { ...record.encounter!.foe, hit: 50 } } } : record);
     const game = new GameEngine(shaky), rolls = [0.7, 0.2, 0.1, 0.9];
     game.random = () => rolls.shift()!;
-    expect(game.fight("bandit")).toMatchObject({ yourChance: 0.5, foeChance: 0.5, winSeconds: 8, loseSeconds: 6 });
+    const projection = game.fight("bandit");
+    expect(projection).toMatchObject({ yourChance: 0.5, foeChance: 0.5 });
+    expect(projection.winSeconds).toBeCloseTo(5.9916, 3);
+    expect(projection.loseSeconds).toBeCloseTo(4.9535, 3);
     game.start("bandit");
     game.advance(2);
     expect(game.state.fight!.lines).toEqual([
@@ -844,11 +848,11 @@ describe("encounters, boosts and discounts", () => {
   test("a held method is part of the fight while it is attuned", () => {
     const game = new GameEngine(encounter());
     expect(game.attune("brace").ok).toBe(true);
-    expect(game.fight("bandit")).toMatchObject({ held: [{ id: "brace", adds: { guard: 1 } }], you: { guard: 2 }, winSeconds: 4, loseSeconds: 6, winChance: 1, verdict: "certain", likely: true });
+    expect(game.fight("bandit")).toMatchObject({ held: [{ id: "brace", adds: { guard: 1 } }], you: { guard: 2 }, winSeconds: 4, loseSeconds: Infinity, winChance: 1, verdict: "certain", likely: true });
     const fight = game.tooltip("bandit").find(block => block.kind === "fight");
     expect(fight?.label).toBe("Fight");
-    expect(fight?.lines).toContain("Held methods: Brace guard +1");
-    expect(fight?.lines).toContain("On average you fell the bandit in ~4 s; the bandit fells you in ~6 s.");
+    expect(fight?.lines).toContain("Held: Brace guard +1");
+    expect(fight?.lines).toContain("On average you fell the bandit in ~4 s; the bandit does not fell you inside the limit.");
     game.unattune("brace");
     expect(game.fight("bandit")).toMatchObject({ held: [], you: { guard: 1 }, likely: false });
   });
@@ -959,5 +963,157 @@ describe("state isolation", () => {
     expect((saved.stats.lore as Stat).value).toBe(0);
     expect(restored.stat("lore").value).toBe(1);
     expect(JSON.parse(JSON.stringify(restored.snapshot()))).toEqual(restored.snapshot());
+  });
+});
+
+describe("the hobby place", () => {
+  /** A main-slot practice, a hobby practice trained at two experience a second, and the counted hobby store. */
+  const hobbyWorld = (max = 1): GameRecord[] => [
+    { id: "qi", kind: "resource", initial: { value: 20, max: 20 } },
+    { id: "water", kind: "resource", name: "Water", initial: { value: 0, max: 3 } },
+    { id: "lore", kind: "family", initial: { max: 3 } },
+    { id: "craft", kind: "family", initial: { max: 3 } },
+    { id: "hobby_slots", kind: "resource", initial: { max, open: true } },
+    { id: "reading", kind: "task", length: "continuous", train: "lore", effect: { "lore.exp": 1 } },
+    { id: "drill", name: "Drill", kind: "task", length: "continuous", hobby: true, train: "craft", effect: { "craft.exp": 2 }, run: { qi: 0.1 } },
+    { id: "carry", name: "Carry", kind: "task", length: "continuous", hobby: true, effect: { water: 1 }, fill: ["water"] },
+  ];
+
+  test("a hobby trains at half the main slot's pace beside a running practice, and the bank never accelerates it", () => {
+    const game = new GameEngine(hobbyWorld());
+    expect(game.start("reading").ok).toBe(true);
+    expect(game.startHobby("drill")).toEqual({ ok: true, reason: "Started as a hobby." });
+    expect(game.stat("hobby_slots").value).toBe(1);
+    game.advance(60);
+    // Sixty seconds at two a second is 120 experience in the slot; the hobby lands half: exactly level one.
+    expect(game.stat("lore")).toMatchObject({ value: 1, exp: 0 });
+    expect(game.stat("craft")).toMatchObject({ value: 1, exp: 0 });
+    expect(game.stat("qi").value).toBeCloseTo(14, 9);
+    expect(game.stat("drill").ticks).toBe(60);
+    const slot = new GameEngine(hobbyWorld());
+    run(slot, "drill", 60);
+    expect(slot.stat("craft")).toMatchObject({ value: 1, exp: 60 });
+    // Accelerating spends banked seconds on the slot's objective alone.
+    game.state.bank.seconds = 30;
+    expect(game.setAccelerating(true).ok).toBe(true);
+    game.advance(30);
+    expect(game.stat("drill").ticks).toBe(90);
+    expect(game.stat("reading").ticks).toBe(120);
+  });
+
+  test("the hobby keeps running with the slot empty, stops when what it fills is full, and yields to the slot", () => {
+    const game = new GameEngine(hobbyWorld());
+    expect(game.startHobby("carry").ok).toBe(true);
+    expect(game.state.active).toBeNull();
+    const result = game.advance(5);
+    expect(game.stat("water").value).toBeCloseTo(2.5, 9);
+    expect(result).toMatchObject({ activitySeconds: 5, bankedSeconds: 5 });
+    game.advance(10);
+    expect(game.stat("water").value).toBe(3);
+    expect(game.state.hobby).toBeNull();
+    expect(game.state.log.some(entry => entry.text === "Carry leaves the hobby place: Water is full.")).toBe(true);
+    expect(game.startHobby("carry").reason).toBe("Water is already full.");
+    game.stat("water").value = 0;
+    expect(game.startHobby("carry").ok).toBe(true);
+    expect(game.start("carry").ok).toBe(true);
+    expect(game.state.hobby).toBeNull();
+    expect(game.state.active?.id).toBe("carry");
+    expect(game.startHobby("carry").reason).toBe("Already running in the activity slot.");
+  });
+
+  test("without a hobby place nothing can be a hobby, and only marked practices can", () => {
+    const none = new GameEngine(hobbyWorld(0));
+    expect(none.startHobby("drill")).toEqual({ ok: false, reason: "You have no hobby place yet." });
+    const game = new GameEngine(hobbyWorld());
+    expect(game.startHobby("reading")).toEqual({ ok: false, reason: "This cannot be a hobby." });
+    expect(game.startHobby("drill").ok).toBe(true);
+    expect(game.startHobby("carry").ok).toBe(true);
+    expect(game.state.hobby).toBe("carry");
+    expect(game.stopHobby()).toEqual({ ok: true, reason: "Stopped." });
+    expect(game.state.hobby).toBeNull();
+    expect(game.stat("hobby_slots").value).toBe(0);
+  });
+});
+
+describe("stances, foe techniques and lasting preparations", () => {
+  const stances = (): GameRecord[] => [
+    ...encounter(),
+    { id: "rooted", name: "Rooted stance", kind: "technique", stance: true, held: { "guard.max": 2, "speed.max": -1 } },
+    { id: "pressing", name: "Pressing stance", kind: "technique", stance: true, held: { "strike.max": 2 } },
+  ];
+
+  test("taking a stance changes the fight stats at once, a second replaces the first, and the fight projects with it", () => {
+    const game = new GameEngine(stances());
+    expect(game.fight("bandit")).toMatchObject({ you: { strike: 2, guard: 1, speed: 5 }, foeDamage: 2 });
+    expect(game.takeStance("rooted")).toEqual({ ok: true, reason: "Taken." });
+    expect(game.stat("guard").max).toBe(3);
+    expect(game.fight("bandit")).toMatchObject({ you: { guard: 3, speed: 4 }, foeDamage: 0, held: [{ id: "rooted", adds: { guard: 2, speed: -1 } }], verdict: "certain" });
+    expect(game.takeStance("pressing").ok).toBe(true);
+    expect(game.state.stance).toBe("pressing");
+    expect(game.stat("guard").max).toBe(1);
+    expect(game.fight("bandit")).toMatchObject({ you: { strike: 4, guard: 1, speed: 5 }, yourDamage: 3, held: [{ id: "pressing", adds: { strike: 2 } }] });
+    expect(game.takeStance("brace").reason).toBe("This is not a stance.");
+    expect(game.dropStance().ok).toBe(true);
+    expect(game.stat("strike").max).toBe(2);
+    // The flip hint names the stance that would turn the verdict.
+    expect(game.fight("bandit").flip).toBe("Taking the Rooted stance: about 99%");
+  });
+
+  test("a foe's technique falls on every n-th swing, and the exact projection agrees with seeded fights", () => {
+    const technique = { name: "the rush", every: 2, strike: 6 };
+    const records = encounter().map(record => record.id === "life" ? { ...record, initial: { value: 20, max: 20, rate: 0 } }
+      : record.id === "bandit" ? { ...record, encounter: { ...record.encounter!, foe: { ...record.encounter!.foe, life: 10, technique } } } : record);
+    const game = new GameEngine(records);
+    game.start("bandit");
+    game.advance(4);
+    // Guard 1 against strike 3 twice and the rush's 6 twice: 20 − 2·2 − 2·5.
+    expect(game.stat("life").value).toBe(6);
+    expect(game.state.fight).toMatchObject({ foeSwings: 4, foeLanded: 4 });
+    expect(game.state.fight!.lines).toContain("0:02 The bandit: the rush.");
+    expect(game.state.fight!.lines).toContain("0:02 The bandit strikes you for 5 (life 13).");
+    expect(game.tooltip("bandit").find(block => block.kind === "fight")?.lines).toContain("Every second swing: the rush, strike 6 for 5");
+
+    const uneven = records.map(record => record.id === "hit" ? { ...record, initial: { max: 70 } }
+      : record.id === "dodge" ? { ...record, initial: { max: 20 } }
+      : record.id === "life" ? { ...record, initial: { value: 30, max: 30, rate: 0 } }
+      : record.id === "bandit" ? { ...record, encounter: { ...record.encounter!, foe: { ...record.encounter!.foe, life: 6 } } } : record);
+    const projection = new GameEngine(uneven).fight("bandit"), fights = 2000;
+    expect(projection.winChance).toBeGreaterThan(0.05);
+    expect(projection.winChance).toBeLessThan(0.95);
+    let won = 0, seed = 7;
+    for (let fight = 0; fight < fights; fight++) {
+      const trial = new GameEngine(uneven);
+      trial.random = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+      trial.start("bandit");
+      trial.advance(10);
+      if (trial.state.fight?.result === "won") won++;
+    }
+    expect(Math.abs(won / fights - projection.winChance)).toBeLessThan(0.03);
+  });
+
+  test("a lasting preparation pays its held table from the click until it wears off, and taking another resets the clock", () => {
+    const game = new GameEngine([
+      { id: "coin", kind: "resource", initial: { max: 10 } },
+      { id: "dose", kind: "resource", initial: { value: 2, max: 3 } },
+      { id: "lore", kind: "family", initial: { max: 3 } },
+      { id: "reading", kind: "task", length: "continuous", train: "lore", effect: { "lore.exp": 1 } },
+      { id: "draught", name: "Draught", kind: "preparation", cost: { dose: 1 }, lasts: 5, held: { "coin.max": 5 } },
+    ]);
+    expect(game.stat("coin").max).toBe(10);
+    expect(game.start("draught").ok).toBe(true);
+    expect(game.stat("coin").max).toBe(15);
+    expect(game.state.effects).toEqual([{ id: "draught", remaining: 5 }]);
+    expect(game.tooltip("draught").find(block => block.kind === "time")?.lines).toEqual(["Lasts 5 s (00:00:05 left)"]);
+    run(game, "reading", 3);
+    expect(game.state.effects).toEqual([{ id: "draught", remaining: 2 }]);
+    expect(game.stat("coin").max).toBe(15);
+    expect(game.start("draught").ok).toBe(true);
+    expect(game.state.effects).toEqual([{ id: "draught", remaining: 5 }]);
+    game.advance(4);
+    expect(game.stat("coin").max).toBe(15);
+    game.advance(1);
+    expect(game.state.effects).toEqual([]);
+    expect(game.stat("coin").max).toBe(10);
+    expect(game.state.log.some(entry => entry.kind === "completion" && entry.text === "Draught wears off.")).toBe(true);
   });
 });

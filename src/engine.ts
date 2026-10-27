@@ -8,9 +8,12 @@ export const WAITING_MAX = 6;
 export const MAX_DISCOUNT = 0.5;
 export const BANK_BASE_CAP = 3600;
 export const EXP_PER_LEVEL = 60;
-/** Two stores whose amount is an occupancy count: the engine fills them in, content only raises their caps. */
+/** Three stores whose amount is an occupancy count: the engine fills them in, content only raises their caps. */
 export const HOME_SPACE = "home_space";
 export const ATTUNE_SLOTS = "attune_slots";
+export const HOBBY_SLOTS = "hobby_slots";
+/** A hobby's effect and training land at this share of the main slot's pace. */
+export const HOBBY_RATE = 0.5;
 /** The cultivator's fight stats; apart from Life only their `max` carries meaning. */
 export const LIFE = "life";
 export const STRIKE = "strike";
@@ -33,8 +36,8 @@ const FIGHT_SECONDS_MAX = 86_400;
 const NOTHING_RAISES = "Nothing you know of raises this further.";
 
 const derivedFields = new Set<string>(DERIVED_FIELDS);
-/** Two stores the engine fills in; content only raises their caps, and neither is ever a reward. */
-const countedStores = new Set([HOME_SPACE, ATTUNE_SLOTS]);
+/** Stores the engine fills in; content only raises their caps, and none is ever a reward. */
+const countedStores = new Set([HOME_SPACE, ATTUNE_SLOTS, HOBBY_SLOTS]);
 const shown = (amount: number): number => Math.round(amount * 100) / 100;
 const passiveKinds = new Set(["resource", "family", "flag", "lead"]);
 const oneShotKinds = new Set(["purchase", "arrangement", "home", "class", "breakthrough", "teaching"]);
@@ -141,6 +144,7 @@ export class GameEngine {
     const world: WorldState = {
       stats, active: null, waiting: [], activitySeconds: 0,
       visibleIds: [], lockedIds: [], attuned: [], eventIds: [], capHits: [], log: [], wallRemainder: 0,
+      hobby: null, effects: [], stance: null,
     };
     this.state = { ...world, bank: { seconds: 0, cap: BANK_BASE_CAP, accelerating: false } };
     this.reconcile(false);
@@ -309,6 +313,14 @@ export class GameEngine {
       }
       set(ATTUNE_SLOTS, this.state.attuned.length);
     }
+    if (this.byId.has(HOBBY_SLOTS)) {
+      if (this.state.hobby && this.stat(HOBBY_SLOTS).max + EPSILON < 1) {
+        this.log("pause", `${this.record(this.state.hobby).name ?? this.state.hobby} leaves the hobby place: there is no place left for it.`);
+        this.state.hobby = null;
+        changed = true;
+      }
+      set(HOBBY_SLOTS, this.state.hobby ? 1 : 0);
+    }
     for (const record of this.records) {
       const stat = this.stat(record.id);
       if (stat.value > stat.max) { stat.value = stat.max; changed = true; }
@@ -327,7 +339,7 @@ export class GameEngine {
         if (scale) visit(compiled.owned, scale, source);
       }
       if (value && tableEntries(compiled.perLevel)) visit(compiled.perLevel, value, source);
-      if (tableEntries(compiled.held) && this.state.attuned.includes(source.id)) visit(compiled.held, 1, source);
+      if (tableEntries(compiled.held) && this.holding(source.id)) visit(compiled.held, 1, source);
       if (!compiled.at.length && !compiled.every.length) continue;
       const count = this.count(source);
       for (const { threshold, table } of compiled.at) if (count + EPSILON >= threshold) visit(table, 1, source, threshold);
@@ -336,6 +348,11 @@ export class GameEngine {
         if (times > 0) visit(table, times, source);
       }
     }
+  }
+
+  /** Whether a record's `held` table is paid now: attuned, the stance taken, or a preparation in effect. */
+  holding(id: string): boolean {
+    return this.state.attuned.includes(id) || this.state.stance === id || this.state.effects.some(effect => effect.id === id);
   }
 
   /**
@@ -567,7 +584,11 @@ export class GameEngine {
    */
   title(): string {
     const breakthroughs = this.records.filter(record => record.kind === "breakthrough" && this.stat(record.id).value > 0);
-    const granted = breakthroughs.flatMap(record => Object.keys(record.result ?? {}).filter(path => this.byId.has(path)).map(path => this.record(path)));
+    // A breakthrough grants what its result pays and what its title events set.
+    const granted = breakthroughs.flatMap(record => [
+      ...Object.keys(record.result ?? {}),
+      ...(record.events ?? []).flatMap(event => Object.keys(event.changes ?? {})),
+    ].filter(path => this.byId.has(path)).map(path => this.record(path)));
     let best: GameRecord | undefined;
     for (const record of this.records) {
       if (record.kind !== "class" || !record.title || this.stat(record.id).value <= 0) continue;
@@ -615,9 +636,126 @@ export class GameEngine {
       this.release();
       this.log("pause", this.state.lastStop);
     }
+    if (this.state.hobby === id) {
+      this.state.hobby = null;
+      this.log("pause", `${name} leaves the hobby place: it is no longer attuned.`);
+    }
     this.log("method", `${name} is released.`);
     this.reconcile();
     return { ok: true, reason: "Released." };
+  }
+
+  // ------------------------------------------------------------------ stances
+
+  /** The one stance taken replaces any other; its `held` table is paid while taken. */
+  takeStance(id: string): Availability {
+    const record = this.record(id);
+    if (!record.stance) return { ok: false, reason: "This is not a stance." };
+    if (this.locked(id)) return { ok: false, reason: "This chapter has closed." };
+    if (!this.visible(id)) return { ok: false, reason: "This has not been discovered." };
+    if (this.state.stance === id) return { ok: false, reason: "Already taken." };
+    this.state.stance = id;
+    this.log("method", `You take the ${inSentence(record.name ?? id)}.`);
+    this.reconcile();
+    return { ok: true, reason: "Taken." };
+  }
+
+  dropStance(): Availability {
+    const id = this.state.stance;
+    if (!id) return { ok: false, reason: "No stance is taken." };
+    this.state.stance = null;
+    this.log("method", `You drop the ${inSentence(this.record(id).name ?? id)}.`);
+    this.reconcile();
+    return { ok: true, reason: "Dropped." };
+  }
+
+  // -------------------------------------------------------------------- hobby
+
+  /**
+   * A continuous practice marked `hobby` runs in the hobby place at half pace beside the activity slot. It has no
+   * objective, the bank never accelerates it, and it is replaced outright by the next hobby started.
+   */
+  startHobby(id: string): Availability {
+    const record = this.record(id);
+    if (!record.hobby) return { ok: false, reason: "This cannot be a hobby." };
+    if (!this.byId.has(HOBBY_SLOTS) || this.stat(HOBBY_SLOTS).max + EPSILON < 1) return { ok: false, reason: "You have no hobby place yet." };
+    if (this.state.active?.id === id) return { ok: false, reason: "Already running in the activity slot." };
+    if (this.state.hobby === id) return { ok: false, reason: "Already the hobby." };
+    const available = this.availability(id);
+    if (!available.ok) return available;
+    const previous = this.state.hobby;
+    if (previous) this.log("pause", `${this.record(previous).name ?? previous} leaves the hobby place.`);
+    this.state.hobby = id;
+    const stat = this.stat(id);
+    if (!stat.started) {
+      stat.started = true;
+      this.effects(record.onStart);
+    }
+    this.log("method", `${record.name ?? id} is taken up as a hobby.`);
+    this.reconcile();
+    return { ok: true, reason: "Started as a hobby." };
+  }
+
+  stopHobby(): Availability {
+    const id = this.state.hobby;
+    if (!id) return { ok: false, reason: "No hobby is running." };
+    this.state.hobby = null;
+    this.log("pause", `${this.record(id).name ?? id} leaves the hobby place.`);
+    this.reconcile();
+    return { ok: true, reason: "Stopped." };
+  }
+
+  /** The hobby leaves its place for a reason the engine found, worded as the main slot words its stops. */
+  private endHobby(reason: string): void {
+    const id = this.state.hobby;
+    if (!id) return;
+    this.state.hobby = null;
+    this.lastReason = `${this.record(id).name ?? id} leaves the hobby place: ${reason}`;
+    this.log("pause", this.lastReason);
+  }
+
+  /**
+   * One activity second of the hobby: its drains in full, its effect and training at `HOBBY_RATE`, its thresholds
+   * on whole seconds. It stops as the main slot would: an unpayable drain, a full `fill` store, or a lost need.
+   */
+  private hobbyTick(): void {
+    const id = this.state.hobby;
+    if (!id) return;
+    const record = this.record(id), stat = this.stat(id);
+    const short = this.unsustained(record);
+    if (short) { this.endHobby(`${this.record(short).name ?? short} cannot sustain it.`); return; }
+    stat.ticks++;
+    const levelBefore = record.train ? this.stat(record.train).value : 0;
+    this.effects(record.run, -1);
+    this.effects(record.strain, -1);
+    this.effects(record.effect, stat.rate * HOBBY_RATE);
+    this.thresholds(record, stat.ticks);
+    if (record.train) {
+      const gained = this.stat(record.train).value - levelBefore;
+      stat.reps += gained;
+      stat.value = Math.min(stat.max, stat.value + gained);
+    }
+    this.recompute();
+    if (this.state.hobby !== id) return;
+    if (this.filled(record)) {
+      const names = this.fillTargets(record).map(target => this.record(target).name ?? target);
+      this.endHobby(`${list(names)} ${names.length > 1 ? "are" : "is"} full.`);
+      return;
+    }
+    const available = this.availability(id);
+    if (!available.ok) this.endHobby(available.reason);
+  }
+
+  /** Lasting preparations run down by one activity second; a spent one is dropped and said. */
+  private wearEffects(): void {
+    if (!this.state.effects.length) return;
+    const kept: WorldState["effects"] = [];
+    for (const effect of this.state.effects) {
+      effect.remaining -= 1;
+      if (effect.remaining > EPSILON) kept.push(effect);
+      else this.log("completion", `${this.record(effect.id).name ?? effect.id} wears off.`);
+    }
+    this.state.effects = kept;
   }
 
   // ------------------------------------------------------------------ actions
@@ -674,6 +812,8 @@ export class GameEngine {
       }
     }
     const stat = this.stat(id);
+    // The slot takes precedence: a practice started here leaves the hobby place.
+    if (this.state.hobby === id) this.state.hobby = null;
     if (typeof record.length !== "number") this.pay(record);
     else if (!stat.paid) this.payEntry(record);
     if (!stat.started) {
@@ -682,6 +822,11 @@ export class GameEngine {
     }
     if (record.length === undefined) {
       this.complete(record);
+      if (record.kind === "preparation" && record.lasts) {
+        // Taking one again resets its clock; nothing stacks.
+        this.state.effects = this.state.effects.filter(effect => effect.id !== id);
+        this.state.effects.push({ id, remaining: record.lasts });
+      }
       if (oneShotKinds.has(record.kind)) this.log("purchase", `${record.name ?? id} is now part of your life.`);
       this.reconcile();
       this.checkActive();
@@ -802,6 +947,13 @@ export class GameEngine {
           break;
         }
         if (!this.state.active) this.fillIdle();
+      } else if (this.state.hobby) {
+        // The hobby runs second by second; the waiting list is checked after each, as the slot does.
+        this.hobbySecond();
+        remaining = Math.max(0, remaining - 1);
+        result.activitySeconds++;
+        result.bankedSeconds += this.creditBank(1);
+        this.fillIdle();
       } else if (this.state.waiting.length && this.passiveMoving()) {
         // Content thresholds sit on whole units and caps, so checking at each crossing resumes on the same second as checking every second.
         const step = Math.min(Math.floor(remaining + EPSILON), this.nextPassiveCrossing());
@@ -823,6 +975,18 @@ export class GameEngine {
     return result;
   }
 
+  /** An activity second with the slot empty and only the hobby running: passive rates, the hobby, lasting preparations. */
+  private hobbySecond(): void {
+    this.state.activitySeconds++;
+    for (const resource of this.records) {
+      const current = this.stat(resource.id);
+      if (resource.kind === "resource" && current.open && current.rate) this.change(resource.id, current.rate);
+    }
+    this.hobbyTick();
+    this.wearEffects();
+    this.reconcile();
+  }
+
   /** Turns bank spending on or off for the running activity's objective. */
   setAccelerating(on: boolean): Availability {
     if (!on) { this.state.bank.accelerating = false; return { ok: true, reason: "Acceleration stopped." }; }
@@ -834,7 +998,7 @@ export class GameEngine {
 
   private bankTick(result: AdvanceResult): void {
     this.state.bank.seconds = Math.max(0, this.state.bank.seconds - 1);
-    if (this.tick()) result.spentSeconds++;
+    if (this.tick(false)) result.spentSeconds++;
     else this.state.bank.seconds = Math.min(this.state.bank.cap, this.state.bank.seconds + 1);
     if (this.state.bank.seconds + EPSILON < 1) this.state.bank.accelerating = false;
   }
@@ -1012,7 +1176,7 @@ export class GameEngine {
     return (objective.kind === "repetitions" ? stat.reps : stat.value) + EPSILON >= objective.target;
   }
 
-  private tick(): boolean {
+  private tick(withHobby = true): boolean {
     // Rest yields to a waiting pursuit the moment one can resume.
     if (this.state.active && this.record(this.state.active.id).autoStart) this.resumeWaiting();
     this.checkActive();
@@ -1066,6 +1230,9 @@ export class GameEngine {
         }
       }
     }
+    // The hobby place and lasting preparations run on the same activity second; an accelerated second is the slot's alone.
+    if (withHobby) this.hobbyTick();
+    this.wearEffects();
     this.reconcile();
     if (this.state.active === active && this.filled(record)) this.finishFill(record);
     return true;
@@ -1091,16 +1258,13 @@ export class GameEngine {
     const you: Fighter = live ? { ...live.you } : this.fighter();
     const lifeValue = lifeHeld ?? live?.life ?? this.stat(LIFE).value, life = Math.floor(lifeValue + EPSILON);
     const held: FightProjection["held"] = [];
-    for (const attuned of this.state.attuned) {
-      const adds = this.heldAdds(attuned);
-      if (Object.keys(adds).length) held.push({ id: attuned, adds });
+    for (const source of [...this.state.attuned, ...this.state.stance ? [this.state.stance] : [], ...this.state.effects.map(effect => effect.id)]) {
+      const adds = this.heldAdds(source);
+      if (Object.keys(adds).length) held.push({ id: source, adds });
     }
     const odds = exchange(you, foe);
-    const race = (toFell: number, damage: number, chance: number, speed: number) =>
-      damage > 0 && chance > 0 && speed > 0 ? Math.ceil(toFell / damage) / chance * GAUGE / speed : Infinity;
-    const winSeconds = race(foe.life, odds.yourDamage, odds.yourChance, you.speed), loseSeconds = race(life, odds.foeDamage, odds.foeChance, foe.speed);
-    const winChance = this.winChance(record, you, lifeValue), verdict = fightVerdict(winChance, odds.yourDamage);
-    const projection: FightProjection = { foe, you, life, lifeMax: this.stat(LIFE).max, held, ...odds, winSeconds, loseSeconds,
+    const outcome = this.replay(record, you, lifeValue), winChance = outcome.chance, verdict = fightVerdict(winChance, odds.yourDamage);
+    const projection: FightProjection = { foe, you, life, lifeMax: this.stat(LIFE).max, held, ...odds, winSeconds: outcome.winSeconds, loseSeconds: outcome.loseSeconds,
       limit: this.stat(id).length, winChance, verdict, verdictText: this.verdictText(winChance, verdict, you, foe), likely: winChance + EPSILON >= 0.5 };
     const flip = live ? undefined : this.flip(record, projection, lifeValue);
     if (flip) projection.flip = flip;
@@ -1124,12 +1288,12 @@ export class GameEngine {
     return adds;
   }
 
-  /** The exact chance of a win if this fight began now with these stats and this much Life. */
-  private winChance(record: GameRecord, you: Fighter, life: number): number {
+  /** The exact outcome of this fight if it began now with these stats and this much Life. */
+  private replay(record: GameRecord, you: Fighter, life: number): Outcome {
     const run = this.stat(record.id), lifeStat = this.stat(LIFE), speed = this.speed(record);
     // The run ends on the second its progress reaches its length, so that is the fight's last second.
     const seconds = speed > EPSILON ? Math.max(1, Math.ceil((run.length - run.exp) / speed - EPSILON)) : FIGHT_SECONDS_MAX;
-    return winChance({ you, foe: record.encounter!.foe, life, lifeMax: lifeStat.max, regen: lifeStat.open ? lifeStat.rate : 0,
+    return replay({ you, foe: record.encounter!.foe, life, lifeMax: lifeStat.max, regen: lifeStat.open ? lifeStat.rate : 0,
       seconds: Math.min(seconds, FIGHT_SECONDS_MAX) });
   }
 
@@ -1141,8 +1305,8 @@ export class GameEngine {
   }
 
   /**
-   * The cheapest change that would move the verdict up a band, cheapest first: resting to full Life, holding a
-   * method in a free attunement place, then a higher Strike and what raises it.
+   * The cheapest change that would move the verdict up a band, cheapest first: resting to full Life, taking a
+   * stance, holding a method in a free attunement place, then a higher Strike and what raises it.
    */
   private flip(record: GameRecord, projection: FightProjection, life: number): string | undefined {
     if (projection.verdict === "certain") return undefined;
@@ -1150,16 +1314,31 @@ export class GameEngine {
     const better = (chance: number, you: Fighter) => FIGHT_VERDICTS.indexOf(fightVerdict(chance, Math.max(0, you.strike - foe.guard))) > rank;
     const lifeMax = this.stat(LIFE).max;
     if (life + EPSILON < lifeMax) {
-      const rested = this.winChance(record, projection.you, lifeMax);
+      const rested = this.replay(record, projection.you, lifeMax).chance;
       if (better(rested, projection.you)) return `Rested to full ${this.record(LIFE).name ?? LIFE}: ${percent(rested)}`;
     }
+    // A stance costs nothing to take; the one taken now gives its numbers back when another replaces it.
+    const current = this.state.stance ? this.heldAdds(this.state.stance) : {};
+    let stance: { name: string; chance: number } | undefined;
+    for (const candidate of this.records) {
+      if (!candidate.stance || this.state.stance === candidate.id || !this.visible(candidate.id)) continue;
+      const adds: Partial<Fighter> = {}, offered = this.heldAdds(candidate.id);
+      for (const key of FIGHT_STATS) {
+        const delta = (offered[key] ?? 0) - (current[key] ?? 0);
+        if (delta) adds[key] = delta;
+      }
+      if (!Object.keys(adds).length) continue;
+      const you = this.fighter(adds), chance = this.replay(record, you, life).chance;
+      if (better(chance, you) && (!stance || chance > stance.chance)) stance = { name: candidate.name ?? candidate.id, chance };
+    }
+    if (stance) return `Taking the ${inSentence(stance.name)}: ${percent(stance.chance)}`;
     if (this.byId.has(ATTUNE_SLOTS) && this.state.attuned.length < Math.floor(this.stat(ATTUNE_SLOTS).max + EPSILON)) {
       let best: { name: string; chance: number } | undefined;
       for (const method of this.records) {
         if (!method.attune || this.isAttuned(method.id) || !this.visible(method.id)) continue;
         const adds = this.heldAdds(method.id);
         if (!Object.keys(adds).length) continue;
-        const you = this.fighter(adds), chance = this.winChance(record, you, life);
+        const you = this.fighter(adds), chance = this.replay(record, you, life).chance;
         if (better(chance, you) && (!best || chance > best.chance)) best = { name: method.name ?? method.id, chance };
       }
       if (best) return `Holding ${best.name} as well: ${percent(best.chance)}`;
@@ -1168,7 +1347,7 @@ export class GameEngine {
     const raisers = sources.length ? `raised by ${sources.join(" or ")}` : "nothing you know of raises it further";
     if (projection.verdict === "hopeless") return `${strikeName} ${foe.guard + 1} passes ${this.record(GUARD).name ?? GUARD} ${foe.guard}: ${raisers}`;
     if (!sources.length) return undefined;
-    const stronger = { ...projection.you, strike: projection.you.strike + 1 }, chance = this.winChance(record, stronger, life);
+    const stronger = { ...projection.you, strike: projection.you.strike + 1 }, chance = this.replay(record, stronger, life).chance;
     return better(chance, stronger) ? `${strikeName} ${stronger.strike}: ${percent(chance)}; ${raisers}` : undefined;
   }
 
@@ -1216,13 +1395,19 @@ export class GameEngine {
       } else {
         fight.foeGauge -= GAUGE;
         fight.foeSwings++;
+        // Every `every`-th swing of the foe is its technique, named before the swing itself is told.
+        const technique = foeTechnique(foe, fight.foeSwings), foeDamage = Math.max(0, (technique?.strike ?? foe.strike) - fight.you.guard);
+        if (technique) {
+          fight.lines.push(`${fightClock(fight.seconds)} ${Foe}: ${technique.name}.`);
+          this.log("fight", `${name}: ${Foe}: ${technique.name}.`);
+        }
         if (this.random() >= projection.foeChance) text = `You slip ${foe.name}'s strike.`;
         else {
           fight.foeLanded++;
-          this.change(LIFE, -projection.foeDamage);
+          this.change(LIFE, -foeDamage);
           const left = Math.floor(this.stat(LIFE).value + EPSILON);
-          text = projection.foeDamage === 0 ? `${Foe}'s strike lands, but your guard turns it.`
-            : `${Foe} strikes you for ${projection.foeDamage} (${lifeName} ${left}).`;
+          text = foeDamage === 0 ? `${Foe}'s strike lands, but your guard turns it.`
+            : `${Foe} strikes you for ${foeDamage} (${lifeName} ${left}).`;
           if (left < 1) {
             // Taking every whole point empties the store, so a regenerated fraction does not linger.
             this.change(LIFE, -this.stat(LIFE).value);
@@ -1306,6 +1491,14 @@ export class GameEngine {
       if (this.isAttuned(id)) {
         this.state.attuned = this.state.attuned.filter(entry => entry !== id);
         this.log("method", `${name} is released: this chapter has closed.`);
+      }
+      if (this.state.hobby === id) {
+        this.state.hobby = null;
+        this.log("pause", `${name} leaves the hobby place: this chapter has closed.`);
+      }
+      if (this.state.stance === id) {
+        this.state.stance = null;
+        this.log("method", `${name} is dropped: this chapter has closed.`);
       }
     }
     for (const id of record.enable ?? []) {
@@ -1456,7 +1649,7 @@ export class GameEngine {
       const stat = this.stat(record.id), done = record.kind !== "resource" && stat.value >= stat.max;
       // A knowledge at its cap pays more per level only once its own cap can rise.
       if (raises(perLevel) && (!done || (!asked.has(record.id) && this.raisable(record.id, asked)))) return true;
-      if (raises(held) && !this.isAttuned(record.id)) return true;
+      if (raises(held) && !this.holding(record.id)) return true;
       if (at.some(step => step.threshold > this.count(record) && raises(step.table))) return true;
       return !done && (raises(owned) || every.some(step => raises(step.table)));
     });
@@ -1561,7 +1754,8 @@ export class GameEngine {
       : unbounded ? (stat.reps ? `${stat.reps} completed` : undefined) : `${shown(stat.value)}/${shown(stat.max)}`]);
     // Route keys are not a type; the UI names them in words beside the blocks.
     block("type", [kindLabel(record), record.slot ? `Place: ${record.slot}` : undefined,
-      record.attune ? (this.isAttuned(id) ? "Attuned" : "Needs an attunement slot") : undefined]);
+      record.stance ? (this.state.stance === id ? "Stance, taken" : "Stance") : record.attune ? (this.isAttuned(id) ? "Attuned" : "Needs an attunement slot") : undefined,
+      record.hobby ? (this.state.hobby === id ? "Running as the hobby" : "Can run as the hobby") : undefined]);
     block("rate", [
       record.kind === "family" && stat.open ? `Experience: ${shown(stat.exp)}/${EXP_PER_LEVEL * (stat.value + 1)}` : undefined,
       timed && stat.rate !== 1 ? `Completion rate: ${Math.round(stat.rate * 100)}%` : undefined,
@@ -1570,7 +1764,11 @@ export class GameEngine {
     ]);
     block("desc", [record.desc, record.breakthrough?.coreLabel]);
     const fullTime = stat.length / Math.max(this.speed(record), EPSILON);
-    block("time", [!timed ? undefined : record.encounter ? `Time limit: ${clock(fullTime)}` : `Completion time: ${clock(fullTime)}`]);
+    const inEffect = this.state.effects.find(effect => effect.id === id);
+    block("time", [
+      !timed ? undefined : record.encounter ? `Time limit: ${clock(fullTime)}` : `Completion time: ${clock(fullTime)}`,
+      record.lasts ? `Lasts ${record.lasts % 60 === 0 ? `${record.lasts / 60} min` : `${record.lasts} s`}${inEffect ? ` (${clock(inEffect.remaining)} left)` : ""}` : undefined,
+    ]);
     if (record.encounter) {
       const live = this.fighting() && this.state.active?.id === id;
       const projection = this.fight(id), { foe, you } = projection, lifeName = this.record(LIFE).name ?? LIFE;
@@ -1578,14 +1776,18 @@ export class GameEngine {
         `strike ${fighter.strike}, guard ${fighter.guard}, speed ${shown(fighter.speed)}, hit ${shown(fighter.hit)}%, dodge ${shown(fighter.dodge)}%`);
       const held = projection.held.map(entry => `${this.record(entry.id).name ?? entry.id} ${Object.entries(entry.adds)
         .map(([key, amount]) => `${key} +${shown(amount)}${key === HIT || key === DODGE ? "%" : ""}`).join(" ")}`);
-      const yours = projection.winSeconds === Infinity ? `your swings cannot hurt ${foe.name}` : `you fell ${foe.name} in ~${Math.round(projection.winSeconds)} s`;
-      const theirs = projection.loseSeconds === Infinity ? `${foe.name} cannot hurt you` : `${foe.name} fells you in ~${Math.round(projection.loseSeconds)} s`;
+      const technique = foe.technique, ordinal = technique ? ({ 2: "second", 3: "third", 4: "fourth", 5: "fifth" } as Record<number, string>)[technique.every] ?? `${technique.every}th` : "";
+      const yours = projection.winSeconds !== Infinity ? `you fell ${foe.name} in ~${Math.round(projection.winSeconds)} s`
+        : projection.yourDamage > 0 ? `you do not fell ${foe.name} inside the limit` : `your swings cannot hurt ${foe.name}`;
+      const theirs = projection.loseSeconds !== Infinity ? `${foe.name} fells you in ~${Math.round(projection.loseSeconds)} s`
+        : projection.foeDamage > 0 || (technique && technique.strike > you.guard) ? `${foe.name} does not fell you inside the limit` : `${foe.name} cannot hurt you`;
       block("fight", [
         projection.verdictText,
         projection.flip,
         `${foe.name.charAt(0).toUpperCase()}${foe.name.slice(1)}: life ${foe.life}, ${foeStats}`,
+        technique ? `Every ${ordinal} swing: ${technique.name}, strike ${technique.strike}${technique.strike > you.guard ? ` for ${technique.strike - you.guard}` : ", turned by your guard"}` : undefined,
         `You: ${lifeName} ${projection.life}/${shown(projection.lifeMax)}, ${yourStats}${live ? " (as you entered)" : ""}`,
-        held.length && !live ? `Held methods: ${held.join(", ")}` : undefined,
+        held.length && !live ? `Held: ${held.join(", ")}` : undefined,
         `Your swings land ${Math.round(projection.yourChance * 100)}% of the time for ${projection.yourDamage}; ${foe.name}'s land ${Math.round(projection.foeChance * 100)}% for ${projection.foeDamage}.`,
         `On average ${yours}; ${theirs}.`,
       ], "Fight");
@@ -1607,7 +1809,7 @@ export class GameEngine {
     const payout = { ...(record.kind === "family" ? record.perLevel : record.mod) };
     for (const path of this.patchedPaths(id)) if (!Object.keys(payout).some(own => fieldPath(own) === fieldPath(path))) payout[path] = 0;
     block("mod", (record.kind === "family" ? this.lines(record.mod).concat(this.lines(payout, " per level", patched)) : this.lines(payout, "", patched))
-      .concat(this.lines(record.held, " while attuned"))
+      .concat(this.lines(record.held, record.stance ? " while taken" : record.kind === "preparation" ? " while in effect" : " while attuned"))
       .concat(Object.entries(record.at ?? {}).flatMap(([threshold, changes]) => this.lines(changes, ` ${thresholdText(record, Number(threshold))}`))), "Modifies");
     // A completion adds the record's yield to every resource it pays, as `complete` does.
     block("result", this.lines(record.result, "", (path, base) => !path.includes(".") && base > 0 && this.byId.get(path)?.kind === "resource"
@@ -1771,16 +1973,24 @@ function percent(chance: number): string {
 }
 
 interface Race { you: Fighter; foe: Foe; life: number; lifeMax: number; regen: number; seconds: number }
+/** A fight's exact outcome: the win chance, and the mean fight second a win or a felling comes, Infinity when it never does. */
+interface Outcome { chance: number; winSeconds: number; loseSeconds: number }
+
+/** The foe's technique on its `swing`-th swing of the fight, when it has one and the count is a multiple of `every`. */
+function foeTechnique(foe: Foe, swing: number): Foe["technique"] | undefined {
+  return foe.technique && foe.technique.every > 0 && swing % foe.technique.every === 0 ? foe.technique : undefined;
+}
 
 /**
- * The exact chance that the foe falls before your Life drops below 1 or the seconds run out, under the rules
- * `playSwings` rolls (ADR 0026 §3). Swings come on gauges that fill whatever lands, so the order of swings is
- * fixed and only the two Life totals vary: their distribution is carried swing by swing, with your Life
- * regenerating at the start of each second and kept in bounds exactly as the store keeps it.
+ * The fight replayed exactly, under the rules `playSwings` rolls (ADR 0026 §3): the chance that the foe falls
+ * before your Life drops below 1 or the seconds run out, and the mean second at which each outcome comes.
+ * Swings come on gauges that fill whatever lands, so the order of swings is fixed, the foe's technique falls on
+ * known swings, and only the two Life totals vary: their distribution is carried swing by swing, with your Life
+ * regenerating at the start of each second and kept in bounds exactly as the store keeps it. Mass still standing
+ * when the seconds run out is outlasted: a loss, but not a felling.
  */
-function winChance({ you, foe, life, lifeMax, regen, seconds }: Race): number {
-  const { yourChance, foeChance, yourDamage, foeDamage } = exchange(you, foe);
-  if (yourDamage <= 0 || yourChance <= 0) return 0;
+function replay({ you, foe, life, lifeMax, regen, seconds }: Race): Outcome {
+  const { yourChance, foeChance, yourDamage } = exchange(you, foe);
   const store = (value: number): number => {
     const kept = Math.max(0, Math.min(lifeMax, value));
     return lifeMax - kept < EPSILON ? lifeMax : kept;
@@ -1794,8 +2004,8 @@ function winChance({ you, foe, life, lifeMax, regen, seconds }: Race): number {
   };
   let sides = new Map<string, Side>();
   add(sides, life, foe.life, 1);
-  let won = 0, yourGauge = 0, foeGauge = 0;
-  for (let second = 0; second < seconds && sides.size; second++) {
+  let won = 0, wonSeconds = 0, lost = 0, lostSeconds = 0, yourGauge = 0, foeGauge = 0, foeSwings = 0;
+  for (let second = 1; second <= seconds && sides.size; second++) {
     if (regen) {
       const rested = new Map<string, Side>();
       for (const side of sides.values()) add(rested, store(side.life + regen), side.foeLife, side.chance);
@@ -1811,20 +2021,23 @@ function winChance({ you, foe, life, lifeMax, regen, seconds }: Race): number {
         yourGauge -= GAUGE;
         for (const side of sides.values()) {
           const foeLife = Math.max(0, side.foeLife - yourDamage);
-          if (foeLife === 0) won += side.chance * yourChance;
+          if (foeLife === 0) { won += side.chance * yourChance; wonSeconds += side.chance * yourChance * second; }
           else add(next, side.life, foeLife, side.chance * yourChance);
           add(next, side.life, side.foeLife, side.chance * (1 - yourChance));
         }
       } else {
         foeGauge -= GAUGE;
+        foeSwings++;
+        const foeDamage = Math.max(0, (foeTechnique(foe, foeSwings)?.strike ?? foe.strike) - you.guard);
         for (const side of sides.values()) {
           const hurt = store(side.life - foeDamage);
           if (Math.floor(hurt + EPSILON) >= 1) add(next, hurt, side.foeLife, side.chance * foeChance);
+          else { lost += side.chance * foeChance; lostSeconds += side.chance * foeChance * second; }
           add(next, side.life, side.foeLife, side.chance * (1 - foeChance));
         }
       }
       sides = next;
     }
   }
-  return Math.min(1, won);
+  return { chance: Math.min(1, won), winSeconds: won > EPSILON ? wonSeconds / won : Infinity, loseSeconds: lost > EPSILON ? lostSeconds / lost : Infinity };
 }

@@ -178,6 +178,8 @@ Arrangements consume space; relocation carries what fits; place-bound arrangemen
 
 ## Part C: First playable slice, fully specified
 
+The chapter after this slice, from the waystation's leads to the Second Direction and Reedmarket, is specified in [`CHAPTER-2-BASIN-ROAD.md`](CHAPTER-2-BASIN-ROAD.md) ([ADR 0030](decisions/0030-sphere-techniques.md), [ADR 0031](decisions/0031-basin-road-systems.md)); its retrofit of the ridge's First Direction is recorded there, and this Part's ridge rows are read through it.
+
 Bound: cold start to Foundation in about ten minutes of honest play, then the ridge to the waystation ([ADR 0028](decisions/0028-ten-minute-foundation.md)). `bun run validate` fails a direct route outside 8–13 minutes to Foundation or with Circulation opening after 10, a preference route above 20, and any ridge route outside 12–24 minutes from Foundation to the waystation. **The measured figure lives in [`playtest/SIMULATION-REPORT.md`](../playtest/SIMULATION-REPORT.md) and nowhere else in this plan.** Every number below is provisional: unless this plan says a figure was measured, it was chosen, and all of the pre-20-October measurements were taken before ADRs 0021-0025. This section states the slice's shape; where it and the shipped JSON disagree, the JSON is the record of what runs and the correction belongs in §0. The 2-3-visit idle pattern still needs human play evidence.
 
 ### C.1 Stat sheet
@@ -424,7 +426,7 @@ Playtest questions, ranked:
 | ADR 0017 roster (7 at B4) | 9: adds Vein Adept (pure Earth), Grand Array Adept (pure Formation) | Same; each is one key record into a module that exists anyway |
 | ADR 0015 "mastery totals are qualifications, not trainable levels" | Kept for tags; techniques are the trainable layer beneath them, and class gates name a technique | Arcanum gates classes on skills (Necromancer: `reanimation ≥ 7`), not on tag counts alone |
 
-**Decisions recorded 20 October 2026 (ADRs 0021-0025), with 0026 (21 October) and 0027-0028 (27 October)**
+**Decisions recorded 20 October 2026 (ADRs 0021-0025), with 0026 (21 October), 0027-0031 (27 October)**
 
 | ADR | Decision | What it changes here |
 |---|---|---|
@@ -437,8 +439,10 @@ Playtest questions, ranked:
 | [0027: Locks at payment and stops](decisions/0027-locks-at-payment-and-stops.md) (27 Oct) | A timed record's lock applies when its bill is paid; confirmations name what closes; discoveries never stop activity | Amends rule 9 and ADR 0007's stops |
 | [0028: A ten-minute Foundation](decisions/0028-ten-minute-foundation.md) (27 Oct) | About ten minutes of honest play to Foundation; the validator's bands are the one bound | Replaces Part E check 4's bounds and the bound line that opens Part C |
 | [0029: Crafting](decisions/0029-crafting-workbench-recipes-preparations.md) (27 Oct) | A workbench after Foundation; timed recipes make kit (held, carrying a `mod`) and doses; `preparation` is an instant kind that spends a dose | Settles the open part of ADR 0009; adds `preparation` to Part D's kinds |
+| [0030: Sphere techniques](decisions/0030-sphere-techniques.md) (27 Oct) | Identity is the held set of sphere techniques: each sphere teaches an opposed pair per tier that lock each other with a warning; a Direction is one sphere-agnostic breakthrough that never locks and raises every carried sphere; titles are derived by ordered events and keep only their `X.mod.Y` patches; attunement places 3 → 4 → 5; save v7 | **Supersedes rule 2's "+3 to its line" and rule 6's "a class choice closes its same-tier rivals"**, B.2 rows 2–3 and B.3 as the class table; supersedes ADR 0015 and ADR 0016's roster (B4, ADR 0017, untouched); amends ADR 0023, 0024, 0026 §1 |
+| [0031: Basin road systems](decisions/0031-basin-road-systems.md) (27 Oct) | A hobby slot at half pace beside the activity slot; Focus as a second gauge; stances as a second exclusive loadout and foe techniques inside the exact win chance; preparations that last and pay `held` while in effect | **Supersedes rule 12's "strain gauges"** with Strain and Focus and **rule 13's hobby schedule** (the Second Direction grants it); settles ADR 0026's open stances and foe techniques and ADR 0029's lasting preparation |
 
-**Unchanged**: eight breakthroughs; four starters; all original B3/B4 classes and their tags (incl. Golden Cauldron open entry per Q72); mastery counting (ADR 0015, which attunement does not touch, since attunement is a place in the mind and not a record of history); one activity at a time; 1:1 bank and its accrual, delivery and cap-as-reward rules (ADR 0007); Cloudwell structure (ADR 0018); noncombat viability; optional sects; desktop text-panel presentation; no morality axis (now recorded as a decision).
+**Unchanged**: eight breakthroughs; four starters as spheres; the B4 roster and its tags (ADR 0017, to be rewritten on ADR 0030's model when its chapter is designed; Golden Cauldron open entry per Q72); one activity at a time plus the hobby place (ADR 0031); 1:1 bank and its accrual, delivery and cap-as-reward rules (ADR 0007); Cloudwell structure (ADR 0018); noncombat viability; optional sects; desktop text-panel presentation; no morality axis (now recorded as a decision). Mastery counting (ADR 0015) and the B3 roster as bought classes (ADR 0016) are superseded by [ADR 0030](decisions/0030-sphere-techniques.md).
 
 **Decisions taken in the 18 October revision (from the third-party recommendations)**: hybrid tempo; Golden Cauldron as the fallback, no scholar line; TypeScript engine implementing the grammar, Arcanum as reference not fork; Karma cut; B1-B4 only; Body + Earth + hybrid first.
 

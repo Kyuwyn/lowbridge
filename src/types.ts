@@ -101,16 +101,27 @@ export interface GameRecord {
   slot?: string;
   /** Shown as the character's standing while this class is held. */
   title?: string;
-  /** Standing modifiers paid while this technique holds an attunement place. */
+  /** Standing modifiers paid while this technique holds an attunement place, is the stance taken, or is a preparation in effect. */
   held?: Changes;
   /** Fought across the timed run: each side swings whenever its gauge fills, until one side falls or the run's length runs out. */
   encounter?: Encounter;
+  /** A continuous practice that may run in the hobby place at half pace beside the activity slot. */
+  hobby?: boolean;
+  /** A technique held as the one stance taken; its `held` table is paid while taken. */
+  stance?: boolean;
+  /** A preparation whose `held` table is paid for this many activity seconds after it is taken. */
+  lasts?: number;
 }
 
 /** Hit and dodge are percentages. */
 export interface Fighter { strike: number; guard: number; speed: number; hit: number; dodge: number }
 
-export interface Foe extends Fighter { name: string; life: number }
+export interface Foe extends Fighter {
+  name: string;
+  life: number;
+  /** Every `every`-th swing of the foe, counted across the whole fight, uses `strike` instead of its ordinary strike. */
+  technique?: { name: string; every: number; strike: number };
+}
 
 export interface Encounter {
   foe: Foe;
@@ -199,6 +210,12 @@ export interface WorldState {
   lastStop?: string;
   /** The fight being played out, or the last one until the player starts something else. */
   fight?: FightState;
+  /** The practice running in the hobby place at half pace, if any. */
+  hobby: string | null;
+  /** Lasting preparations in effect, each with the activity seconds it has left. */
+  effects: { id: string; remaining: number }[];
+  /** The stance taken, if any. */
+  stance: string | null;
 }
 
 /** A fight under way or just finished. Your stats are taken as it begins; your Life is the live store. */

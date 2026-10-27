@@ -2,7 +2,7 @@ import type { ActiveTask, FightState, GameRecord, GameState, LogEntry, Objective
 import { DODGE_MAX, FIGHT_LINES, GAUGE, GameEngine, WAITING_MAX } from './engine';
 
 export const SAVE_FORMAT = 'lowbridge-save';
-export const SAVE_VERSION = 6;
+export const SAVE_VERSION = 7;
 export const DATABASE_NAME = 'lowbridge-first-slice';
 const LOG_KINDS = ['discovery', 'story', 'cap', 'completion', 'pause', 'purchase', 'method', 'home', 'fight'];
 const OBJECTIVE_KINDS = ['repetitions', 'level', 'resource'];
@@ -45,6 +45,9 @@ export interface SaveFile {
   log: LogEntry[];
   lastStop?: string;
   fight?: FightState;
+  hobby: string | null;
+  effects: { id: string; remaining: number }[];
+  stance: string | null;
 }
 
 export interface DecodedSave {
@@ -104,6 +107,7 @@ export function makeSave(state: GameState, records: GameRecord[], savedAt = Date
     log: structuredClone(state.log),
     ...state.lastStop === undefined ? {} : { lastStop: state.lastStop },
     ...state.fight ? { fight: structuredClone(state.fight) } : {},
+    hobby: state.hobby, effects: structuredClone(state.effects), stance: state.stance,
   };
 }
 
@@ -213,7 +217,28 @@ export function decodeSave(input: unknown, records: GameRecord[]): DecodedSave {
     capHits: strings(save.capHits, 'Cap notices'),
     log: [],
     wallRemainder: number(save.wallRemainder, 'Partial tick', 1),
+    hobby: null, effects: [], stance: null,
   };
+  if (save.hobby !== null) {
+    const record = typeof save.hobby === 'string' ? definitions.get(save.hobby) : undefined;
+    if (!record || record.hobby !== true || record.length !== 'continuous') fail('the hobby is invalid.');
+    world.hobby = record.id;
+  }
+  if (save.stance !== null) {
+    const record = typeof save.stance === 'string' ? definitions.get(save.stance) : undefined;
+    if (!record || record.stance !== true) fail('the stance is invalid.');
+    world.stance = record.id;
+  }
+  if (!Array.isArray(save.effects) || save.effects.length > 100) fail('the preparations in effect are invalid.');
+  for (const item of save.effects as unknown[]) {
+    const entry = object(item, 'A preparation in effect');
+    const record = typeof entry.id === 'string' ? definitions.get(entry.id) : undefined;
+    if (!record || record.kind !== 'preparation' || !record.lasts) fail('a preparation in effect is not a lasting preparation.');
+    const remaining = number(entry.remaining, `${record.id} time left`);
+    if (remaining <= 0) fail(`${record.id} has no time left.`);
+    if (world.effects.some(effect => effect.id === record.id)) fail(`${record.id} is in effect twice.`);
+    world.effects.push({ id: record.id, remaining });
+  }
   if (world.wallRemainder >= 1) fail('the partial tick is invalid.');
   if (save.lastStop !== undefined) {
     if (typeof save.lastStop !== 'string' || save.lastStop.length > 1000) fail('the stop reason is invalid.');
@@ -267,6 +292,7 @@ export function decodeSave(input: unknown, records: GameRecord[]): DecodedSave {
     const valid = engine.objectiveAvailability(entry.id, entry.objective);
     if (!valid.ok) fail(valid.reason);
   }
+  if (state.hobby && state.active?.id === state.hobby) fail('the hobby is also the running activity.');
   return {
     save: {
       format: SAVE_FORMAT, version: SAVE_VERSION, savedAt,
@@ -278,6 +304,7 @@ export function decodeSave(input: unknown, records: GameRecord[]): DecodedSave {
       attuned: [...state.attuned], events: [...state.eventIds], capHits: [...state.capHits], log: structuredClone(state.log),
       ...world.lastStop === undefined ? {} : { lastStop: world.lastStop },
       ...state.fight ? { fight: structuredClone(state.fight) } : {},
+      hobby: state.hobby, effects: structuredClone(state.effects), stance: state.stance,
     },
     state: engine.snapshot(),
   };

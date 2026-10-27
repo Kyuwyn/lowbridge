@@ -25,7 +25,7 @@ function lived(): GameEngine {
   return game;
 }
 
-describe('version 6 delta saves', () => {
+describe('version 7 delta saves', () => {
   test('a roundtrip restores the same life, deriving every cap and rate again on the way in', () => {
     const game = lived();
     const decoded = reload(JSON.stringify(save(game)));
@@ -111,11 +111,47 @@ describe('version 6 delta saves', () => {
     expect(new GameEngine(generous, decodeSave(file, generous).state).stat('coin').max).toBe(22);
   });
 
-  test('a save from the format before derived fields were rebuilt is refused by name', () => {
+  test('a save from a format before this one is refused by name', () => {
     expect(outdated.version).toBe(5);
     expect(() => reload(outdated)).toThrow(/version 5/);
     expect(() => reload(outdated)).toThrow(/start a new journey/);
+    const six = { ...save(new GameEngine(records)), version: 6 } as Record<string, unknown>;
+    delete six.hobby; delete six.effects; delete six.stance;
+    expect(() => reload(six)).toThrow(/version 6/);
     expect(() => reload({ ...save(new GameEngine(records)), version: SAVE_VERSION + 1 })).toThrow(/newer than this build/);
+  });
+
+  test('the hobby, the stance and the preparations in effect round-trip, and nonsense in them is refused', () => {
+    const world: GameRecord[] = [...records,
+      { id: 'hobby_slots', kind: 'resource', initial: { max: 1, open: true } },
+      { id: 'drill', kind: 'task', length: 'continuous', hobby: true, train: 'lore', effect: { 'lore.exp': 1 } },
+      { id: 'rooted', kind: 'technique', stance: true, held: { 'coin.max': 1 } },
+      { id: 'draught', kind: 'preparation', cost: { herbs: 1 }, lasts: 40, held: { 'coin.max': 5 } },
+    ];
+    const game = new GameEngine(world);
+    game.stat('herbs').value = 2;
+    expect(game.start('draught').ok).toBe(true);
+    expect(game.takeStance('rooted').ok).toBe(true);
+    expect(game.startHobby('drill').ok).toBe(true);
+    expect(game.start('reading').ok).toBe(true);
+    game.advance(10);
+    const file = makeSave(game.state, world, 1000);
+    expect(file).toMatchObject({ version: 7, hobby: 'drill', stance: 'rooted', effects: [{ id: 'draught', remaining: 30 }] });
+    const decoded = decodeSave(JSON.stringify(file), world);
+    expect(decoded.state).toEqual(game.state);
+    expect((decoded.state.stats.coin as Stat).max).toBe(game.stat('coin').max);
+    const copy = () => JSON.parse(JSON.stringify(file)) as Record<string, unknown>;
+    const bad = (mutate: (save: Record<string, unknown>) => void, message: RegExp) => {
+      const broken = copy();
+      mutate(broken);
+      expect(() => decodeSave(broken, world)).toThrow(message);
+    };
+    bad(save => { save.effects = [{ id: 'reading', remaining: 5 }]; }, /not a lasting preparation/);
+    bad(save => { save.effects = [{ id: 'draught', remaining: 0 }]; }, /no time left/);
+    bad(save => { save.effects = [{ id: 'draught', remaining: 5 }, { id: 'draught', remaining: 6 }]; }, /in effect twice/);
+    bad(save => { save.stance = 'ember_form'; }, /stance is invalid/);
+    bad(save => { save.hobby = 'reading'; }, /hobby is invalid/);
+    bad(save => { save.hobby = 'drill'; save.active = { id: 'drill', progress: 0, objective: { kind: 'level', id: 'lore', target: 3 } }; }, /also the running activity/);
   });
 
   test('corrupt files are refused before anything is replaced', () => {

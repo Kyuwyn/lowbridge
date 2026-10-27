@@ -257,10 +257,11 @@ describe("Part E validation over real opening content", () => {
     game.recompute();
     game.unattune("carry_current");
     expect(game.fight("sparring_bout")).toMatchObject({ you: { strike: 2, guard: 0, speed: 1, hit: 80, dodge: 5 }, life: 6, yourDamage: 1, foeDamage: 2, likely: false });
-    expect(game.fight("sparring_bout").winSeconds).toBeCloseTo(31.25, 6);
+    // Mean fight second of a win, over the wins alone: the replay's figure, not an average race.
+    expect(game.fight("sparring_bout").winSeconds).toBeCloseTo(23.9958, 3);
     expect(game.attune("carry_current").ok).toBe(true);
     expect(game.fight("sparring_bout")).toMatchObject({ you: { strike: 3 }, yourDamage: 2, likely: true });
-    expect(game.fight("sparring_bout").winSeconds).toBeCloseTo(15.625, 6);
+    expect(game.fight("sparring_bout").winSeconds).toBeCloseTo(13.5765, 3);
     // Every swing lands: both swing at five seconds, you first, and your second blow fells Tam at ten.
     game.random = () => 0;
     expect(game.start("sparring_bout").ok).toBe(true);
