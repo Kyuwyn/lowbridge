@@ -42,6 +42,13 @@ const clone = <T>(value: T): T => structuredClone(value);
 /** A record name inside a sentence: "through a larger coin pouch", not "through A larger coin pouch". */
 const inSentence = (name: string): string => name.replace(/^(A|An|The) /, article => article.toLowerCase());
 const list = (items: string[]): string => items.length < 2 ? items.join("") : `${items.slice(0, -1).join(", ")} and ${items.at(-1)}`;
+/** `coin` and `coin.value` are one path. */
+const fieldPath = (path: string): string => path.includes(".") ? path : `${path}.value`;
+/** How far a line has grown past content's own number, and the records responsible. */
+interface Growth { amount: number; labels: string[] }
+/** When an `at` step pays: "at level 3" on a knowledge, "after 30 s" of practice, "at 5 uses" otherwise. */
+const thresholdText = (record: GameRecord, threshold: number): string =>
+  record.kind === "family" ? `at level ${threshold}` : record.length === "continuous" ? `after ${threshold} s` : `at ${threshold} uses`;
 
 type Amount = number | string;
 /** A contribution to one derived field of one record. */
@@ -309,24 +316,55 @@ export class GameEngine {
     return changed;
   }
 
-  /** Every table a record currently pays from, with the multiplier it pays at. */
-  private eachContribution(visit: (table: Table, scale: number) => void): void {
+  /** Every table a record currently pays from, with the multiplier it pays at, the paying record, and an `at` step's threshold. */
+  private eachContribution(visit: (table: Table, scale: number, source: GameRecord, threshold?: number) => void): void {
     for (const compiled of this.compiled) {
-      const value = this.stat(compiled.record.id).value;
+      const source = compiled.record, value = this.stat(source.id).value;
       if (tableEntries(compiled.owned)) {
-        const scale = compiled.record.kind === "resource" ? value : value > 0 ? 1 : 0;
-        if (scale) visit(compiled.owned, scale);
+        const scale = source.kind === "resource" ? value : value > 0 ? 1 : 0;
+        if (scale) visit(compiled.owned, scale, source);
       }
-      if (value && tableEntries(compiled.perLevel)) visit(compiled.perLevel, value);
-      if (tableEntries(compiled.held) && this.state.attuned.includes(compiled.record.id)) visit(compiled.held, 1);
+      if (value && tableEntries(compiled.perLevel)) visit(compiled.perLevel, value, source);
+      if (tableEntries(compiled.held) && this.state.attuned.includes(source.id)) visit(compiled.held, 1, source);
       if (!compiled.at.length && !compiled.every.length) continue;
-      const count = this.count(compiled.record);
-      for (const { threshold, table } of compiled.at) if (count + EPSILON >= threshold) visit(table, 1);
+      const count = this.count(source);
+      for (const { threshold, table } of compiled.at) if (count + EPSILON >= threshold) visit(table, 1, source, threshold);
       for (const { period, table } of compiled.every) {
         const times = period > 0 ? Math.floor(count / period) : 0;
-        if (times > 0) visit(table, times);
+        if (times > 0) visit(table, times, source);
       }
     }
+  }
+
+  /**
+   * Who pays into `id.field` now and how much, for the "(+2 from 40 uses)" note on a grown value. With `patchOf`,
+   * it is the `X.mod.Y` patches into record `patchOf`'s own payout path `id.field` instead, before that record's
+   * own scale. A threshold on the viewed record's own curve is named by its count alone.
+   */
+  private contributions(path: string, viewer: string, patchOf?: string): Growth {
+    const bySource = new Map<string, { amount: number; label: string; threshold: number }>();
+    this.eachContribution((table, scale, source, threshold) => {
+      let amount = 0;
+      if (patchOf === undefined) {
+        for (const entry of table.derived) if (`${entry.id}.${entry.field}` === path) amount += this.value(entry.amount) * scale;
+      } else {
+        for (const entry of table.patches) if (entry.target === patchOf && fieldPath(entry.path) === path) amount += this.value(entry.amount) * scale;
+      }
+      if (!amount) return;
+      const name = source.name ?? source.id, perLevel = table === this.compiledById.get(source.id)!.perLevel;
+      const counted = threshold === undefined ? "" : source.kind === "family" ? `${name} ${threshold}`
+        : `${threshold}${source.length === "continuous" ? " s" : " uses"}`;
+      const label = perLevel ? `${name} ${shown(this.stat(source.id).value)}`
+        : counted && source.kind !== "family" && source.id !== viewer ? `${name} ${counted}` : counted || name;
+      const key = `${source.id}:${perLevel ? "level" : threshold === undefined ? "own" : "at"}`, known = bySource.get(key);
+      if (!known) bySource.set(key, { amount, label, threshold: threshold ?? 0 });
+      else {
+        known.amount += amount;
+        if ((threshold ?? 0) >= known.threshold) Object.assign(known, { label, threshold: threshold ?? 0 });
+      }
+    });
+    const entries = [...bySource.values()].filter(entry => Math.abs(entry.amount) > EPSILON);
+    return { amount: entries.reduce((sum, entry) => sum + entry.amount, 0), labels: entries.map(entry => entry.label) };
   }
 
   /** What a patch into X's own payout is multiplied by: a family's levels, a resource's units, else ownership. */
@@ -410,7 +448,10 @@ export class GameEngine {
     if (passiveKinds.has(record.kind)) return fail(record.kind === "lead" ? "This lead continues beyond the opening." : "This is a capability, not an activity.");
     if (stat.value >= stat.max || stat.reps >= stat.max) return fail("Completed.");
     if (record.attune && !this.isAttuned(id)) return fail(`${record.name ?? id} must be attuned before it can be used.`);
-    if (this.filled(record)) return fail(`${list(this.fillTargets(record).map(target => this.record(target).name ?? target))} is already full.`);
+    if (this.filled(record)) {
+      const names = this.fillTargets(record).map(target => this.record(target).name ?? target);
+      return fail(`${list(names)} ${names.length > 1 ? "are" : "is"} already full.`);
+    }
     if (record.breakthrough) {
       if (!this.condition(record.breakthrough.core)) return fail(record.breakthrough.coreLabel ?? "The core method is not ready.");
       const ready = record.breakthrough.pointers.filter(pointer => this.condition(pointer.when)).length;
@@ -517,13 +558,22 @@ export class GameEngine {
     return this.records.find(record => record.slot === slot && this.stat(record.id).value > 0);
   }
 
-  /** Title of the highest class held; "Mortal" before any. */
+  /**
+   * The character's standing: the title of the highest class held, "Mortal" before any. Once a breakthrough is
+   * held, only a class a breakthrough grants still names the character, and without one the breakthrough's
+   * milestone does ("Foundation"), so the apprenticeship stops naming someone who has outgrown it.
+   */
   title(): string {
+    const breakthroughs = this.records.filter(record => record.kind === "breakthrough" && this.stat(record.id).value > 0);
+    const granted = breakthroughs.flatMap(record => Object.keys(record.result ?? {}).filter(path => this.byId.has(path)).map(path => this.record(path)));
     let best: GameRecord | undefined;
     for (const record of this.records) {
-      if (record.kind === "class" && record.title && this.stat(record.id).value > 0 && (!best || this.stat(record.id).value >= this.stat(best.id).value)) best = record;
+      if (record.kind !== "class" || !record.title || this.stat(record.id).value <= 0) continue;
+      if (breakthroughs.length && !granted.includes(record)) continue;
+      if (!best || this.stat(record.id).value >= this.stat(best.id).value) best = record;
     }
-    return best?.title ?? "Mortal";
+    const milestone = granted.filter(record => record.kind === "flag").at(-1);
+    return best?.title ?? milestone?.name ?? breakthroughs.at(-1)?.breakthrough?.title ?? "Mortal";
   }
 
   // --------------------------------------------------------------- attunement
@@ -1388,9 +1438,26 @@ export class GameEngine {
       if (stat.value < stat.max || this.state.capHits.includes(key)) continue;
       this.state.capHits.push(key);
       const sources = this.capSources(id).map(record => inSentence(record.name ?? record.id));
-      this.log("cap", `${this.record(id).name ?? id} has reached ${stat.value}/${stat.max}. ${sources.length ? `A higher cap is possible through ${sources.join(" or ")}.` : "Further ways to raise this cap have not been discovered."}`);
+      this.log("cap", `${this.record(id).name ?? id} has reached ${stat.value}/${stat.max}. ${sources.length ? `A higher cap is possible through ${sources.join(" or ")}.` : this.raisable(id) ? "Further ways to raise this cap have not been discovered." : NOTHING_RAISES}`);
     }
     this.pendingCaps.clear();
+  }
+
+  /** Whether anything in the content, discovered or not, could still raise this store's cap. */
+  private raisable(id: string, asked = new Set<string>()): boolean {
+    asked.add(id);
+    const target = `${id}.max`;
+    const raises = (table: Table) => table.patches.some(entry => entry.path === target)
+      || table.derived.some(entry => `${entry.id}.${entry.field}` === target && (typeof entry.amount === "string" || entry.amount > 0));
+    return this.compiled.some(({ record, owned, perLevel, held, at, every }) => {
+      if (this.locked(record.id)) return false;
+      const stat = this.stat(record.id), done = record.kind !== "resource" && stat.value >= stat.max;
+      // A knowledge at its cap pays more per level only once its own cap can rise.
+      if (raises(perLevel) && (!done || (!asked.has(record.id) && this.raisable(record.id, asked)))) return true;
+      if (raises(held) && !this.isAttuned(record.id)) return true;
+      if (at.some(step => step.threshold > this.count(record) && raises(step.table))) return true;
+      return !done && (raises(owned) || every.some(step => raises(step.table)));
+    });
   }
 
   private checkActive(): void {
@@ -1458,18 +1525,17 @@ export class GameEngine {
 
   // --------------------------------------------------------------- presentation
 
-  /** Confirmation text for an irreversible action, or undefined when none is needed. */
+  /**
+   * Confirmation text for an irreversible action, or undefined when none is needed. Any record it would still
+   * close asks, seen or not; the authored warning, when there is one, says it in the content's own words.
+   */
   warnText(id: string): string | undefined {
     const record = this.record(id);
-    const doors = (record.lock ?? []).filter(target => this.byId.has(target));
+    const doors = (record.lock ?? []).filter(target => this.byId.has(target)), open = doors.filter(target => !this.locked(target));
     // The warning is about the transition, not the record: once every door it names has shut there is
     // nothing left to confirm, so a repeatable chore stops asking after the haul that closed the mill.
-    if (doors.length && doors.every(target => this.locked(target))) return undefined;
-    // A loss the authored warning already names is not named twice.
-    const said = (record.warn ?? "").toLowerCase();
-    const lost = doors.filter(target => this.visible(target)).map(target => this.record(target).name ?? target).filter(name => !said.includes(name.toLowerCase()));
-    const parts = [record.warn, lost.length ? `This closes ${list(lost)} for good.` : undefined].filter(Boolean);
-    return parts.length ? parts.join(" ") : undefined;
+    if (doors.length && !open.length) return undefined;
+    return record.warn ?? (open.length ? `This closes ${list(open.map(target => this.record(target).name ?? target))} for good.` : undefined);
   }
 
   /**
@@ -1498,8 +1564,7 @@ export class GameEngine {
       record.kind === "family" && stat.open ? `Experience: ${shown(stat.exp)}/${EXP_PER_LEVEL * (stat.value + 1)}` : undefined,
       timed && stat.rate !== 1 ? `Completion rate: ${Math.round(stat.rate * 100)}%` : undefined,
       record.kind === "resource" && stat.open && stat.rate ? `${shown(stat.rate)}/s` : undefined,
-      stat.yield ? `Extra yield: ${shown(stat.yield)}` : undefined,
-      stat.discount ? `Discount: ${Math.round(stat.discount * 100)}%` : undefined,
+      stat.discount ? `−${amountText(stat.discount * 100)}% cost` : undefined,
     ]);
     block("desc", [record.desc, record.breakthrough?.coreLabel]);
     const fullTime = stat.length / Math.max(this.speed(record), EPSILON);
@@ -1526,18 +1591,34 @@ export class GameEngine {
     // A store or a knowledge is not an action, so its "cannot be started" reason is not a need.
     const availability = passiveKinds.has(record.kind) ? { ok: true, reason: "" } : this.availability(id);
     block("need", [record.needtext, !availability.ok && availability.reason !== record.needtext ? availability.reason : undefined], "Need");
-    block("cost", this.lines(record.buy).concat(this.lines(record.cost)), "Cost");
-    block("cost", this.lines(record.run, "/s").concat(this.lines(record.strain, "/s")), "Progress cost");
-    block("effect", this.lines(record.effect, "/s").map(line => this.fullMark(record, line)), "Effect");
-    block("mod", this.lines(record.mod).concat(this.lines(record.perLevel).map(line => `${line} per level`), this.lines(record.held).map(line => `${line} while attuned`))
-      .concat(Object.entries(record.at ?? {}).flatMap(([threshold, changes]) => this.lines(changes).map(line => `${line} at ${threshold}`))), "Modifies");
-    block("result", this.lines(record.result).concat(this.lines(record.onStart).map(line => `${line} on first start`))
-      .concat(record.encounter ? this.lines(record.encounter.success).map(line => `${line} if won`) : []), "Gives");
+    // Costs read as paid after discounts, payouts as they pay now, each naming what made it grow.
+    const paid = (path: string, base: number): Growth => {
+      const resource = fieldPath(path).split(".")[0]!, discounts = [`${id}.discount`, `${resource}.discount`].map(target => this.contributions(target, id));
+      return { amount: this.discounted(record, resource, base) - base, labels: discounts.flatMap(found => found.labels) };
+    };
+    block("cost", this.lines(record.buy, "", paid).concat(this.lines(record.cost, "", paid)), "Cost");
+    block("cost", this.lines(record.run, "/s", paid).concat(this.lines(record.strain, "/s", paid)), "Progress cost");
+    block("effect", this.lines(record.effect, "/s", (_, base) => ({ amount: base * (stat.rate - 1), labels: this.contributions(`${id}.rate`, id).labels }))
+      .map(line => this.fullMark(record, line)), "Effect");
+    // `X.mod.Y` patches raise what this record pays: per level for a knowledge, once owned for anything else.
+    const patched = (path: string): Growth => this.contributions(fieldPath(path), id, id);
+    const payout = { ...(record.kind === "family" ? record.perLevel : record.mod) };
+    for (const path of this.patchedPaths(id)) if (!Object.keys(payout).some(own => fieldPath(own) === fieldPath(path))) payout[path] = 0;
+    block("mod", (record.kind === "family" ? this.lines(record.mod).concat(this.lines(payout, " per level", patched)) : this.lines(payout, "", patched))
+      .concat(this.lines(record.held, " while attuned"))
+      .concat(Object.entries(record.at ?? {}).flatMap(([threshold, changes]) => this.lines(changes, ` ${thresholdText(record, Number(threshold))}`))), "Modifies");
+    // A completion adds the record's yield to every resource it pays, as `complete` does.
+    block("result", this.lines(record.result, "", (path, base) => !path.includes(".") && base > 0 && this.byId.get(path)?.kind === "resource"
+      ? { amount: stat.yield, labels: this.contributions(`${id}.yield`, id).labels } : undefined)
+      .concat(this.lines(record.onStart, " on first start"))
+      .concat(record.encounter ? this.lines(record.encounter.success, " if won") : []), "Gives");
+    // Once nothing it closes is still open, the closing has happened and the note goes with the warning.
+    const warning = this.warnText(id);
     block("lock", [
-      (record.lock ?? []).length ? `Closes ${list((record.lock ?? []).map(target => this.byId.get(target)?.name ?? target))}` : undefined,
+      warning && (record.lock ?? []).length ? `Closes ${list((record.lock ?? []).map(target => this.byId.get(target)?.name ?? target))}` : undefined,
       (record.enable ?? []).length ? `Reopens ${list((record.enable ?? []).map(target => this.byId.get(target)?.name ?? target))}` : undefined,
-      this.fillTargets(record).length ? `Stops when ${list(this.fillTargets(record).map(target => this.record(target).name ?? target))} is full` : undefined,
-      record.warn,
+      this.fillTargets(record).length ? `Stops when ${list(this.fillTargets(record).map(target => this.record(target).name ?? target))} ${this.fillTargets(record).length > 1 ? "are" : "is"} full` : undefined,
+      warning && record.warn,
     ], "Note");
     block("flavor", [record.flavor]);
     return blocks;
@@ -1549,15 +1630,45 @@ export class GameEngine {
     return full ? `${line} (Full)` : line;
   }
 
-  private lines(changes: Changes | undefined, suffix = ""): string[] {
+  /** Paths some record now patches into this record's own payout. */
+  private patchedPaths(target: string): string[] {
+    const paths = new Set<string>();
+    this.eachContribution(table => { for (const entry of table.patches) if (entry.target === target) paths.add(entry.path); });
+    return [...paths];
+  }
+
+  /**
+   * One line per change. `grow` says how much more (or less) a line pays now than content's own number and who
+   * is responsible, so the line shows the grown value and names them: "Coin: 5 (+2 from 40 uses)".
+   */
+  private lines(changes: Changes | undefined, suffix = "", grow?: (path: string, base: number) => Growth | undefined): string[] {
     return Object.entries(changes ?? {}).filter(([path]) => this.worthShowing(path)).map(([path, amount]) => {
-      const value = typeof amount === "number" ? amount : this.safeValue(amount);
-      const [id, field = "value"] = path.split("."), record = this.byId.get(id!);
-      // A switch thrown once reads as its name: "Foundation", "Strain opens", not "Foundation: 1".
-      if (value === 1 && !suffix && (field === "open" || (field === "value" && record?.kind === "flag"))) return this.pathLabel(path);
-      if (id === "bank" && value !== undefined) return `${this.pathLabel(path)}: ${span(value)}${suffix}`;
-      return `${this.pathLabel(path)}: ${value === undefined ? amount : amountText(value)}${suffix}`;
+      const base = typeof amount === "number" ? amount : this.safeValue(amount);
+      if (base === undefined) return `${this.pathLabel(path)}: ${amount}${suffix}`;
+      const growth = grow?.(path, base), grown = growth && Math.abs(growth.amount) > EPSILON ? growth : undefined;
+      const note = grown?.labels.length ? ` (${this.quantity(path, grown.amount, true)} from ${list(grown.labels)})` : "";
+      return `${this.changeLine(path, base + (grown?.amount ?? 0), suffix)}${note}`;
     });
+  }
+
+  /** A change in the player's words: "+25% Rest speed", "+0.005 Qi/s", "−15% Qi cost", "Max Vigor: 2". */
+  private changeLine(path: string, value: number, suffix: string): string {
+    const parts = path.split("."), id = parts[0]!, field = parts[1] ?? "value", record = this.byId.get(id), name = record?.name ?? id;
+    if (field === "mod" && parts.length > 2) return `${name} ➢ ${this.changeLine(parts.slice(2).join("."), value, suffix)}`;
+    // A switch thrown once reads as its name: "Foundation", "Strain opens", not "Foundation: 1".
+    if (value === 1 && suffix !== "/s" && (field === "open" || (field === "value" && record?.kind === "flag"))) return `${this.pathLabel(path)}${suffix}`;
+    if (id === "bank") return `${this.pathLabel(path)}: ${span(value)}${suffix}`;
+    if (field === "rate") return `${this.quantity(path, value, true)} ${name}${record?.kind === "resource" ? "/s" : record?.kind === "family" ? " experience" : " speed"}${suffix}`;
+    if (field === "discount") return `${this.quantity(path, value, true)} ${name} cost${suffix}`;
+    return `${this.pathLabel(path)}: ${this.quantity(path, value, false)}${suffix}`;
+  }
+
+  /** A change's number: an action's speed and any discount in percent (a discount as a cut), the rest as it is. */
+  private quantity(path: string, value: number, signed: boolean): string {
+    const [id, field = "value"] = fieldPath(path).split("."), resource = this.byId.get(id!)?.kind === "resource";
+    const percent = field === "discount" || (field === "rate" && !resource), amount = field === "discount" ? -value : value;
+    const text = percent ? `${amountText(Math.abs(amount) * 100)}%` : amountText(Math.abs(amount));
+    return signed ? `${amount < 0 ? "−" : "+"}${text}` : `${amount < 0 ? "−" : ""}${text}`;
   }
 
   /**
