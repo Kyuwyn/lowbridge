@@ -477,7 +477,7 @@ export class GameEngine {
       }
       // What is short is named before the need, which would otherwise recite the whole bill.
       const short = Object.entries(payment).filter(([resource, amount]) => this.stat(resource).value + EPSILON < amount)
-        .map(([resource, amount]) => `${this.record(resource).name ?? resource}: ${shown(amount)} needed, ${Math.floor(this.stat(resource).value * 100 + EPSILON) / 100} held.`);
+        .map(([resource, amount]) => `${this.record(resource).name ?? resource}: ${shown(amount)} needed, ${Math.floor(this.stat(resource).value * 10 + EPSILON) / 10} held.`);
       if (short.length) return fail(short.join(" "));
       if (!this.condition(record.need)) return fail(record.needtext ?? "The requirements are not met.");
     }
