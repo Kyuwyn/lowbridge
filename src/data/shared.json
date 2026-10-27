@@ -13,7 +13,7 @@
   {
     "id": "timber", "name": "Timber", "kind": "resource", "group": "Resources",
     "desc": "Straight lengths for racks, frames and a roof of your own. Six is a full stack without a shed.",
-    "require": "g.field_kit > 0", "initial": { "value": 0, "max": 6 }
+    "require": "g.field_kit > 0 || g.foundation > 0", "initial": { "value": 0, "max": 6 }
   },
   {
     "id": "stone", "name": "Channel stone", "kind": "resource", "group": "Resources",
@@ -29,7 +29,9 @@
     "id": "attune_slots", "name": "Attunement", "kind": "resource", "group": "Resources",
     "desc": "Methods held ready in the mind. Attuning a technique fills one place, and a technique must be held before it can be used.",
     "flavor": "You can remember reading a method and still be unable to use it.",
-    "require": "g.jade_slip > 0", "initial": { "max": 1, "open": true }
+    "require": "g.qi_sense >= 1", "initial": { "max": 1, "open": true },
+    "events": [{ "id": "shu_sees_method", "when": "g.attune_slots >= 1",
+      "text": "Shu watches you sit through a whole morning's sorting without once fidgeting. ‘So it took,’ she says, and leaves a cup of something bitter by your bundles." }]
   },
   {
     "id": "vigor", "name": "Vigor", "kind": "resource", "group": "Resources",
@@ -43,7 +45,7 @@
   },
   {
     "id": "life", "name": "Life", "kind": "resource", "group": "Resources",
-    "desc": "What a blow takes before the body gives way. Only a fight draws on it; it returns slowly on its own, busy or idle, and Circulation deepens it.",
+    "desc": "What a blow takes before the body gives way. Only a fight draws on it. It returns slowly on its own, busy or idle, and from empty to full in about five minutes while you rest. Circulation deepens it.",
     "flavor": "Nobody in Lowbridge counts it until somebody swings at them.",
     "require": "g.circulation.open > 0", "initial": { "value": 6, "max": 6, "rate": 0.02 }
   },
@@ -140,14 +142,14 @@
     "desc": "Granny Shu's eye for a good bundle and a bad one.",
     "require": "g.shu_apprentice > 0",
     "initial": { "value": 0, "max": 5, "open": false },
-    "perLevel": { "herbs.max": 2, "rack_tending.rate": 0.05, "survey_marker.rate": 0.05, "trade_marrow_herbs.yield": 1 },
+    "perLevel": { "herbs.max": 2, "survey_marker.rate": 0.05, "trade_marrow_herbs.yield": 1 },
     "at": { "2": { "herbs.discount": 0.1 } }
   },
   {
     "id": "labour", "name": "Labour", "kind": "family", "group": "Families",
     "desc": "Sacks, timber and freight harden the back and teach it to pace itself.",
     "initial": { "value": 0, "max": 5 },
-    "perLevel": { "vigor.max": 1, "vigor.rate": 0.005, "timber.max": 1, "mill_shift.rate": 0.05 },
+    "perLevel": { "vigor.max": 1, "vigor.rate": 0.005, "timber.max": 1 },
     "at": { "3": { "vigor.discount": 0.1 } }
   },
   {
@@ -161,7 +163,7 @@
   {
     "id": "composure", "name": "Composure", "kind": "family", "group": "Families",
     "desc": "Stillness that outlasts the sitting.",
-    "require": "g.fernhollow_observe > 0 || g.jade_slip > 0",
+    "require": "g.qi_sense >= 1",
     "initial": { "value": 0, "max": 5 },
     "perLevel": { "qi.rate": 0.002, "breath_gathering.rate": 0.05, "strain.max": 1, "strain.rate": 0.002 },
     "at": { "2": { "strain.discount": 0.1 } }

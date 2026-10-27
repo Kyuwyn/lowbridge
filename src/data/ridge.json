@@ -1,89 +1,140 @@
 [
   {
     "id": "ridge_outskirts", "name": "Walk the ridge outskirts", "kind": "site", "group": "Sites",
-    "desc": "Two minutes up the old porters' path to the collapsed hut below Old Ridge. Hard ground draws on Strain; the climb teaches Composure.",
+    "desc": "Two minutes up the old porters' path to the collapsed hut below Old Ridge. Hard ground draws on Strain; the climb teaches Composure. Someone who has settled the breath walks the ridge lightly: once you know the path, every outing draws a fifth less Strain.",
     "require": "g.foundation > 0", "length": 120, "max": 1, "strain": { "strain": 0.03 }, "result": { "composure.exp": 40 },
+    "mod": { "strain.discount": "0.2 * (g.t_hollow > 0)" },
     "events": [{ "id": "outskirts_texts", "when": "g.ridge_outskirts > 0",
       "text": "Four bundles of notes survive in the collapsed porter's hut: one on carrying, one on the blade, one on reading ground, one on fixed layouts." }]
   },
   {
     "id": "body_teaching", "name": "The porter's notes on carrying", "kind": "teaching", "group": "Purchases",
-    "desc": "A body method for loads and slopes. Circulation can grow two levels further, and the carrying drills open. A hollow reading of the slip already covers the first pages, and the widow asks a bundle less for them.",
-    "require": "g.ridge_outskirts > 0", "need": "g.lore >= 3 && g.herbs >= 4 - (g.t_hollow > 0)",
-    "needtext": "Lore 3 to read the notes, and four bundles for the porter's widow; three if you settle the breath.",
+    "desc": "A body method for loads and slopes, and a technique to hold. Circulation can grow two levels further, and the carrying drills open; they want a porter's load frame on one span of your floor. The widow asks four bundles; a hollow reading of the slip already covers the first pages, so three if you settle the breath.",
+    "require": "g.ridge_outskirts > 0", "need": "g.lore >= 3", "needtext": "Lore 3, to read the notes.",
     "buy": { "herbs": "4 - (g.t_hollow > 0)" }, "mod": { "circulation.max": 2 }
   },
   {
     "id": "sword_teaching", "name": "The porter's notes on the blade", "kind": "teaching", "group": "Purchases",
-    "desc": "A guard's method for meeting what comes up the path. Blade Intent opens.",
-    "require": "g.ridge_outskirts > 0", "need": "g.lore >= 3 && g.herbs >= 4", "needtext": "Lore 3 to read the notes, and four bundles for the porter's widow.",
+    "desc": "A guard's method for meeting what comes up the path, and a technique to hold. Blade Intent opens, and with it the blade-contact drills; they want a practice post on one span of your floor. The widow asks four bundles.",
+    "require": "g.ridge_outskirts > 0", "need": "g.lore >= 3", "needtext": "Lore 3, to read the notes.",
     "buy": { "herbs": 4 }, "mod": { "blade_intent.open": 1 }
   },
   {
     "id": "earth_teaching", "name": "The porter's notes on ground", "kind": "teaching", "group": "Purchases",
-    "desc": "How a surveyor tells settled ground from sliding ground. Ground Reading opens. A channel reading of the slip has already taught the hand half of it, and the widow asks a bundle less.",
-    "require": "g.ridge_outskirts > 0", "need": "g.lore >= 3 && g.herbs >= 4 - (g.t_channel > 0)",
-    "needtext": "Lore 3 to read the notes, and four bundles for the porter's widow; three if you carry the current.",
+    "desc": "How a surveyor tells settled ground from sliding ground, and a technique to hold. Ground Reading opens, and with it the ground drills; they want survey stakes on one span of your floor. The widow asks four bundles; a channel reading of the slip has already taught the hand half of it, so three if you carry the current.",
+    "require": "g.ridge_outskirts > 0", "need": "g.lore >= 3", "needtext": "Lore 3, to read the notes.",
     "buy": { "herbs": "4 - (g.t_channel > 0)" }, "mod": { "ground_reading.open": 1 }
   },
   {
     "id": "formation_teaching", "name": "The porter's notes on layouts", "kind": "teaching", "group": "Purchases",
-    "desc": "Fixed layouts that steady a small area. Array Craft opens.",
-    "require": "g.ridge_outskirts > 0", "need": "g.lore >= 3 && g.herbs >= 4", "needtext": "Lore 3 to read the notes, and four bundles for the porter's widow.",
+    "desc": "Fixed layouts that steady a small area, and a technique to hold. Array Craft opens, and with it the array drills; they want a drawing board on one span of your floor. The widow asks four bundles.",
+    "require": "g.ridge_outskirts > 0", "need": "g.lore >= 3", "needtext": "Lore 3, to read the notes.",
     "buy": { "herbs": 4 }, "mod": { "array_craft.open": 1 }
   },
   {
     "id": "blade_intent", "name": "Blade Intent", "kind": "family", "group": "Families",
-    "desc": "Meeting a blade's line with your own.",
+    "desc": "Meeting a blade's line with your own. From level 2 the carved face gives a measure more grit with every cut.",
     "require": "g.sword_teaching > 0",
-    "initial": { "value": 0, "max": 5, "open": false }, "perLevel": { "whetstone_grit.max": 2, "direction_sword.rate": 0.02, "cross_sword.rate": 0.01, "trade_whetstone_grit.yield": 1, "strike.max": 1 }
+    "initial": { "value": 0, "max": 5, "open": false }, "perLevel": { "whetstone_grit.max": 2, "direction_sword.rate": 0.02, "cross_sword.rate": 0.01, "trade_whetstone_grit.yield": 1, "strike.max": 1 },
+    "at": { "2": { "inscription_face.yield": 1 } },
+    "events": [{ "id": "blade_finds_seams", "when": "g.blade_intent >= 2",
+      "text": "The post stops ringing when you meet it. On the carved face your edge finds the soft seams first, and a measure more of grit comes away with every cut." }]
   },
   {
     "id": "ground_reading", "name": "Ground Reading", "kind": "family", "group": "Families",
-    "desc": "Where the ground holds and where it slides.",
+    "desc": "Where the ground holds and where it slides. From level 2 the stable point gives a piece more ore each time.",
     "require": "g.earth_teaching > 0",
-    "initial": { "value": 0, "max": 5, "open": false }, "perLevel": { "veined_ore.max": 2, "direction_earth.rate": 0.02, "cross_earth.rate": 0.01, "trade_veined_ore.yield": 1 }
+    "initial": { "value": 0, "max": 5, "open": false }, "perLevel": { "veined_ore.max": 2, "direction_earth.rate": 0.02, "cross_earth.rate": 0.01, "trade_veined_ore.yield": 1 },
+    "at": { "2": { "stable_point.yield": 1 } },
+    "events": [{ "id": "ground_runs_true", "when": "g.ground_reading >= 2",
+      "text": "Poured water runs where you guessed it would, three times running. Above the slide you start to see the ore before your foot finds it." }]
   },
   {
     "id": "array_craft", "name": "Array Craft", "kind": "family", "group": "Families",
-    "desc": "Small fixed layouts that hold a place still.",
+    "desc": "Small fixed layouts that hold a place still. From level 2 a tested layout keeps a token more each time.",
     "require": "g.formation_teaching > 0",
-    "initial": { "value": 0, "max": 5, "open": false }, "perLevel": { "inked_tokens.max": 2, "direction_formation.rate": 0.02, "cross_formation.rate": 0.01, "trade_inked_tokens.yield": 1 }
+    "initial": { "value": 0, "max": 5, "open": false }, "perLevel": { "inked_tokens.max": 2, "direction_formation.rate": 0.02, "cross_formation.rate": 0.01, "trade_inked_tokens.yield": 1 },
+    "at": { "2": { "fixed_layout.yield": 1 } },
+    "events": [{ "id": "layout_holds_overnight", "when": "g.array_craft >= 2",
+      "text": "A layout on your floor holds through a whole night with nobody correcting it. On the ridge the next test keeps a token more." }]
+  },
+  {
+    "id": "sink_the_load", "name": "Sink the breath under the load", "kind": "technique", "group": "Techniques",
+    "attune": true, "tags": ["t_school_body"],
+    "desc": "The porter's way of climbing on: qi sunk below the navel and down into the legs. Three qi bring back two Strain. Held, it adds two to Life and one to Guard in a fight.",
+    "flavor": "His widow says he climbed the ridge twice a day until he was seventy.",
+    "require": "g.body_teaching > 0",
+    "need": "g.strain < g.strain.max", "needtext": "Strain is full.",
+    "cost": { "qi": 3 }, "result": { "strain": 2 },
+    "at": { "5": { "sink_the_load.discount": 0.15 } },
+    "held": { "life.max": 2, "guard.max": 1 }
+  },
+  {
+    "id": "cut_by_intent", "name": "Cut by intent", "kind": "technique", "group": "Techniques",
+    "attune": true, "tags": ["t_school_sword"],
+    "desc": "The guard's trick of letting the intent arrive before the blade. Three qi through the edge take two measures of whetstone grit off worked stone in one stroke. Held, it adds one to Strike and five to Hit in a fight.",
+    "flavor": "The notes say a good guard cuts the rope before the bridge sways.",
+    "require": "g.sword_teaching > 0",
+    "need": "g.whetstone_grit < g.whetstone_grit.max", "needtext": "The grit store is full.",
+    "cost": { "qi": 3 }, "result": { "whetstone_grit": 2 },
+    "at": { "5": { "cut_by_intent.discount": 0.15 } },
+    "held": { "strike.max": 1, "hit.max": 5 }
+  },
+  {
+    "id": "read_the_grain", "name": "Read the grain", "kind": "technique", "group": "Techniques",
+    "attune": true, "tags": ["t_school_earth"],
+    "desc": "The surveyor's habit of listening before digging. Three qi spent listening find two pieces of veined ore where the ground's grain gathers it. Held, ore pried by hand comes away a piece richer, and you carry two more Strain.",
+    "flavor": "Ground that has slid once remembers which way it went.",
+    "require": "g.earth_teaching > 0",
+    "need": "g.veined_ore < g.veined_ore.max", "needtext": "The ore store is full.",
+    "cost": { "qi": 3 }, "result": { "veined_ore": 2 },
+    "at": { "5": { "read_the_grain.discount": 0.15 } },
+    "held": { "pry_veined_ore.yield": 1, "strain.max": 2 }
+  },
+  {
+    "id": "fix_the_layout", "name": "Fix a layout", "kind": "technique", "group": "Techniques",
+    "attune": true, "tags": ["t_school_formation"],
+    "desc": "Three qi pressed into a tested layout fix its marks, and two tokens keep them without ink. Held, a small layout keeps your floor still: Rest and the slip's breath practice both run a quarter faster.",
+    "flavor": "Nothing moves inside it that you did not put there.",
+    "require": "g.formation_teaching > 0",
+    "need": "g.inked_tokens < g.inked_tokens.max", "needtext": "The token store is full.",
+    "cost": { "qi": 3 }, "result": { "inked_tokens": 2 },
+    "at": { "5": { "fix_the_layout.discount": 0.15 } },
+    "held": { "rest.rate": 0.25, "breath_gathering.rate": 0.25 }
   },
   {
     "id": "load_frame", "name": "Porter's load frame", "kind": "arrangement", "group": "Home",
     "desc": "One span of floor. Carrying drills run a quarter faster against a loaded frame.",
-    "require": "g.body_teaching > 0", "need": "g.coin >= 15 && g.timber >= 3 && g.home_space.max - g.home_space >= 1",
-    "needtext": "Fifteen coin, three timber and one free span of floor.",
+    "require": "g.body_teaching > 0",
     "buy": { "coin": 15, "timber": 3 }, "space": 1, "mod": { "body_drills.rate": 0.25 }, "max": 1
   },
   {
     "id": "practice_post", "name": "Practice post", "kind": "arrangement", "group": "Home",
     "desc": "One span of floor. Blade-contact drills run a quarter faster against a post that answers.",
-    "require": "g.sword_teaching > 0", "need": "g.coin >= 15 && g.timber >= 4 && g.home_space.max - g.home_space >= 1",
-    "needtext": "Fifteen coin, four timber and one free span of floor.",
+    "require": "g.sword_teaching > 0",
     "buy": { "coin": 15, "timber": 4 }, "space": 1, "mod": { "blade_drills.rate": 0.25 }, "max": 1
   },
   {
     "id": "survey_stakes", "name": "Survey stakes and cord", "kind": "arrangement", "group": "Home",
-    "desc": "One span of floor laid out as a model slope. Ground drills run a quarter faster.",
-    "require": "g.earth_teaching > 0", "need": "g.coin >= 12 && g.timber >= 3 && g.home_space.max - g.home_space >= 1",
-    "needtext": "Twelve coin, three timber for stakes and one free span of floor.",
+    "desc": "One span of floor laid out as a model slope with three lengths of timber for stakes. Ground drills run a quarter faster.",
+    "require": "g.earth_teaching > 0",
     "buy": { "coin": 12, "timber": 3 }, "space": 1, "mod": { "ground_drills.rate": 0.25 }, "max": 1
   },
   {
     "id": "drawing_board", "name": "Drawing board", "kind": "arrangement", "group": "Home",
-    "desc": "One span of floor and herb ink for marking layouts. Array drills run a quarter faster.",
-    "require": "g.formation_teaching > 0", "need": "g.coin >= 15 && g.herbs >= 4 && g.home_space.max - g.home_space >= 1",
-    "needtext": "Fifteen coin, four bundles for ink and one free span of floor.",
+    "desc": "One span of floor and four bundles boiled down to herb ink for marking layouts. Array drills run a quarter faster.",
+    "require": "g.formation_teaching > 0",
     "buy": { "coin": 15, "herbs": 4 }, "space": 1, "mod": { "array_drills.rate": 0.25 }, "max": 1
   },
   {
     "id": "body_drills", "name": "Carry and recover", "kind": "task", "group": "Practice",
-    "desc": "Loaded climbs on the frame, then the breath that brings the body back. Circulation grows at three experience per second, with a little Labour; it draws lightly on Strain.",
+    "desc": "Loaded climbs on the frame, then the breath that brings the body back. Circulation grows at three experience per second, with a little Labour; it draws lightly on Strain. After two minutes of it, the survey marker gives a root more each haul.",
     "require": "g.body_teaching > 0", "need": "g.load_frame > 0 && g.circulation < g.circulation.max",
     "needtext": "A load frame on the floor, and room left in Circulation.",
-    "length": "continuous", "train": "circulation", "effect": { "circulation.exp": 3, "labour.exp": 0.6 }, "strain": { "strain": 0.01 }
+    "length": "continuous", "train": "circulation", "effect": { "circulation.exp": 3, "labour.exp": 0.6 }, "strain": { "strain": 0.01 },
+    "at": { "120": { "survey_marker.yield": 1 } },
+    "events": [{ "id": "frame_becomes_shape", "when": "g.body_drills.ticks >= 120",
+      "text": "The frame stops feeling like a load and starts feeling like a shape you hold. Hauling the marker, you have breath left over to dig a root more around it." }]
   },
   {
     "id": "blade_drills", "name": "Blade-contact drills", "kind": "task", "group": "Practice",
@@ -152,117 +203,138 @@
   },
   {
     "id": "direction_body", "name": "First Direction: the Body", "kind": "breakthrough", "group": "Practice",
-    "desc": "Three minutes under the loaded frame with the reconstructed method. The bill is paid at the start. Choosing a direction closes the other three.",
-    "require": "g.body_teaching > 0", "need": "g.herbs >= 20 && g.marrow_herbs >= 12 && g.coin >= 60",
-    "needtext": "Twenty herbs, twelve marrow herbs and sixty coin.", "buy": { "herbs": 20, "marrow_herbs": 12, "coin": 60 }, "length": 180, "max": 1,
+    "desc": "Three minutes under the loaded frame with the reconstructed method. The bill is paid at the start, and paying it closes the other three directions. Afterwards the bank keeps up to a day of time away.",
+    "require": "g.body_teaching > 0",
+    "buy": { "herbs": 20, "marrow_herbs": 12, "coin": 60 }, "length": 180, "max": 1,
     "breakthrough": { "title": "First Direction: the Body", "core": "g.circulation >= 4 && g.body_drills.started > 0", "coreLabel": "Circulation 4, and the carrying drills begun", "required": 3,
       "pointers": [
         { "label": "Lore 4", "when": "g.lore >= 4" },
         { "label": "A second-tier arrangement installed", "when": "g.cot > 0 || g.garden_plot > 0 || g.strongbox > 0" },
-        { "label": "The ridge outskirts observed", "when": "g.ridge_outskirts > 0" },
+        { "label": "Two methods of the body school used: Steady the breath, Settle the breath or Sink the breath under the load", "when": "g.t_school_body >= 2" },
         { "label": "Two hundred coin earned in wages", "when": "g.coin_earned >= 200" }
       ] },
     "result": { "body_disciple": 1 }, "mod": { "bank.max": 64800, "circulation.max": 3 },
     "lock": ["direction_sword", "direction_earth", "direction_formation"],
+    "warn": "Paying for the Body makes it your First Direction. The Sword, the Earth and Formation close for good, and whatever you have spent on them stays spent.",
     "events": [{ "id": "body_direction", "when": "g.direction_body > 0", "text": "The load settles into the frame of the body itself. Body Disciple. The main approach no longer looks steep." }]
   },
   {
     "id": "direction_sword", "name": "First Direction: the Sword", "kind": "breakthrough", "group": "Practice",
-    "desc": "Three minutes at the post with the reconstructed method. The bill is paid at the start. Choosing a direction closes the other three.",
-    "require": "g.sword_teaching > 0", "need": "g.herbs >= 20 && g.whetstone_grit >= 12 && g.coin >= 60",
-    "needtext": "Twenty herbs, twelve measures of whetstone grit and sixty coin.", "buy": { "herbs": 20, "whetstone_grit": 12, "coin": 60 }, "length": 180, "max": 1,
+    "desc": "Three minutes at the post with the reconstructed method. The bill is paid at the start, and paying it closes the other three directions. Afterwards the bank keeps up to a day of time away.",
+    "require": "g.sword_teaching > 0",
+    "buy": { "herbs": 20, "whetstone_grit": 12, "coin": 60 }, "length": 180, "max": 1,
     "breakthrough": { "title": "First Direction: the Sword", "core": "g.blade_intent >= 4 && g.blade_drills.started > 0", "coreLabel": "Blade Intent 4, and the blade-contact drills begun", "required": 3,
       "pointers": [
         { "label": "Lore 4", "when": "g.lore >= 4" },
         { "label": "A second-tier arrangement installed", "when": "g.cot > 0 || g.garden_plot > 0 || g.strongbox > 0" },
-        { "label": "The ridge outskirts observed", "when": "g.ridge_outskirts > 0" },
+        { "label": "A method of the sword school used: Cut by intent", "when": "g.t_school_sword >= 1" },
         { "label": "Two hundred coin earned in wages", "when": "g.coin_earned >= 200" }
       ] },
     "result": { "sword_disciple": 1 }, "mod": { "bank.max": 64800, "blade_intent.max": 3 },
     "lock": ["direction_body", "direction_earth", "direction_formation"],
+    "warn": "Paying for the Sword makes it your First Direction. The Body, the Earth and Formation close for good, and whatever you have spent on them stays spent.",
     "events": [{ "id": "sword_direction", "when": "g.direction_sword > 0", "text": "The post stops answering; the intent arrives before the blade. Sword Disciple. The side passage looks cuttable." }]
   },
   {
     "id": "direction_earth", "name": "First Direction: the Earth", "kind": "breakthrough", "group": "Practice",
-    "desc": "Three minutes kneeling on the stakes with the reconstructed method. The bill is paid at the start. Choosing a direction closes the other three.",
-    "require": "g.earth_teaching > 0", "need": "g.herbs >= 20 && g.veined_ore >= 12 && g.coin >= 60",
-    "needtext": "Twenty herbs, twelve pieces of veined ore and sixty coin.", "buy": { "herbs": 20, "veined_ore": 12, "coin": 60 }, "length": 180, "max": 1,
+    "desc": "Three minutes kneeling on the stakes with the reconstructed method. The bill is paid at the start, and paying it closes the other three directions. Afterwards the bank keeps up to a day of time away.",
+    "require": "g.earth_teaching > 0",
+    "buy": { "herbs": 20, "veined_ore": 12, "coin": 60 }, "length": 180, "max": 1,
     "breakthrough": { "title": "First Direction: the Earth", "core": "g.ground_reading >= 4 && g.ground_drills.started > 0", "coreLabel": "Ground Reading 4, and the ground drills begun", "required": 3,
       "pointers": [
         { "label": "Lore 4", "when": "g.lore >= 4" },
         { "label": "A second-tier arrangement installed", "when": "g.cot > 0 || g.garden_plot > 0 || g.strongbox > 0" },
-        { "label": "The ridge outskirts observed", "when": "g.ridge_outskirts > 0" },
+        { "label": "A method of the earth school used: Carry the current or Read the grain", "when": "g.t_school_earth >= 1" },
         { "label": "Two hundred coin earned in wages", "when": "g.coin_earned >= 200" }
       ] },
     "result": { "earth_listener": 1 }, "mod": { "bank.max": 64800, "ground_reading.max": 3 },
     "lock": ["direction_body", "direction_sword", "direction_formation"],
+    "warn": "Paying for the Earth makes it your First Direction. The Body, the Sword and Formation close for good, and whatever you have spent on them stays spent.",
     "events": [{ "id": "earth_direction", "when": "g.direction_earth > 0", "text": "Under the knees the ground has a grain, and the grain has a direction. Earth Listener. A stable line runs up the ridge." }]
   },
   {
     "id": "direction_formation", "name": "First Direction: Formation", "kind": "breakthrough", "group": "Practice",
-    "desc": "Three minutes inside a held layout with the reconstructed method. The bill is paid at the start. Choosing a direction closes the other three.",
-    "require": "g.formation_teaching > 0", "need": "g.herbs >= 20 && g.inked_tokens >= 12 && g.coin >= 60",
-    "needtext": "Twenty herbs, twelve inked tokens and sixty coin.", "buy": { "herbs": 20, "inked_tokens": 12, "coin": 60 }, "length": 180, "max": 1,
+    "desc": "Three minutes inside a held layout with the reconstructed method. The bill is paid at the start, and paying it closes the other three directions. Afterwards the bank keeps up to a day of time away.",
+    "require": "g.formation_teaching > 0",
+    "buy": { "herbs": 20, "inked_tokens": 12, "coin": 60 }, "length": 180, "max": 1,
     "breakthrough": { "title": "First Direction: Formation", "core": "g.array_craft >= 4 && g.array_drills.started > 0", "coreLabel": "Array Craft 4, and the array drills begun", "required": 3,
       "pointers": [
         { "label": "Lore 4", "when": "g.lore >= 4" },
         { "label": "A second-tier arrangement installed", "when": "g.cot > 0 || g.garden_plot > 0 || g.strongbox > 0" },
-        { "label": "The ridge outskirts observed", "when": "g.ridge_outskirts > 0" },
+        { "label": "A method of the formation school used: Fix a layout", "when": "g.t_school_formation >= 1" },
         { "label": "Two hundred coin earned in wages", "when": "g.coin_earned >= 200" }
       ] },
     "result": { "formation_student": 1 }, "mod": { "bank.max": 64800, "array_craft.max": 3 },
     "lock": ["direction_body", "direction_sword", "direction_earth"],
+    "warn": "Paying for Formation makes it your First Direction. The Body, the Sword and the Earth close for good, and whatever you have spent on them stays spent.",
     "events": [{ "id": "formation_direction", "when": "g.direction_formation > 0", "text": "The tokens stop drifting and the air inside them stops too. Formation Student. A small array could turn the flow on the ridge." }]
   },
   {
     "id": "body_disciple", "name": "Body Disciple", "kind": "class", "group": "Purchases", "title": "Body Disciple",
-    "desc": "The First Direction of the Body: loads and slopes are met by the frame of the body.", "require": "g.direction_body > 0",
-    "mod": { "strike.max": 1, "guard.max": 2, "speed.max": 0.2, "dodge.max": 5 }
+    "desc": "The First Direction of the Body: loads and slopes are met by the frame of the body. Strike, Guard, Speed and Dodge rise, and every level of Labour adds another point of Vigor.",
+    "require": "g.direction_body > 0",
+    "mod": { "strike.max": 1, "guard.max": 2, "speed.max": 0.2, "dodge.max": 5, "labour.mod.vigor.max": 1 }
   },
   {
     "id": "sword_disciple", "name": "Sword Disciple", "kind": "class", "group": "Purchases", "title": "Sword Disciple",
-    "desc": "The First Direction of the Sword: intent arrives before the blade.", "require": "g.direction_sword > 0",
-    "mod": { "strike.max": 2, "guard.max": 1, "speed.max": 0.1, "hit.max": 10 }
+    "desc": "The First Direction of the Sword: intent arrives before the blade. Strike, Guard, Speed and Hit rise, and timber comes away clean: a length more every trip beyond the mill.",
+    "require": "g.direction_sword > 0",
+    "mod": { "strike.max": 2, "guard.max": 1, "speed.max": 0.1, "hit.max": 10, "cut_timber.yield": 1 }
   },
   {
     "id": "earth_listener", "name": "Earth Listener", "kind": "class", "group": "Purchases", "title": "Earth Listener",
-    "desc": "The First Direction of the Earth: the ground's grain can be followed.", "require": "g.direction_earth > 0"
+    "desc": "The First Direction of the Earth: the ground's grain can be followed. You keep to ground that holds, so Strain drains a quarter slower everywhere; you carry two more Strain, and every level of Stone Sense adds another.",
+    "require": "g.direction_earth > 0",
+    "mod": { "strain.discount": 0.25, "strain.max": 2, "stonework.mod.strain.max": 1 }
   },
   {
     "id": "formation_student", "name": "Formation Student", "kind": "class", "group": "Purchases", "title": "Formation Student",
-    "desc": "The First Direction of Formation: a held layout steadies a small place.", "require": "g.direction_formation > 0"
+    "desc": "The First Direction of Formation: a held layout steadies a small place. Your floor holds a span more, and what already stands on it works harder: the pallet and the cot rest you faster, the mat speeds the breath practice, and the herb plot grows more.",
+    "require": "g.direction_formation > 0",
+    "mod": { "home_space.max": 1, "straw_pallet.mod.rest.rate": 0.25, "cot.mod.rest.rate": 0.25, "practice_mat.mod.breath_gathering.rate": 0.25, "garden_plot.mod.herbs.rate": 0.01 }
   },
   {
     "id": "cross_body", "name": "Reinforced ascent of the main approach", "kind": "site", "group": "Sites",
-    "desc": "Three minutes straight up the broken main approach with a full load. It draws on Strain as fast as Strain returns.",
-    "require": "g.body_disciple > 0", "length": 180, "max": 1, "strain": { "strain": 0.02 }, "result": { "waystation": 1 }
+    "desc": "A minute and a half straight up the broken main approach with a full load. It draws on Strain as fast as Strain returns. A carried current takes you up half again as fast.",
+    "require": "g.body_disciple > 0", "length": 90, "max": 1, "strain": { "strain": 0.02 }, "result": { "waystation": 1 },
+    "boost": { "flag": "current_carried", "multiplier": 1.5 },
+    "events": [{ "id": "body_arrival", "when": "g.cross_body > 0",
+      "text": "You reach the top with the load still on your back and set it down inside the waystation's door. The service passage opens with a shoulder; the way back is ordinary now." }]
   },
   {
     "id": "cross_sword", "name": "Cut open the side passage", "kind": "site", "group": "Sites",
-    "desc": "Three minutes cutting through the thorn and deadfall that close the side passage. It draws on Strain as fast as Strain returns.",
-    "require": "g.sword_disciple > 0", "length": 180, "max": 1, "strain": { "strain": 0.02 }, "result": { "waystation": 1 }
+    "desc": "A minute and a half cutting through the thorn and deadfall that close the side passage. It draws on Strain as fast as Strain returns. A carried current takes you through half again as fast.",
+    "require": "g.sword_disciple > 0", "length": 90, "max": 1, "strain": { "strain": 0.02 }, "result": { "waystation": 1 },
+    "boost": { "flag": "current_carried", "multiplier": 1.5 },
+    "events": [{ "id": "sword_arrival", "when": "g.cross_sword > 0",
+      "text": "The last of the thorn falls away and the side passage lets you into the waystation yard. The keeper looks at the cut ends for a long moment, then at you." }]
   },
   {
     "id": "cross_earth", "name": "Follow the stable line", "kind": "site", "group": "Sites",
-    "desc": "Three minutes along the one line of ground that does not slide. It draws on Strain as fast as Strain returns.",
-    "require": "g.earth_listener > 0", "length": 180, "max": 1, "strain": { "strain": 0.02 }, "result": { "waystation": 1 }
+    "desc": "A minute and a half along the one line of ground that does not slide. It draws on Strain as fast as Strain returns. A carried current takes you along it half again as fast.",
+    "require": "g.earth_listener > 0", "length": 90, "max": 1, "strain": { "strain": 0.02 }, "result": { "waystation": 1 },
+    "boost": { "flag": "current_carried", "multiplier": 1.5 },
+    "events": [{ "id": "earth_arrival", "when": "g.cross_earth > 0",
+      "text": "The stable line runs out at the waystation's footings, which were laid square on it. Whoever built the place could hear the ground too." }]
   },
   {
     "id": "cross_formation", "name": "Divert the flow with a small array", "kind": "site", "group": "Sites",
-    "desc": "Three minutes setting tokens until the runoff turns aside from the path. It draws on Strain as fast as Strain returns.",
-    "require": "g.formation_student > 0", "length": 180, "max": 1, "strain": { "strain": 0.02 }, "result": { "waystation": 1 }
+    "desc": "A minute and a half setting tokens until the runoff turns aside from the path. It draws on Strain as fast as Strain returns. A carried current sets them half again as fast.",
+    "require": "g.formation_student > 0", "length": 90, "max": 1, "strain": { "strain": 0.02 }, "result": { "waystation": 1 },
+    "boost": { "flag": "current_carried", "multiplier": 1.5 },
+    "events": [{ "id": "formation_arrival", "when": "g.cross_formation > 0",
+      "text": "The runoff turns along your tokens and leaves the path dry to the waystation gate. The keeper asks you to leave the tokens where they are." }]
   },
   {
     "id": "waystation", "name": "The ridge waystation", "kind": "flag", "group": "Milestones",
     "desc": "The old porters' waystation on Old Ridge, reached by your own direction.",
-    "require": "g.waystation > 0", "initial": { "value": 0, "max": 1 },
-    "events": [{ "id": "waystation_arrival", "when": "g.waystation > 0",
-      "text": "From inside, the service passage opens with a shoulder. The way back is ordinary now." }]
+    "require": "g.waystation > 0", "initial": { "value": 0, "max": 1 }
   },
   {
     "id": "waystation_work", "name": "Work the waystation stores", "kind": "task", "group": "Work",
-    "desc": "Three vigor for eight coin and a little Labour, shifting stores for the keeper. Taking this job closes the ferry hauling.",
-    "require": "g.waystation > 0", "cost": { "vigor": 3 }, "result": { "coin": 8, "coin_earned": 8, "labour.exp": 4 }, "lock": ["ferry_hauling"]
+    "desc": "Three vigor for eight coin and a little Labour, shifting stores for the keeper. He pays two coin more a load after ten loads and again after thirty. Taking this job closes the ferry hauling.",
+    "require": "g.waystation > 0", "cost": { "vigor": 3 }, "result": { "coin": 8, "coin_earned": 8, "labour.exp": 4 },
+    "at": { "10": { "waystation_work.yield": 2 }, "30": { "waystation_work.yield": 2 } }, "lock": ["ferry_hauling"]
   },
   {
     "id": "trade_marrow_herbs", "name": "Trade marrow herbs", "kind": "task", "group": "Trade",
@@ -297,12 +369,20 @@
     "desc": "A spur of the old path ends at a slide.", "require": "g.waystation > 0"
   },
   {
+    "id": "slip_leaves", "name": "The slip's other nine leaves", "kind": "lead", "group": "Leads",
+    "desc": "The keeper's oldest ledger lists a jade slip of twelve leaves, carried up the porters' path to be sold in the Cloudwell basin long before Shu was born. Three of its leaves stayed below.",
+    "require": "g.waystation > 0"
+  },
+  {
     "id": "ridge_bandit", "name": "Face the man on the porters' path", "kind": "site", "group": "Fights",
-    "desc": "A minute on the path with a man who wants your herbs. He is harder than Tam: ten of life, a strike of eight, a guard of five, and quick on his feet; if he still stands when the minute is out, he has outlasted you. Losing costs the Vigor and herbs you brought; winning clears the path to whatever he keeps. Once begun it cannot stop, so it waits for enough Strain to see the minute through. Nothing here is needed to cross.",
-    "require": "g.ridge_outskirts > 0", "need": "g.vigor >= 4 && g.herbs >= 3", "needtext": "Four Vigor and three herbs for the road.",
+    "desc": "A minute on the path with a man who wants your herbs. He is harder than Tam: ten of life, a strike of eight, a guard of five, and heavy-handed; if he still stands when the minute is out, he has outlasted you. Losing costs the Vigor and herbs you brought; winning clears the path to whatever he keeps. Once begun it cannot stop, so it waits for enough Strain to see the minute through. Nothing here is needed to cross.",
+    "require": "g.ridge_outskirts > 0",
     "cost": { "vigor": 4, "herbs": 3 }, "length": 60, "max": 1, "strain": { "strain": 0.06 },
     "encounter": { "foe": { "name": "the man on the path", "life": 10, "strike": 8, "guard": 5, "speed": 1, "hit": 80, "dodge": 15 },
-      "success": { "coin": 15, "bandit_cleared": 1 }, "failureText": "you back off along the path; the herbs are gone." }
+      "success": { "coin": 15, "bandit_cleared": 1 },
+      "failureText": "you back off along the path, and the herbs are gone. A blow that does not get past his guard of five does nothing; Circulation and the methods you hold are what raise your Strike." },
+    "events": [{ "id": "bandit_driven_off", "when": "g.bandit_cleared > 0",
+      "text": "The man on the path goes down and stays down long enough to think better of it. When you look round he is a shape on the far slope, and the path is quiet for the first time in a season." }]
   },
   {
     "id": "bandit_cleared", "name": "The porters' path is clear", "kind": "flag", "group": "Discoveries",
@@ -318,19 +398,21 @@
   {
     "id": "coffer", "name": "Iron-bound coffer", "kind": "purchase", "group": "Purchases",
     "desc": "Room for two hundred more coin beside the strongbox; enough to save for a cottage.",
-    "require": "g.strongbox > 0", "need": "g.foundation > 0 && g.coin >= 60", "needtext": "Sixty coin, once the foundation is laid.",
+    "require": "g.strongbox > 0", "need": "g.foundation > 0", "needtext": "Not until the foundation is laid.",
     "buy": { "coin": 60 }, "mod": { "coin.max": 200 }, "max": 1
   },
   {
     "id": "cottage", "name": "A cottage beyond the mill", "kind": "home", "group": "Home",
     "desc": "Eight spans of floor, a place to sleep, a place to practise and a place to study. The walls hold a little qi of their own. Arrangements move with you; the Lean-to closes when you move.",
-    "require": "g.foundation > 0 && g.lean_to > 0", "need": "g.coin >= 300", "needtext": "Three hundred coin.",
-    "buy": { "coin": 300 }, "mod": { "home_space.max": 4, "qi.rate": 0.00167 }, "lock": ["lean_to"], "max": 1, "slots": ["rest", "practice", "study"]
+    "require": "g.foundation > 0 && g.lean_to > 0",
+    "buy": { "coin": 300 }, "mod": { "home_space.max": 4, "qi.rate": 0.00167 }, "lock": ["lean_to"], "max": 1, "slots": ["rest", "practice", "study"],
+    "events": [{ "id": "cottage_moved_in", "when": "g.cottage > 0",
+      "text": "Wen helps carry your things across and stays longer than he needs to, one hand flat on the wall. ‘Warm for the season,’ he says, and does not ask why." }]
   },
   {
     "id": "reading_desk", "name": "Reading desk", "kind": "arrangement", "group": "Home", "slot": "study",
     "desc": "Fills the place you study. Copying the slip goes half again as fast, and Lore can reach one level further.",
-    "require": "g.cottage > 0", "need": "g.coin >= 25 && g.timber >= 3", "needtext": "Twenty-five coin and three timber.",
+    "require": "g.cottage > 0",
     "buy": { "coin": 25, "timber": 3 }, "mod": { "fragment_notes.rate": 0.5, "lore.max": 1 }, "max": 1
   }
 ]
