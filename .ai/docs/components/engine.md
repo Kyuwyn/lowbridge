@@ -68,7 +68,7 @@ Discoveries and story events are logged during the tick but **never stop the run
 2. An encounter settles from the Strike, Guard and Life captured when the fight began; a loss returns early with journal text.
 3. Reps and value increment.
 4. `recompute()` runs **before** `result`, so caps raised by this completion apply to its own payout (`src/engine.ts:1114-1115`).
-5. The first completion applies `mod` and locks. [HIGH]
+5. The first completion applies `mod`, and an instant record's locks; a timed record's locks already fell when its entry bill was paid (`payEntry`, ADR 0027). [HIGH]
 
 **WF-engine:005 — Reconcile** → `src/engine.ts:1237-1272`. Loops to a fixed point:
 - reveals records whose `require` holds and logs "is now known.", except for flags;
@@ -146,5 +146,5 @@ Not applicable: the game is single-player and client-only, with no auth. [HIGH]
 | Patches folded in before payout | `src/engine.ts:235-246` | `X.mod.Y` reaches every level and unit X already has | code comment `src/engine.ts:235` | HIGH |
 | Recompute before applying `result` | `src/engine.ts:1114-1115` | Caps raised by a completion must stand before its own payout lands | code comment | HIGH |
 | Stall guard | `src/engine.ts:692-695` | Content that can never tick must not spin the loop | code comment | HIGH |
-| Discoveries never pause | `src/engine.ts:1243-1261` | `pauseOnReveal` was removed, and the validator rejects `pause` events | `scripts/validate.ts:37`, `scripts/validate.ts:169` | HIGH (no ADR records the removal; see issues) |
-| Fight snapshot at entry | `src/engine.ts:1074-1079` | The course projected in the tooltip is the course played, even if held methods change mid-fight | code comment `src/engine.ts:1059-1060`; ADR 0026 | HIGH |
+| Discoveries never pause | `src/engine.ts:1411-1424` | `pauseOnReveal` was removed, and the validator rejects `pause` events | `REMOVED_FIELDS` and `validateGrammar` in `scripts/validate.ts`, ADR 0027 | HIGH |
+| Fight snapshot at entry | `src/engine.ts:1180` | Stats and whole Life captured at entry, so the projected win chance describes the fight that is played even if held methods change mid-fight | ADR 0026 | HIGH |

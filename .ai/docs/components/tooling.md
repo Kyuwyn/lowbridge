@@ -13,9 +13,9 @@ These are the build, dev server, content validator, route simulator and browser 
 |---|---|---|
 | Grammar: record vocabulary, removed fields, expression parsing, references, self-keys | `scripts/validate.ts:59-204` | HIGH |
 | Mandatory-core check: each breakthrough is unreachable with its core knowledge at zero | `scripts/validate.ts:208-226` | HIGH |
-| Pacing: Foundation within 720–1200 s; Circulation by 850 s on the direct routes; chapter-one timed actions at most 180 s | `scripts/validate.ts:29-34`, `scripts/validate.ts:233-252` | HIGH |
+| Pacing (ADR 0028): Foundation within 480–780 s and Circulation by 600 s on the direct routes; preference routes within 1200 s; every timed action at most 180 s; every ridge route 720–1440 s from Foundation to the waystation | constants at the top of `scripts/validate.ts` | HIGH |
 | Cap lines: the first arrives within 2 min and names its source; on opening routes, unsourced lines are errors | `scripts/validate.ts:253-256` | HIGH |
-| Ridge: each First Direction reaches the waystation 90–240 min after Foundation | `scripts/validate.ts:265-268` | HIGH |
+| Ridge: every First Direction route, from the channel and from the hollow, reaches the waystation 12–24 min after Foundation; the validator also enforces ADR 0021's chapter patch (`validateCompounding`), rule 74's attunement-place check and ADR 0024's "every carried key is read" | `scripts/validate.ts` | HIGH |
 | Reachability: every record witnessed on some cold-start branch; routes must not name departed ids | `scripts/validate.ts:270-276` | HIGH |
 | Route runner (`ROUTES`, `DIRECT_ROUTES`, `RIDGE_ROUTES`, coverage branches) | `scripts/routes.ts:6`, `scripts/routes.ts:29`, `scripts/routes.ts:171`, `scripts/routes.ts:331`, `scripts/routes.ts:356` | HIGH |
 | Browser smoke (Playwright Chromium): writes screenshots and `smoke-results.json` to `playtest/` | `scripts/browser-smoke.ts:11-14`, `scripts/browser-smoke.ts:660` | HIGH |
@@ -31,7 +31,7 @@ These are the build, dev server, content validator, route simulator and browser 
 5. Coverage branches, then ridge routes from the channel-only and channel-direct end states → `:258-269`
 6. Unknown ids and reachability → `:270-278`; set the exit code → `:298` [HIGH]
 
-**WF-tooling:002 — `bun scripts/routes.ts`**: runs `ROUTES` and exits 1 if any route fails or Foundation takes more than 2700 s → `scripts/routes.ts:439-445`. [HIGH]
+**WF-tooling:002 — `bun scripts/routes.ts`**: runs the preference and direct routes, prints them, and exits 1 only if a route cannot reach Foundation; it enforces no time band. [HIGH]
 
 ## 4. Business Rules
 | ID | Rule | Criticality | Source |
@@ -70,9 +70,9 @@ Not applicable. [HIGH]
 | persistence | `decodeSave`, `makeSave`, `DATABASE_NAME`, `SAVE_VERSION` | `scripts/browser-smoke.ts:8` |
 
 ## 10. Legacy Warnings
-- Two pacing ceilings disagree: the validator's 1200 s and `routes.ts`' 2700 s exit check; the design plan's Part E states yet another bound. See `.ai/docs/issues.md`. [HIGH] (`scripts/validate.ts:30`, `scripts/routes.ts:445`)
-- Route preferences hardcode about 40 content ids; renames are caught only by the `unknownIds` check. [HIGH] (`scripts/routes.ts:6-22`, `scripts/validate.ts:270-273`)
-- The validator does no route-key (`t_`) checks, although ADR 0024 lists three. See issues. [HIGH]
+- One pacing bound: the validator's bands (ADR 0028). `routes.ts` and the design plan defer to it. [HIGH]
+- Route preferences hardcode content ids; renames are caught only by the `unknownIds` check. [HIGH] (`scripts/routes.ts`)
+- The validator checks route keys for names and readers, but not that no gate names another module's record id (ADR 0024). See ISS-004. [HIGH]
 - The Python simulators are deliberately historical approximations, not a baseline. [HIGH] (`design/validation/opening-sim.py:11-13`)
 
 ## 11. Design Rationale

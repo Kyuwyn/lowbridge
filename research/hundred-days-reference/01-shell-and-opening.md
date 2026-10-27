@@ -56,7 +56,7 @@ The readout "Life: Yr 60 M0 D0 (0 %)" is not the character's age: `age` is a **l
 
 ## Mobile (390×844)
 
-Not responsive: the three columns keep their desktop widths, the title wraps over the buttons, the news ticker and hint band overflow, bars are cut (`screens/mobile-390-main.webp`). Arcanum 0.12.12.9 has a working single-column phone layout (`../arcanum-reference/01-shell-and-layout.md`). The fork never touched the CSS for small screens.
+Not responsive: the three columns keep their desktop widths, the title wraps over the buttons, the news ticker and hint band overflow, bars are cut (`screens/mobile-390-main.webp`). Arcanum does not reflow either (A/01 Mobile, rule 37); neither reference is a phone model. The fork never touched the CSS for small screens.
 
 ## Visual style
 
