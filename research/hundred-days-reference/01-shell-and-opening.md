@@ -62,6 +62,8 @@ Not responsive: the three columns keep their desktop widths, the title wraps ove
 
 Default light theme, Open Sans, Arcanum's grey boxes; the Cultivation cards are the only art in the game (17 landscape PNGs under `images/xl_bgs/`), the Research tab is a dark panel with teal/orange outlines and three circular progress dials; achievements and some names carry emoji prefixes (🎇, 👑, ⚔, ☀, 🌙, 🐭, 💠). The translator's English is readable but uneven ("Divine Machine", "Open Indicator", "Buy Reactor"); the Chinese original uses pinyin ids and Chinese `name`s throughout.
 
+Voice: `flavor` appears on 304 of 4,520 records (`data-census.md`) and on 1 of 193 cultivation nodes. The vocabulary mixes Daoist alchemy with industrial and science terms. The tone runs in four registers: ticker jokes, the death text, the cat chain, and the translation.
+
 ## What this means for Lowbridge
 
 - *copy*: the TAB guide as **paid quests** (`missions.json`): the tutorial is content, costs/pays coins, and lives in the same vocabulary; Lowbridge's discoveries already log without pausing, a guide overlay would be the next step.
@@ -69,5 +71,5 @@ Default light theme, Open Sans, Arcanum's grey boxes; the Cultivation cards are 
 - *copy*: the Dwelling **search box** by tag/result/name once furniture passes ~50 records; the fork has 325.
 - *copy*: Cultivation as **one illustrated card per domain** with the node list beside it; it reads better than Arcanum's flat upgrade grid for a tree with 17 branches, and a card is one `tags` value, so it costs no new field.
 - *avoid*: three permanent coloured notice strips, a 3-s reminder toast, a news ticker and a bottom hint band at once; the useful content is one line each.
-- *avoid*: the broken phone layout; Lowbridge's mobile rules (Arcanum 01, rule 1) stand.
+- *avoid*: the broken phone layout. Arcanum does not reflow either (Arcanum 01 Mobile, rule 37), so Lowbridge's own responsive rules stand on their own.
 - *beat*: "Start Background Process" is a workaround for tab throttling; Lowbridge settles elapsed time on resume (`settle()` in `src/main.ts`) and needs no audio trick.
