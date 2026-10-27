@@ -254,6 +254,90 @@
         "yield": 0,
         "discount": 0
       },
+      "walking_staff": {
+        "value": 0,
+        "exp": 0,
+        "reps": 0,
+        "ticks": 0,
+        "started": false,
+        "paid": false,
+        "max": 1,
+        "rate": 0,
+        "open": true,
+        "length": 1,
+        "yield": 0,
+        "discount": 0
+      },
+      "herb_poultice": {
+        "value": 0,
+        "exp": 0,
+        "reps": 0,
+        "ticks": 0,
+        "started": false,
+        "paid": false,
+        "max": 3,
+        "rate": 0,
+        "open": true,
+        "length": 1,
+        "yield": 0,
+        "discount": 0
+      },
+      "marrow_tonic": {
+        "value": 0,
+        "exp": 0,
+        "reps": 0,
+        "ticks": 0,
+        "started": false,
+        "paid": false,
+        "max": 3,
+        "rate": 0,
+        "open": true,
+        "length": 1,
+        "yield": 0,
+        "discount": 0
+      },
+      "honed_edge": {
+        "value": 0,
+        "exp": 0,
+        "reps": 0,
+        "ticks": 0,
+        "started": false,
+        "paid": false,
+        "max": 1,
+        "rate": 0,
+        "open": true,
+        "length": 1,
+        "yield": 0,
+        "discount": 0
+      },
+      "weighted_stakes": {
+        "value": 0,
+        "exp": 0,
+        "reps": 0,
+        "ticks": 0,
+        "started": false,
+        "paid": false,
+        "max": 1,
+        "rate": 0,
+        "open": true,
+        "length": 1,
+        "yield": 0,
+        "discount": 0
+      },
+      "warding_strip": {
+        "value": 0,
+        "exp": 0,
+        "reps": 0,
+        "ticks": 0,
+        "started": false,
+        "paid": false,
+        "max": 1,
+        "rate": 0,
+        "open": true,
+        "length": 1,
+        "yield": 0,
+        "discount": 0
+      },
       "home_space": {
         "value": 0,
         "exp": 0,
@@ -1709,6 +1793,132 @@
         "length": 1,
         "yield": 0,
         "discount": 0
+      },
+      "workbench": {
+        "value": 0,
+        "exp": 0,
+        "reps": 0,
+        "ticks": 0,
+        "started": false,
+        "paid": false,
+        "max": 1,
+        "rate": 1,
+        "open": true,
+        "length": 1,
+        "yield": 0,
+        "discount": 0
+      },
+      "craft_walking_staff": {
+        "value": 0,
+        "exp": 0,
+        "reps": 0,
+        "ticks": 0,
+        "started": false,
+        "paid": false,
+        "max": 1,
+        "rate": 1,
+        "open": true,
+        "length": 60,
+        "yield": 0,
+        "discount": 0
+      },
+      "craft_herb_poultice": {
+        "value": 0,
+        "exp": 0,
+        "reps": 0,
+        "ticks": 0,
+        "started": false,
+        "paid": false,
+        "max": 1000000000000,
+        "rate": 1,
+        "open": true,
+        "length": 30,
+        "yield": 0,
+        "discount": 0
+      },
+      "craft_marrow_tonic": {
+        "value": 0,
+        "exp": 0,
+        "reps": 0,
+        "ticks": 0,
+        "started": false,
+        "paid": false,
+        "max": 1000000000000,
+        "rate": 1,
+        "open": true,
+        "length": 45,
+        "yield": 0,
+        "discount": 0
+      },
+      "craft_honed_edge": {
+        "value": 0,
+        "exp": 0,
+        "reps": 0,
+        "ticks": 0,
+        "started": false,
+        "paid": false,
+        "max": 1,
+        "rate": 1,
+        "open": true,
+        "length": 60,
+        "yield": 0,
+        "discount": 0
+      },
+      "craft_weighted_stakes": {
+        "value": 0,
+        "exp": 0,
+        "reps": 0,
+        "ticks": 0,
+        "started": false,
+        "paid": false,
+        "max": 1,
+        "rate": 1,
+        "open": true,
+        "length": 60,
+        "yield": 0,
+        "discount": 0
+      },
+      "craft_warding_strip": {
+        "value": 0,
+        "exp": 0,
+        "reps": 0,
+        "ticks": 0,
+        "started": false,
+        "paid": false,
+        "max": 1,
+        "rate": 1,
+        "open": true,
+        "length": 60,
+        "yield": 0,
+        "discount": 0
+      },
+      "take_herb_poultice": {
+        "value": 0,
+        "exp": 0,
+        "reps": 0,
+        "ticks": 0,
+        "started": false,
+        "paid": false,
+        "max": 1000000000000,
+        "rate": 1,
+        "open": true,
+        "length": 1,
+        "yield": 0,
+        "discount": 0
+      },
+      "take_marrow_tonic": {
+        "value": 0,
+        "exp": 0,
+        "reps": 0,
+        "ticks": 0,
+        "started": false,
+        "paid": false,
+        "max": 1000000000000,
+        "rate": 1,
+        "open": true,
+        "length": 1,
+        "yield": 0,
+        "discount": 0
       }
     },
     "active": null,
@@ -1728,6 +1938,8 @@
       "speed",
       "hit",
       "dodge",
+      "walking_staff",
+      "herb_poultice",
       "home_space",
       "coin_earned",
       "lore",
@@ -1767,7 +1979,11 @@
       "strongbox",
       "ridge_outskirts",
       "coffer",
-      "cottage"
+      "cottage",
+      "workbench",
+      "craft_walking_staff",
+      "craft_herb_poultice",
+      "take_herb_poultice"
     ],
     "lockedIds": [
       "carry_current",
@@ -1827,42 +2043,6 @@
       "life:20"
     ],
     "log": [
-      {
-        "id": 67,
-        "kind": "discovery",
-        "text": "Hit is now known.",
-        "activitySeconds": 416
-      },
-      {
-        "id": 68,
-        "kind": "discovery",
-        "text": "Dodge is now known.",
-        "activitySeconds": 416
-      },
-      {
-        "id": 69,
-        "kind": "discovery",
-        "text": "Steady-attention exercise is now known.",
-        "activitySeconds": 416
-      },
-      {
-        "id": 70,
-        "kind": "discovery",
-        "text": "Settle the breath is now known.",
-        "activitySeconds": 416
-      },
-      {
-        "id": 71,
-        "kind": "discovery",
-        "text": "Settle the foundation is now known.",
-        "activitySeconds": 416
-      },
-      {
-        "id": 72,
-        "kind": "story",
-        "text": "At the third dusk the turn can be held without being followed. The missing sentence has become an exercise.",
-        "activitySeconds": 416
-      },
       {
         "id": 73,
         "kind": "discovery",
@@ -2742,47 +2922,83 @@
       {
         "id": 219,
         "kind": "discovery",
-        "text": "Haul freight to the ferry is now known.",
+        "text": "Walking staff is now known.",
         "activitySeconds": 1064
       },
       {
         "id": 220,
+        "kind": "discovery",
+        "text": "Herb poultice is now known.",
+        "activitySeconds": 1064
+      },
+      {
+        "id": 221,
+        "kind": "discovery",
+        "text": "Haul freight to the ferry is now known.",
+        "activitySeconds": 1064
+      },
+      {
+        "id": 222,
         "kind": "story",
         "text": "The pooled breath turns, and returns, and turns again without being asked. Foundation. The method has room to grow in it now, and so does the road: the ferry crossing, and the outskirts of Old Ridge beyond it.",
         "activitySeconds": 1064
       },
       {
-        "id": 221,
+        "id": 223,
         "kind": "story",
         "text": "A woman waiting for the ferry asks whether anyone still sits in Fernhollow at dusk. Granny Shu, buying salt beside her, says nobody in particular and looks at you.",
         "activitySeconds": 1064
       },
       {
-        "id": 222,
+        "id": 224,
         "kind": "discovery",
         "text": "Walk the ridge outskirts is now known.",
         "activitySeconds": 1064
       },
       {
-        "id": 223,
+        "id": 225,
         "kind": "discovery",
         "text": "Iron-bound coffer is now known.",
         "activitySeconds": 1064
       },
       {
-        "id": 224,
+        "id": 226,
         "kind": "discovery",
         "text": "A cottage beyond the mill is now known.",
         "activitySeconds": 1064
       },
       {
-        "id": 225,
+        "id": 227,
+        "kind": "discovery",
+        "text": "Workbench is now known.",
+        "activitySeconds": 1064
+      },
+      {
+        "id": 228,
+        "kind": "discovery",
+        "text": "Cut a walking staff is now known.",
+        "activitySeconds": 1064
+      },
+      {
+        "id": 229,
+        "kind": "discovery",
+        "text": "Make a poultice is now known.",
+        "activitySeconds": 1064
+      },
+      {
+        "id": 230,
+        "kind": "discovery",
+        "text": "Bind on a poultice is now known.",
+        "activitySeconds": 1064
+      },
+      {
+        "id": 231,
         "kind": "completion",
         "text": "Rest: objective complete.",
         "activitySeconds": 1103
       },
       {
-        "id": 226,
+        "id": 232,
         "kind": "cap",
         "text": "Life has reached 20/20. A higher cap is possible through Circulation or Spar with the ferry hand.",
         "activitySeconds": 1103

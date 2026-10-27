@@ -3,7 +3,7 @@
   "reports": [
     {
       "name": "channel-only",
-      "browserWallSeconds": 19.018696422999998,
+      "browserWallSeconds": 18.285594778000004,
       "activitySeconds": 720,
       "actionCount": 76,
       "levels": {
@@ -224,6 +224,14 @@
           "at": 681
         },
         {
+          "id": "walking_staff",
+          "at": 681
+        },
+        {
+          "id": "herb_poultice",
+          "at": 681
+        },
+        {
           "id": "foundation",
           "at": 681
         },
@@ -242,6 +250,22 @@
         {
           "id": "cottage",
           "at": 681
+        },
+        {
+          "id": "workbench",
+          "at": 681
+        },
+        {
+          "id": "craft_walking_staff",
+          "at": 681
+        },
+        {
+          "id": "craft_herb_poultice",
+          "at": 681
+        },
+        {
+          "id": "take_herb_poultice",
+          "at": 681
         }
       ],
       "unsourcedCapLog": [],
@@ -256,7 +280,7 @@
     },
     {
       "name": "hollow-only",
-      "browserWallSeconds": 41.408560333000004,
+      "browserWallSeconds": 40.537614089,
       "activitySeconds": 1103,
       "actionCount": 221,
       "levels": {
@@ -465,6 +489,14 @@
           "at": 1064
         },
         {
+          "id": "walking_staff",
+          "at": 1064
+        },
+        {
+          "id": "herb_poultice",
+          "at": 1064
+        },
+        {
           "id": "foundation",
           "at": 1064
         },
@@ -482,6 +514,22 @@
         },
         {
           "id": "cottage",
+          "at": 1064
+        },
+        {
+          "id": "workbench",
+          "at": 1064
+        },
+        {
+          "id": "craft_walking_staff",
+          "at": 1064
+        },
+        {
+          "id": "craft_herb_poultice",
+          "at": 1064
+        },
+        {
+          "id": "take_herb_poultice",
           "at": 1064
         }
       ],

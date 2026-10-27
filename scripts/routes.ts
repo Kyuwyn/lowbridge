@@ -204,7 +204,7 @@ export function runRoute(name: string, options: RouteOptions = {}): RouteResult 
   };
   /** Timber is cut only toward the next piece the route still means to build, never into a full stack. */
   const timberShort = (): boolean => {
-    for (const id of preferences.prefer) {
+    for (const id of [...afterGoal.filter(id => engine.stat(id).reps < 1).slice(0, 1), ...preferences.prefer]) {
       if (held(engine, id) > 0 || engine.locked(id) || satisfied(id)) continue;
       const timber = engine.billProgress(id).find(row => row.id === "timber");
       if (timber) return timber.held < timber.need;
