@@ -1,10 +1,10 @@
 [
   {
     "id": "mill_work", "name": "Haul sacks at the mill", "kind": "task", "group": "Work",
-    "desc": "Sacks from the cart to the stones, counted into your hand at the door. After five sacks Wen puts you on a small wage that comes in on its own, a coin every twenty seconds, here or away. He rounds the sack rate up after twenty sacks, again after forty and again after eighty.",
+    "desc": "Sacks from the cart to the stones, counted into your hand at the door. After five sacks Wen puts you on a small wage that comes in on its own, a coin every twenty seconds, here or away, for as long as you work for him. He rounds the sack rate up after twenty sacks, again after forty and again after eighty.",
     "flavor": "Wen pays by the sack and watches you carry every one of them.",
     "cost": { "vigor": 2 }, "result": { "coin": 3, "coin_earned": 3, "labour.exp": 4 },
-    "at": { "5": { "coin.rate": 0.05 }, "20": { "mill_work.yield": 1 }, "40": { "mill_work.yield": 1 }, "80": { "mill_work.yield": 1 } },
+    "at": { "5": { "coin.rate": 0.05, "coin_earned.rate": 0.05 }, "20": { "mill_work.yield": 1 }, "40": { "mill_work.yield": 1 }, "80": { "mill_work.yield": 1 } },
     "events": [{ "id": "wen_stops_counting", "when": "g.mill_work.reps >= 5",
       "text": "Wen stops counting your sacks aloud. ‘You're on the books now. A small wage comes to you whether you're on my floor or not, and the sacks still pay by the sack. Nobody watches.’" }]
   },
@@ -27,18 +27,19 @@
   },
   {
     "id": "ferry_hauling", "name": "Haul freight to the ferry", "kind": "task", "group": "Work",
-    "desc": "Freight to the ferry pays better than sacks, two coin more a load after twenty loads and again after fifty. Wen will hire a boy the day you take it.",
+    "desc": "Freight to the ferry pays better than sacks, two coin more a load after twenty loads and again after fifty. Wen will hire a boy the day you take it, and his wage stops.",
     "require": "g.foundation > 0", "cost": { "vigor": 3 }, "result": { "coin": 6, "coin_earned": 6, "labour.exp": 4 },
     "at": { "20": { "ferry_hauling.yield": 2 }, "50": { "ferry_hauling.yield": 2 } }, "lock": ["mill_work"],
-    "warn": "The ferry road closes the sack work at the mill for good.",
+    "mod": { "coin.rate": "-0.05 * (g.mill_work.reps >= 5)", "coin_earned.rate": "-0.05 * (g.mill_work.reps >= 5)" },
+    "warn": "The ferry road closes the sack work at the mill for good, and Wen's wage with it.",
     "events": [{ "id": "wen_hires_boy", "when": "g.ferry_hauling.reps >= 1",
-      "text": "Wen takes on a boy for the sacks before you have finished saying it. The ferry road pays better and he knows it." }]
+      "text": "Wen takes on a boy for the sacks before you have finished saying it, and your name comes off his books. The ferry road pays better and he knows it." }]
   },
   {
     "id": "rest", "name": "Rest", "kind": "task", "group": "Work",
-    "desc": "Lie down until the day's strength comes back. Vigor returns whatever you do; resting is faster, a pallet or a cot faster still. Spending Vigor on a chore does not end the rest: it keeps going until you are full again. Resting brings Life back too, from empty to full in about five minutes. Once the hollow's reading is yours, lying still teaches Composure as well.",
+    "desc": "Lie down until the day's strength comes back. Vigor returns whatever you do; resting is faster, a pallet or a cot faster still. Spending Vigor on a chore does not end the rest: it keeps going until you are full again. Resting brings Life back too, from empty to full in about five minutes. While Settle the breath is held, lying still teaches Composure as well.",
     "length": "continuous", "fill": ["vigor", "life"],
-    "effect": { "vigor": 0.35, "life": "g.life.max / 300", "composure.exp": "0.3 * (g.t_hollow > 0)" }, "autoStart": true
+    "effect": { "vigor": 0.35, "life": "g.life.max / 300", "composure.exp": "0.3 * g.settle_breath.attuned" }, "autoStart": true
   },
   {
     "id": "coin_pouch", "name": "A larger coin pouch", "kind": "purchase", "group": "Purchases",
@@ -249,7 +250,7 @@
     "buy": { "coin": 4 }, "mod": { "rest.rate": 0.25 }, "max": 1
   },
   {
-    "id": "cot", "name": "A proper cot", "kind": "arrangement", "group": "Home", "slot": "rest",
+    "id": "cot", "name": "A proper cot", "kind": "arrangement", "group": "Home", "slot": "rest", "tags": ["t_furnished"],
     "desc": "Fills the place you sleep in the lean-to. Resting returns half again as much, and Vigor comes back a little faster all day.",
     "require": "g.lean_to > 0",
     "buy": { "coin": 20, "timber": 3 }, "mod": { "rest.rate": 0.5, "vigor.rate": 0.02 }, "max": 1
@@ -273,7 +274,7 @@
     "mod": { "herbs.max": 12, "gather_herbs.yield": 1, "herbs.rate": 0.005, "herbcraft.max": 1 }, "max": 1
   },
   {
-    "id": "garden_plot", "name": "Herb plot by the door", "kind": "arrangement", "group": "Home",
+    "id": "garden_plot", "name": "Herb plot by the door", "kind": "arrangement", "group": "Home", "tags": ["t_furnished"],
     "desc": "One span by the door, bedded with four bundles of cuttings from Shu's stock. Herbs come on by themselves whether you are home or not.",
     "require": "g.herbcraft >= 2",
     "buy": { "coin": 12, "timber": 2, "herbs": 4 }, "space": 1,
@@ -299,7 +300,7 @@
       "text": "You shut the lean-to's door behind you for the first time and stand there a while. In Lowbridge, a door you can shut counts as independence." }]
   },
   {
-    "id": "strongbox", "name": "Strongbox", "kind": "arrangement", "group": "Home",
+    "id": "strongbox", "name": "Strongbox", "kind": "arrangement", "group": "Home", "tags": ["t_furnished"],
     "desc": "One span of lean-to floor and room for fifty more coin. The hayloft never had a corner safe enough for one.",
     "require": "g.coin_pouch > 0",
     "need": "g.lean_to > 0", "needtext": "The lean-to first; the hayloft has no corner safe enough.",

@@ -418,18 +418,20 @@ export function runRidgeRoute(name: RidgeRoute, records: GameRecord[] = sourceRe
 /**
  * The quickest sensible ridge play from either direct Foundation: no cottage or coffer, the strongbox before line
  * furniture, the line's method attuned in Foundation's third place, chores during every run, the next pursuit started
- * as soon as one ends, and the bandit fought once the projected fight is won, for the cache that shortens the bill.
+ * as soon as one ends, and the cache taken for the bill it shortens: traced by the earth or formation teaching, or
+ * reached by fighting the bandit once the projected fight is won.
  */
 export function runDirectRidgeRoute(name: RidgeRoute, records: GameRecord[] = sourceRecords, from: DirectRoute = "channel-direct", start = runDirectRoute(from, { records }).state): RouteResult {
   const line = RIDGE_ROUTES[name];
   const beatable = (engine: GameEngine) => engine.has("ridge_bandit") && engine.visible("ridge_bandit") && engine.fight("ridge_bandit").likely;
-  // Four from the cache count once the bandit can be beaten and the cache is still unsearched.
+  // Four from the cache count once the cache can be reached (fought for or traced) and is still unsearched.
   const stocked = (engine: GameEngine) => held(engine, line.material) >= 12 || held(engine, line.direction) > 0 && held(engine, line.material) >= 3
-    || held(engine, "ridge_cache") < 1 && beatable(engine) && held(engine, line.material) >= 8;
+    || held(engine, "ridge_cache") < 1 && held(engine, line.material) >= 8
+    && (beatable(engine) || held(engine, "cache_found") > 0 || ["trace_cache_ground", "trace_cache_layout"].some(id => engine.has(id) && engine.visible(id)));
   return runRoute(from === "channel-direct" ? `${name}-direct` : `${name}-hollow-direct`, {
     records, start, goal: "waystation", maxSeconds: 21600, focused: false, attentive: true,
     preferences: {
-      prefer: [line.direction, line.crossing, "ridge_cache", "ridge_bandit", "ridge_outskirts", line.teaching, "field_kit", "lean_to", "strongbox", line.arrangement,
+      prefer: [line.direction, line.crossing, "ridge_cache", "trace_cache_ground", "trace_cache_layout", "ridge_bandit", "ridge_outskirts", line.teaching, "field_kit", "lean_to", "strongbox", line.arrangement,
         line.drills, line.method, line.chore, line.site, "fragment_notes", "cut_timber", "ferry_hauling"],
       avoid: ["steady_breath"], others: 999,
     },

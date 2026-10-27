@@ -203,6 +203,8 @@ export class GameEngine {
       if (field === "value" && this.tagged.has(id!)) return this.tagCount(id!);
       throw new Error(`Unknown stat: ${id}`);
     }
+    // Whether a method holds an attunement place now; held state lives on the save, not on the stat.
+    if (field === "attuned") return Number(this.state.attuned.includes(id!));
     const stat = this.stat(id!);
     if (!Object.hasOwn(stat, field)) throw new Error(`Unknown stat field: ${path}`);
     const value = stat[field as keyof Stat];

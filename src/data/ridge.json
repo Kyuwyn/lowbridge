@@ -209,7 +209,7 @@
     "breakthrough": { "title": "First Direction: the Body", "core": "g.circulation >= 4 && g.body_drills.started > 0", "coreLabel": "Circulation 4, and the carrying drills begun", "required": 3,
       "pointers": [
         { "label": "Lore 4", "when": "g.lore >= 4" },
-        { "label": "A second-tier arrangement installed", "when": "g.cot > 0 || g.garden_plot > 0 || g.strongbox > 0" },
+        { "label": "A furnished home: a cot, a herb plot or a strongbox", "when": "g.t_furnished >= 1" },
         { "label": "Two methods of the body school used: Steady the breath, Settle the breath or Sink the breath under the load", "when": "g.t_school_body >= 2" },
         { "label": "Two hundred coin earned in wages", "when": "g.coin_earned >= 200" }
       ] },
@@ -226,7 +226,7 @@
     "breakthrough": { "title": "First Direction: the Sword", "core": "g.blade_intent >= 4 && g.blade_drills.started > 0", "coreLabel": "Blade Intent 4, and the blade-contact drills begun", "required": 3,
       "pointers": [
         { "label": "Lore 4", "when": "g.lore >= 4" },
-        { "label": "A second-tier arrangement installed", "when": "g.cot > 0 || g.garden_plot > 0 || g.strongbox > 0" },
+        { "label": "A furnished home: a cot, a herb plot or a strongbox", "when": "g.t_furnished >= 1" },
         { "label": "A method of the sword school used: Cut by intent", "when": "g.t_school_sword >= 1" },
         { "label": "Two hundred coin earned in wages", "when": "g.coin_earned >= 200" }
       ] },
@@ -243,7 +243,7 @@
     "breakthrough": { "title": "First Direction: the Earth", "core": "g.ground_reading >= 4 && g.ground_drills.started > 0", "coreLabel": "Ground Reading 4, and the ground drills begun", "required": 3,
       "pointers": [
         { "label": "Lore 4", "when": "g.lore >= 4" },
-        { "label": "A second-tier arrangement installed", "when": "g.cot > 0 || g.garden_plot > 0 || g.strongbox > 0" },
+        { "label": "A furnished home: a cot, a herb plot or a strongbox", "when": "g.t_furnished >= 1" },
         { "label": "A method of the earth school used: Carry the current or Read the grain", "when": "g.t_school_earth >= 1" },
         { "label": "Two hundred coin earned in wages", "when": "g.coin_earned >= 200" }
       ] },
@@ -260,7 +260,7 @@
     "breakthrough": { "title": "First Direction: Formation", "core": "g.array_craft >= 4 && g.array_drills.started > 0", "coreLabel": "Array Craft 4, and the array drills begun", "required": 3,
       "pointers": [
         { "label": "Lore 4", "when": "g.lore >= 4" },
-        { "label": "A second-tier arrangement installed", "when": "g.cot > 0 || g.garden_plot > 0 || g.strongbox > 0" },
+        { "label": "A furnished home: a cot, a herb plot or a strongbox", "when": "g.t_furnished >= 1" },
         { "label": "A method of the formation school used: Fix a layout", "when": "g.t_school_formation >= 1" },
         { "label": "Two hundred coin earned in wages", "when": "g.coin_earned >= 200" }
       ] },
@@ -375,7 +375,7 @@
   },
   {
     "id": "ridge_bandit", "name": "Face the man on the porters' path", "kind": "site", "group": "Fights",
-    "desc": "A minute on the path with a man who wants your herbs. He is harder than Tam: ten of life, a strike of eight, a guard of five, and heavy-handed; if he still stands when the minute is out, he has outlasted you. Losing costs the Vigor and herbs you brought; winning clears the path to whatever he keeps. Once begun it cannot stop, so it waits for enough Strain to see the minute through. Nothing here is needed to cross.",
+    "desc": "A minute on the path with a man who wants your herbs. He is harder than Tam: ten of life, a strike of eight, a guard of five, and heavy-handed; if he still stands when the minute is out, he has outlasted you. Losing costs the Vigor and herbs you brought; winning clears the path to whatever he keeps. Once begun it cannot stop, so it waits for enough Strain to see the minute through. Nothing here is needed to cross, and the earth and formation teachings find his cache without meeting him.",
     "require": "g.ridge_outskirts > 0",
     "cost": { "vigor": 4, "herbs": 3 }, "length": 60, "max": 1, "strain": { "strain": 0.06 },
     "encounter": { "foe": { "name": "the man on the path", "life": 10, "strike": 8, "guard": 5, "speed": 1, "hit": 80, "dodge": 15 },
@@ -390,21 +390,42 @@
     "require": "g.bandit_cleared > 0", "initial": { "value": 0, "max": 1 }
   },
   {
+    "id": "trace_cache_ground", "name": "Read the path for his cache", "kind": "site", "group": "Sites",
+    "desc": "Ninety seconds reading the ground along the porters' path. Stone that has been lifted and put back lies wrong, and the wrong stones lead to his cache without your meeting him. Teaches Ground Reading.",
+    "flavor": "He hides things the way a man does who has never been asked where the ground is soft.",
+    "require": "g.ridge_outskirts > 0 && g.earth_teaching > 0",
+    "length": 90, "max": 1, "strain": { "strain": 0.04 },
+    "result": { "cache_found": 1, "ground_reading.exp": 20 }
+  },
+  {
+    "id": "trace_cache_layout", "name": "Mark out the path for his cache", "kind": "site", "group": "Sites",
+    "desc": "Ninety seconds laying tokens along the porters' path and watching which ones he steps round. The shape he keeps clear of points at his cache without your meeting him. Teaches Array Craft.",
+    "flavor": "A man who walks the same path every day has drawn a map of it with his feet.",
+    "require": "g.ridge_outskirts > 0 && g.formation_teaching > 0",
+    "length": 90, "max": 1, "strain": { "strain": 0.04 },
+    "result": { "cache_found": 1, "array_craft.exp": 20 }
+  },
+  {
+    "id": "cache_found", "name": "His cache is found", "kind": "flag", "group": "Discoveries",
+    "desc": "You know where the man on the path keeps what he takes, and he does not know you know.",
+    "require": "g.cache_found > 0", "initial": { "value": 0, "max": 1 }
+  },
+  {
     "id": "ridge_cache", "name": "Search the man's cache", "kind": "site", "group": "Sites",
     "desc": "Two minutes searching a hollow under the path. Four of each ridge material your teachings put to use; the line sites give the same.",
-    "require": "g.bandit_cleared > 0", "length": 120, "max": 1,
+    "require": "g.bandit_cleared > 0 || g.cache_found > 0", "length": 120, "max": 1,
     "result": { "marrow_herbs": "4 * (g.body_teaching > 0)", "whetstone_grit": "4 * (g.sword_teaching > 0)", "veined_ore": "4 * (g.earth_teaching > 0)", "inked_tokens": "4 * (g.formation_teaching > 0)" }
   },
   {
     "id": "coffer", "name": "Iron-bound coffer", "kind": "purchase", "group": "Purchases",
-    "desc": "Room for two hundred more coin beside the strongbox; enough to save for a cottage.",
-    "require": "g.strongbox > 0", "need": "g.foundation > 0", "needtext": "Not until the foundation is laid.",
+    "desc": "Room for two hundred more coin; enough to save for a cottage.",
+    "require": "g.foundation > 0",
     "buy": { "coin": 60 }, "mod": { "coin.max": 200 }, "max": 1
   },
   {
     "id": "cottage", "name": "A cottage beyond the mill", "kind": "home", "group": "Home",
     "desc": "Eight spans of floor, a place to sleep, a place to practise and a place to study. The walls hold a little qi of their own. Arrangements move with you; the Lean-to closes when you move.",
-    "require": "g.foundation > 0 && g.lean_to > 0",
+    "require": "g.foundation > 0 && g.home_space.max >= 4",
     "buy": { "coin": 300 }, "mod": { "home_space.max": 4, "qi.rate": 0.00167 }, "lock": ["lean_to"], "max": 1, "slots": ["rest", "practice", "study"],
     "events": [{ "id": "cottage_moved_in", "when": "g.cottage > 0",
       "text": "Wen helps carry your things across and stays longer than he needs to, one hand flat on the wall. ‘Warm for the season,’ he says, and does not ask why." }]

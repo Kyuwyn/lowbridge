@@ -95,6 +95,8 @@ export function validateGrammar(records: GameRecord[]): string[] {
       else if (extra || field !== "value") errors.push(`${record.id}: a tag counter takes no field (${path})`);
       return;
     }
+    // `attuned` is read-only and means something only on a record that can hold an attunement place.
+    if (field === "attuned") { if (extra || !byId.get(id)?.attune) errors.push(`${record.id}: ${path} reads attunement on a record that cannot be attuned`); return; }
     if (extra || !statFields.has(field)) errors.push(`${record.id}: unsupported field in ${path}`);
   };
 
@@ -273,10 +275,26 @@ export function validateCompounding(records: GameRecord[]): string[] {
     ? [] : [`${chapter.name} patches no earlier chapter's payout; ADR 0021 asks every later chapter for at least one X.mod.Y patch`]);
 }
 
+/**
+ * ADR 0024: across a chapter boundary the route key is the seam, so no gate in one chapter's file names a record
+ * from another's. The shared file is the common vocabulary both read; its own reveals may name what reveals them.
+ */
+export function validateModuleSeams(): string[] {
+  const modules = [{ name: "opening", records: opening as GameRecord[] }, { name: "ridge", records: ridge as GameRecord[] }];
+  const home = new Map(modules.flatMap(module => module.records.map(record => [record.id, module.name] as const)));
+  return modules.flatMap(module => module.records.flatMap(record => {
+    const gates = [record.require, record.need, record.breakthrough?.core, ...record.breakthrough?.pointers.map(pointer => pointer.when) ?? [], ...record.events?.map(event => event.when) ?? []];
+    return gates.filter((gate): gate is string => typeof gate === "string").flatMap(gate => expressionReferences(gate)
+      .map(path => path.replace(/^g\./, "").split(".")[0]!)
+      .filter(id => (home.get(id) ?? module.name) !== module.name)
+      .map(id => `${record.id}: a ${module.name} gate names ${id} from ${home.get(id)}; read a route key across chapters (ADR 0024)`));
+  }));
+}
+
 export function validateContent(records: GameRecord[] = sourceRecords): ValidationReport {
   const errors = validateGrammar(records);
   if (errors.length) return { ok: false, errors, routes: [], coverageBranches: [], ridgeRoutes: [], recordCount: records.length, reachedCount: 0, missing: records.map(record => record.id) };
-  errors.push(...validateMandatoryCores(records), ...validateContext(records), ...validateCompounding(records));
+  errors.push(...validateMandatoryCores(records), ...validateContext(records), ...validateCompounding(records), ...validateModuleSeams());
   for (const record of records) {
     if (typeof record.length === "number" && record.length > TIMED_CEILING) {
       errors.push(`${record.id}: timed action runs ${record.length}s, over the ${TIMED_CEILING} s ceiling`);

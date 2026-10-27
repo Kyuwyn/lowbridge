@@ -85,7 +85,7 @@ h1, h2, h3, h4, p, blockquote, dl, dd { margin: 0; }
 .workspace { display: grid; grid-template-columns: 218px minmax(0, 1fr) 300px; gap: .75rem; align-items: start; }
 .ledger-column, .centre-column, .status-column { min-width: 0; }
 .ledger-column, .status-column { position: sticky; top: .75rem; display: grid; gap: .75rem; }
-.centre-column { display: grid; gap: .75rem; outline: none; }
+.centre-column { display: grid; gap: .75rem; }
 .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 3px; overflow: hidden; }
 .panel-heading { display: flex; align-items: baseline; justify-content: space-between; gap: .55rem; min-height: 34px; padding: .48rem .7rem; border-bottom: 1px solid var(--line); background: #202a29; }
 .panel-heading h2 { color: #d4e0d1; font-size: .79rem; font-weight: 600; }
@@ -120,7 +120,7 @@ h1, h2, h3, h4, p, blockquote, dl, dd { margin: 0; }
 .family-pip.filled { background: #8dba87; border-color: #9ac391; }
 .family-exp { font-size: .68rem; color: #a8b7a4; line-height: 1.5; }
 .location-panel p { padding: .65rem .7rem .7rem; color: #a0ada0; font-size: .76rem; line-height: 1.65; }
-.activity-panel { min-height: calc(100dvh - 119px); overflow: visible; }
+.activity-panel { min-height: calc(100dvh - 119px); overflow: visible; outline: none; }
 .activity-nav { display: flex; min-height: 43px; padding: 0 .45rem; border-bottom: 1px solid #526148; background: #1d2825; }
 .activity-tab { display: flex; align-items: center; gap: .35rem; justify-content: center; min-width: 94px; min-height: 43px; padding: .65rem .85rem; border: 0; border-radius: 0; color: #aabaaa; background: transparent; font-size: .84rem; }
 .activity-tab:hover:not(:disabled) { background: #2a372d; border-color: transparent; }
@@ -480,7 +480,10 @@ h1, h2, h3, h4, p, blockquote, dl, dd { margin: 0; }
   .ledger-column, .centre-column, .activity-slot, .body-panel, .character-status, .journal-panel { width: 100%; }
   .activity-slot { order: 1; }
   .body-panel { order: 2; }
-  .centre-column { order: 3; }
+  /* The column dissolves on a phone so a banner (Foundation, the return summary, news) reads first, above the slot it reports on. */
+  .centre-column { display: contents; }
+  .centre-column > section { width: 100%; }
+  .activity-panel { order: 3; }
   .ledger-column { position: static; order: 4; }
   .character-status { order: 5; }
   .journal-panel { order: 6; }

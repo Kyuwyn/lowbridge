@@ -26,6 +26,7 @@ export const routeKeys: Record<string, RouteKey> = {
   t_school_body: { name: "Body school", desc: "A discipline that comes from breath and the frame that carries it." },
   t_school_sword: { name: "Sword school", desc: "A discipline that meets what comes up the path with an edge of intent." },
   t_school_formation: { name: "Formation school", desc: "A discipline that holds a small place still inside a fixed layout." },
+  t_furnished: { name: "Furnished home", desc: "A furnishing beyond the first: a bed, a plot or a strongbox that wants a home of your own." },
 };
 
 export const openingContext: { title: string; place: string; scenes: Scene[]; beats: StoryBeat[] } = {
