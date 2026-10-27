@@ -64,7 +64,8 @@
   {
     "id": "ash_form", "kind": "technique", "name": "Ash form", "group": "Techniques",
     "desc": "The same shape, run cold.", "tags": ["t_fireform"],
-    "attune": true, "length": 10, "cost": { "qi": 1 }, "result": { "herbs": 1 }
+    "attune": true, "length": 10, "cost": { "qi": 1 }, "result": { "herbs": 1 },
+    "lock": ["kindling_form"], "warn": "Taking up the cold reading settles the shape for good."
   },
   {
     "id": "kindling_form", "kind": "technique", "name": "Kindling form", "group": "Techniques",

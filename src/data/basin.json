@@ -1,0 +1,552 @@
+[
+  {
+    "id": "landslide_rise", "name": "Climb the rise above the slide", "kind": "site", "group": "Sites",
+    "desc": "Two and a half minutes up the loose rise above the slide the route records describe, drawing on Strain and on Focus both. The climb teaches Composure and a little Ground Reading, and from the top the terrace that bypasses the slide can be seen running toward Reedmarket.",
+    "require": "g.route_records > 0", "length": 150, "max": 1, "strain": { "strain": 0.03, "focus": 0.03 },
+    "result": { "composure.exp": 40, "ground_reading.exp": 30, "bypass_known": 1 },
+    "events": [{ "id": "bypass_seen", "when": "g.bypass_known > 0",
+      "text": "From the top of the rise the slide is a grey fan below you, and beyond it a terrace runs level along the ridge's flank as far as the eye follows. The ledger called it a day's carry to the market." }]
+  },
+  {
+    "id": "bypass_known", "name": "The terrace bypass is known", "kind": "flag", "group": "Milestones",
+    "desc": "A terrace above the slide runs toward Reedmarket. The way is seen, not yet walked.",
+    "require": "g.bypass_known > 0", "initial": { "value": 0, "max": 1 }
+  },
+  {
+    "id": "terrace_bypass", "name": "Trace the terrace to Reedmarket", "kind": "site", "group": "Sites",
+    "desc": "Four minutes along the terrace above the slide with four bundles of herbs for the day's carry. It draws on Strain and on Focus; a carried current takes you along it half again as fast. At the far end is Reedmarket, and twenty coin for what you bring down. It wants the Second Direction first.",
+    "require": "g.bypass_known > 0", "need": "g.second_direction > 0", "needtext": "The Second Direction first; the terrace is a day's carry.",
+    "cost": { "herbs": 4 }, "length": 240, "max": 1, "strain": { "strain": 0.04, "focus": 0.04 },
+    "result": { "reedmarket": 1, "coin": 20 },
+    "boost": { "flag": "current_carried", "multiplier": 1.5 },
+    "events": [{ "id": "reedmarket_arrival", "when": "g.reedmarket > 0",
+      "text": "The terrace drops into reed beds and the reed beds into a street of stalls at the basin's edge. Reedmarket. A porter takes your bundles without asking where you came from, and pays." }]
+  },
+  {
+    "id": "reedmarket", "name": "Reedmarket", "kind": "flag", "group": "Milestones",
+    "desc": "The market settlement on the Cloudwell basin's edge, reached by the terrace. Three of the slip's leaves the ledger could not place are somewhere in the basin beyond it: the ferryman's, the cistern's and the one the ledger only calls the far leaf. The basin is the next stage.",
+    "require": "g.reedmarket > 0", "initial": { "value": 0, "max": 1 }
+  },
+  {
+    "id": "reedmarket_work", "name": "Carry for the market porters", "kind": "task", "group": "Work",
+    "desc": "Three Vigor for ten coin and a little Labour, carrying for the porters at the basin's edge. Taking this work closes the waystation stores for good.",
+    "require": "g.reedmarket > 0", "cost": { "vigor": 3 }, "result": { "coin": 10, "coin_earned": 10, "labour.exp": 4 },
+    "lock": ["waystation_work"],
+    "warn": "Carrying for the market porters closes Work the waystation stores for good; Han finds another pair of hands."
+  },
+  {
+    "id": "chime_watch", "name": "Sit out the dusk chime", "kind": "site", "group": "Sites",
+    "desc": "Two minutes sitting still higher up the ridge until the chime rings once at dusk. It draws on Focus only. Qi Sense 4 to hear where it comes from; the sitting teaches Qi Sense and Composure, and fixes the hour the relay rings.",
+    "require": "g.unusual_chime > 0", "need": "g.qi_sense >= 4", "needtext": "Qi Sense 4, to hear where the chime comes from.",
+    "length": 120, "max": 1, "strain": { "focus": 0.04 },
+    "result": { "qi_sense.exp": 60, "composure.exp": 30, "chime_timed": 1 },
+    "events": [{ "id": "chime_placed", "when": "g.chime_timed > 0",
+      "text": "The chime rings once as the light goes, and this time you feel where: a standing stone up the ridge, struck by nothing you can see. It rings at the same breath of dusk every day." }]
+  },
+  {
+    "id": "chime_timed", "name": "The chime's hour is known", "kind": "flag", "group": "Milestones",
+    "desc": "The chime comes from a relay stone up the ridge, and rings at the same breath of dusk every day.",
+    "require": "g.chime_timed > 0", "initial": { "value": 0, "max": 1 }
+  },
+  {
+    "id": "relay_test", "name": "Test the old relay stone", "kind": "site", "group": "Sites",
+    "desc": "Two and a half minutes at the relay stone marking it before dusk with two inked tokens, or two pieces of veined ore if you have no tokens. Composure 3 to hold still when it rings. It draws hard on Focus and lightly on Strain. Explaining the chime leaves the reservoir four deeper and Composure a point higher, and uncovers the relay keeper's leaf.",
+    "require": "g.chime_timed > 0",
+    "need": "g.composure >= 3 && (g.inked_tokens >= 2 || g.veined_ore >= 2)", "needtext": "Composure 3, and two tokens or two pieces of ore to mark the relay.",
+    "cost": { "inked_tokens": "2 * (g.inked_tokens >= 2)", "veined_ore": "2 * (g.inked_tokens < 2)" },
+    "length": 150, "max": 1, "strain": { "strain": 0.02, "focus": 0.05 },
+    "result": { "chime_explained": 1 },
+    "events": [{ "id": "relay_explained", "when": "g.chime_explained > 0",
+      "text": "The stone rings, and your marks ring with it a breath later: it is answering another stone, far down toward the basin, and passing the answer on. Under the stone's foot a leaf of the slip has been wedged by whoever kept the relay last." }]
+  },
+  {
+    "id": "chime_explained", "name": "The returning chime is explained", "kind": "flag", "group": "Milestones",
+    "desc": "The relay stone answers another far down toward the basin. Knowing it leaves the reservoir four deeper and Composure a point higher.",
+    "require": "g.chime_explained > 0", "initial": { "value": 0, "max": 1 },
+    "mod": { "qi.max": 4, "composure.max": 1 }
+  },
+  {
+    "id": "spur_clearing", "name": "Clear the slide on the spur", "kind": "site", "group": "Sites",
+    "desc": "Three minutes shifting the slide that ends the survey spur, with a staff or shod stakes from the bench to lever it and four Vigor to spend. It draws hard on Strain and a little on Focus. Clearing it reopens the spur, turns up four stone, and leaves you able to carry two more Strain; the shelter beyond it has a leaf of the slip.",
+    "require": "g.damaged_spur > 0", "need": "g.walking_staff > 0 || g.weighted_stakes > 0", "needtext": "A staff or shod stakes, from the bench.",
+    "cost": { "vigor": 4 }, "length": 180, "max": 1, "strain": { "strain": 0.05, "focus": 0.02 },
+    "result": { "spur_reopened": 1, "stone": 4 },
+    "events": [{ "id": "spur_cleared", "when": "g.spur_reopened > 0",
+      "text": "The last of the slide goes over the edge and the spur runs on to a survey shelter nobody has opened in years. There is a leaf of the slip on its shelf, and below the shelter a bank of pale root." }]
+  },
+  {
+    "id": "spur_reopened", "name": "The survey spur is reopened", "kind": "flag", "group": "Milestones",
+    "desc": "The spur runs to the old survey shelter again. The clearing taught you to carry two more Strain.",
+    "require": "g.spur_reopened > 0", "initial": { "value": 0, "max": 1 },
+    "mod": { "strain.max": 2 }
+  },
+  {
+    "id": "pale_root_bank", "name": "Dig the pale-root bank", "kind": "site", "group": "Sites",
+    "desc": "A minute and a half digging the bank below the survey shelter. Three pale root each time; the first dig lets Refining reach one level further, and shows where to dig root by hand. A carried current digs half again as fast.",
+    "require": "g.spur_reopened > 0 && g.refining.open > 0", "length": 90, "strain": { "strain": 0.03 },
+    "result": { "pale_root": 3 }, "at": { "1": { "refining.max": 1 } }, "boost": { "flag": "current_carried", "multiplier": 1.5 }
+  },
+  {
+    "id": "dig_pale_root", "name": "Dig pale root by hand", "kind": "task", "group": "Work",
+    "desc": "Pale root pulled from the bank the dig opened. Three Vigor a root.",
+    "require": "g.pale_root_bank > 0", "cost": { "vigor": 3 }, "result": { "pale_root": 1 }
+  },
+  {
+    "id": "trade_pale_root", "name": "Trade pale root", "kind": "task", "group": "Trade",
+    "desc": "The Reedmarket stalls pay twelve coin for three pale root.",
+    "require": "g.reedmarket > 0", "cost": { "pale_root": 3 }, "result": { "coin": 12 }
+  },
+  {
+    "id": "shu_three_leaves", "name": "Shu's three leaves", "kind": "teaching", "group": "Purchases", "tags": ["t_leaf"],
+    "desc": "The three leaves of the slip that stayed below, in Granny Shu's keeping: the old hand's notes on refining. Lore 5 to read them. Refining opens, and with it the clay vessel, the drills and the pale-root bank; the slip's breath practice runs a quarter faster for knowing them, and Lore can reach one level further. Shu asks twelve bundles and thirty coin.",
+    "require": "g.slip_leaves > 0", "need": "g.lore >= 5", "needtext": "Lore 5: the three leaves are in the old hand.",
+    "buy": { "herbs": 12, "coin": 30 }, "max": 1,
+    "mod": { "refining.open": 1, "breath_gathering.rate": 0.25, "lore.max": 1 }
+  },
+  {
+    "id": "chime_leaf", "name": "The relay keeper's leaf", "kind": "teaching", "group": "Purchases", "tags": ["t_leaf"],
+    "desc": "The leaf wedged under the relay stone's foot, yours for the taking once the chime is explained. It is on holding qi: every level of Qi Sense holds a point more in the reservoir.",
+    "require": "g.chime_explained > 0", "buy": {}, "max": 1,
+    "mod": { "qi_sense.mod.qi.max": 1 }
+  },
+  {
+    "id": "spur_leaf", "name": "The shelter's leaf", "kind": "teaching", "group": "Purchases", "tags": ["t_leaf"],
+    "desc": "The leaf on the survey shelter's shelf, yours for the taking once the spur is clear. It is on bearing weather: every level of Composure carries a point more Strain.",
+    "require": "g.spur_reopened > 0", "buy": {}, "max": 1,
+    "mod": { "composure.mod.strain.max": 1 }
+  },
+  {
+    "id": "keeper_leaf", "name": "Keeper Han's leaf", "kind": "teaching", "group": "Purchases", "tags": ["t_leaf"],
+    "desc": "Han keeps one leaf of the slip in the ledger room and will trade it for forty coin once three others are in your hand; he wants the set to exist. It is on the body: every level of Circulation adds a point of Life.",
+    "require": "g.waystation > 0", "need": "g.t_leaf >= 3", "needtext": "Three leaves in hand; Han trades his for the set.",
+    "buy": { "coin": 40 }, "max": 1,
+    "mod": { "circulation.mod.life.max": 1 }
+  },
+  {
+    "id": "conditioning_sheets", "name": "The conditioning sheets", "kind": "teaching", "group": "Purchases",
+    "desc": "Loose sheets from the ledger room on hardening the body for the basin road, for anyone with Circulation at five and Lore to read them. Circulation can grow two levels further, and the deep body pair, the scree, and Han's hauling commission open. Six bundles.",
+    "require": "g.waystation > 0 && g.circulation >= 5", "need": "g.lore >= 5", "needtext": "Lore 5, to read the sheets.",
+    "buy": { "herbs": 6 }, "max": 1, "mod": { "circulation.max": 2 }
+  },
+  {
+    "id": "tam_lessons", "name": "Old Tam's second lesson", "kind": "teaching", "group": "Purchases",
+    "desc": "Tam at the ferry has a second lesson for anyone with Blade Intent at five, Lore to follow it and twenty coin for his time. Blade Intent can grow two levels further, and the deep sword pair, the fouled gallery and the bridge-line commission open.",
+    "require": "g.waystation > 0 && g.blade_intent >= 5", "need": "g.lore >= 5 && g.coin >= 20", "needtext": "Lore 5, and twenty coin for Tam's time.",
+    "buy": { "coin": 20 }, "max": 1, "mod": { "blade_intent.max": 2 }
+  },
+  {
+    "id": "current_accounts", "name": "The ground-current accounts", "kind": "teaching", "group": "Purchases",
+    "desc": "The surveyors' accounts of where the ridge's currents run under the ground, for anyone with Ground Reading at five and Lore to read them. Ground Reading can grow two levels further, and the deep earth pair, the undercut bank and the cellar commission open. Six bundles.",
+    "require": "g.waystation > 0 && g.ground_reading >= 5", "need": "g.lore >= 5", "needtext": "Lore 5, to read the accounts.",
+    "buy": { "herbs": 6 }, "max": 1, "mod": { "ground_reading.max": 2 }
+  },
+  {
+    "id": "overlay_plan", "name": "The survey overlay", "kind": "teaching", "group": "Purchases",
+    "desc": "An overlay drawn on the survey plan showing where the old relay stones stand in relation to one another, for anyone with Array Craft at five and Lore to read it. Array Craft can grow two levels further, and the deep formation pair, the relay stones and the ward-line commission open. Six bundles.",
+    "require": "g.waystation > 0 && g.array_craft >= 5", "need": "g.lore >= 5", "needtext": "Lore 5, to read the overlay.",
+    "buy": { "herbs": 6 }, "max": 1, "mod": { "array_craft.max": 2 }
+  },
+  {
+    "id": "clay_vessel", "name": "Clay refining vessel", "kind": "arrangement", "group": "Home",
+    "desc": "One span of floor for a lidded clay vessel on a timber stand, bought with twenty coin, two timber and four bundles for the first steeping. Refining drills run a quarter faster over it, and the bench's draughts want it.",
+    "require": "g.refining.open > 0",
+    "buy": { "coin": 20, "timber": 2, "herbs": 4 }, "space": 1, "mod": { "refining_drills.rate": 0.25 }, "max": 1
+  },
+  {
+    "id": "refining_drills", "name": "Steep, reduce, taste", "kind": "task", "group": "Practice", "hobby": true,
+    "desc": "Steep a pinch, reduce it, taste what is left. Refining grows at three experience per second and eats a bundle of herbs every fifty seconds. It can run as a hobby at half pace once the hobby slot opens.",
+    "require": "g.refining.open > 0", "need": "g.clay_vessel > 0 && g.refining < g.refining.max",
+    "needtext": "A clay vessel on the floor, and room left in Refining.",
+    "length": "continuous", "train": "refining", "effect": { "refining.exp": 3, "herbs": -0.02 }
+  },
+  {
+    "id": "temper_the_marrow", "name": "Temper the marrow", "kind": "technique", "group": "Techniques",
+    "attune": true, "tags": ["t_school_body", "t_deep_body"],
+    "desc": "The sheets' deeper method: qi driven into the bone until it answers. Five qi bring back four Strain and two of Life. Held, it adds four to Life and two to Guard. Holding it closes Carry without rest for good.",
+    "flavor": "The sheets say the marrow is the last thing to tire and the first to be forgotten.",
+    "require": "g.conditioning_sheets > 0",
+    "need": "g.strain < g.strain.max", "needtext": "Strain is full.",
+    "cost": { "qi": 5 }, "result": { "strain": 4, "life": 2 },
+    "at": { "5": { "temper_the_marrow.discount": 0.15 } },
+    "held": { "life.max": 4, "guard.max": 2 },
+    "lock": ["carry_without_rest"],
+    "warn": "Holding this closes *Carry without rest* for good."
+  },
+  {
+    "id": "carry_without_rest", "name": "Carry without rest", "kind": "technique", "group": "Techniques",
+    "attune": true, "tags": ["t_school_body", "t_deep_body"],
+    "desc": "The sheets' other method: the load carried on the breath so the legs never set it down. Five qi bring back eight Vigor. Held, Vigor returns faster and Speed rises in a fight. Holding it closes Temper the marrow for good.",
+    "flavor": "The porters who kept this up were the ones who never stopped at the shelters.",
+    "require": "g.conditioning_sheets > 0",
+    "need": "g.vigor < g.vigor.max", "needtext": "Vigor is full.",
+    "cost": { "qi": 5 }, "result": { "vigor": 8 },
+    "at": { "5": { "carry_without_rest.discount": 0.15 } },
+    "held": { "vigor.rate": 0.05, "speed.max": 0.3 },
+    "lock": ["temper_the_marrow"],
+    "warn": "Holding this closes *Temper the marrow* for good."
+  },
+  {
+    "id": "sever_the_knot", "name": "Sever the knot", "kind": "technique", "group": "Techniques",
+    "attune": true, "tags": ["t_school_sword", "t_deep_sword"],
+    "desc": "Tam's deeper cut: the whole intent put through one point. Five qi take three measures of whetstone grit off worked stone in a stroke. Held, it adds three to Strike. Holding it closes Send the intent ahead for good.",
+    "flavor": "Tam says a knot is only rope that has decided where to be cut.",
+    "require": "g.tam_lessons > 0",
+    "need": "g.whetstone_grit < g.whetstone_grit.max", "needtext": "The grit store is full.",
+    "cost": { "qi": 5 }, "result": { "whetstone_grit": 3 },
+    "at": { "5": { "sever_the_knot.discount": 0.15 } },
+    "held": { "strike.max": 3 },
+    "lock": ["send_the_intent"],
+    "warn": "Holding this closes *Send the intent ahead* for good."
+  },
+  {
+    "id": "send_the_intent", "name": "Send the intent ahead", "kind": "technique", "group": "Techniques",
+    "attune": true, "tags": ["t_school_sword", "t_deep_sword"],
+    "desc": "Tam's other lesson: the intent sent out before the body moves at all. Five qi take two measures of grit and settle Composure. Held, it adds ten to Hit and five to Dodge. Holding it closes Sever the knot for good.",
+    "flavor": "By the time the blade arrives the matter is already decided.",
+    "require": "g.tam_lessons > 0",
+    "need": "g.whetstone_grit < g.whetstone_grit.max", "needtext": "The grit store is full.",
+    "cost": { "qi": 5 }, "result": { "whetstone_grit": 2, "composure.exp": 20 },
+    "at": { "5": { "send_the_intent.discount": 0.15 } },
+    "held": { "hit.max": 10, "dodge.max": 5 },
+    "lock": ["sever_the_knot"],
+    "warn": "Holding this closes *Sever the knot* for good."
+  },
+  {
+    "id": "root_to_the_vein", "name": "Root to the vein", "kind": "technique", "group": "Techniques",
+    "attune": true, "tags": ["t_school_earth", "t_deep_earth"],
+    "desc": "The accounts' deeper method: standing where the ground's current gathers and letting it hold you. Five qi find three pieces of veined ore. Held, it adds two to Guard and keeps you to ground that holds, so Strain drains a quarter slower. Holding it closes Listen for water for good.",
+    "flavor": "Ore lies where the current pooled before the ground was ground.",
+    "require": "g.current_accounts > 0",
+    "need": "g.veined_ore < g.veined_ore.max", "needtext": "The ore store is full.",
+    "cost": { "qi": 5 }, "result": { "veined_ore": 3 },
+    "at": { "5": { "root_to_the_vein.discount": 0.15 } },
+    "held": { "guard.max": 2, "strain.discount": 0.25 },
+    "lock": ["listen_for_water"],
+    "warn": "Holding this closes *Listen for water* for good."
+  },
+  {
+    "id": "listen_for_water", "name": "Listen for water", "kind": "technique", "group": "Techniques",
+    "attune": true, "tags": ["t_school_earth", "t_deep_earth"],
+    "desc": "The accounts' other method: attention sent down to the water under the ground until the attention comes back rested. Five qi bring back four Focus. Held, you carry three more Focus and Qi Sense grows faster. Holding it closes Root to the vein for good.",
+    "flavor": "The surveyors found springs by sitting still longer than anyone else.",
+    "require": "g.current_accounts > 0",
+    "need": "g.focus < g.focus.max", "needtext": "Focus is full.",
+    "cost": { "qi": 5 }, "result": { "focus": 4 },
+    "at": { "5": { "listen_for_water.discount": 0.15 } },
+    "held": { "focus.max": 3, "qi_sense.rate": 0.05 },
+    "lock": ["root_to_the_vein"],
+    "warn": "Holding this closes *Root to the vein* for good."
+  },
+  {
+    "id": "anchor_the_array", "name": "Anchor the array", "kind": "technique", "group": "Techniques",
+    "attune": true, "tags": ["t_school_formation", "t_deep_formation"],
+    "desc": "The overlay's deeper method: a layout tied to the relay stones so it holds when you leave. Five qi keep three inked tokens. Held, your floor holds a span more, and the warding strip and the specimen case are sewn and fitted a quarter faster. Holding it closes Ward the threshold for good.",
+    "flavor": "An anchored layout keeps working on a floor nobody is standing on.",
+    "require": "g.overlay_plan > 0",
+    "need": "g.inked_tokens < g.inked_tokens.max", "needtext": "The token store is full.",
+    "cost": { "qi": 5 }, "result": { "inked_tokens": 3 },
+    "at": { "5": { "anchor_the_array.discount": 0.15 } },
+    "held": { "home_space.max": 1, "craft_warding_strip.rate": 0.25, "craft_specimen_case.rate": 0.25 },
+    "lock": ["ward_the_threshold"],
+    "warn": "Holding this closes *Ward the threshold* for good."
+  },
+  {
+    "id": "ward_the_threshold", "name": "Ward the threshold", "kind": "technique", "group": "Techniques",
+    "attune": true, "tags": ["t_school_formation", "t_deep_formation"],
+    "desc": "The overlay's other method: a small ward laid at the door, inside which nothing presses on you. Five qi bring back three Focus. Held, it adds ten to Dodge and Rest runs a quarter faster. Holding it closes Anchor the array for good.",
+    "flavor": "What cannot cross the threshold cannot reach the bed.",
+    "require": "g.overlay_plan > 0",
+    "need": "g.focus < g.focus.max", "needtext": "Focus is full.",
+    "cost": { "qi": 5 }, "result": { "focus": 3 },
+    "at": { "5": { "ward_the_threshold.discount": 0.15 } },
+    "held": { "dodge.max": 10, "rest.rate": 0.25 },
+    "lock": ["anchor_the_array"],
+    "warn": "Holding this closes *Anchor the array* for good."
+  },
+  {
+    "id": "draw_the_essence", "name": "Draw the essence", "kind": "technique", "group": "Techniques",
+    "attune": true, "tags": ["t_school_pill", "t_deep_pill"],
+    "desc": "Shu's deeper method: qi passed through the root until what it holds comes to the surface. Five qi bring up two pale root from stock already dug. Held, the settling draught, the marrow draught and the clear pill are all made half again as fast. Holding it closes Temper the fire for good.",
+    "flavor": "Shu says the root gives up what it has only to someone who has already been given something.",
+    "require": "g.refining > 0",
+    "need": "g.pale_root < g.pale_root.max", "needtext": "The pale-root store is full.",
+    "cost": { "qi": 5 }, "result": { "pale_root": 2 },
+    "at": { "5": { "draw_the_essence.discount": 0.15 } },
+    "held": { "craft_settling_draught.rate": 0.5, "craft_marrow_draught.rate": 0.5, "craft_clear_pill.rate": 0.5 },
+    "lock": ["temper_the_fire"],
+    "warn": "Holding this closes *Temper the fire* for good."
+  },
+  {
+    "id": "temper_the_fire", "name": "Temper the fire", "kind": "technique", "group": "Techniques",
+    "attune": true, "tags": ["t_school_pill", "t_deep_pill"],
+    "desc": "Shu's other method: the refiner's heat turned on the body itself and held just short of harm. Five qi bring back four bundles of herbs from what would have scorched. Held, you carry two more Strain and two more Life. Holding it closes Draw the essence for good.",
+    "flavor": "A fire tempered is a fire that will still be there tomorrow.",
+    "require": "g.refining > 0",
+    "need": "g.herbs < g.herbs.max", "needtext": "The herb store is full.",
+    "cost": { "qi": 5 }, "result": { "herbs": 4 },
+    "at": { "5": { "temper_the_fire.discount": 0.15 } },
+    "held": { "strain.max": 2, "life.max": 2 },
+    "lock": ["draw_the_essence"],
+    "warn": "Holding this closes *Draw the essence* for good."
+  },
+  {
+    "id": "scree_climb", "name": "Climb the scree under load", "kind": "site", "group": "Sites",
+    "desc": "Four minutes up the scree with a full frame, drawing hard on Strain and a little on Focus. Three marrow herbs from the ledges each time, and Circulation learns from it; the first climb lets Circulation reach one level further. A carried current takes you up half again as fast.",
+    "require": "g.conditioning_sheets > 0", "length": 240, "strain": { "strain": 0.05, "focus": 0.02 },
+    "result": { "marrow_herbs": 3, "circulation.exp": 40 }, "at": { "1": { "circulation.max": 1 } },
+    "boost": { "flag": "current_carried", "multiplier": 1.5 }
+  },
+  {
+    "id": "rope_gallery", "name": "Cut the fouled gallery lines", "kind": "site", "group": "Sites",
+    "desc": "Four minutes in the gallery under the bridge cutting old lines fouled on the rock, drawing on Focus and a little on Strain. Three measures of whetstone grit from the rock face each time, and Blade Intent learns from it; the first cutting lets Blade Intent reach one level further. A carried current cuts half again as fast.",
+    "require": "g.tam_lessons > 0", "length": 240, "strain": { "strain": 0.03, "focus": 0.04 },
+    "result": { "whetstone_grit": 3, "blade_intent.exp": 40 }, "at": { "1": { "blade_intent.max": 1 } },
+    "boost": { "flag": "current_carried", "multiplier": 1.5 }
+  },
+  {
+    "id": "undercut_bank", "name": "Read the undercut bank", "kind": "site", "group": "Sites",
+    "desc": "Four minutes reading the bank the current has undercut below the waystation, drawing on Focus and a little on Strain. Three pieces of veined ore where the current left them each time, and Ground Reading learns from it; the first reading lets Ground Reading reach one level further. A carried current reads half again as fast.",
+    "require": "g.current_accounts > 0", "length": 240, "strain": { "strain": 0.03, "focus": 0.04 },
+    "result": { "veined_ore": 3, "ground_reading.exp": 40 }, "at": { "1": { "ground_reading.max": 1 } },
+    "boost": { "flag": "current_carried", "multiplier": 1.5 }
+  },
+  {
+    "id": "relay_stones", "name": "Walk the relay stones", "kind": "site", "group": "Sites",
+    "desc": "Four minutes walking the line of relay stones the overlay shows, marking each, drawing hard on Focus and a little on Strain. Three inked tokens keep their marks each time, and Array Craft learns from it; the first walk lets Array Craft reach one level further. A carried current walks it half again as fast.",
+    "require": "g.overlay_plan > 0", "length": 240, "strain": { "strain": 0.02, "focus": 0.05 },
+    "result": { "inked_tokens": 3, "array_craft.exp": 40 }, "at": { "1": { "array_craft.max": 1 } },
+    "boost": { "flag": "current_carried", "multiplier": 1.5 }
+  },
+  {
+    "id": "haul_the_stores", "name": "Haul Han's stores up from the landing", "kind": "site", "group": "Commissions", "tags": ["t_commission"],
+    "desc": "Two minutes hauling a season's stores from the ferry landing to the waystation for Keeper Han, for anyone with Circulation at six. It draws on Strain. Forty coin in wages, and Han lets you keep four more marrow herbs in his store afterwards.",
+    "require": "g.waystation > 0 && g.circulation >= 6", "length": 120, "max": 1, "strain": { "strain": 0.04 },
+    "result": { "coin": 40, "coin_earned": 40 }, "mod": { "marrow_herbs.max": 4 }
+  },
+  {
+    "id": "recut_the_lines", "name": "Recut the bridge lines", "kind": "site", "group": "Commissions", "tags": ["t_commission"],
+    "desc": "Two minutes recutting the bridge lines to Han's measure with a honed edge, for anyone with Blade Intent at six. It draws on Focus. Forty coin in wages, and Han lets you keep four more measures of grit in his store afterwards.",
+    "require": "g.waystation > 0 && g.blade_intent >= 6", "need": "g.honed_edge > 0", "needtext": "A honed edge, from the bench.",
+    "length": 120, "max": 1, "strain": { "focus": 0.04 },
+    "result": { "coin": 40, "coin_earned": 40 }, "mod": { "whetstone_grit.max": 4 }
+  },
+  {
+    "id": "shore_the_cellar", "name": "Shore the ledger cellar", "kind": "site", "group": "Commissions", "tags": ["t_commission"],
+    "desc": "Two minutes shoring the cellar under Han's ledger room with shod stakes driven where the ground holds, for anyone with Ground Reading at six. It draws on Strain. Forty coin in wages, and Han lets you keep four more pieces of ore in his store afterwards.",
+    "require": "g.waystation > 0 && g.ground_reading >= 6", "need": "g.weighted_stakes > 0", "needtext": "Shod survey stakes, from the bench.",
+    "length": 120, "max": 1, "strain": { "strain": 0.04 },
+    "result": { "coin": 40, "coin_earned": 40 }, "mod": { "veined_ore.max": 4 }
+  },
+  {
+    "id": "lay_the_ward_lines", "name": "Lay Han's ward lines", "kind": "site", "group": "Commissions", "tags": ["t_commission"],
+    "desc": "Two minutes laying ward lines round the waystation's stores from a sewn strip, for anyone with Array Craft at six. It draws on Focus. Forty coin in wages, and Han lets you keep four more tokens in his store afterwards.",
+    "require": "g.waystation > 0 && g.array_craft >= 6", "need": "g.warding_strip > 0", "needtext": "A warding strip, from the bench.",
+    "length": 120, "max": 1, "strain": { "focus": 0.04 },
+    "result": { "coin": 40, "coin_earned": 40 }, "mod": { "inked_tokens.max": 4 }
+  },
+  {
+    "id": "stock_the_still_room", "name": "Stock Han's still-room", "kind": "site", "group": "Commissions", "tags": ["t_commission"],
+    "desc": "Two minutes stocking the waystation's still-room with two settling draughts of your own making, for anyone with Refining at three. Forty coin in wages, and Han lets you keep four more pale root in his store afterwards.",
+    "require": "g.waystation > 0 && g.refining >= 3", "need": "g.settling_draught >= 2", "needtext": "Two settling draughts kept at the bench.",
+    "cost": { "settling_draught": 2 }, "length": 120, "max": 1,
+    "result": { "coin": 40, "coin_earned": 40 }, "mod": { "pale_root.max": 4 }
+  },
+  {
+    "id": "craft_settling_draught", "name": "Steep a settling draught", "kind": "recipe", "group": "Craft",
+    "desc": "A minute steeping two pale root with two bundles of herbs in the clay vessel. Stops when three are kept.",
+    "require": "g.refining.open > 0", "need": "g.workbench > 0 && g.clay_vessel > 0 && g.pale_root >= 2 && g.herbs >= 2",
+    "needtext": "A workbench, a clay vessel, two pale root and two bundles of herbs.",
+    "cost": { "pale_root": 2, "herbs": 2 }, "length": 60, "fill": "settling_draught", "result": { "settling_draught": 1 }
+  },
+  {
+    "id": "craft_marrow_draught", "name": "Reduce a marrow draught", "kind": "recipe", "group": "Craft",
+    "desc": "A minute reducing two marrow herbs over a pale root in the clay vessel. Refining 2. Stops when three are kept.",
+    "require": "g.refining >= 2", "need": "g.workbench > 0 && g.clay_vessel > 0 && g.marrow_herbs >= 2 && g.pale_root >= 1",
+    "needtext": "A workbench, a clay vessel, two marrow herbs and a pale root.",
+    "cost": { "marrow_herbs": 2, "pale_root": 1 }, "length": 60, "fill": "marrow_draught", "result": { "marrow_draught": 1 }
+  },
+  {
+    "id": "craft_clear_pill", "name": "Roll a clear pill", "kind": "recipe", "group": "Craft",
+    "desc": "A minute and a half reducing three pale root to a pill, with five coin for the wax. Refining 3. Stops when three are kept; delivering Han's case teaches a faster roll.",
+    "require": "g.refining >= 3", "need": "g.workbench > 0 && g.clay_vessel > 0 && g.pale_root >= 3 && g.coin >= 5",
+    "needtext": "A workbench, a clay vessel, three pale root and five coin.",
+    "cost": { "pale_root": 3, "coin": 5 }, "length": 90, "fill": "clear_pill", "result": { "clear_pill": 1 }
+  },
+  {
+    "id": "craft_specimen_case", "name": "Fit Han's specimen case", "kind": "recipe", "group": "Craft",
+    "desc": "A minute and a half fitting three timber into a partitioned case for Han's specimens, with an inked token set in the lid and ten coin for the hinges. Lore 5 to follow his drawing.",
+    "require": "g.waystation > 0 && g.lore >= 5", "need": "g.workbench > 0 && g.timber >= 3 && g.inked_tokens >= 1 && g.coin >= 10",
+    "needtext": "A workbench, three timber, an inked token and ten coin.",
+    "cost": { "timber": 3, "inked_tokens": 1, "coin": 10 }, "length": 90, "max": 1, "result": { "specimen_case": 1 }
+  },
+  {
+    "id": "deliver_specimen_case", "name": "Deliver the case to Han", "kind": "purchase", "group": "Craft",
+    "desc": "Hand the fitted case over in the ledger room. Forty coin in wages, and Han shows you how the refiners of the basin roll a pill: the clear pill takes half a minute less from then on.",
+    "require": "g.specimen_case > 0", "cost": { "specimen_case": 1 }, "max": 1,
+    "result": { "coin": 40, "coin_earned": 40 }, "mod": { "craft_clear_pill.length": -30 }
+  },
+  {
+    "id": "take_settling_draught", "name": "Drink a settling draught", "kind": "preparation", "group": "Craft",
+    "desc": "One draught, on the instant, while anything else runs. For five minutes afterwards Strain and Focus both drain a quarter slower; drinking another starts the five minutes again.",
+    "require": "g.refining.open > 0", "need": "g.settling_draught >= 1", "needtext": "A settling draught kept at the bench.",
+    "cost": { "settling_draught": 1 }, "lasts": 300,
+    "held": { "strain.discount": 0.25, "focus.discount": 0.25 }
+  },
+  {
+    "id": "take_marrow_draught", "name": "Drink a marrow draught", "kind": "preparation", "group": "Craft",
+    "desc": "One draught, on the instant, while anything else runs. For five minutes afterwards the carrying drills run half again as fast and the scree climb a quarter faster; drinking another starts the five minutes again.",
+    "require": "g.refining >= 2", "need": "g.marrow_draught >= 1", "needtext": "A marrow draught kept at the bench.",
+    "cost": { "marrow_draught": 1 }, "lasts": 300,
+    "held": { "body_drills.rate": 0.5, "scree_climb.rate": 0.25 }
+  },
+  {
+    "id": "take_clear_pill", "name": "Take a clear pill", "kind": "preparation", "group": "Craft",
+    "desc": "One pill for six qi and four Focus, on the instant, while anything else runs.",
+    "require": "g.refining >= 3", "need": "g.clear_pill >= 1", "needtext": "A clear pill kept at the bench.",
+    "cost": { "clear_pill": 1 }, "result": { "qi": 6, "focus": 4 }
+  },
+  {
+    "id": "rooted_stance", "name": "Rooted stance", "kind": "technique", "group": "Techniques", "stance": true,
+    "desc": "Weight sunk, feet set, nothing given. Taken, it adds two to Guard and takes a fifth off Speed. One stance is held at a time; taking another replaces it, and nothing is spent.",
+    "require": "g.waystation > 0",
+    "held": { "guard.max": 2, "speed.max": -0.2 }
+  },
+  {
+    "id": "open_stance", "name": "Open stance", "kind": "technique", "group": "Techniques", "stance": true,
+    "desc": "Weight light, room left to move. Taken, it adds ten to Dodge and takes one from Guard. One stance is held at a time; taking another replaces it, and nothing is spent.",
+    "require": "g.waystation > 0",
+    "held": { "dodge.max": 10, "guard.max": -1 }
+  },
+  {
+    "id": "pressing_stance", "name": "Pressing stance", "kind": "technique", "group": "Techniques", "stance": true,
+    "desc": "Weight forward, always closing. Taken, it adds two to Strike and takes five from Dodge. One stance is held at a time; taking another replaces it, and nothing is spent.",
+    "require": "g.waystation > 0",
+    "held": { "strike.max": 2, "dodge.max": -5 }
+  },
+  {
+    "id": "spur_pair", "name": "Two men at the spur", "kind": "site", "group": "Fights",
+    "desc": "A minute at the slide on the spur with two men who have been waiting for whoever clears it. Together they are eighteen of life, a strike of ten and a guard of six, quick and hard to pin; every third swing they rush you together for sixteen, and only Guard turns a rush. If they still stand when the minute is out, they have outlasted you. Losing costs the Vigor and herbs you brought; winning takes thirty coin and four measures of grit off them. Once begun it cannot stop, so it waits for enough Strain to see the minute through. Nothing here is needed; the spur clears without meeting them. A stance taken first changes the odds.",
+    "flavor": "They did not clear the slide themselves because they were waiting for someone who would.",
+    "require": "g.damaged_spur > 0",
+    "cost": { "vigor": 4, "herbs": 3 }, "length": 60, "max": 1, "strain": { "strain": 0.06 },
+    "encounter": { "foe": { "name": "the two at the spur", "life": 18, "strike": 10, "guard": 6, "speed": 1.2, "hit": 80, "dodge": 20,
+        "technique": { "name": "the rush", "every": 3, "strike": 16 } },
+      "success": { "coin": 30, "whetstone_grit": 4 },
+      "failureText": "you back down the spur, and the herbs are gone. Their rush of sixteen lands on whatever Guard you bring to it, and nothing else; the body methods you hold and the Rooted stance are what raise your Guard, and the Pressing stance is what gets past theirs." },
+    "events": [{ "id": "spur_pair_driven_off", "when": "g.spur_pair > 0",
+      "text": "The second man goes down over the first and neither gets up in a hurry. What they carried is yours, and the spur is quiet." }]
+  },
+  {
+    "id": "ridge_room", "name": "A room at the waystation", "kind": "home", "group": "Home",
+    "desc": "A room at the waystation kept beside the cottage, let by Han for ninety coin and four timber for the shelving. Two spans more of floor, a place to study, and a dry loft that keeps ten bundles more; Ground Reading grows a tenth faster so near the slide, and Lore a tenth slower so far from the village. The cottage stays yours.",
+    "require": "g.waystation > 0",
+    "buy": { "coin": 90, "timber": 4 }, "mod": { "home_space.max": 2, "herbs.max": 10, "ground_reading.rate": 0.1, "lore.rate": -0.1 }, "slots": ["study"], "max": 1
+  },
+  {
+    "id": "second_direction", "name": "Take the Second Direction", "kind": "breakthrough", "group": "Practice",
+    "desc": "Five minutes at the waystation with everything held at once. The bill is thirty bundles and a hundred and fifty coin, paid at the start, and it wants a full reservoir. Afterwards a fifth attunement place and the hobby slot open, Lore, Strain and Focus each carry two more, every sphere deepened can grow three levels further, and the bank keeps up to three days of time away. The title is read from what you hold.",
+    "require": "g.waystation > 0 && g.first_direction > 0",
+    "need": "g.qi >= g.qi.max", "needtext": "A full reservoir.",
+    "buy": { "herbs": 30, "coin": 150 }, "length": 300, "max": 1,
+    "breakthrough": { "title": "The Second Direction", "core": "g.t_deep_body + g.t_deep_sword + g.t_deep_earth + g.t_deep_formation + g.t_deep_pill >= 2 && g.attune_slots >= 3", "coreLabel": "Two spheres deepened, three methods held", "required": 3,
+      "pointers": [
+        { "label": "A reliable method: ten uses across the deep methods", "when": "g.temper_the_marrow.reps + g.carry_without_rest.reps + g.sever_the_knot.reps + g.send_the_intent.reps + g.root_to_the_vein.reps + g.listen_for_water.reps + g.anchor_the_array.reps + g.ward_the_threshold.reps + g.draw_the_essence.reps + g.temper_the_fire.reps >= 10" },
+        { "label": "The returning chime explained", "when": "g.chime_explained > 0" },
+        { "label": "A working study: a reading desk and Lore 6", "when": "g.reading_desk > 0 && g.lore >= 6" },
+        { "label": "The survey spur reopened", "when": "g.spur_reopened > 0" },
+        { "label": "A commission done", "when": "g.t_commission >= 1" },
+        { "label": "Four leaves recovered", "when": "g.t_leaf >= 4" }
+      ] },
+    "mod": { "bank.max": 172800, "attune_slots.max": 1, "hobby_slots.max": 1, "lore.max": 2, "strain.max": 2, "focus.max": 2,
+      "circulation.max": "3 * (g.t_deep_body > 0)", "blade_intent.max": "3 * (g.t_deep_sword > 0)", "ground_reading.max": "3 * (g.t_deep_earth > 0)",
+      "array_craft.max": "3 * (g.t_deep_formation > 0)", "refining.max": "3 * (g.t_deep_pill > 0)" },
+    "events": [
+      { "id": "title_mountain_vessel", "when": "g.second_direction > 0 && g.second_title < 1 && g.t_deep_body >= 1 && g.t_deep_earth >= 1",
+        "text": "The body holds and the ground holds it. Mountain Vessel. What Stone Sense taught the eye, the frame keeps: Circulation practises faster for every level of it.",
+        "changes": { "second_title": 1, "mountain_vessel": 1 } },
+      { "id": "title_blade_body", "when": "g.second_direction > 0 && g.second_title < 1 && g.t_deep_sword >= 1 && g.t_deep_body >= 1",
+        "text": "The edge and the frame behind it are one thing. Blade Body. The back that carried sacks carries the edge: Blade Intent practises faster for every level of Labour.",
+        "changes": { "second_title": 1, "blade_body": 1 } },
+      { "id": "title_earth_array_adept", "when": "g.second_direction > 0 && g.second_title < 1 && g.t_deep_earth >= 1 && g.t_deep_formation >= 1",
+        "text": "The layout is set where the ground already agrees to it. Earth Array Adept. Every level of Stone Sense now holds an inked token more.",
+        "changes": { "second_title": 1, "earth_array_adept": 1 } },
+      { "id": "title_intent_warden", "when": "g.second_direction > 0 && g.second_title < 1 && g.t_deep_sword >= 1 && g.t_deep_formation >= 1",
+        "text": "The intent is laid out like a ward and held like a blade. Intent Warden. Every level of Composure now holds a measure of grit more.",
+        "changes": { "second_title": 1, "intent_warden": 1 } },
+      { "id": "title_pill_refiner", "when": "g.second_direction > 0 && g.second_title < 1 && g.t_school_pill >= 1",
+        "text": "Heat, root and breath in the one vessel. Pill Refiner. Shu's eye for a bundle is an eye for a root: every level of Herb Lore holds a pale root more.",
+        "changes": { "second_title": 1, "pill_refiner": 1 } },
+      { "id": "title_iron_marrow_adept", "when": "g.second_direction > 0 && g.second_title < 1 && g.t_deep_body >= 1 && g.circulation >= g.array_craft",
+        "text": "The bone itself has taken the method. Iron Marrow Adept. Even the mill's work hardens the frame: Circulation practises faster for every level of Labour.",
+        "changes": { "second_title": 1, "iron_marrow_adept": 1 } },
+      { "id": "title_spirit_blade", "when": "g.second_direction > 0 && g.second_title < 1 && g.t_deep_sword >= 1 && g.blade_intent >= g.ground_reading",
+        "text": "The intent cuts before the steel moves. Spirit Blade. The intent is a kind of stillness: Blade Intent practises faster for every level of Composure.",
+        "changes": { "second_title": 1, "spirit_blade": 1 } },
+      { "id": "title_deep_listener", "when": "g.second_direction > 0 && g.second_title < 1 && g.t_deep_earth >= 1",
+        "text": "The ground speaks and you have stopped needing to ask. Deep Listener. Every level of Stone Sense now holds a channel stone more.",
+        "changes": { "second_title": 1, "deep_listener": 1 } },
+      { "id": "title_array_keeper", "when": "g.second_direction > 0 && g.second_title < 1 && g.t_deep_formation >= 1",
+        "text": "What you lay out stays laid. Array Keeper. A layout is held still from inside: Array Craft practises faster for every level of Composure.",
+        "changes": { "second_title": 1, "array_keeper": 1 } }
+    ]
+  },
+  {
+    "id": "second_title", "name": "A second title taken", "kind": "flag", "group": "Milestones",
+    "desc": "The Second Direction has read a title from what you hold.",
+    "require": "g.second_title > 0", "initial": { "value": 0, "max": 1 }
+  },
+  {
+    "id": "mountain_vessel", "name": "Mountain Vessel", "kind": "class", "group": "Purchases", "title": "Mountain Vessel",
+    "desc": "The Second Direction of body and earth together. What the ground taught the eye the frame keeps: every level of Stone Sense makes Circulation practice five percent faster.",
+    "require": "g.mountain_vessel > 0", "max": 1,
+    "mod": { "stonework.mod.circulation.rate": 0.05 }
+  },
+  {
+    "id": "blade_body", "name": "Blade Body", "kind": "class", "group": "Purchases", "title": "Blade Body",
+    "desc": "The Second Direction of sword and body together. The back that carried sacks carries the edge: every level of Labour makes Blade Intent practice five percent faster.",
+    "require": "g.blade_body > 0", "max": 1,
+    "mod": { "labour.mod.blade_intent.rate": 0.05 }
+  },
+  {
+    "id": "earth_array_adept", "name": "Earth Array Adept", "kind": "class", "group": "Purchases", "title": "Earth Array Adept",
+    "desc": "The Second Direction of earth and formation together. Stone that sits still holds a layout: every level of Stone Sense holds an inked token more.",
+    "require": "g.earth_array_adept > 0", "max": 1,
+    "mod": { "stonework.mod.inked_tokens.max": 1 }
+  },
+  {
+    "id": "intent_warden", "name": "Intent Warden", "kind": "class", "group": "Purchases", "title": "Intent Warden",
+    "desc": "The Second Direction of sword and formation together. Stillness keeps an edge: every level of Composure holds a measure of whetstone grit more.",
+    "require": "g.intent_warden > 0", "max": 1,
+    "mod": { "composure.mod.whetstone_grit.max": 1 }
+  },
+  {
+    "id": "pill_refiner", "name": "Pill Refiner", "kind": "class", "group": "Purchases", "title": "Pill Refiner",
+    "desc": "The Second Direction of the pill. Shu's eye for a bundle is an eye for a root: every level of Herb Lore holds a pale root more.",
+    "require": "g.pill_refiner > 0", "max": 1,
+    "mod": { "herbcraft.mod.pale_root.max": 1 }
+  },
+  {
+    "id": "iron_marrow_adept", "name": "Iron Marrow Adept", "kind": "class", "group": "Purchases", "title": "Iron Marrow Adept",
+    "desc": "The Second Direction of the body alone. Even the mill's work hardens the frame: every level of Labour makes Circulation practice five percent faster.",
+    "require": "g.iron_marrow_adept > 0", "max": 1,
+    "mod": { "labour.mod.circulation.rate": 0.05 }
+  },
+  {
+    "id": "spirit_blade", "name": "Spirit Blade", "kind": "class", "group": "Purchases", "title": "Spirit Blade",
+    "desc": "The Second Direction of the sword alone. The intent is a kind of stillness: every level of Composure makes Blade Intent practice five percent faster.",
+    "require": "g.spirit_blade > 0", "max": 1,
+    "mod": { "composure.mod.blade_intent.rate": 0.05 }
+  },
+  {
+    "id": "deep_listener", "name": "Deep Listener", "kind": "class", "group": "Purchases", "title": "Deep Listener",
+    "desc": "The Second Direction of the earth alone. The village channel still has stones to give: every level of Stone Sense holds a channel stone more.",
+    "require": "g.deep_listener > 0", "max": 1,
+    "mod": { "stonework.mod.stone.max": 1 }
+  },
+  {
+    "id": "array_keeper", "name": "Array Keeper", "kind": "class", "group": "Purchases", "title": "Array Keeper",
+    "desc": "The Second Direction of formation alone. A layout is held still from inside: every level of Composure makes Array Craft practice five percent faster.",
+    "require": "g.array_keeper > 0", "max": 1,
+    "mod": { "composure.mod.array_craft.rate": 0.05 }
+  }
+]

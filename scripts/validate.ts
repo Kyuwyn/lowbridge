@@ -2,10 +2,11 @@ import { openingContext, routeKeys, records as sourceRecords } from "../src/cont
 import opening from "../src/data/opening.json";
 import ridge from "../src/data/ridge.json";
 import shared from "../src/data/shared.json";
-import { ATTUNE_SLOTS, DODGE_MAX, FIGHT_STATS, GAUGE, GameEngine, HOME_SPACE, LIFE } from "../src/engine";
+import basin from "../src/data/basin.json";
+import { ATTUNE_SLOTS, DODGE_MAX, FIGHT_STATS, GAUGE, GameEngine, HOBBY_SLOTS, HOME_SPACE, LIFE } from "../src/engine";
 import { evaluateCondition, expressionReferences } from "../src/expression";
 import { DERIVED_FIELDS, type Changes, type GameRecord } from "../src/types";
-import { compactRoute, DIRECT_ROUTES, RIDGE_ROUTES, ROUTES, runCoverageBranches, runDirectRidgeRoute, runDirectRoute, runRidgeCoverage, runRidgeRoute, runRoute, type DirectRoute, type OpeningRoute, type RidgeRoute, type RouteResult } from "./routes";
+import { compactRoute, DEEP_ROUTES, DIRECT_ROUTES, RIDGE_ROUTES, ROUTES, runCoverageBranches, runDeepRoute, runDirectRidgeRoute, runDirectRoute, runRidgeCoverage, runRidgeRoute, runRoute, SPHERES, type DeepRoute, type DirectRoute, type OpeningRoute, type RidgeRoute, type RouteResult } from "./routes";
 
 export interface ValidationReport {
   ok: boolean;
@@ -14,9 +15,17 @@ export interface ValidationReport {
   coverageBranches: RouteResult[];
   /** Foundation to the waystation, one First Direction each, plus the bandit-and-cottage branch. */
   ridgeRoutes: RouteResult[];
+  /** The waystation to the Second Direction and on to Reedmarket, one route per title. */
+  deepRoutes: DeepRouteResult[];
   recordCount: number;
   reachedCount: number;
   missing: string[];
+}
+
+export interface DeepRouteResult extends RouteResult {
+  /** The title the Second Direction read from what the route held. */
+  title: string;
+  reedmarketSeconds: number | null;
 }
 
 const statFields = new Set(["value", "max", "exp", "rate", "reps", "open", "length", "yield", "discount", "ticks", "started", "paid"]);
@@ -26,7 +35,8 @@ const kinds = new Set<string>(["resource", "family", "task", "site", "arrangemen
 /** The whole record vocabulary; anything else in the JSON is a typo or a field the engine dropped. */
 const recordFields = new Set(["id", "kind", "name", "desc", "flavor", "group", "tags", "require", "need", "needtext", "initial", "max",
   "buy", "cost", "length", "run", "effect", "result", "mod", "perLevel", "onStart", "at", "every", "fill", "lock", "enable", "warn",
-  "attune", "space", "train", "strain", "events", "breakthrough", "autoStart", "boost", "slots", "slot", "title", "encounter", "held"]);
+  "attune", "space", "train", "strain", "events", "breakthrough", "autoStart", "boost", "slots", "slot", "title", "encounter", "held",
+  "hobby", "stance", "lasts"]);
 /**
  * About ten active minutes to Foundation, measured on the quickest sensible play (owner decision, 27 October 2026).
  * The band sits round the honest direct figures with room for a minute or two of tuning either way.
@@ -37,23 +47,30 @@ export const FOUNDATION_CEILING = 780;
 export const WANDERING_CEILING = 1200;
 /** Circulation must open with a Settling sitting's worth of room before the ceiling. */
 export const CIRCULATION_WINDOW = 600;
-/** No outing, sitting or breakthrough may hold the slot longer than this. */
+/** No outing, sitting or breakthrough may hold the slot longer than this; the basin road's longer carries have their own ceiling. */
 export const TIMED_CEILING = 180;
+export const BASIN_TIMED_CEILING = 300;
 /** Activity seconds from Foundation to the waystation, on every ridge route, from either reading. */
 export const RIDGE_FLOOR = 720;
 export const RIDGE_CEILING = 1440;
+/** Activity seconds from the waystation to the Second Direction, on every deep route (30 to 60 minutes of honest play). */
+export const SECOND_FLOOR = 1800;
+export const SECOND_CEILING = 3600;
+/** Activity seconds from the Second Direction to Reedmarket. */
+export const ARRIVAL_WINDOW = 900;
 
 /** The chapters in play order, for the rule that later content compounds earlier payouts; the shared stores and knowledge are chapter one's. */
 const CHAPTERS: readonly { name: string; ids: ReadonlySet<string> }[] = [
   { name: "The village", ids: new Set([...shared, ...opening].map(record => record.id)) },
   { name: "The ridge", ids: new Set(ridge.map(record => record.id)) },
+  { name: "The basin road", ids: new Set(basin.map(record => record.id)) },
 ];
 
 /** Fields content used to carry. Naming them beats "unknown field" when an old record is pasted in. */
 export const REMOVED_FIELDS = ["disable", "runway", "raisers", "lifespan", "age", "checkpoint", "pauseOnReveal", "pauseOnComplete", "perpetual", "secret"];
 const bankPaths = new Set(["bank", "bank.value", "bank.seconds", "bank.max", "bank.cap"]);
 /** The engine owns both of these amounts; content may only raise their caps. */
-const countedStores = new Set([HOME_SPACE, ATTUNE_SLOTS]);
+const countedStores = new Set([HOME_SPACE, ATTUNE_SLOTS, HOBBY_SLOTS]);
 
 function expressions(record: GameRecord): string[] {
   const result = [record.require, record.need, record.breakthrough?.core, ...record.breakthrough?.pointers.map(pointer => pointer.when) ?? [], ...record.events?.map(event => event.when) ?? []];
@@ -133,6 +150,9 @@ export function validateGrammar(records: GameRecord[]): string[] {
     if (countedStores.has(id) && field === "value") errors.push(`${record.id}: ${id} counts itself; raise ${id}.max instead`);
   };
 
+  /** Ids a breakthrough grants by its result or its events' changes: titles, acquired rather than started. */
+  const granted = new Set(records.filter(record => record.kind === "breakthrough")
+    .flatMap(record => [...Object.keys(record.result ?? {}), ...(record.events ?? []).flatMap(event => Object.keys(event.changes ?? {}))]));
   for (const record of records) {
     if (!/^[a-z][a-z0-9_]*$/.test(record.id)) errors.push(`Invalid record id ${record.id}`);
     if (tags.has(record.id)) errors.push(`${record.id}: a tag of this name already exists, so g.${record.id} would be ambiguous`);
@@ -201,9 +221,39 @@ export function validateGrammar(records: GameRecord[]): string[] {
         errors.push(`${record.id}: a foe needs speed above 0 and at most ${GAUGE}, hit within 0-100 and dodge within 0-${DODGE_MAX}`);
       }
       if (!record.encounter.failureText) errors.push(`${record.id}: an encounter needs failure text`);
+      const technique = foe?.technique;
+      if (technique !== undefined && !(typeof technique.name === "string" && technique.name && Number.isInteger(technique.every) && technique.every >= 2 && Number.isInteger(technique.strike) && technique.strike >= 0)) {
+        errors.push(`${record.id}: a foe technique needs a name, a whole "every" of at least 2 and a whole, non-negative strike`);
+      }
       if ([LIFE, ...FIGHT_STATS].some(id => byId.get(id)?.kind !== "resource")) errors.push(`a fight needs the resource records ${[LIFE, ...FIGHT_STATS].join(", ")}`);
     }
-    if (record.held !== undefined && !(record.kind === "technique" && record.attune)) errors.push(`${record.id}: held modifiers belong only to a technique that is attuned`);
+    if (record.held !== undefined && !(record.kind === "technique" && (record.attune || record.stance)) && !(record.kind === "preparation" && record.lasts)) {
+      errors.push(`${record.id}: held modifiers belong only to an attuned technique, a stance, or a preparation that lasts`);
+    }
+    if (record.hobby !== undefined) {
+      if (record.hobby !== true) errors.push(`${record.id}: hobby must be true when present`);
+      if (record.length !== "continuous") errors.push(`${record.id}: only a continuous practice can be a hobby`);
+      if (record.autoStart) errors.push(`${record.id}: the idle filler cannot also be a hobby`);
+      if (record.hobby && !ids.has(HOBBY_SLOTS)) errors.push(`${record.id}: a hobby needs a "${HOBBY_SLOTS}" record to count the place`);
+    }
+    if (record.stance !== undefined) {
+      if (record.stance !== true || record.kind !== "technique") errors.push(`${record.id}: only a technique can be a stance`);
+      if (!record.held || !Object.keys(record.held).length) errors.push(`${record.id}: a stance is nothing but its held table`);
+      for (const field of ["attune", "cost", "length", "result"] as const) if (record[field] !== undefined) errors.push(`${record.id}: a stance carries no ${field}`);
+    }
+    if (record.lasts !== undefined) {
+      if (record.kind !== "preparation") errors.push(`${record.id}: only a preparation lasts`);
+      if (!Number.isInteger(record.lasts) || record.lasts <= 0) errors.push(`${record.id}: lasts must be a whole, positive number of activity seconds`);
+    }
+    // A pair: a technique that closes another technique is closed by it in turn, and says so.
+    if (record.kind === "technique") {
+      for (const target of record.lock ?? []) {
+        const sibling = byId.get(target);
+        if (!sibling || sibling.kind !== "technique") continue;
+        if (!sibling.lock?.includes(record.id)) errors.push(`${record.id}: closes ${target}, which does not close it back (a pair's halves lock each other)`);
+        if (!record.warn) errors.push(`${record.id}: closing ${target} needs a warn naming it`);
+      }
+    }
     if (record.kind === "recipe" && typeof record.length !== "number") errors.push(`${record.id}: a recipe is worked over time at the bench, so it needs a length in seconds`);
     if (record.kind === "recipe" && record.max === undefined && record.fill === undefined) errors.push(`${record.id}: a recipe stops at a max or when the store it fills is full`);
     if (record.kind === "preparation" && record.length !== undefined) errors.push(`${record.id}: a preparation is taken on the instant`);
@@ -212,6 +262,8 @@ export function validateGrammar(records: GameRecord[]): string[] {
     if (record.kind === "breakthrough" && !record.breakthrough) errors.push(`${record.id}: breakthrough has no mandatory core metadata`);
     if (record.breakthrough && (record.breakthrough.required < 0 || record.breakthrough.required > record.breakthrough.pointers.length)) errors.push(`${record.id}: invalid supporting pointer count`);
     if (passiveKinds.has(record.kind)) continue;
+    // A title is granted by a breakthrough's event, never started, so its own flag is the right thing to reveal it.
+    if (record.kind === "class" && granted.has(record.id)) continue;
     // A count/level of one's own record cannot be the key needed for its first start.
     for (const gate of [record.require, record.need]) {
       if (!gate) continue;
@@ -228,22 +280,33 @@ export function validateGrammar(records: GameRecord[]): string[] {
   return [...new Set(errors)];
 }
 
-/** Adversarial gate states only: these are never counted as reachability evidence. */
+/**
+ * Adversarial gate states only: these are never counted as reachability evidence. A core names families, or route
+ * keys; with everything else at a hundred, zeroing what it names (each alone for a single family, all together for a
+ * disjunction over several) must leave the breakthrough unavailable.
+ */
 export function validateMandatoryCores(records: GameRecord[]): string[] {
   const errors: string[] = [];
   const families = new Set(records.filter(record => record.kind === "family").map(record => record.id));
+  const carriers = new Map<string, string[]>();
+  for (const record of records) for (const tag of record.tags ?? []) carriers.set(tag, [...carriers.get(tag) ?? [], record.id]);
   for (const record of records.filter(record => record.kind === "breakthrough")) {
     if (!record.breakthrough) { errors.push(`${record.id}: missing mandatory core`); continue; }
-    const coreFamilies = [...new Set(expressionReferences(record.breakthrough.core).map(path => path.replace(/^g\./, "").split(".")[0]!).filter(id => families.has(id)))];
-    if (coreFamilies.length === 0) { errors.push(`${record.id}: mandatory core names no family`); continue; }
-    for (const coreFamily of coreFamilies) {
+    const named = [...new Set(expressionReferences(record.breakthrough.core).map(path => path.replace(/^g\./, "").split(".")[0]!))];
+    const coreFamilies = named.filter(id => families.has(id)), coreKeys = named.filter(id => carriers.has(id));
+    if (coreFamilies.length === 0 && coreKeys.length === 0) { errors.push(`${record.id}: mandatory core names no family or route key`); continue; }
+    const trials = coreFamilies.length === 1 && coreKeys.length === 0 ? [[coreFamilies[0]!]] : [[...coreFamilies, ...coreKeys]];
+    for (const zeroed of trials) {
       const engine = new GameEngine(records);
       for (const candidate of records) Object.assign(engine.stat(candidate.id), { value: 100, max: 100, exp: 0, reps: 100, open: true, started: true });
       Object.assign(engine.stat(record.id), { value: 0, reps: 0, max: 1, started: false });
-      engine.stat(coreFamily).value = 0;
+      for (const id of zeroed) {
+        if (families.has(id)) engine.stat(id).value = 0;
+        else for (const carrier of carriers.get(id) ?? []) engine.stat(carrier).value = 0;
+      }
       engine.state.lockedIds = [];
       engine.state.visibleIds = records.map(candidate => candidate.id);
-      if (engine.availability(record.id).ok) errors.push(`${record.id}: mandatory core is skippable with ${coreFamily} at zero`);
+      if (engine.availability(record.id).ok) errors.push(`${record.id}: mandatory core is skippable with ${zeroed.join(", ")} at zero`);
     }
   }
   return errors;
@@ -284,7 +347,7 @@ export function validateCompounding(records: GameRecord[]): string[] {
  * from another's. The shared file is the common vocabulary both read; its own reveals may name what reveals them.
  */
 export function validateModuleSeams(): string[] {
-  const modules = [{ name: "opening", records: opening as GameRecord[] }, { name: "ridge", records: ridge as GameRecord[] }];
+  const modules = [{ name: "opening", records: opening as GameRecord[] }, { name: "ridge", records: ridge as GameRecord[] }, { name: "basin", records: basin as GameRecord[] }];
   const home = new Map(modules.flatMap(module => module.records.map(record => [record.id, module.name] as const)));
   return modules.flatMap(module => module.records.flatMap(record => {
     const gates = [record.require, record.need, record.breakthrough?.core, ...record.breakthrough?.pointers.map(pointer => pointer.when) ?? [], ...record.events?.map(event => event.when) ?? []];
@@ -297,11 +360,13 @@ export function validateModuleSeams(): string[] {
 
 export function validateContent(records: GameRecord[] = sourceRecords): ValidationReport {
   const errors = validateGrammar(records);
-  if (errors.length) return { ok: false, errors, routes: [], coverageBranches: [], ridgeRoutes: [], recordCount: records.length, reachedCount: 0, missing: records.map(record => record.id) };
+  if (errors.length) return { ok: false, errors, routes: [], coverageBranches: [], ridgeRoutes: [], deepRoutes: [], recordCount: records.length, reachedCount: 0, missing: records.map(record => record.id) };
   errors.push(...validateMandatoryCores(records), ...validateContext(records), ...validateCompounding(records), ...validateModuleSeams());
+  const basinIds = CHAPTERS[2]!.ids;
   for (const record of records) {
-    if (typeof record.length === "number" && record.length > TIMED_CEILING) {
-      errors.push(`${record.id}: timed action runs ${record.length}s, over the ${TIMED_CEILING} s ceiling`);
+    const ceiling = basinIds.has(record.id) ? BASIN_TIMED_CEILING : TIMED_CEILING;
+    if (typeof record.length === "number" && record.length > ceiling) {
+      errors.push(`${record.id}: timed action runs ${record.length}s, over the ${ceiling} s ceiling`);
     }
   }
   // The Foundation band and the Circulation window bind on the direct routes, the quickest sensible play.
@@ -341,8 +406,26 @@ export function validateContent(records: GameRecord[] = sourceRecords): Validati
     const elapsed = route.goalSeconds! - route.startSeconds;
     if (elapsed < RIDGE_FLOOR || elapsed > RIDGE_CEILING) errors.push(`${route.name}: the waystation takes ${(elapsed / 60).toFixed(2)} min after Foundation, outside ${RIDGE_FLOOR / 60}-${RIDGE_CEILING / 60} min`);
   }
+  // The basin road: each deep route from its ridge direction's waystation, inside the Second Direction band, then Reedmarket inside the arrival window.
+  const deepRoutes = (Object.keys(DEEP_ROUTES) as DeepRoute[]).map(name => {
+    const from = SPHERES[DEEP_ROUTES[name].first].ridge, waystation = ridgeRoutes.find(route => route.name === from)?.state;
+    const result = runDeepRoute(name, records, waystation) as DeepRouteResult;
+    const engine = new GameEngine(records, result.state);
+    result.title = engine.title();
+    result.reedmarketSeconds = result.unlocks.find(unlock => unlock.id === "reedmarket")?.at ?? null;
+    return result;
+  });
+  for (const route of deepRoutes) {
+    const expected = records.find(record => record.id === DEEP_ROUTES[route.name as DeepRoute].title)?.title;
+    if (!route.success) { errors.push(`${route.name}: the Second Direction is unreachable (${route.reason})`); continue; }
+    const elapsed = route.goalSeconds! - route.startSeconds;
+    if (elapsed < SECOND_FLOOR || elapsed > SECOND_CEILING) errors.push(`${route.name}: the Second Direction takes ${(elapsed / 60).toFixed(2)} min after the waystation, outside ${SECOND_FLOOR / 60}-${SECOND_CEILING / 60} min`);
+    if (route.title !== expected) errors.push(`${route.name}: the Second Direction names ${route.title}, not ${expected}`);
+    if (!route.state.stats.reedmarket?.value) errors.push(`${route.name}: Reedmarket is not reached after the Second Direction (${route.reason})`);
+    else if (route.reedmarketSeconds! - route.goalSeconds! > ARRIVAL_WINDOW) errors.push(`${route.name}: Reedmarket comes ${((route.reedmarketSeconds! - route.goalSeconds!) / 60).toFixed(2)} min after the Second Direction, outside the ${ARRIVAL_WINDOW / 60}-minute window`);
+  }
   // Rule 74: an attunement place no history can fill is an empty socket the slice cannot close.
-  const played = [...routes, ...coverageBranches, ...ridgeRoutes];
+  const played = [...routes, ...coverageBranches, ...ridgeRoutes, ...deepRoutes];
   const places = Math.max(0, ...played.map(route => route.caps[ATTUNE_SLOTS] ?? 0));
   const heldAtOnce = Math.max(0, ...played.map(route => route.heldAtOnce));
   if (places > heldAtOnce) errors.push(`attunement places reach ${places}, but no route holds more than ${heldAtOnce} methods at once (rule 74)`);
@@ -355,15 +438,19 @@ export function validateContent(records: GameRecord[] = sourceRecords): Validati
   if (missing.length) errors.push(`No cold-start reachability witness for: ${missing.join(", ")}`);
   // Replayable witnesses must actually satisfy each lead's need; mere early visibility is insufficient.
   for (const route of coverageBranches) if (!route.success) errors.push(`${route.name}: coverage branch failed (${route.reason})`);
-  return { ok: errors.length === 0, errors, routes, coverageBranches, ridgeRoutes, recordCount: records.length, reachedCount: reached.size, missing };
+  return { ok: errors.length === 0, errors, routes, coverageBranches, ridgeRoutes, deepRoutes, recordCount: records.length, reachedCount: reached.size, missing };
 }
 
 if (import.meta.main) {
   const report = validateContent();
-  if (process.argv.includes("--json")) console.log(JSON.stringify({ ...report, routes: report.routes.map(compactRoute), coverageBranches: report.coverageBranches.map(compactRoute), ridgeRoutes: report.ridgeRoutes.map(compactRoute) }, null, 2));
+  if (process.argv.includes("--json")) console.log(JSON.stringify({ ...report, routes: report.routes.map(compactRoute), coverageBranches: report.coverageBranches.map(compactRoute), ridgeRoutes: report.ridgeRoutes.map(compactRoute), deepRoutes: report.deepRoutes.map(compactRoute) }, null, 2));
   else {
     for (const route of [...report.routes, ...report.coverageBranches]) console.log(`${route.name}: ${route.success ? "Foundation" : "BLOCKED"} at ${((route.foundationSeconds ?? route.activitySeconds) / 60).toFixed(2)} min; ${route.reached.length} records witnessed; ${route.unsourcedCapLog.length} cap lines without a source`);
     for (const route of report.ridgeRoutes) console.log(`${route.name}: ${route.success ? "waystation" : "BLOCKED"} ${(((route.goalSeconds ?? route.activitySeconds) - route.startSeconds) / 60).toFixed(2)} min after Foundation; ${route.reached.length} records witnessed; ${route.unsourcedCapLog.length} cap lines without a source`);
+    for (const route of report.deepRoutes) {
+      const arrival = route.state.stats.reedmarket?.value ? ` → Reedmarket ${((route.reedmarketSeconds! - route.goalSeconds!) / 60).toFixed(2)} min after` : "";
+      console.log(`${route.name}: ${route.success ? "Second Direction" : "BLOCKED"} ${(((route.goalSeconds ?? route.activitySeconds) - route.startSeconds) / 60).toFixed(2)} min after the waystation${arrival}; title ${route.title}; ${route.reached.length} records witnessed`);
+    }
     // The measured figure the whole simulation exists to produce.
     const timing = (name: string) => {
       const route = report.routes.find(candidate => candidate.name === name);

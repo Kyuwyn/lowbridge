@@ -73,7 +73,7 @@ export interface RouteResult {
   foundationSeconds: number | null;
   /** When the route's goal flag was first held; Foundation for the opening routes. */
   goalSeconds: number | null;
-  actions: { id: string; at: number; elapsed: number; objective: Objective; unlocks: string[]; attune?: true; release?: string }[];
+  actions: { id: string; at: number; elapsed: number; objective: Objective; unlocks: string[]; attune?: true; release?: string; stance?: true; hobby?: true }[];
   unlocks: { id: string; at: number }[];
   reached: string[];
   completed: string[];
@@ -120,6 +120,8 @@ function productive(engine: GameEngine, record: GameRecord, focused: boolean, qi
   }
   if (record.id === "sit_fernhollow") return engine.stat(record.id).reps < 3 || (!focused && held(engine, "qi_sense") < held(engine, "qi_sense", "max"));
   if (record.max === 1 || record.kind === "breakthrough" || record.kind === "teaching" || record.length === "continuous") return true;
+  // A preparation that lasts is worth taking whenever it is not in effect.
+  if (record.kind === "preparation" && record.lasts) return !engine.state.effects.some(effect => effect.id === record.id);
   return Object.keys(record.result ?? {}).some(path => {
     const [id, field] = path.split(".");
     if (!engine.has(id!)) return false;
@@ -170,6 +172,12 @@ export interface RouteOptions {
    * Without it, chores wait until the slot is free, which overstates the time to each goal.
    */
   attentive?: boolean;
+  /** A stance taken as soon as it is visible. */
+  stance?: string;
+  /** A practice run in the hobby place as soon as the place exists; it is kept out of the activity slot by `avoid`. */
+  hobby?: string;
+  /** Keep at least this much timber cut, instead of cutting toward the next listed piece alone. */
+  timber?: number;
 }
 
 /** Real one-second engine ticks; there is no duplicated reward or leveling model here. */
@@ -202,8 +210,9 @@ export function runRoute(name: string, options: RouteOptions = {}): RouteResult 
     const when = enough[id];
     return when !== undefined && (typeof when === "function" ? when(engine) : engine.condition(when));
   };
-  /** Timber is cut only toward the next piece the route still means to build, never into a full stack. */
+  /** Timber is cut only toward the next piece the route still means to build, never into a full stack; a route with a `timber` floor keeps that much cut. */
   const timberShort = (): boolean => {
+    if (options.timber !== undefined) return held(engine, "timber") < options.timber;
     for (const id of [...afterGoal.filter(id => engine.stat(id).reps < 1).slice(0, 1), ...preferences.prefer]) {
       if (held(engine, id) > 0 || engine.locked(id) || satisfied(id)) continue;
       const timber = engine.billProgress(id).find(row => row.id === "timber");
@@ -235,7 +244,8 @@ export function runRoute(name: string, options: RouteOptions = {}): RouteResult 
       const stat = engine.stat(record.id);
       if (record.kind === "family" ? stat.open : record.kind === "lead"
         ? engine.condition(record.need)
-        : record.kind === "resource" || record.kind === "flag" || stat.reps > 0 || stat.value > 0 || stat.ticks > 0) reached.add(record.id);
+        : record.kind === "resource" || record.kind === "flag" || stat.reps > 0 || stat.value > 0 || stat.ticks > 0
+        || (record.stance && engine.state.stance === record.id)) reached.add(record.id);
     }
     heldAtOnce = Math.max(heldAtOnce, engine.state.attuned.length);
     if (foundationSeconds === null && held(engine, "foundation") > 0) foundationSeconds = engine.state.activitySeconds;
@@ -273,6 +283,8 @@ export function runRoute(name: string, options: RouteOptions = {}): RouteResult 
       && !satisfied(record.id) && !engine.state.waiting.some(entry => entry.id === record.id)
       && engine.availability(record.id).ok && preference(engine, record.id, preferences) < 900)
     .filter(record => record.id !== "settling" || beforeGoal.every(id => engine.stat(id).reps > 0))
+    // Once the hobby has a place of its own, the slot leaves it alone.
+    .filter(record => record.id !== options.hobby || engine.state.hobby !== record.id)
     .sort((a, b) => preference(engine, a.id, preferences) - preference(engine, b.id, preferences));
   /** Instant actions clicked alongside the running activity; they never replace it. */
   const chores = () => {
@@ -289,8 +301,20 @@ export function runRoute(name: string, options: RouteOptions = {}): RouteResult 
       observe();
     }
   };
+  /** A stance is taken as soon as it is seen; a hobby is started as soon as there is a place for it, and kept. */
+  const keepLoadout = () => {
+    const stance = options.stance;
+    if (stance && engine.has(stance) && engine.state.stance !== stance && engine.visible(stance) && engine.takeStance(stance).ok) {
+      actions.push({ id: stance, at: engine.state.activitySeconds, elapsed: 0, objective: { kind: "repetitions", id: stance, target: 1 }, unlocks: [], stance: true });
+    }
+    const hobby = options.hobby;
+    if (hobby && engine.has(hobby) && engine.state.hobby !== hobby && engine.startHobby(hobby).ok) {
+      actions.push({ id: hobby, at: engine.state.activitySeconds, elapsed: 0, objective: objectiveFor(engine, engine.record(hobby), focused, options.qiSense), unlocks: [], hobby: true });
+    }
+  };
   for (let count = 0; count < (options.maxActions ?? 1200); count++) {
     holdTechniques();
+    keepLoadout();
     const founded = goalSeconds !== null;
     const after = afterGoal.find(id => engine.stat(id).reps < 1);
     if (founded && !after) { reason = `${engine.has(goal) ? engine.record(goal).name ?? goal : goal} reached`; break; }
@@ -381,10 +405,10 @@ export function runCoverageBranches(records: GameRecord[] = sourceRecords): Rout
 
 /** One First Direction each, continued from a life at Foundation. */
 export const RIDGE_ROUTES = {
-  "direction-body": { teaching: "body_teaching", arrangement: "load_frame", drills: "body_drills", site: "survey_marker", direction: "direction_body", crossing: "cross_body", entry: "circulation", material: "marrow_herbs", chore: "dig_marrow_herbs", method: "sink_the_load" },
-  "direction-sword": { teaching: "sword_teaching", arrangement: "practice_post", drills: "blade_drills", site: "inscription_face", direction: "direction_sword", crossing: "cross_sword", entry: "blade_intent", material: "whetstone_grit", chore: "scrape_whetstone_grit", method: "cut_by_intent" },
-  "direction-earth": { teaching: "earth_teaching", arrangement: "survey_stakes", drills: "ground_drills", site: "stable_point", direction: "direction_earth", crossing: "cross_earth", entry: "ground_reading", material: "veined_ore", chore: "pry_veined_ore", method: "read_the_grain" },
-  "direction-formation": { teaching: "formation_teaching", arrangement: "drawing_board", drills: "array_drills", site: "fixed_layout", direction: "direction_formation", crossing: "cross_formation", entry: "array_craft", material: "inked_tokens", chore: "ink_tokens", method: "fix_the_layout" },
+  "direction-body": { teaching: "body_teaching", arrangement: "load_frame", drills: "body_drills", site: "survey_marker", direction: "first_direction", crossing: "cross_body", entry: "circulation", material: "marrow_herbs", chore: "dig_marrow_herbs", method: "sink_the_load", half: "rise_with_load" },
+  "direction-sword": { teaching: "sword_teaching", arrangement: "practice_post", drills: "blade_drills", site: "inscription_face", direction: "first_direction", crossing: "cross_sword", entry: "blade_intent", material: "whetstone_grit", chore: "scrape_whetstone_grit", method: "cut_by_intent", half: "let_the_blade_wait" },
+  "direction-earth": { teaching: "earth_teaching", arrangement: "survey_stakes", drills: "ground_drills", site: "stable_point", direction: "first_direction", crossing: "cross_earth", entry: "ground_reading", material: "veined_ore", chore: "pry_veined_ore", method: "read_the_grain", half: "walk_the_slide" },
+  "direction-formation": { teaching: "formation_teaching", arrangement: "drawing_board", drills: "array_drills", site: "fixed_layout", direction: "first_direction", crossing: "cross_formation", entry: "array_craft", material: "inked_tokens", chore: "ink_tokens", method: "fix_the_layout", half: "open_the_layout" },
 } as const;
 export type RidgeRoute = keyof typeof RIDGE_ROUTES;
 type RidgeLine = (typeof RIDGE_ROUTES)[RidgeRoute];
@@ -470,6 +494,102 @@ export function runRidgeCoverage(records: GameRecord[] = sourceRecords, start = 
       "formation_teaching", "fixed_layout", "craft_warding_strip"],
     maxActions: 4000, maxSeconds: 36000,
   })];
+}
+
+/** What each sphere offers on the basin road; the first four continue the ridge lines, the pill sphere opens from Shu's leaves. */
+export const SPHERES = {
+  body: { ridge: "direction-body", family: "circulation", teaching: "conditioning_sheets", halves: ["temper_the_marrow", "carry_without_rest"], site: "scree_climb", commission: "haul_the_stores", kit: [] },
+  sword: { ridge: "direction-sword", family: "blade_intent", teaching: "tam_lessons", halves: ["sever_the_knot", "send_the_intent"], site: "rope_gallery", commission: "recut_the_lines", kit: ["craft_honed_edge"] },
+  earth: { ridge: "direction-earth", family: "ground_reading", teaching: "current_accounts", halves: ["root_to_the_vein", "listen_for_water"], site: "undercut_bank", commission: "shore_the_cellar", kit: ["craft_weighted_stakes"] },
+  formation: { ridge: "direction-formation", family: "array_craft", teaching: "overlay_plan", halves: ["anchor_the_array", "ward_the_threshold"], site: "relay_stones", commission: "lay_the_ward_lines", kit: ["craft_warding_strip"] },
+  pill: { ridge: undefined, family: "refining", teaching: "shu_three_leaves", halves: ["draw_the_essence", "temper_the_fire"], site: "pale_root_bank", commission: "stock_the_still_room", kit: ["craft_settling_draught"] },
+} as const;
+export type Sphere = keyof typeof SPHERES;
+
+interface DeepSpec {
+  first: Sphere; firstHalf: 0 | 1; second: Sphere; secondHalf: 0 | 1;
+  /** The title record the Second Direction must read. */
+  title: string;
+  stance?: string;
+  /** Fights the pair at the spur once the projection is likely, or deliberately before anything, to witness the loss. */
+  fight?: true; loss?: true;
+  specimen?: true; draughts?: true;
+  hobby?: string;
+}
+export type DeepRoute = "pure-body" | "pure-sword" | "pure-earth" | "pure-formation" | "pill" | "pill-fire" | "mountain-vessel" | "blade-body" | "earth-array" | "intent-warden";
+/**
+ * Ten ways from the waystation to the Second Direction, at least one per title: the first sphere is the ridge direction's,
+ * deepened with one half of its pair; the second is deepened with one half of its own, so every half is witnessed
+ * across them. The pure titles fall to the sphere trained higher when the two are not a hybrid pair.
+ */
+export const DEEP_ROUTES: Record<DeepRoute, DeepSpec> = {
+  "pure-body": { first: "body", firstHalf: 0, second: "formation", secondHalf: 1, title: "iron_marrow_adept", stance: "rooted_stance", fight: true },
+  "pure-sword": { first: "sword", firstHalf: 0, second: "earth", secondHalf: 1, title: "spirit_blade", stance: "pressing_stance" },
+  "pure-earth": { first: "earth", firstHalf: 0, second: "sword", secondHalf: 1, title: "deep_listener", stance: "open_stance" },
+  "pure-formation": { first: "formation", firstHalf: 0, second: "body", secondHalf: 1, title: "array_keeper", specimen: true },
+  "pill": { first: "body", firstHalf: 1, second: "pill", secondHalf: 0, title: "pill_refiner", hobby: "refining_drills", draughts: true },
+  "pill-fire": { first: "earth", firstHalf: 0, second: "pill", secondHalf: 1, title: "pill_refiner" },
+  "mountain-vessel": { first: "body", firstHalf: 1, second: "earth", secondHalf: 0, title: "mountain_vessel" },
+  "blade-body": { first: "sword", firstHalf: 1, second: "body", secondHalf: 0, title: "blade_body", loss: true },
+  "earth-array": { first: "earth", firstHalf: 1, second: "formation", secondHalf: 0, title: "earth_array_adept" },
+  "intent-warden": { first: "formation", firstHalf: 1, second: "sword", secondHalf: 0, title: "intent_warden" },
+};
+
+export function runDeepRoute(name: DeepRoute, records: GameRecord[] = sourceRecords, start?: GameState): RouteResult {
+  const deep = DEEP_ROUTES[name], first = SPHERES[deep.first], second = SPHERES[deep.second];
+  if (!first.ridge) throw new Error(`${name}: the first sphere must be a ridge direction`);
+  const from = RIDGE_ROUTES[first.ridge], firstHalf = first.halves[deep.firstHalf], secondHalf = second.halves[deep.secondHalf];
+  const secondLine = second.ridge ? RIDGE_ROUTES[second.ridge] : undefined;
+  const waystation = start ?? runRidgeRoute(first.ridge, records).state;
+  /** The ridge pair's other half for the second sphere, so both halves of every ridge pair are witnessed across the routes. */
+  const secondRidgeHalf = secondLine?.half;
+  const beatable = (engine: GameEngine) => engine.has("spur_pair") && engine.visible("spur_pair") && engine.fight("spur_pair").likely;
+  const pillSetup = second.ridge ? [] : ["clay_vessel", "spur_clearing", "craft_walking_staff", "refining_drills", "pale_root_bank", "dig_pale_root", "craft_settling_draught", "take_settling_draught"];
+  const materials = [from.material, ...secondLine ? [secondLine.material] : []];
+  // The bench and the room come first: the runner cuts timber only toward the next unbuilt piece it lists, and the kit wants the bench.
+  const prefer = [
+    "second_direction",
+    ...deep.fight ? ["spur_pair"] : [],
+    "coffer", "cottage", "workbench", "ridge_room", "reading_desk",
+    first.teaching, firstHalf, first.site, first.commission, ...first.kit,
+    ...secondLine ? [secondLine.teaching, secondLine.arrangement, secondLine.drills, secondRidgeHalf!] : [],
+    second.teaching, ...pillSetup, secondHalf, second.site,
+    ...deep.draughts ? ["craft_settling_draught", "take_settling_draught", "stock_the_still_room"] : [],
+    "chime_watch", "relay_test", "spur_clearing", "craft_walking_staff", "chime_leaf", "spur_leaf", "keeper_leaf", "shu_three_leaves",
+    "herb_rack", "fragment_notes", from.drills, ...secondLine ? [secondLine.chore] : [], from.chore,
+    ...materials.map(material => `trade_${material}`), "breath_gathering", "waystation_work", "cut_timber", "ferry_hauling",
+  ];
+  const after = [
+    ...deep.specimen ? ["craft_specimen_case", "deliver_specimen_case"] : [],
+    ...deep.draughts ? ["craft_marrow_draught", "take_marrow_draught", "craft_clear_pill", "take_clear_pill"] : [],
+    "landslide_rise", "terrace_bypass", "reedmarket_work", "trade_pale_root",
+  ];
+  const vigorPaid = [firstHalf, secondHalf].filter(half => /g\.vigor </.test(records.find(record => record.id === half)?.need ?? ""));
+  return runRoute(name, {
+    records, start: waystation, goal: "second_direction", maxSeconds: 21600, maxActions: 4000, focused: false, attentive: true, timber: 6,
+    preferences: { prefer, avoid: [], others: 999 },
+    attune: [firstHalf, secondHalf, from.method, ...secondRidgeHalf ? [secondRidgeHalf] : [], "steady_breath"],
+    stance: deep.stance, hobby: deep.hobby,
+    // A deliberate loss first, at Foundation stats: it keeps nothing and costs only the preparation.
+    prelude: deep.loss ? ["spur_pair"] : [],
+    enough: {
+      [from.drills]: `g.${first.family} >= 6`,
+      ...secondLine ? { [secondLine.drills]: `g.${second.family} >= 5`, [secondLine.chore]: `g.${secondLine.material} >= 6`, [secondRidgeHalf!]: `g.${secondRidgeHalf}.reps >= 1` } : { refining_drills: "g.refining >= 5", dig_pale_root: "g.pale_root >= 6" },
+      [firstHalf]: `g.${firstHalf}.reps >= 10`, [secondHalf]: `g.${secondHalf}.reps >= 3`,
+      [first.site]: `g.${first.site}.reps >= 2`, [second.site]: `g.${second.site}.reps >= 2`,
+      [from.chore]: `g.${from.material} >= 6`,
+      // A store is traded only when it is nearly full, so a method that pays into it can still be used; wages stop short of the purse so trades stay worth making.
+      ...Object.fromEntries(materials.map(material => [`trade_${material}`, `g.${material} < g.${material}.max - 2`])),
+      // A method paid back in Vigor is used between chores, so wages go on until it has been used enough.
+      waystation_work: `g.coin >= g.coin.max - 30${vigorPaid.length ? ` && ${vigorPaid.map(half => `g.${half}.reps >= 10`).join(" && ")}` : ""}`,
+      fragment_notes: "g.lore >= 6", ferry_hauling: "g.coin >= g.coin.max - 30", herb_rack: "g.cottage < 1 && g.ridge_room < 1",
+      // Herbs are gathered toward the bill, not into a full store, so a method paid back in herbs can still be used.
+      gather_herbs: "g.herbs >= 34", sort_herbs: "g.herbs >= 34",
+      craft_settling_draught: "g.settling_draught >= 2",
+      spur_pair: engine => engine.stat("spur_pair").reps >= 1 || !beatable(engine),
+    },
+    afterFoundation: after,
+  });
 }
 
 export function compactRoute(result: RouteResult) {

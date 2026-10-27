@@ -1,10 +1,11 @@
 import shared from "./data/shared.json";
 import opening from "./data/opening.json";
 import ridge from "./data/ridge.json";
+import basin from "./data/basin.json";
 import type { GameRecord } from "./types";
 
 /** The browser, route runner and validator all consume these same source records. */
-export const records = [...shared, ...opening, ...ridge] as GameRecord[];
+export const records = [...shared, ...opening, ...ridge, ...basin] as GameRecord[];
 export const recordById = new Map(records.map((record) => [record.id, record]));
 
 /**
@@ -27,6 +28,14 @@ export const routeKeys: Record<string, RouteKey> = {
   t_school_sword: { name: "Sword school", desc: "A discipline that meets what comes up the path with an edge of intent." },
   t_school_formation: { name: "Formation school", desc: "A discipline that holds a small place still inside a fixed layout." },
   t_furnished: { name: "Furnished home", desc: "A furnishing beyond the first: a bed, a plot or a strongbox that wants a home of your own." },
+  t_school_pill: { name: "Pill school", desc: "A discipline that draws what a root holds out of it over a careful fire." },
+  t_deep_body: { name: "Body, deepened", desc: "A deep method of the body school held: the marrow tempered or the load carried without rest." },
+  t_deep_sword: { name: "Sword, deepened", desc: "A deep method of the sword school held: the knot severed or the intent sent ahead." },
+  t_deep_earth: { name: "Earth, deepened", desc: "A deep method of the earth school held: rooted to the vein or listening for water." },
+  t_deep_formation: { name: "Formation, deepened", desc: "A deep method of the formation school held: the array anchored or the threshold warded." },
+  t_deep_pill: { name: "Pill, deepened", desc: "A deep method of the pill school held: the essence drawn or the fire tempered." },
+  t_leaf: { name: "A leaf of the slip", desc: "One of the slip's missing leaves recovered: Shu's three, the relay keeper's, the shelter's or Han's." },
+  t_commission: { name: "A commission done", desc: "A piece of work done for Keeper Han and paid for." },
 };
 
 export const openingContext: { title: string; place: string; scenes: Scene[]; beats: StoryBeat[] } = {
@@ -41,10 +50,16 @@ export const openingContext: { title: string; place: string; scenes: Scene[]; be
       introduction: "The slip's method is your own now. Haulage to the ferry pays better than Wen's sacks, and from the landing the porters' path climbs to Old Ridge, where the teachings that choose a First Direction are found." },
     { id: "ridge", when: "g.ridge_outskirts > 0", place: "Old Ridge", title: "On Old Ridge", bound: "The ridge to the waystation",
       location: "Two minutes up the porters' path, the collapsed hut below Old Ridge. Hard ground draws on Strain.",
-      introduction: "Lowbridge lies below the porters' path. On the ridge the porter's notes teach four ways to carry the method further, and any one of them carries you to the waystation." },
+      introduction: "Lowbridge lies below the porters' path. On the ridge the porter's notes teach four spheres to carry the method into; any one carried to four takes the First Direction, and a held method of its school carries you to the waystation." },
     { id: "waystation", when: "g.waystation > 0", place: "The ridge waystation", title: "At the waystation", bound: "The waystation",
       location: "The old porters' waystation on Old Ridge, reached by your own direction.",
-      introduction: "The keeper has stores to shift and ledgers that name a basin beyond the ridge. The direction you chose brought you here; the roads past it are still unwalked." },
+      introduction: "The keeper has stores to shift and ledgers that name a basin beyond the ridge. The method you held brought you here; four leads wait on the board." },
+    { id: "second_direction", when: "g.second_direction > 0", place: "The basin road", title: "The Second Direction", bound: "The Second Direction to Reedmarket",
+      location: "The terrace above the slide, a day's carry from the waystation to the basin's edge.",
+      introduction: "The Second Direction is taken and named from what you hold. The terrace the route records showed runs to Reedmarket, the market settlement on the Cloudwell basin's edge." },
+    { id: "reedmarket", when: "g.reedmarket > 0", place: "Reedmarket", title: "Reedmarket", bound: "Reedmarket",
+      location: "The market settlement on the Cloudwell basin's edge, where the terrace comes down.",
+      introduction: "Reedmarket's porters pay better than Han and its stalls buy pale root. The three leaves the ledger could not place are somewhere in the basin." },
   ],
   beats: [
     { id: "start", when: "true", title: "A hayloft and two jobs",
@@ -79,7 +94,7 @@ export const openingContext: { title: string; place: string; scenes: Scene[]; be
       next: "Haul freight to the ferry for the coin the ridge will want, and walk the ridge outskirts when Strain allows.", focus: ["ferry_hauling", "ridge_outskirts"] },
     { id: "teachings", when: "g.ridge_outskirts > 0 && g.body_teaching + g.sword_teaching + g.earth_teaching + g.formation_teaching < 1", title: "Four bundles of notes",
       text: "The porter's notes are four ways to carry the method further: under a load, along a blade, through the ground, inside a layout. His widow wants herbs for each bundle, and reading them wants Lore 3.",
-      next: "Buy the notes for the line you want to try. You may read more than one; only one becomes your First Direction.", focus: ["body_teaching", "sword_teaching", "earth_teaching", "formation_teaching"] },
+      next: "Buy the notes for the sphere you want to try. You may read more than one; any sphere carried to four takes the First Direction.", focus: ["body_teaching", "sword_teaching", "earth_teaching", "formation_teaching"] },
     { id: "line_work", when: "g.body_teaching + g.sword_teaching + g.earth_teaching + g.formation_teaching > 0", title: "Working a line",
       text: "Each line asks the same four things in its own way: a furnishing on your floor and the drills that use it, a site on the ridge that yields its material, and a chore that digs or scrapes more of it by hand. Each also has a method to hold in the place Foundation opened.",
       next: "Set the line's furnishing and begin its drills, walk its site and work its chore until the core of its direction and three of its signs hold.",
@@ -88,14 +103,26 @@ export const openingContext: { title: string; place: string; scenes: Scene[]; be
         "survey_stakes", "ground_drills", "stable_point", "pry_veined_ore", "read_the_grain",
         "drawing_board", "array_drills", "fixed_layout", "ink_tokens", "fix_the_layout"] },
     { id: "direction_ready", title: "A direction within reach",
-      when: "(g.circulation >= 4 && g.body_drills.started > 0) || (g.blade_intent >= 4 && g.blade_drills.started > 0) || (g.ground_reading >= 4 && g.ground_drills.started > 0) || (g.array_craft >= 4 && g.array_drills.started > 0)",
-      text: "One line's core holds. Its breakthrough wants twenty herbs, twelve of the line's material and sixty coin, all paid at the start, and three of its four signs.",
-      next: "Choose your First Direction. Paying for it closes the other three for good.", focus: ["direction_body", "direction_sword", "direction_earth", "direction_formation"] },
-    { id: "cross", when: "g.body_disciple + g.sword_disciple + g.earth_listener + g.formation_student > 0", title: "The way up",
-      text: "The direction has changed how you meet the ridge. Each way up to the old waystation suits one of them: a loaded climb, a cut passage, a stable line, a turned runoff.",
-      next: "Cross to the waystation by your own direction's way.", focus: ["cross_body", "cross_sword", "cross_earth", "cross_formation"] },
-    { id: "waystation", when: "g.waystation > 0", title: "The waystation",
-      text: "The old porters' waystation, reached by your own direction. The keeper has stores to shift and ledgers older than Lowbridge.",
-      next: "The leads beyond the ridge belong to the next stage of the journey.", focus: [] },
+      when: "((g.circulation >= 4 && g.body_drills.started > 0) || (g.blade_intent >= 4 && g.blade_drills.started > 0) || (g.ground_reading >= 4 && g.ground_drills.started > 0) || (g.array_craft >= 4 && g.array_drills.started > 0)) && g.first_direction < 1",
+      text: "One sphere's core holds. The First Direction wants twenty herbs and sixty coin paid at the start, twelve of that sphere's material in hand, and three of its four signs. It closes nothing.",
+      next: "Take the First Direction. The sphere you carried to four names you.", focus: ["first_direction"] },
+    { id: "cross", when: "g.first_direction > 0 && g.waystation < 1", title: "The way up",
+      text: "The Direction has changed how you meet the ridge. Each way up to the old waystation wants a held method of its school: a loaded climb, a cut passage, a stable line, a turned runoff.",
+      next: "Cross to the waystation by a method you hold.", focus: ["cross_body", "cross_sword", "cross_earth", "cross_formation"] },
+    { id: "waystation", when: "g.waystation > 0 && g.second_direction < 1", title: "The waystation",
+      text: "The old porters' waystation, reached by the method you held. The keeper has stores to shift, ledgers older than Lowbridge, and four things on the board: route records toward a basin, a chime at dusk, a spur that ends at a slide, and the slip's other nine leaves. The bad ground here draws on Focus as well as Strain; a stance can be taken before any fight.",
+      next: "Climb the rise the route records point at, and sit out the dusk chime. Each sphere carried to five opens a deeper teaching at Lore 5.", focus: ["route_records", "unusual_chime", "landslide_rise", "chime_watch"] },
+    { id: "deepening", when: "g.conditioning_sheets + g.tam_lessons + g.current_accounts + g.overlay_plan + g.refining.open > 0 && g.second_direction < 1", title: "Deeper into a sphere",
+      text: "Each deeper teaching offers two methods that read the sphere differently; holding one closes the other. A sphere site raises its cap, and Han pays for a commission once the sphere stands at six. Two spheres deepened and three methods held are what the Second Direction asks.",
+      next: "Hold a deep method in each of two spheres, do a commission, and gather three of the Second Direction's six signs.", focus: ["temper_the_marrow", "sever_the_knot", "root_to_the_vein", "anchor_the_array", "draw_the_essence", "second_direction"] },
+    { id: "second_ready", when: "g.t_deep_body + g.t_deep_sword + g.t_deep_earth + g.t_deep_formation + g.t_deep_pill >= 2 && g.attune_slots >= 3 && g.second_direction < 1", title: "The Second Direction within reach",
+      text: "Two spheres deepened, three methods held. The Direction wants forty herbs and a hundred and fifty coin at the start, the reservoir full, and three of its six signs. Its title is read from what you hold.",
+      next: "Take the Second Direction. It closes nothing; a fifth place and the hobby place open with it.", focus: ["second_direction"] },
+    { id: "second_direction", when: "g.second_direction > 0 && g.reedmarket < 1", title: "The basin road",
+      text: "The title is yours, a fifth method can be held, and a hobby runs at half pace beside whatever holds the slot. The terrace above the slide is a day's carry to Reedmarket.",
+      next: "Trace the terrace to Reedmarket.", focus: ["terrace_bypass"] },
+    { id: "reedmarket", when: "g.reedmarket > 0", title: "Reedmarket",
+      text: "The market settlement on the Cloudwell basin's edge. The porters pay better than Han, pale root sells, and the three leaves the ledger could not place are somewhere in the basin.",
+      next: "The basin belongs to the next stage of the journey.", focus: [] },
   ],
 };

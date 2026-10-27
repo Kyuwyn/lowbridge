@@ -44,6 +44,16 @@
     "require": "g.foundation > 0", "initial": { "value": 10, "max": 10, "rate": 0.02, "open": false }
   },
   {
+    "id": "focus", "name": "Focus", "kind": "resource", "group": "Resources",
+    "desc": "How long attention holds on bad ground; outings draw it down and Rest brings it back. It returns slowly on its own, busy or idle.",
+    "require": "g.waystation > 0", "initial": { "value": 8, "max": 8, "rate": 0.02, "open": false }
+  },
+  {
+    "id": "hobby_slots", "name": "Hobby", "kind": "resource", "group": "Resources",
+    "desc": "A second place for a practice that runs at half pace beside whatever holds the activity slot, and keeps running while you are away. The Second Direction opens it.",
+    "require": "g.hobby_slots.max >= 1", "initial": { "max": 0, "open": true }
+  },
+  {
     "id": "life", "name": "Life", "kind": "resource", "group": "Resources",
     "desc": "What a blow takes before the body gives way. Only a fight draws on it. It returns slowly on its own, busy or idle, and from empty to full in about five minutes while you rest. Circulation deepens it.",
     "flavor": "Nobody in Lowbridge counts it until somebody swings at them.",
@@ -125,6 +135,31 @@
     "require": "g.formation_teaching > 0", "initial": { "value": 0, "max": 1 }, "mod": { "dodge.max": 10 }
   },
   {
+    "id": "pale_root", "name": "Pale root", "kind": "resource", "group": "Resources",
+    "desc": "A white root from the bank the spur uncovers, bitter and cold. Refining holds two more per level; ten is a full basket without a still-room.",
+    "require": "g.refining.open > 0", "initial": { "value": 0, "max": 10 }
+  },
+  {
+    "id": "settling_draught", "name": "Settling draught", "kind": "resource", "group": "Preparations",
+    "desc": "Pale root steeped with ordinary herbs. Drunk, it keeps the body and the attention on bad ground for five minutes. Three keep at the bench.",
+    "require": "g.refining.open > 0", "initial": { "value": 0, "max": 3 }
+  },
+  {
+    "id": "marrow_draught", "name": "Marrow draught", "kind": "resource", "group": "Preparations",
+    "desc": "Marrow herbs reduced over pale root. Drunk, the carrying drills and the scree run faster for five minutes. Three keep at the bench.",
+    "require": "g.refining.open > 0", "initial": { "value": 0, "max": 3 }
+  },
+  {
+    "id": "clear_pill", "name": "Clear pill", "kind": "resource", "group": "Preparations",
+    "desc": "Pale root rolled with a coin's worth of binder. Taken, it returns six qi and four Focus at once. Three keep at the bench.",
+    "require": "g.refining.open > 0", "initial": { "value": 0, "max": 3 }
+  },
+  {
+    "id": "specimen_case", "name": "Han's specimen case", "kind": "resource", "group": "Preparations",
+    "desc": "A fitted case with an inked token sewn into the lining, made to the keeper's measure. It is his once delivered.",
+    "require": "g.craft_specimen_case > 0", "initial": { "value": 0, "max": 1 }
+  },
+  {
     "id": "home_space", "name": "Home space", "kind": "resource", "group": "Home",
     "desc": "Spans of floor already in use. Arrangements come with you when the home grows.",
     "initial": { "max": 2 }
@@ -163,9 +198,36 @@
     "need": "g.channel_arrangement > 0 || g.sit_fernhollow.reps >= 3",
     "needtext": "Channel stones set in the floor, or three dusks sat in Fernhollow.",
     "initial": { "value": 0, "max": 5, "open": false },
-    "perLevel": { "vigor.max": 2, "vigor.rate": 0.01, "marrow_herbs.max": 2, "settling.rate": 0.05, "direction_body.rate": 0.02, "cross_body.rate": 0.01, "life.max": 2, "strike.max": 1, "guard.max": 1, "hit.max": 2, "dodge.max": 1 },
+    "perLevel": { "vigor.max": 2, "vigor.rate": 0.01, "marrow_herbs.max": 2, "settling.rate": 0.05, "first_direction.rate": 0.02, "cross_body.rate": 0.01, "life.max": 2, "strike.max": 1, "guard.max": 1, "hit.max": 2, "dodge.max": 1 },
     "events": [{ "id": "turn_holds", "when": "g.circulation >= 2",
       "text": "The turn holds on its own for a breath. The method is whole enough to settle." }]
+  },
+  {
+    "id": "blade_intent", "name": "Blade Intent", "kind": "family", "group": "Families",
+    "desc": "Meeting a blade's line with your own. From level 2 the carved face gives a measure more grit with every cut.",
+    "require": "g.sword_teaching > 0",
+    "initial": { "value": 0, "max": 5, "open": false }, "perLevel": { "whetstone_grit.max": 2, "first_direction.rate": 0.02, "cross_sword.rate": 0.01, "trade_whetstone_grit.yield": 1, "strike.max": 1 },
+    "at": { "2": { "inscription_face.yield": 1 } },
+    "events": [{ "id": "blade_finds_seams", "when": "g.blade_intent >= 2",
+      "text": "The post stops ringing when you meet it. On the carved face your edge finds the soft seams first, and a measure more of grit comes away with every cut." }]
+  },
+  {
+    "id": "ground_reading", "name": "Ground Reading", "kind": "family", "group": "Families",
+    "desc": "Where the ground holds and where it slides. From level 2 the stable point gives a piece more ore each time.",
+    "require": "g.earth_teaching > 0",
+    "initial": { "value": 0, "max": 5, "open": false }, "perLevel": { "veined_ore.max": 2, "first_direction.rate": 0.02, "cross_earth.rate": 0.01, "trade_veined_ore.yield": 1 },
+    "at": { "2": { "stable_point.yield": 1 } },
+    "events": [{ "id": "ground_runs_true", "when": "g.ground_reading >= 2",
+      "text": "Poured water runs where you guessed it would, three times running. Above the slide you start to see the ore before your foot finds it." }]
+  },
+  {
+    "id": "array_craft", "name": "Array Craft", "kind": "family", "group": "Families",
+    "desc": "Small fixed layouts that hold a place still. From level 2 a tested layout keeps a token more each time.",
+    "require": "g.formation_teaching > 0",
+    "initial": { "value": 0, "max": 5, "open": false }, "perLevel": { "inked_tokens.max": 2, "first_direction.rate": 0.02, "cross_formation.rate": 0.01, "trade_inked_tokens.yield": 1 },
+    "at": { "2": { "fixed_layout.yield": 1 } },
+    "events": [{ "id": "layout_holds_overnight", "when": "g.array_craft >= 2",
+      "text": "A layout on your floor holds through a whole night with nobody correcting it. On the ridge the next test keeps a token more." }]
   },
   {
     "id": "herbcraft", "name": "Herb Lore", "kind": "family", "group": "Families",
@@ -199,6 +261,14 @@
     "at": { "2": { "strain.discount": 0.1 } }
   },
   {
+    "id": "refining", "name": "Refining", "kind": "family", "group": "Families",
+    "desc": "Drawing what a root holds out of it with an ordinary vessel and a careful fire. Each level holds two more pale root and steeps the draughts a tenth faster. From level 2 the pale-root bank gives a root more each dig.",
+    "require": "g.refining.open > 0",
+    "initial": { "value": 0, "max": 5, "open": false },
+    "perLevel": { "pale_root.max": 2, "craft_settling_draught.rate": 0.1, "craft_marrow_draught.rate": 0.1 },
+    "at": { "2": { "pale_root_bank.yield": 1 } }
+  },
+  {
     "id": "foundation", "name": "Foundation", "kind": "flag", "group": "Milestones",
     "desc": "The reconstructed method holds without you watching it.",
     "require": "g.foundation > 0", "initial": { "value": 0, "max": 1 }
@@ -207,5 +277,85 @@
     "id": "faint_trace", "name": "Faint trace", "kind": "flag", "group": "Discoveries",
     "desc": "A thread kept through stillness. It stays distinct from the channel's flow pattern.",
     "require": "g.faint_trace > 0", "initial": { "value": 0, "max": 1 }
+  },
+  {
+    "id": "waystation", "name": "The ridge waystation", "kind": "flag", "group": "Milestones",
+    "desc": "The old porters' waystation on Old Ridge, reached by the method you held. Its bad ground draws on Focus as well as Strain.",
+    "mod": { "focus.open": 1 },
+    "require": "g.waystation > 0", "initial": { "value": 0, "max": 1 },
+    "events": [{ "id": "keeper_board", "when": "g.waystation > 0", "changes": { "route_records": 1, "unusual_chime": 1, "damaged_spur": 1, "slip_leaves": 1 },
+      "text": "Keeper Han writes your name in the ledger and turns it round so you can read what is on the board beside it: route records toward the basin, a chime that rings at dusk, a spur that ends at a slide, and the slip's other nine leaves. ‘Any of them,’ he says. ‘All of them, if you stay.’" }]
+  },
+  {
+    "id": "route_records", "name": "Surviving route records toward the Cloudwell basin", "kind": "lead", "group": "Leads",
+    "desc": "The keeper's ledgers name a basin beyond the ridge.", "require": "g.waystation > 0", "initial": { "value": 0, "max": 1 }
+  },
+  {
+    "id": "unusual_chime", "name": "An unusual chime", "kind": "lead", "group": "Leads",
+    "desc": "At dusk something rings once from higher up the ridge.", "require": "g.waystation > 0", "initial": { "value": 0, "max": 1 }
+  },
+  {
+    "id": "damaged_spur", "name": "The damaged spur", "kind": "lead", "group": "Leads",
+    "desc": "A spur of the old path ends at a slide.", "require": "g.waystation > 0", "initial": { "value": 0, "max": 1 }
+  },
+  {
+    "id": "slip_leaves", "name": "The slip's other nine leaves", "kind": "lead", "group": "Leads",
+    "desc": "The keeper's oldest ledger lists a jade slip of twelve leaves, carried up the porters' path to be sold in the Cloudwell basin long before Shu was born. Three of its leaves stayed below.",
+    "require": "g.waystation > 0", "initial": { "value": 0, "max": 1 }
+  },
+  {
+    "id": "coffer", "name": "Iron-bound coffer", "kind": "purchase", "group": "Purchases",
+    "desc": "Room for two hundred more coin; enough to save for a cottage.",
+    "require": "g.foundation > 0",
+    "buy": { "coin": 60 }, "mod": { "coin.max": 200 }, "max": 1
+  },
+  {
+    "id": "cottage", "name": "A cottage beyond the mill", "kind": "home", "group": "Home",
+    "desc": "Eight spans of floor, a place to sleep, a place to practise and a place to study. The walls hold a little qi of their own. Arrangements move with you; the Lean-to closes when you move.",
+    "require": "g.foundation > 0 && g.home_space.max >= 4",
+    "buy": { "coin": 300 }, "mod": { "home_space.max": 4, "qi.rate": 0.00167 }, "lock": ["lean_to"], "max": 1, "slots": ["rest", "practice", "study"],
+    "events": [{ "id": "cottage_moved_in", "when": "g.cottage > 0",
+      "text": "Wen helps carry your things across and stays longer than he needs to, one hand flat on the wall. ‘Warm for the season,’ he says, and does not ask why." }]
+  },
+  {
+    "id": "reading_desk", "name": "Reading desk", "kind": "arrangement", "group": "Home", "slot": "study",
+    "desc": "Fills the place you study. Copying the slip goes half again as fast, and Lore can reach one level further.",
+    "require": "g.cottage > 0",
+    "buy": { "coin": 25, "timber": 3 }, "mod": { "fragment_notes.rate": 0.5, "lore.max": 1 }, "max": 1
+  },
+  {
+    "id": "workbench", "name": "Workbench", "kind": "arrangement", "group": "Home",
+    "desc": "One span of floor under the window: a bench, a vice and a mortar, with room to stack two more timber. What it makes is worked on the Craft tab; each recipe holds the activity slot while it runs.",
+    "require": "g.foundation > 0", "need": "g.coin >= 20 && g.timber >= 4 && g.home_space.max - g.home_space >= 1",
+    "needtext": "Twenty coin, four timber and one free span of floor.",
+    "buy": { "coin": 20, "timber": 4 }, "space": 1, "mod": { "timber.max": 2 }, "max": 1
+  },
+  {
+    "id": "first_direction", "name": "Take a First Direction", "kind": "breakthrough", "group": "Practice",
+    "desc": "Three minutes with the reconstructed method carried into whichever sphere you have brought to four: the loaded frame, the post, the stakes or a held layout. The bill is paid at the start; twelve of that sphere's material must be in hand and are not spent. It raises the cap of every sphere you carry at four, holds a fourth method ready, and afterwards the bank keeps up to a day of time away. It closes nothing.",
+    "require": "g.ridge_outskirts > 0",
+    "need": "g.marrow_herbs >= 12 || g.whetstone_grit >= 12 || g.veined_ore >= 12 || g.inked_tokens >= 12",
+    "needtext": "Twelve of that sphere's material in hand: marrow herbs, whetstone grit, veined ore or inked tokens.",
+    "buy": { "herbs": 20, "coin": 60 }, "length": 180, "max": 1,
+    "breakthrough": { "title": "First Direction", "required": 3,
+      "core": "g.circulation >= 4 && g.body_drills.reps > 0 || g.blade_intent >= 4 && g.blade_drills.reps > 0 || g.ground_reading >= 4 && g.ground_drills.reps > 0 || g.array_craft >= 4 && g.array_drills.reps > 0",
+      "coreLabel": "A sphere carried to four, its drills begun: Circulation, Blade Intent, Ground Reading or Array Craft",
+      "pointers": [
+        { "label": "Lore 4", "when": "g.lore >= 4" },
+        { "label": "A furnished home: a cot, a herb plot or a strongbox", "when": "g.t_furnished >= 1" },
+        { "label": "A method of that school held and used: two of the body's, or one of the sword's, the earth's or formation's", "when": "g.t_school_body >= 2 || g.t_school_sword >= 1 || g.t_school_earth >= 1 || g.t_school_formation >= 1" },
+        { "label": "Two hundred coin earned in wages", "when": "g.coin_earned >= 200" }
+      ] },
+    "mod": { "bank.max": 64800, "attune_slots.max": 1, "circulation.max": "3 * (g.circulation >= 4)", "blade_intent.max": "3 * (g.blade_intent >= 4)", "ground_reading.max": "3 * (g.ground_reading >= 4)", "array_craft.max": "3 * (g.array_craft >= 4)" },
+    "events": [
+      { "id": "body_direction", "when": "g.first_direction > 0 && g.first_title < 1 && g.circulation >= 4 && g.t_school_body >= 2", "changes": { "first_title": 1, "body_disciple": 1 },
+        "text": "The load settles into the frame of the body itself. Body Disciple. The main approach no longer looks steep." },
+      { "id": "sword_direction", "when": "g.first_direction > 0 && g.first_title < 1 && g.blade_intent >= 4 && g.t_school_sword >= 1", "changes": { "first_title": 1, "sword_disciple": 1 },
+        "text": "The post stops answering; the intent arrives before the blade. Sword Disciple. The side passage looks cuttable." },
+      { "id": "earth_direction", "when": "g.first_direction > 0 && g.first_title < 1 && g.ground_reading >= 4 && g.t_school_earth >= 1", "changes": { "first_title": 1, "earth_listener": 1 },
+        "text": "Under the knees the ground has a grain, and the grain has a direction. Earth Listener. A stable line runs up the ridge." },
+      { "id": "formation_direction", "when": "g.first_direction > 0 && g.first_title < 1 && g.array_craft >= 4 && g.t_school_formation >= 1", "changes": { "first_title": 1, "formation_student": 1 },
+        "text": "The tokens stop drifting and the air inside them stops too. Formation Student. A small array could turn the flow on the ridge." }
+    ]
   }
 ]

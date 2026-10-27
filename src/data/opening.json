@@ -37,9 +37,9 @@
   },
   {
     "id": "rest", "name": "Rest", "kind": "task", "group": "Work",
-    "desc": "Lie down until the day's strength comes back. Vigor returns whatever you do; resting is faster, a pallet or a cot faster still. Spending Vigor on a chore does not end the rest: it keeps going until you are full again. Resting brings Life back too, from empty to full in about five minutes. While Settle the breath is held, lying still teaches Composure as well.",
-    "length": "continuous", "fill": ["vigor", "life"],
-    "effect": { "vigor": 0.35, "life": "g.life.max / 300", "composure.exp": "0.3 * g.settle_breath.attuned" }, "autoStart": true
+    "desc": "Lie down until the day's strength comes back. Vigor returns whatever you do; resting is faster, a pallet or a cot faster still. Spending Vigor on a chore does not end the rest: it keeps going until you are full again. Resting brings Life back too, from empty to full in about five minutes, and once the ridge has taught you Focus it brings that back in about eighty seconds. While Settle the breath is held, lying still teaches Composure as well.",
+    "length": "continuous", "fill": ["vigor", "life", "focus"],
+    "effect": { "vigor": 0.35, "life": "g.life.max / 300", "focus": 0.1, "composure.exp": "0.3 * g.settle_breath.attuned" }, "autoStart": true
   },
   {
     "id": "coin_pouch", "name": "A larger coin pouch", "kind": "purchase", "group": "Purchases",
@@ -84,14 +84,14 @@
     "desc": "Sit as water sits. Qi Sense grows, and the reservoir fills about a point a second. At the limit of what you understand, it can still fill the reservoir.",
     "require": "g.jade_slip > 0", "need": "g.qi_sense < g.qi_sense.max || g.qi < g.qi.max",
     "needtext": "The reservoir is full and the slip says nothing more; the next character is missing.",
-    "length": "continuous", "train": "qi_sense", "effect": { "qi_sense.exp": 8 },
+    "length": "continuous", "train": "qi_sense", "effect": { "qi_sense.exp": 8 }, "hobby": true,
     "every": { "1": { "qi": 1 } }
   },
   {
     "id": "fragment_notes", "name": "Copy and compare the slip", "kind": "task", "group": "Practice",
     "desc": "Copy each surviving character and set the strokes beside one another. Lore comes to anyone who will sit with the cracks; the stillness teaches a little Composure.",
     "require": "g.jade_slip > 0", "need": "g.lore < g.lore.max", "needtext": "The surviving leaves have given up all they hold.",
-    "length": "continuous", "train": "lore", "effect": { "lore.exp": 6, "composure.exp": 0.6 }
+    "length": "continuous", "train": "lore", "effect": { "lore.exp": 6, "composure.exp": 0.6 }, "hobby": true
   },
   {
     "id": "channel_exercise", "name": "Circulate at the channel stones", "kind": "task", "group": "Practice",

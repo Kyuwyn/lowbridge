@@ -77,7 +77,18 @@ describe("the record vocabulary", () => {
     expect(complains(spoiled("bandit", record => { record.encounter!.foe.speed = 0; }, encounter()), "a foe needs speed above 0")).toBe(true);
     expect(complains(spoiled("bandit", record => { record.encounter!.foe.dodge = 75; }, encounter()), "dodge within 0-60")).toBe(true);
     expect(complains(validateGrammar(encounter().filter(record => record.id !== "dodge")), "a fight needs the resource records")).toBe(true);
-    expect(complains(spoiled("bandit", record => { record.held = { "strike.max": 1 }; }, encounter()), "held modifiers belong only to a technique that is attuned")).toBe(true);
+    expect(complains(spoiled("bandit", record => { record.held = { "strike.max": 1 }; }, encounter()), "held modifiers belong only to an attuned technique, a stance, or a preparation that lasts")).toBe(true);
+    expect(complains(spoiled("bandit", record => { record.encounter!.foe.technique = { name: "the rush", every: 1, strike: 6 }; }, encounter()), "a foe technique needs a name")).toBe(true);
+  });
+
+  test("a hobby is a continuous practice, a stance is only its held table, and lasts belongs to a preparation", () => {
+    expect(complains(validateGrammar(changed("mill_work", record => { record.hobby = true; })), "only a continuous practice can be a hobby")).toBe(true);
+    expect(complains(validateGrammar(changed("rest", record => { record.hobby = true; })), "the idle filler cannot also be a hobby")).toBe(true);
+    expect(complains(validateGrammar(changed("rooted_stance", record => { record.cost = { qi: 1 }; })), "a stance carries no cost")).toBe(true);
+    expect(complains(validateGrammar(changed("rooted_stance", record => { delete record.held; })), "a stance is nothing but its held table")).toBe(true);
+    expect(complains(validateGrammar(changed("take_settling_draught", record => { delete record.lasts; })), "held modifiers belong only to")).toBe(true);
+    expect(complains(validateGrammar(changed("craft_walking_staff", record => { record.lasts = 10; })), "only a preparation lasts")).toBe(true);
+    expect(complains(validateGrammar(changed("rise_with_load", record => { delete record.lock; })), "sink_the_load: closes rise_with_load, which does not close it back")).toBe(true);
   });
 
   test("a recipe is timed and bounded; a preparation is instant and spends a dose", () => {
@@ -136,20 +147,24 @@ describe("Part E validation over real opening content", () => {
         for (const path of Object.keys(changes ?? {})) if (path.split(".")[1] === "mod") delete changes![path];
       }
     }
-    expect(validateCompounding(flat)).toEqual(["The ridge patches no earlier chapter's payout; ADR 0021 asks every later chapter for at least one X.mod.Y patch"]);
+    expect(validateCompounding(flat)).toEqual([
+      "The ridge patches no earlier chapter's payout; ADR 0021 asks every later chapter for at least one X.mod.Y patch",
+      "The basin road patches no earlier chapter's payout; ADR 0021 asks every later chapter for at least one X.mod.Y patch",
+    ]);
   });
 
   test("a route key that no requirement, bill or sign reads is an error", () => {
     expect(validateContext(records)).toEqual([]);
-    const unread = changed("direction_sword", record => {
-      record.breakthrough!.pointers = record.breakthrough!.pointers.filter(pointer => !pointer.when.includes("t_school_sword"));
+    const unread = changed("first_direction", record => {
+      record.breakthrough!.pointers = record.breakthrough!.pointers.map(pointer => ({ ...pointer, when: pointer.when.replace(" || g.t_school_sword >= 1", "") }));
+      record.events = record.events!.map(event => ({ ...event, when: event.when.replace("g.t_school_sword >= 1", "g.blade_intent >= 4") }));
     });
     expect(validateContext(unread)).toContain("route key t_school_sword is carried, but no requirement, bill or sign reads it");
   });
 
   test("an attunement place that no history can fill is an error", () => {
     const report = validateContent(changed("settling", record => { record.mod = { ...record.mod, "attune_slots.max": 2 }; }));
-    expect(report.errors).toContain("attunement places reach 4, but no route holds more than 3 methods at once (rule 74)");
+    expect(report.errors).toContain("attunement places reach 6, but no route holds more than 5 methods at once (rule 74)");
   }, VALIDATION_MS);
 
   test("a valid-looking dependency cycle is rejected by actual cold-start play", () => {
@@ -178,7 +193,7 @@ describe("Part E validation over real opening content", () => {
     expect(referenceErrors.some(error => error.includes("unknown record path g.lroe"))).toBe(true);
   });
 
-  test("each First Direction reaches the ridge waystation with its class, closing the other three", () => {
+  test("each ridge line takes the one First Direction, is named by what it carried, and closes no other line", () => {
     const start = runRoute("channel-only").state;
     expect(start.stats.strain).toMatchObject({ open: true, value: 10 });
     const titles: Record<RidgeRoute, string> = { "direction-body": "Body Disciple", "direction-sword": "Sword Disciple", "direction-earth": "Earth Listener", "direction-formation": "Formation Student" };
@@ -187,12 +202,16 @@ describe("Part E validation over real opening content", () => {
       expect(route.success).toBe(true);
       const engine = new GameEngine(records, route.state);
       expect(engine.title()).toBe(titles[name]);
-      // The line's own method fills Foundation's third attunement place and is used.
+      expect(engine.stat("first_direction").value).toBe(1);
+      expect(engine.stat("first_title").value).toBe(1);
+      // The line's own method fills Foundation's third attunement place and is used; the Direction's fourth place waits for the basin road.
       expect(engine.isAttuned(RIDGE_ROUTES[name].method)).toBe(true);
       expect(engine.stat(RIDGE_ROUTES[name].method).reps).toBeGreaterThan(0);
-      expect(route.heldAtOnce).toBe(engine.stat("attune_slots").max);
-      const others = Object.values(RIDGE_ROUTES).map(line => line.direction).filter(id => id !== RIDGE_ROUTES[name].direction);
-      for (const id of others) expect(engine.state.lockedIds).toContain(id);
+      expect(route.heldAtOnce).toBe(3);
+      expect(engine.stat("attune_slots").max).toBe(4);
+      // Holding one half closed the other; nothing else on the ridge closed.
+      expect(engine.locked(RIDGE_ROUTES[name].half)).toBe(true);
+      for (const line of Object.values(RIDGE_ROUTES)) if (line !== RIDGE_ROUTES[name]) expect(engine.locked(line.teaching)).toBe(false);
       expect(engine.state.bank.cap).toBe(86400);
       for (const lead of ["route_records", "unusual_chime", "damaged_spur", "slip_leaves"]) expect(engine.visible(lead)).toBe(true);
       expect(engine.stat("waystation_work").reps).toBeGreaterThan(0);
@@ -223,9 +242,11 @@ describe("Part E validation over real opening content", () => {
     Object.assign(weak.stat("ridge_bandit"), { value: 0, reps: 0, paid: false, exp: 0 });
     weak.stat("circulation").value = 0;
     weak.stat("blade_intent").value = 0;
-    for (const id of ["sword_disciple", "body_disciple"]) weak.stat(id).value = 0;
+    // Strike comes from Circulation and the held halves now; with those stripped the man's guard of five is not passed.
+    weak.state.attuned = weak.state.attuned.filter(id => !["sink_the_load", "cut_by_intent", "rise_with_load", "let_the_blade_wait"].includes(id));
+    weak.state.stance = null;
     weak.recompute();
-    expect(weak.fight("ridge_bandit")).toMatchObject({ you: { strike: 3 }, yourDamage: 0, winSeconds: Infinity, verdict: "hopeless", likely: false });
+    expect(weak.fight("ridge_bandit")).toMatchObject({ yourDamage: 0, winSeconds: Infinity, verdict: "hopeless", likely: false });
     // The branch spent its herbs on the direction; lay in the road's bill first.
     for (const [id, amount] of Object.entries(bandit.cost ?? {})) weak.stat(id).value = Number(amount);
     expect(weak.start("ridge_bandit").ok).toBe(true);
