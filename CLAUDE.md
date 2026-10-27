@@ -13,7 +13,7 @@ Browser incremental, plain DOM, no runtime deps. One-way graph: `content → eng
 | ui | `src/main.ts`, `src/ui.ts`, `src/style.css`, `index.html` | Boot, Web Lock, ticker, DOM view; holds no game rules |
 | tooling | `scripts/validate.ts`, `scripts/routes.ts`, `scripts/browser-smoke.ts` | Content gate: grammar, pacing, reachability by playing the real engine |
 
-Checks on 2026-10-21: `bun run typecheck` clean; `bun test` 84/84; `bun run validate` OK (Foundation 13.00 / 14.90 min, 109/109 reachable).
+Checks on 2026-10-27 (audit-tooling, as reported by its owner): `bun run typecheck` clean; `bun test` 97/97; `bun run validate` OK (Foundation 9.47 / 10.73 min on the direct routes, 119/119 reachable).
 
 ## Non-obvious facts (verify before changing)
 
