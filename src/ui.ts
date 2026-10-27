@@ -84,6 +84,13 @@ function meter(className = "") {
   root.append(fill);
   return { root, update(value: number, max: number) { fill.style.width = `${max > 0 ? Math.min(100, Math.max(0, value / max * 100)) : 0}%`; } };
 }
+/** One pip per unit of a small capacity, filled up to the amount held. */
+function syncPips(pips: HTMLElement, value: number, max: number, className: string): void {
+  const count = Math.floor(max);
+  while (pips.children.length < count) pips.append(element("span", className));
+  while (pips.children.length > count) pips.lastElementChild!.remove();
+  Array.from(pips.children).forEach((pip, index) => pip.classList.toggle("filled", index < value));
+}
 function modeOf(record: GameRecord): Mode {
   return record.length === undefined ? "instant" : record.length === "continuous" ? "continuous" : "timed";
 }
@@ -334,12 +341,16 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
   const nowTitle = element("h2"), nowText = element("p", "now-text"), nowNext = element("p", "now-next");
   now.append(element("span", "now-kicker", "Now"), nowTitle, nowText, nowNext);
   tasksPanel.append(now);
-  const techniqueIntro = element("div", "view-intro");
-  const attuneCount = element("p", "attune-count"); attuneCount.dataset.ui = "attune-count";
-  techniqueIntro.append(element("h2", "", "Techniques"), element("p", "", "What the method can do on command. Only an attuned technique is ready to use; attunement holds it in mind, and there is room for only so many."), attuneCount);
-  techniquesPanel.append(techniqueIntro);
-  const homeIntro = element("div", "view-intro");
-  const homeTitle = element("h2"), homeCapacity = element("p"); homeIntro.append(homeTitle, homeCapacity); homePanel.append(homeIntro);
+  /** A screen's heading row, as Arcanum's Home reads "Floor Space: 128 / 387": title and note, then a held / max count with a pip per unit. */
+  function viewHead(panel: HTMLElement, title: string, note: string, gaugeLabel: string, gaugeKey: string) {
+    const head = element("div", "view-intro view-head"), text = element("div", "view-head-text"), heading = element("h2", "", title);
+    const gauge = element("div", "view-gauge"), count = element("p", "view-gauge-text"), value = element("strong", "numeric"), pips = element("div", "gauge-pips");
+    count.dataset.ui = gaugeKey; count.append(`${gaugeLabel} `, value); pips.setAttribute("aria-hidden", "true");
+    text.append(heading, element("p", "", note)); gauge.append(count, pips); head.append(text, gauge); panel.append(head);
+    return { heading, gauge, value, pips };
+  }
+  const techniqueHead = viewHead(techniquesPanel, "Techniques", "What the method can do on command. Only an attuned technique is ready to use; attunement holds it in mind, and there is room for only so many.", "Attuned", "attune-count");
+  const homeHead = viewHead(homePanel, "", "Installed arrangements move with you; those you take down are not refunded.", "Floor spans", "home-floor");
   const places = element("section", "places"); places.dataset.ui = "places";
   const placeList = element("ul", "place-list");
   places.append(element("h3", "", "Places"), placeList); homePanel.append(places);
@@ -363,6 +374,7 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
     for (const row of placeList.children) {
       const holder = engine.slotHolder((row as HTMLElement).dataset.slot!);
       setText(row.querySelector<HTMLElement>(".place-holder")!, holder?.name ?? "empty");
+      row.classList.toggle("is-empty", !holder);
       row.querySelector<HTMLButtonElement>("button")!.hidden = !holder;
     }
   }
@@ -499,13 +511,17 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
     const summary = element("summary"), count = element("span", "group-count numeric");
     count.setAttribute("aria-hidden", "true");
     summary.append(element("h3", "", title), count);
-    const grid = element("div", "task-grid");
+    // Home and Techniques read as Arcanum's furniture table and spell list: one row per record, columns aligned down the list.
+    const grid = element("div", tab === "home" || tab === "techniques" ? "task-grid task-rows" : "task-grid");
     details.append(summary, grid);
     tabViews.get(tab)!.panel.append(details);
     return { details, count, grid };
   }
   const groupViews = groups.map(definition => {
-    const group = makeGroup(definition.id, definition.title, definition.tab, !closedGroups.has(definition.id));
+    // A tab with one group has no use for its header: the screen's own heading already names it, so it stays open.
+    const sole = groups.filter(other => other.tab === definition.tab).length === 1;
+    const group = makeGroup(definition.id, definition.title, definition.tab, sole || !closedGroups.has(definition.id));
+    if (sole) group.details.classList.add("is-sole");
     group.details.addEventListener("toggle", () => {
       if (group.details.open) closedGroups.delete(definition.id); else closedGroups.add(definition.id);
       try { localStorage.setItem(groupsKey, JSON.stringify([...closedGroups])); } catch { /* A preference only. */ }
@@ -530,7 +546,11 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
     button.setAttribute("aria-describedby", tipId);
     const sub = element("span", "task-sub"), badge = element("span", "task-badge"), fill = element("span", "task-fill");
     fill.setAttribute("aria-hidden", "true");
-    button.append(element("span", "task-name", name), sub, badge, fill);
+    // What a home record takes or gives, read off its fields: the place it fills, the floor it uses, the places it offers.
+    const lead = record.slot ? `${record.slot.charAt(0).toUpperCase()}${record.slot.slice(1)} place` : record.space ? `${record.space} ${record.space === 1 ? "span" : "spans"}`
+      : record.slots ? `${record.slots.length} places` : "";
+    button.append(element("span", "task-name", name), ...(lead ? [element("span", "task-lead", lead)] : []), sub, badge, fill);
+    button.classList.toggle("has-lead", Boolean(lead));
     const info = element("button", "task-info", "i");
     info.type = "button"; info.setAttribute("aria-label", `Details for ${name}`); info.setAttribute("aria-controls", tipId); info.setAttribute("aria-expanded", "false");
     cell.append(button, info); grid.append(cell);
@@ -556,7 +576,7 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
           announce(result.ok ? `${name} is attuned.` : result.reason);
         }));
       });
-      cell.append(attune);
+      cell.insertBefore(attune, info);
     }
     const tip = attachTip(cell, tipId); tip.dataset.recordDetails = record.id;
     const modeLine = element("p", "tip-mode"); tip.append(modeLine);
@@ -985,7 +1005,8 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
       setText(ui("notice-text"), stories.length ? `New: ${known.join(", ")}.` : known.length === 1 ? `${known[0]} is now known.` : `Now known: ${known.join(", ")}.`);
       ui("notice-text").hidden = !known.length;
     }
-    setText(homeTitle, homeName); setText(homeCapacity, `${number(homeSpace.value)} of ${number(homeSpace.max)} floor spans occupied. Installed arrangements move with you; those you take down are not refunded.`);
+    setText(homeHead.heading, homeName); setText(homeHead.value, `${number(homeSpace.value)} / ${number(homeSpace.max)}`);
+    syncPips(homeHead.pips, homeSpace.value, homeSpace.max, "gauge-pip");
     for (const view of ledgerRows) {
       const stat = engine.stat(view.record.id); view.row.hidden = !engine.visible(view.record.id);
       setText(view.amount, `${held(stat.value)} / ${number(stat.max)}`); view.bar.update(stat.value, stat.max);
@@ -1002,9 +1023,7 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
     for (const view of familyRows) {
       const stat = engine.stat(view.record.id); view.row.hidden = !engine.visible(view.record.id); if (view.row.hidden) continue;
       visibleFamilies++; setText(view.amount, `${number(stat.value)} / ${number(stat.max)}`);
-      while (view.pips.children.length < Math.floor(stat.max)) view.pips.append(element("span", "family-pip"));
-      while (view.pips.children.length > Math.floor(stat.max)) view.pips.lastElementChild!.remove();
-      Array.from(view.pips.children).forEach((pip, index) => pip.classList.toggle("filled", index < stat.value));
+      syncPips(view.pips, stat.value, stat.max, "family-pip");
       setText(view.exp, !stat.open ? view.record.needtext ?? "Method not open." : stat.value >= stat.max ? "Current limit reached" : `${number(stat.exp)} / ${60 * (stat.value + 1)} XP toward level ${stat.value + 1}`);
       view.detail.update(engine.tooltip(view.record.id));
     }
@@ -1036,8 +1055,8 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
     const techniquesVisible = cells.some(cell => cell.tab === "techniques" && !cell.cell.hidden);
     // How many methods are held ready, of how many can be; absent until the content defines attunement at all.
     const slots = engine.records.some(record => record.id === "attune_slots") ? engine.stat("attune_slots") : undefined;
-    setText(ui("attune-count"), slots ? `Attuned ${number(slots.value)} / ${number(slots.max)}` : "");
-    ui("attune-count").hidden = !slots;
+    techniqueHead.gauge.hidden = !slots;
+    if (slots) { setText(techniqueHead.value, `${number(slots.value)} / ${number(slots.max)}`); syncPips(techniqueHead.pips, slots.value, slots.max, "gauge-pip"); }
     tabViews.get("techniques")!.button.hidden = !techniquesVisible;
     tabViews.get("home")!.button.hidden = !apprenticed;
     if ((selectedTab === "techniques" && !techniquesVisible) || (selectedTab === "home" && !apprenticed)) selectedTab = "tasks";
