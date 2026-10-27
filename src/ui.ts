@@ -207,7 +207,7 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
         </aside>
         <main class="centre-column" id="activities" tabindex="-1">
           <dialog class="confirmation" data-ui="confirmation" role="alertdialog" aria-labelledby="confirmation-text" aria-describedby="confirmation-detail"><div class="confirmation-copy"><p id="confirmation-text" data-ui="confirmation-text"></p><p class="confirmation-detail" id="confirmation-detail" data-ui="confirmation-detail" hidden></p></div><div class="banner-actions"><button type="button" class="danger-button" data-ui="confirm">Confirm</button><button type="button" data-ui="cancel">Cancel</button></div></dialog>
-          <section class="completion-banner" data-ui="completion" role="region" aria-labelledby="completion-title" hidden><div class="completion-main"><p class="completion-kicker" data-ui="completion-kicker"></p><strong class="completion-title" id="completion-title" data-ui="completion-title"></strong><p class="completion-text" data-ui="completion-text"></p><p class="completion-story" data-ui="completion-story" hidden></p><div class="completion-changes" data-ui="completion-changes-block" hidden><h3 data-ui="completion-changes-heading"></h3><ul data-ui="completion-changes"></ul></div></div><div class="banner-actions"><button type="button" data-ui="review-foundation">Review Foundation</button><button type="button" class="text-button" data-ui="completion-dismiss">Dismiss</button></div></section>
+          <section class="completion-banner" data-ui="completion" role="region" aria-labelledby="completion-title" hidden><div class="completion-main"><strong class="completion-title" id="completion-title" data-ui="completion-title"></strong><p class="completion-text" data-ui="completion-text"></p><p class="completion-story" data-ui="completion-story" hidden></p><div class="completion-changes" data-ui="completion-changes-block" hidden><h3 data-ui="completion-changes-heading"></h3><ul data-ui="completion-changes"></ul></div></div><div class="banner-actions"><button type="button" data-ui="review-foundation">Review Foundation</button><button type="button" class="text-button" data-ui="completion-dismiss">Dismiss</button></div></section>
           <section class="return-banner" data-ui="return" role="region" aria-labelledby="return-title" hidden><div><strong id="return-title" data-ui="return-title"></strong><ul class="return-list" data-ui="return-list"></ul></div><button type="button" data-ui="return-dismiss">Continue</button></section>
           <section class="return-banner notice-banner" data-ui="notice" role="status" hidden><div><p class="notice-story" data-ui="notice-story"></p><p class="notice-new" data-ui="notice-text"></p></div><button type="button" data-ui="notice-dismiss">Dismiss</button></section>
           <section class="panel activity-panel"><nav class="activity-nav" role="tablist" aria-label="Game views" data-ui="tabs"></nav><div data-ui="tab-panels"></div></section>
@@ -1050,28 +1050,28 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
    */
   function renderCompletion(completion: GameRecord): void {
     const reached = latestBreakthrough(), standings = reached ? standingsOf(reached) : [];
-    let kicker: string, title: string, text: string, story = "", heading = "", changes: string[] = [], review: string;
+    let title: string, text: string, story = "", heading = "", changes: string[] = [], review: string;
     if (completion.id === "waystation") {
       // The crossing's own completion entry dates the arrival; time spent resting there since does not count.
       const crossing = engine.records.find(record => record.result && "waystation" in record.result && engine.stat(record.id).reps > 0);
       const arrived = crossing && engine.state.log.find(entry => entry.kind === "completion" && entry.text.startsWith(`${crossing.name ?? crossing.id}:`));
-      kicker = "Stage complete"; title = label("waystation");
+      title = label("waystation");
       text = [reached?.breakthrough?.title, ...standings, `${duration(arrived?.activitySeconds ?? engine.state.activitySeconds)} of activity`].filter(Boolean).join(" · ");
       story = "A fire, a ledger, and a keeper who asks which way you came up. The road goes on above the waystation.";
       review = "Review the road ahead";
     } else if (completion.id === "settling") {
-      kicker = "Breakthrough"; title = "Foundation reached";
+      title = "Foundation reached";
       text = "The method holds. What was an incomplete reading is now your own.";
       heading = "What Foundation changed"; changes = blockLines(engine.tooltip(completion.id), "mod");
       review = "Review Foundation";
     } else {
-      kicker = completion.breakthrough?.title ?? label(completion.id); title = standings.join(" · ") || label(completion.id);
-      text = "The direction holds. The way up to the ridge waystation is open.";
+      title = standings.join(" · ") || label(completion.id);
+      text = `${completion.breakthrough?.title ?? label(completion.id)}. The direction holds, and the way up to the ridge waystation is open.`;
       heading = "What the direction changed"; changes = [...blockLines(engine.tooltip(completion.id), "mod"), ...standings.map(name => `The standing of ${name}`)];
       review = "Review your path";
     }
     ui("completion").dataset.completion = completion.id;
-    setText(ui("completion-kicker"), kicker); setText(ui("completion-title"), title); setText(ui("completion-text"), text);
+    setText(ui("completion-title"), title); setText(ui("completion-text"), text);
     setText(ui("completion-story"), story); ui("completion-story").hidden = !story;
     setText(ui("completion-changes-heading"), heading); ui("completion-changes-block").hidden = changes.length === 0;
     if (changes.join("\u0000") !== changesKey) { changesKey = changes.join("\u0000"); ui("completion-changes").replaceChildren(...changes.map(line => element("li", "", line))); }
