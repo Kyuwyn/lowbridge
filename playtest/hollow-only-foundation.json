@@ -269,14 +269,14 @@
         "discount": 0
       },
       "coin_earned": {
-        "value": 96,
+        "value": 150.20000000000073,
         "exp": 0,
         "reps": 0,
         "ticks": 0,
         "started": false,
         "paid": false,
         "max": 1000000000000,
-        "rate": 0,
+        "rate": 0.05,
         "open": true,
         "length": 1,
         "yield": 0,
@@ -1612,6 +1612,48 @@
         "yield": 0,
         "discount": 0
       },
+      "trace_cache_ground": {
+        "value": 0,
+        "exp": 0,
+        "reps": 0,
+        "ticks": 0,
+        "started": false,
+        "paid": false,
+        "max": 1,
+        "rate": 1,
+        "open": true,
+        "length": 90,
+        "yield": 0,
+        "discount": 0
+      },
+      "trace_cache_layout": {
+        "value": 0,
+        "exp": 0,
+        "reps": 0,
+        "ticks": 0,
+        "started": false,
+        "paid": false,
+        "max": 1,
+        "rate": 1,
+        "open": true,
+        "length": 90,
+        "yield": 0,
+        "discount": 0
+      },
+      "cache_found": {
+        "value": 0,
+        "exp": 0,
+        "reps": 0,
+        "ticks": 0,
+        "started": false,
+        "paid": false,
+        "max": 1,
+        "rate": 1,
+        "open": true,
+        "length": 1,
+        "yield": 0,
+        "discount": 0
+      },
       "ridge_cache": {
         "value": 0,
         "exp": 0,
@@ -1724,6 +1766,7 @@
       "lean_to",
       "strongbox",
       "ridge_outskirts",
+      "coffer",
       "cottage"
     ],
     "lockedIds": [
@@ -1784,12 +1827,6 @@
       "life:20"
     ],
     "log": [
-      {
-        "id": 66,
-        "kind": "discovery",
-        "text": "Speed is now known.",
-        "activitySeconds": 416
-      },
       {
         "id": 67,
         "kind": "discovery",
@@ -1889,193 +1926,193 @@
       {
         "id": 83,
         "kind": "completion",
+        "text": "Composure reaches level 2.",
+        "activitySeconds": 458
+      },
+      {
+        "id": 84,
+        "kind": "completion",
         "text": "Rest: objective complete.",
         "activitySeconds": 465
       },
       {
-        "id": 84,
+        "id": 85,
         "kind": "cap",
         "text": "Life has reached 8/8. A higher cap is possible through Circulation or Settle the foundation or Spar with the ferry hand.",
         "activitySeconds": 465
       },
       {
-        "id": 85,
+        "id": 86,
         "kind": "completion",
         "text": "Circulation reaches level 2.",
         "activitySeconds": 485
       },
       {
-        "id": 86,
+        "id": 87,
         "kind": "completion",
         "text": "Steady-attention exercise: objective complete.",
-        "activitySeconds": 485
-      },
-      {
-        "id": 87,
-        "kind": "story",
-        "text": "The turn holds on its own for a breath. The method is whole enough to settle.",
         "activitySeconds": 485
       },
       {
         "id": 88,
         "kind": "story",
-        "text": "The current stays where you left it when your attention loosens. A faint trace now marks the turn leaf eight breaks off at.",
+        "text": "The turn holds on its own for a breath. The method is whole enough to settle.",
         "activitySeconds": 485
       },
       {
         "id": 89,
+        "kind": "story",
+        "text": "The current stays where you left it when your attention loosens. A faint trace now marks the turn leaf eight breaks off at.",
+        "activitySeconds": 485
+      },
+      {
+        "id": 90,
         "kind": "completion",
         "text": "Rest: objective complete.",
         "activitySeconds": 489
       },
       {
-        "id": 90,
+        "id": 91,
         "kind": "cap",
         "text": "Vigor has reached 14/14. A higher cap is possible through Circulation or Labour.",
         "activitySeconds": 489
       },
       {
-        "id": 91,
+        "id": 92,
         "kind": "completion",
         "text": "Rest: objective complete.",
         "activitySeconds": 518
       },
       {
-        "id": 92,
+        "id": 93,
         "kind": "cap",
         "text": "Life has reached 10/10. A higher cap is possible through Circulation or Settle the foundation or Spar with the ferry hand.",
         "activitySeconds": 518
       },
       {
-        "id": 93,
+        "id": 94,
         "kind": "purchase",
         "text": "A larger coin pouch is now part of your life.",
         "activitySeconds": 518
       },
       {
-        "id": 94,
+        "id": 95,
         "kind": "discovery",
         "text": "Strongbox is now known.",
         "activitySeconds": 518
       },
       {
-        "id": 95,
+        "id": 96,
         "kind": "completion",
         "text": "Circulation reaches level 3.",
         "activitySeconds": 548
       },
       {
-        "id": 96,
+        "id": 97,
         "kind": "completion",
         "text": "Steady-attention exercise: objective complete.",
         "activitySeconds": 548
       },
       {
-        "id": 97,
+        "id": 98,
         "kind": "completion",
         "text": "Rest: objective complete.",
         "activitySeconds": 551
       },
       {
-        "id": 98,
+        "id": 99,
         "kind": "cap",
         "text": "Vigor has reached 16/16. A higher cap is possible through Circulation or Labour.",
         "activitySeconds": 551
       },
       {
-        "id": 99,
+        "id": 100,
         "kind": "completion",
         "text": "Rest: objective complete.",
         "activitySeconds": 577
       },
       {
-        "id": 100,
+        "id": 101,
         "kind": "cap",
         "text": "Life has reached 12/12. A higher cap is possible through Circulation or Settle the foundation or Spar with the ferry hand.",
         "activitySeconds": 577
       },
       {
-        "id": 101,
+        "id": 102,
         "kind": "completion",
         "text": "Circulation reaches level 4.",
         "activitySeconds": 617
       },
       {
-        "id": 102,
+        "id": 103,
         "kind": "completion",
         "text": "Steady-attention exercise: objective complete.",
         "activitySeconds": 617
       },
       {
-        "id": 103,
+        "id": 104,
         "kind": "completion",
         "text": "Rest: objective complete.",
         "activitySeconds": 620
       },
       {
-        "id": 104,
+        "id": 105,
         "kind": "cap",
         "text": "Vigor has reached 18/18. A higher cap is possible through Circulation or Labour.",
         "activitySeconds": 620
       },
       {
-        "id": 105,
+        "id": 106,
         "kind": "completion",
         "text": "Rest: objective complete.",
         "activitySeconds": 643
       },
       {
-        "id": 106,
+        "id": 107,
         "kind": "cap",
         "text": "Life has reached 14/14. A higher cap is possible through Circulation or Settle the foundation or Spar with the ferry hand.",
         "activitySeconds": 643
       },
       {
-        "id": 107,
+        "id": 108,
         "kind": "completion",
         "text": "Circulation reaches level 5.",
         "activitySeconds": 693
       },
       {
-        "id": 108,
+        "id": 109,
         "kind": "completion",
         "text": "Steady-attention exercise: objective complete.",
         "activitySeconds": 693
       },
       {
-        "id": 109,
+        "id": 110,
         "kind": "cap",
         "text": "Circulation has reached 5/5. A higher cap is possible through Settle the foundation.",
         "activitySeconds": 693
       },
       {
-        "id": 110,
+        "id": 111,
         "kind": "completion",
         "text": "Rest: objective complete.",
         "activitySeconds": 696
       },
       {
-        "id": 111,
+        "id": 112,
         "kind": "cap",
         "text": "Vigor has reached 20/20. A higher cap is possible through Settle the foundation or Labour.",
         "activitySeconds": 696
       },
       {
-        "id": 112,
+        "id": 113,
         "kind": "completion",
         "text": "Rest: objective complete.",
         "activitySeconds": 717
       },
       {
-        "id": 113,
+        "id": 114,
         "kind": "cap",
         "text": "Life has reached 16/16. A higher cap is possible through Settle the foundation or Spar with the ferry hand.",
-        "activitySeconds": 717
-      },
-      {
-        "id": 114,
-        "kind": "completion",
-        "text": "Composure reaches level 2.",
         "activitySeconds": 717
       },
       {
@@ -2111,19 +2148,19 @@
       {
         "id": 120,
         "kind": "completion",
-        "text": "Practise the slip's breath method: objective complete.",
-        "activitySeconds": 732
+        "text": "Composure reaches level 3.",
+        "activitySeconds": 729
       },
       {
         "id": 121,
         "kind": "completion",
         "text": "Practise the slip's breath method: objective complete.",
-        "activitySeconds": 735
+        "activitySeconds": 732
       },
       {
         "id": 122,
         "kind": "completion",
-        "text": "Composure reaches level 3.",
+        "text": "Practise the slip's breath method: objective complete.",
         "activitySeconds": 735
       },
       {
@@ -2171,19 +2208,19 @@
       {
         "id": 130,
         "kind": "completion",
-        "text": "Practise the slip's breath method: objective complete.",
-        "activitySeconds": 756
+        "text": "Composure reaches level 4.",
+        "activitySeconds": 753
       },
       {
         "id": 131,
         "kind": "completion",
         "text": "Practise the slip's breath method: objective complete.",
-        "activitySeconds": 759
+        "activitySeconds": 756
       },
       {
         "id": 132,
         "kind": "completion",
-        "text": "Composure reaches level 4.",
+        "text": "Practise the slip's breath method: objective complete.",
         "activitySeconds": 759
       },
       {
@@ -2237,19 +2274,19 @@
       {
         "id": 141,
         "kind": "completion",
-        "text": "Practise the slip's breath method: objective complete.",
-        "activitySeconds": 778
+        "text": "Composure reaches level 5.",
+        "activitySeconds": 776
       },
       {
         "id": 142,
         "kind": "completion",
         "text": "Practise the slip's breath method: objective complete.",
-        "activitySeconds": 780
+        "activitySeconds": 778
       },
       {
         "id": 143,
         "kind": "completion",
-        "text": "Composure reaches level 5.",
+        "text": "Practise the slip's breath method: objective complete.",
         "activitySeconds": 780
       },
       {
@@ -2321,25 +2358,25 @@
       {
         "id": 155,
         "kind": "completion",
-        "text": "Practise the slip's breath method: objective complete.",
-        "activitySeconds": 802
+        "text": "Composure reaches level 6.",
+        "activitySeconds": 800
       },
       {
         "id": 156,
-        "kind": "completion",
-        "text": "Practise the slip's breath method: objective complete.",
-        "activitySeconds": 804
+        "kind": "cap",
+        "text": "Composure has reached 6/6. A higher cap is possible through Settle the foundation.",
+        "activitySeconds": 800
       },
       {
         "id": 157,
         "kind": "completion",
-        "text": "Composure reaches level 6.",
-        "activitySeconds": 804
+        "text": "Practise the slip's breath method: objective complete.",
+        "activitySeconds": 802
       },
       {
         "id": 158,
-        "kind": "cap",
-        "text": "Composure has reached 6/6. A higher cap is possible through Settle the foundation.",
+        "kind": "completion",
+        "text": "Practise the slip's breath method: objective complete.",
         "activitySeconds": 804
       },
       {
@@ -2729,17 +2766,23 @@
       {
         "id": 223,
         "kind": "discovery",
-        "text": "A cottage beyond the mill is now known.",
+        "text": "Iron-bound coffer is now known.",
         "activitySeconds": 1064
       },
       {
         "id": 224,
+        "kind": "discovery",
+        "text": "A cottage beyond the mill is now known.",
+        "activitySeconds": 1064
+      },
+      {
+        "id": 225,
         "kind": "completion",
         "text": "Rest: objective complete.",
         "activitySeconds": 1103
       },
       {
-        "id": 225,
+        "id": 226,
         "kind": "cap",
         "text": "Life has reached 20/20. A higher cap is possible through Circulation or Spar with the ferry hand.",
         "activitySeconds": 1103

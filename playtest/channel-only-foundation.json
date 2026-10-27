@@ -269,14 +269,14 @@
         "discount": 0
       },
       "coin_earned": {
-        "value": 100,
+        "value": 135.05000000000052,
         "exp": 0,
         "reps": 0,
         "ticks": 0,
         "started": false,
         "paid": false,
         "max": 1000000000000,
-        "rate": 0,
+        "rate": 0.05,
         "open": true,
         "length": 1,
         "yield": 0,
@@ -1612,6 +1612,48 @@
         "yield": 0,
         "discount": 0
       },
+      "trace_cache_ground": {
+        "value": 0,
+        "exp": 0,
+        "reps": 0,
+        "ticks": 0,
+        "started": false,
+        "paid": false,
+        "max": 1,
+        "rate": 1,
+        "open": true,
+        "length": 90,
+        "yield": 0,
+        "discount": 0
+      },
+      "trace_cache_layout": {
+        "value": 0,
+        "exp": 0,
+        "reps": 0,
+        "ticks": 0,
+        "started": false,
+        "paid": false,
+        "max": 1,
+        "rate": 1,
+        "open": true,
+        "length": 90,
+        "yield": 0,
+        "discount": 0
+      },
+      "cache_found": {
+        "value": 0,
+        "exp": 0,
+        "reps": 0,
+        "ticks": 0,
+        "started": false,
+        "paid": false,
+        "max": 1,
+        "rate": 1,
+        "open": true,
+        "length": 1,
+        "yield": 0,
+        "discount": 0
+      },
       "ridge_cache": {
         "value": 0,
         "exp": 0,
@@ -1727,6 +1769,7 @@
       "lean_to",
       "strongbox",
       "ridge_outskirts",
+      "coffer",
       "cottage"
     ],
     "lockedIds": [
@@ -2573,17 +2616,23 @@
       {
         "id": 133,
         "kind": "discovery",
-        "text": "A cottage beyond the mill is now known.",
+        "text": "Iron-bound coffer is now known.",
         "activitySeconds": 681
       },
       {
         "id": 134,
+        "kind": "discovery",
+        "text": "A cottage beyond the mill is now known.",
+        "activitySeconds": 681
+      },
+      {
+        "id": 135,
         "kind": "completion",
         "text": "Rest: objective complete.",
         "activitySeconds": 720
       },
       {
-        "id": 135,
+        "id": 136,
         "kind": "cap",
         "text": "Life has reached 20/20. A higher cap is possible through Circulation or Spar with the ferry hand.",
         "activitySeconds": 720

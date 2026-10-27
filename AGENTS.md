@@ -13,7 +13,7 @@ Browser incremental, plain DOM, no runtime deps. One-way graph: `content → eng
 | ui | `src/main.ts`, `src/ui.ts`, `src/style.css`, `index.html` | Boot, Web Lock, ticker, DOM view; holds no game rules |
 | tooling | `scripts/validate.ts`, `scripts/routes.ts`, `scripts/browser-smoke.ts` | Content gate: grammar, pacing, reachability by playing the real engine |
 
-Checks on 2026-10-27: `bun run validate` OK after commit 94a21fe (Foundation 9.47 / 10.73 min on the direct routes, ridge waystation 15.90–20.17 min after Foundation, 122/122 reachable); `bun run typecheck` clean and `bun test` 97/97 as last reported on audit-tooling.
+Checks on 2026-10-27 after commit 94a21fe: `bun run validate` OK (Foundation 9.47 / 10.73 min on the direct routes, ridge waystation 15.90–20.17 min after Foundation, 122/122 reachable); `bun run typecheck` clean; `bun test` 97/97; `bun run smoke` passes.
 
 ## Non-obvious facts (verify before changing)
 

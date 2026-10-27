@@ -3,7 +3,7 @@
   "reports": [
     {
       "name": "channel-only",
-      "browserWallSeconds": 17.909939498000004,
+      "browserWallSeconds": 19.018696422999998,
       "activitySeconds": 720,
       "actionCount": 76,
       "levels": {
@@ -236,6 +236,10 @@
           "at": 681
         },
         {
+          "id": "coffer",
+          "at": 681
+        },
+        {
           "id": "cottage",
           "at": 681
         }
@@ -252,7 +256,7 @@
     },
     {
       "name": "hollow-only",
-      "browserWallSeconds": 36.601671505000006,
+      "browserWallSeconds": 41.408560333000004,
       "activitySeconds": 1103,
       "actionCount": 221,
       "levels": {
@@ -470,6 +474,10 @@
         },
         {
           "id": "ridge_outskirts",
+          "at": 1064
+        },
+        {
+          "id": "coffer",
           "at": 1064
         },
         {
