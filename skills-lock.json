@@ -55,6 +55,78 @@
       "skillPath": "skills/disciplines/game-ai/SKILL.md",
       "computedHash": "7730b795e9a3633b70b0bde36848c23aff1d6a6b5a57f4aa756a88303dff48a1"
     },
+    "game-design-craft-critique": {
+      "source": "Stanestane/game-design-skills-bundle",
+      "sourceType": "github",
+      "skillPath": "game-design-craft-critique/SKILL.md",
+      "computedHash": "73c131d5ad3784a32cdda4259bc251cf616e7b4e2fbef89301549e486625d3de"
+    },
+    "game-design-failure-loop-audit": {
+      "source": "Stanestane/game-design-skills-bundle",
+      "sourceType": "github",
+      "skillPath": "game-design-failure-loop-audit/SKILL.md",
+      "computedHash": "78efc1f4d29a7fb40ff4ac7fd4ef6915001a3e598bd4e488a136bc2b53783ac3"
+    },
+    "game-design-fairness-frustration-audit": {
+      "source": "Stanestane/game-design-skills-bundle",
+      "sourceType": "github",
+      "skillPath": "game-design-fairness-frustration-audit/SKILL.md",
+      "computedHash": "a100e05af45f26722cb414d185c7c84eb1bbd49e8cbcbcfd199996c8c559a4d5"
+    },
+    "game-design-fantasy-extractor": {
+      "source": "Stanestane/game-design-skills-bundle",
+      "sourceType": "github",
+      "skillPath": "game-design-fantasy-extractor/SKILL.md",
+      "computedHash": "c388fa6a7d4ffd89b3af92186291662fb313969b85155ca210db7993164446fb"
+    },
+    "game-design-flow-audit": {
+      "source": "Stanestane/game-design-skills-bundle",
+      "sourceType": "github",
+      "skillPath": "game-design-flow-audit/SKILL.md",
+      "computedHash": "7db11eb1f8bdc5cf942990aa5af7c1db575b94374f9a3d73ac439309c572648d"
+    },
+    "game-design-friction-journey-audit": {
+      "source": "Stanestane/game-design-skills-bundle",
+      "sourceType": "github",
+      "skillPath": "game-design-friction-journey-audit/SKILL.md",
+      "computedHash": "ea72c086f80ef5b41414bb12d35513bc8ff36663892969e65d12ee8910d0552b"
+    },
+    "game-design-ftue-hero-journey-audit": {
+      "source": "Stanestane/game-design-skills-bundle",
+      "sourceType": "github",
+      "skillPath": "game-design-ftue-hero-journey-audit/SKILL.md",
+      "computedHash": "a7d648475478798e1e8f463004581b22f5e4bf803acf746d39a21bc1ae2e7ce9"
+    },
+    "game-design-goal-density-and-immediacy-audit": {
+      "source": "Stanestane/game-design-skills-bundle",
+      "sourceType": "github",
+      "skillPath": "game-design-goal-density-and-immediacy-audit/SKILL.md",
+      "computedHash": "1000299f8ddb1f6964003a15f8f944b4a2559c2cac3184c45ce22cca0ae87c7a"
+    },
+    "game-design-one-thing-to-remove": {
+      "source": "Stanestane/game-design-skills-bundle",
+      "sourceType": "github",
+      "skillPath": "game-design-one-thing-to-remove/SKILL.md",
+      "computedHash": "cc9b248b6ea4737006eddb1de6947cb67878cf4a18eedaa42e41f2070658f5f6"
+    },
+    "game-design-peak-end-audit": {
+      "source": "Stanestane/game-design-skills-bundle",
+      "sourceType": "github",
+      "skillPath": "game-design-peak-end-audit/SKILL.md",
+      "computedHash": "7f9ad6583ea2ba1f8eff18e3b33cf36b62d3693710a99ee424c67fdf1ff31a2c"
+    },
+    "game-design-thinking-fast-and-slow-audit": {
+      "source": "Stanestane/game-design-skills-bundle",
+      "sourceType": "github",
+      "skillPath": "game-design-thinking-fast-and-slow-audit/SKILL.md",
+      "computedHash": "6abc600ab5fd96321e0c7c238318268dcabdaaacc410bebfdf9f38cf72d9b31c"
+    },
+    "game-design-zeigarnik-effect-audit": {
+      "source": "Stanestane/game-design-skills-bundle",
+      "sourceType": "github",
+      "skillPath": "game-design-zeigarnik-effect-audit/SKILL.md",
+      "computedHash": "d02aa43ea9d5db3bcb46c6899bc572c4754d825b4e5a85c9b0501101ce4e71be"
+    },
     "game-feel": {
       "source": "gamedev-skills/awesome-gamedev-agent-skills",
       "sourceType": "github",
