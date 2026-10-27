@@ -153,7 +153,7 @@ One block per ADR in `design/decisions/`. **Status** and **Date** are quoted fro
 - **Status:** Accepted record vocabulary: the derived/authoritative split, the four contribution sources and their scales, and `X.mod.Y` patching
 - **Date:** 20 October 2026
 - **Source:** `design/decisions/0021-compounding-vocabulary.md`
-- **Code shows:** Derived/authoritative split; `recompute` fixed point; patches (`src/types.ts:28-29`, `src/engine.ts:198-246`)
+- **Code shows:** Derived/authoritative split; `recompute` fixed point; patches (`src/types.ts:28-29`, `src/engine.ts:229-285`). The ridge classes patch chapter-one payouts, and `validateCompounding` in `scripts/validate.ts` enforces one patch per later chapter (amended 27 October 2026)
 - **Certainty:** [HIGH]
 
 ### ADR-0022 — Chore tempo
@@ -174,7 +174,7 @@ One block per ADR in `design/decisions/`. **Status** and **Date** are quoted fro
 - **Status:** Accepted key vocabulary: tag counters, the records that carry them, and the rule that later content reads keys rather than record ids
 - **Date:** 20 October 2026
 - **Source:** `design/decisions/0024-route-keys.md`
-- **Code shows:** `g.t_<tag>` counters (`src/engine.ts:163`, `src/engine.ts:177-179`). The three promised validator checks and the "no cross-module id gates" rule are **not in force** (see issues)
+- **Code shows:** `g.t_<tag>` counters (`src/engine.ts:186-193`), key names in `routeKeys` (`src/content.ts:22-29`), school keys read by the ridge's direction signs. `validateContext` fails a carried key without a name or never read, and a named key nothing carries. The "no cross-module id gates" rule is **not in force** (see ISS-004)
 - **Evidence:** `design/decisions/0024-route-keys.md:32`
 - **Certainty:** [HIGH]
 
@@ -197,7 +197,14 @@ One block per ADR in `design/decisions/`. **Status** and **Date** are quoted fro
 - **Status:** Accepted
 - **Date:** 27 October 2026
 - **Source:** `design/decisions/0027-locks-at-payment-and-stops.md`
-- **Code shows:** Timed locks applied in `payEntry` (`src/engine.ts:1283-1292`); `warnText` and `removeWarning`; discoveries logged without stopping, `pause` on events rejected (`scripts/validate.ts:171`)
+- **Code shows:** Timed locks applied in `payEntry` (`src/engine.ts:1283-1292`); `warnText` and `removeWarning`; discoveries logged without stopping, `pause` on events rejected by `validateGrammar` in `scripts/validate.ts`
+- **Certainty:** [HIGH]
+
+### ADR-0028 — A ten-minute Foundation, measured on honest play
+- **Status:** Accepted by owner decision; bands provisional
+- **Date:** 27 October 2026
+- **Source:** `design/decisions/0028-ten-minute-foundation.md`
+- **Code shows:** `FOUNDATION_FLOOR`/`FOUNDATION_CEILING` 480/780 s, `WANDERING_CEILING` 1200 s, `CIRCULATION_WINDOW` 600 s, `TIMED_CEILING` 180 s, `RIDGE_FLOOR`/`RIDGE_CEILING` 720/1440 s in `scripts/validate.ts`
 - **Certainty:** [HIGH]
 
 ## Design rationale visible in code
@@ -216,5 +223,5 @@ One block per ADR in `design/decisions/`. **Status** and **Date** are quoted fro
 | KL-003 | `X.mod.Y` patches are folded into derived fields by `recompute` (at most 8 passes) before payout | `src/engine.ts:198-246` |
 | KL-004 | Tags and record ids share one namespace; a collision is a validation error | `scripts/validate.ts:120` |
 | KL-005 | The UI references content ids directly; renaming `home_space`, `foundation` and similar breaks the UI at runtime | `src/ui.ts:45`, `src/ui.ts:907` |
-| KL-006 | `playtest/SIMULATION-REPORT.md` is stale; the current figures come from `bun run validate` | `playtest/SIMULATION-REPORT.md:7` |
+| KL-006 | `playtest/SIMULATION-REPORT.md`'s current-pacing paragraph carries the 27 October figures; its older sections are history, and `bun run validate` is the source | `playtest/SIMULATION-REPORT.md` |
 | KL-007 | Retiring a technique or activity id can make saves unloadable (see issues) | `src/persistence.ts:199`, `src/persistence.ts:138-141` |

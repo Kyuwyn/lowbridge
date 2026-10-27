@@ -12,7 +12,7 @@ Incremental-game veterans who know *Arcanum: Theory of Magic* and *Hundred Days*
 
 ## Product Purpose
 
-Lowbridge is a browser cultivation incremental. You start as an ordinary person in a mill village who holds an incomplete jade slip, and you rebuild its missing method along one of two exclusive readings. Success for this slice: the player reaches Foundation in about fifteen active minutes of sensible play, and every choice along the way is readable from the interface alone.
+Lowbridge is a browser cultivation incremental. You start as an ordinary person in a mill village who holds an incomplete jade slip, and you rebuild its missing method along one of two exclusive readings. Success for this slice: the player reaches Foundation in about ten active minutes of play that keeps the activity slot busy, then chooses one of four directions on the ridge, and every choice along the way is readable from the interface alone.
 
 ## Positioning
 
@@ -43,7 +43,7 @@ A weak-to-strong cultivation power fantasy built on Arcanum's machine (capped re
 ## Evidence on Hand
 
 - Design reference wikis: `research/arcanum-reference/`, `research/hundred-days-reference/` (design rules 1–74; 70–74 cover both games).
-- Route measurements: `bun run validate`. The figures in `playtest/SIMULATION-REPORT.md` are stale.
+- Route measurements: `bun run validate`, whose 27 October figures head `playtest/SIMULATION-REPORT.md`; the report's older sections are history.
 - Playtest sheet and UI revision notes in `playtest/`.
 - No players, testimonials or press exist yet; do not invent them.
 

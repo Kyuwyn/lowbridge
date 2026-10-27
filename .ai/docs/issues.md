@@ -26,7 +26,8 @@ All references below were re-checked against the source after the live-combat ch
 - **severity:** Medium
 - **criticality:** Supporting
 - **certainty:** HIGH
-- **lifecycle:** open
+- **lifecycle:** resolved (2026-10-27)
+- **resolution:** The report's current-pacing paragraph now carries the 27 October `bun run validate` figures and bands (direct routes 9.47 / 10.73 min to Foundation, 119/119 records) and marks the older sections as history; [ADR 0028](../../design/decisions/0028-ten-minute-foundation.md) names it as where the measured figure lives.
 - **baseline:** new
 - **suggested direction:** Regenerate the report from `bun run validate --json`.
 
@@ -37,7 +38,8 @@ All references below were re-checked against the source after the live-combat ch
 - **severity:** Medium
 - **criticality:** Supporting
 - **certainty:** HIGH
-- **lifecycle:** open
+- **lifecycle:** resolved (2026-10-27)
+- **resolution:** One bound, recorded in [ADR 0028](../../design/decisions/0028-ten-minute-foundation.md): about ten minutes of honest play, enforced only by `bun run validate` (direct routes 480–780 s with Circulation by 600 s; preference routes within 1200 s; ridge 720–1440 s). The design plan's Part C bound and Part E check 4, the README and PRODUCT.md now say the same; `scripts/routes.ts` no longer exits on a time of its own; and with the sustained earners gone (ADR 0022 amendment) there is no sustained-only figure to report.
 - **baseline:** new
 - **suggested direction:** Pick one bound, record it, and align `routes.ts` and the plan.
 
@@ -48,7 +50,8 @@ All references below were re-checked against the source after the live-combat ch
 - **severity:** Medium
 - **criticality:** Core
 - **certainty:** HIGH
-- **lifecycle:** open
+- **lifecycle:** partly resolved (2026-10-27)
+- **resolution:** ADR 0024 is amended to match the code: keys are named in `routeKeys` (`src/content.ts`) rather than as records, and show by name on Character and in method details. The ridge now reads every school key (its four direction signs), adds the sword and formation keys, and `bun run validate` fails a key carried but never read, a carried key without a name and a named key nothing carries. Still open: the ridge's direction signs name opening furnishings (`cot`, `garden_plot`, `strongbox`), and no check forbids a gate naming another module's record id.
 - **baseline:** new
 - **suggested direction:** Either implement the checks and key records, or amend ADR 0024 to match the code.
 

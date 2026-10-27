@@ -64,9 +64,9 @@ Seventeen rules. Everything else is content.
 14. **Six fields are derived; everything else is history.** `max`, `rate`, `open`, `length`, `yield` and `discount` are rebuilt from content plus what the character has done after every change and on load, and only the history is saved. Contributions come from a record's `mod` while owned (times the units held, for a resource), from a family's `perLevel` times its levels, and from the `at` and `every` thresholds it has passed. A path whose second segment is `mod`, `scrolls.mod.lore.rate`, patches what *that* record pays and is folded in before it pays, so a late upgrade raises what early levels already gave. ([ADR 0021](decisions/0021-compounding-vocabulary.md).)
 15. **Learn, attune, use.** A family is practised. A technique marked `attune` must hold a place in Attunement before it can be used at all, and places are scarce and raised by content. Using one is instant and spends qi. Two methods that read the same thing differently `lock` each other and `warn` in words before the choice is made. ([ADR 0023](decisions/0023-techniques-and-attunement.md).)
 16. **History crosses a module boundary as a tag counter.** A record lists route keys in `tags`, and `g.t_<key>` counts the owned records carrying that key. Later content asks `g.t_school_body >= 1`, never `g.clear_channel > 0`. Keys ride on methods, so what a route taught is something the player chose to hold rather than a flag they tripped. ([ADR 0024](decisions/0024-route-keys.md).)
-17. **A fight is prepared, then swung out.** The cultivator brings Life (a fight-only store that returns on its own), Strike, Guard, Speed, Hit and Dodge; families, classes and breakthroughs raise them like any cap, and each attuned method adds its `held` table while it holds a place. A fight is one timed run on the stats recorded as it begins. Each side's readiness fills by its Speed per second and it swings at 5; a swing lands with chance Hit × (1 − the other's Dodge) for Strike over the other's Guard. The fight ends when a side falls, or is lost when the run's length runs out; it cannot be left halfway. A loss costs the Life taken and the preparation used, never a discovery (rule 10). Every swing is rolled, so the tooltip gives the odds and the average race, and what resting would change, rather than a promise; it plays out in its own Fight view. ([ADR 0026](decisions/0026-combat-exchanges.md).)
+17. **A fight is prepared, then swung out.** The cultivator brings Life (a fight-only store that returns slowly on its own and quickly under Rest), Strike, Guard, Speed, Hit and Dodge; families, classes and breakthroughs raise them like any cap, and each attuned method adds its `held` table while it holds a place. A fight is one timed run on the stats recorded as it begins. Each side's readiness fills by its Speed per second and it swings at 5; a swing lands with chance Hit × (1 − the other's Dodge) for Strike over the other's Guard. The fight ends when a side falls, or is lost when the run's length runs out; it cannot be left halfway. A loss costs the Life taken and the preparation used, never a discovery (rule 10). Every swing is rolled, so the tooltip leads with an exact win chance graded certain, likely, close, loss or hopeless, and names the cheapest change that would raise it, rather than a promise; it plays out in its own Fight view. ([ADR 0026](decisions/0026-combat-exchanges.md).)
 
-Tempo: **hybrid.** Opening through Foundation at active incremental tempo (chores that can be clicked or run, 2-5 min sites, a validator bound of 45 minutes to Foundation); B2-B4 durations ramp into hours as the bank cap grows 1 h → 6 h → 24 h → 72 h. The measured figure is in [`playtest/SIMULATION-REPORT.md`](../playtest/SIMULATION-REPORT.md). The 3-5-day Cloudwell target stays a provisional hypothesis.
+Tempo: **hybrid.** Opening through Foundation at active incremental tempo (instant chores, sites of at most three minutes, and about ten minutes of honest play to Foundation, [ADR 0028](decisions/0028-ten-minute-foundation.md)); B2-B4 durations ramp into hours as the bank cap grows 1 h → 6 h → 24 h → 72 h. The measured figure is in [`playtest/SIMULATION-REPORT.md`](../playtest/SIMULATION-REPORT.md). The 3-5-day Cloudwell target stays a provisional hypothesis.
 
 ---
 
@@ -176,7 +176,7 @@ Arrangements consume space; relocation carries what fits; place-bound arrangemen
 
 ## Part C: First playable slice, fully specified
 
-Bound: cold start to Foundation. No classes, no waystation. `bun run validate` fails a route above the 45-minute bound or with Circulation opening after 27 minutes. **The measured figure lives in [`playtest/SIMULATION-REPORT.md`](../playtest/SIMULATION-REPORT.md) and nowhere else in this plan.** Every number below is provisional: unless this plan says a figure was measured, it was chosen, and all of the pre-20-October measurements were taken before ADRs 0021-0025. This section states the slice's shape; where it and the shipped JSON disagree, the JSON is the record of what runs and the correction belongs in §0. The 2-3-visit idle pattern still needs human play evidence.
+Bound: cold start to Foundation in about ten minutes of honest play, then the ridge to the waystation ([ADR 0028](decisions/0028-ten-minute-foundation.md)). `bun run validate` fails a direct route outside 8–13 minutes to Foundation or with Circulation opening after 10, a preference route above 20, and any ridge route outside 12–24 minutes from Foundation to the waystation. **The measured figure lives in [`playtest/SIMULATION-REPORT.md`](../playtest/SIMULATION-REPORT.md) and nowhere else in this plan.** Every number below is provisional: unless this plan says a figure was measured, it was chosen, and all of the pre-20-October measurements were taken before ADRs 0021-0025. This section states the slice's shape; where it and the shipped JSON disagree, the JSON is the record of what runs and the correction belongs in §0. The 2-3-visit idle pattern still needs human play evidence.
 
 ### C.1 Stat sheet
 
@@ -189,7 +189,7 @@ Bound: cold start to Foundation. No classes, no waystation. `bun run validate` f
 | Vigor | start (10/10) | 10 | — | Circulation +2 per level | every chore; +0.05/s while active, +0.25/s resting |
 | Qi | slip | 2 + Qi Sense level | — | Foundation → +10 | Foundation bill; every technique spends it |
 | Attunement | slip | 1 place | — | practice mat +1; Foundation +1 | a technique cannot be used unheld; Foundation's fourth pointer |
-| Life | Circulation opens (6/6, +0.02/s) | 6 | — | Circulation +2 per level; Foundation +4; first sparring win +1 | a fight needs 1 to start; only fights spend it |
+| Life | Circulation opens (6/6, +0.02/s) | 6 | — | Circulation +2 per level; Foundation +4; first sparring win +1; Rest refills it in about five minutes | a fight needs 1 to start; only fights spend it |
 | Strike | Circulation opens | 1 | — | Circulation +1 per level; *Steady the breath* and *Carry the current* +1 while attuned | fights (never in the ledger) |
 | Guard | Circulation opens | 0 | — | Circulation +1 per level; *Settle the breath* +1 while attuned | fights (never in the ledger) |
 | Speed | Circulation opens | 1 (a swing every 5 s) | — | Body Disciple +0.2 and Sword Disciple +0.1 (ridge) | fights (never in the ledger) |
@@ -272,7 +272,7 @@ Clicking a chore stays the best-paying tempo; the passive rates are the unattend
 | channel_observe "Walk the broken channel" | Qi Sense ≥ 1 | — | 2 min | stone +2; first: Qi Sense cap +1; discovery *flow pattern*; unlocks clear_channel |
 | clear_channel "Clear the fall and reset the stones" | channel_observe | field_kit ("you need cord and a hook") | 5 min | coin +10 (bounty); stone +4; discovery *the stones hum where the flow bends*; unlocks channel_arrangement |
 | fernhollow_observe "Sit quietly in Fernhollow" | Qi Sense ≥ 2 | — | 2 min | discovery *a faint current, easy to lose*; unlocks sit_fernhollow |
-| sit_fernhollow "Sit the hollow at dusk" | fernhollow_observe | Qi Sense < cap or sits < 3 | 3 min | Qi Sense exp +60; first: Qi Sense cap +2; at 3: unlocks steady_attention |
+| sit_fernhollow "Sit the hollow at dusk" | fernhollow_observe | Qi Sense < cap or sits < 3 | 90 s | Qi Sense exp +240; first: Qi Sense cap +2; at 3: unlocks steady_attention |
 
 **Fights** (rule 17: timed, swung out across the run; optional, nothing required behind them)
 
@@ -281,7 +281,7 @@ Clicking a chore stays the best-paying tempo; the passive rates are the unattend
 | sparring_bout "Spar with the ferry hand" | Circulation open | Old Tam 4 / 2 / 1 / 1 / 75% / 20% | none; repeatable | 1 min | Labour exp +6 every bout; first win: Life cap +1 |
 | ridge_bandit "Face the man on the porters' path" (ridge module) | ridge_outskirts | the man on the path 10 / 8 / 5 / 1 / 80% / 15% | vigor 4, herbs 3; Strain 0.06/s | 1 min | coin +15; the path cleared, opening his cache |
 
-With the bare *Steady the breath* at Circulation 0 the bout is a likely loss: you fell Tam in about 31 s on average and he fells you in about 21. A second method held makes it a likely win (about 16 s). At Foundation (Circulation 2) no opening route can hurt the bandit: his guard of 5 turns every strike. Every measured ridge route trains Circulation to 5, where the channel lines are likely to win: Earth and Formation in about 26 s against his 49, Body and Sword in about 11. Because every swing is rolled, a likely win can still be lost; a loss costs the preparation and closes nothing.
+With the bare *Steady the breath* at Circulation 0 the bout is a likely loss (about 23%); a second method held makes it a likely win (about 84% with *Carry the current*, 88% with *Settle the breath*). The bandit needs Strike 6 to pass his Guard of 5. The direct routes reach Foundation at Circulation 2 with Strike 5 or 4, so there he reads "Cannot win"; the Body and Sword lines make him a near-certain win by their crossing, the Earth and Formation lines add no Strike. Because every swing is rolled, a likely win can still be lost; a loss costs the preparation and closes nothing.
 
 **Methods** (rule 15: learned from the route, attuned into a place, used instantly for qi. Rule 16: each carries the route keys a later module reads.)
 
@@ -291,7 +291,7 @@ With the bare *Steady the breath* at Circulation 0 the bout is a likely loss: yo
 | carry_current "Carry the current" | channel_arrangement | qi 3 → a held turn; the next timed run goes 1.5× | `t_channel`, `t_school_earth` | settle_breath |
 | settle_breath "Settle the breath" | sit_fernhollow | qi 3 → Composure and Lore experience | `t_hollow`, `t_school_body` | carry_current |
 
-The two readings of leaf eight close each other for good, and each `warn`s in words before it is attuned. *Steady the breath* carries no reading, so both routes share it. Attunement starts at one place; the practice mat adds one and Foundation adds another.
+The two readings of leaf eight close each other for good, and each `warn`s in words before it is attuned. *Steady the breath* carries no reading, so both routes share it. Attunement starts at one place; the practice mat adds one and Foundation adds another, which a ridge method fills: each of the four ridge teachings makes one attunable technique visible, carrying its school's key ([ADR 0023](decisions/0023-techniques-and-attunement.md), [ADR 0024](decisions/0024-route-keys.md)).
 
 **Home arrangements** (Hayloft space 2)
 
@@ -307,9 +307,9 @@ Any furnishing that does not open a family can be taken down: its space is freed
 
 **Foundation (breakthrough 1)**
 
-Visible once Circulation is open. **Core:** Circulation ≥ 2, the reconstructed method. **Supporting, 3 of 4:** Qi Sense ≥ 3 · Lore ≥ 2 · a lean-to of your own · **two methods held attuned**. The fourth pointer is the one §3.6 was missing: it cannot be satisfied by more of the work already done, only by acquiring a second method and committing a place to it (rule 15). **Bill:** herbs and coin paid at the start; qi must be full and is not consumed. On completion: Circulation cap +2; Lore cap +2; Qi Sense cap +2; qi cap +10; one more attunement place; strain opens; bank cap to 6 h; the ferry crossing and the road to Old Ridge. Decision pause. In this first slice the records beyond Foundation are informational leads; their activities belong to the next slice.
+Visible once Circulation is open. **Core:** Circulation ≥ 2, the reconstructed method. **Supporting, 3 of 4:** Qi Sense ≥ 3 · both places walked · a lean-to of your own · **two methods held attuned**. The fourth pointer is the one §3.6 was missing: it cannot be satisfied by more of the work already done, only by acquiring a second method and committing a place to it (rule 15). **Bill:** herbs and coin paid at the start; qi must be full and is not consumed. On completion: Circulation cap +2; Lore cap +2; Qi Sense cap +2; qi cap +10; one more attunement place; strain opens; bank cap to 6 h; the ferry crossing and the road to Old Ridge. A banner lists what changed; nothing pauses. The ridge chapter beyond Foundation is playable to the waystation, whose leads point at the next slice.
 
-Neither route can skip the method: Circulation ≥ 2 is reachable only through the channel stones or steady attention, and both routes stay open to a player who visits both places. The route timings for this slice are measured by `bun run validate` and reported in [`playtest/SIMULATION-REPORT.md`](../playtest/SIMULATION-REPORT.md); figures taken before the sustained earners existed ([ADR 0022](decisions/0022-chore-tempo.md)) are superseded and are not repeated here.
+Neither route can skip the method: Circulation ≥ 2 is reachable only through the channel stones or steady attention, and both routes stay open to a player who visits both places. The route timings for this slice are measured by `bun run validate` and reported in [`playtest/SIMULATION-REPORT.md`](../playtest/SIMULATION-REPORT.md); figures taken before the 27 October honest-play routes ([ADR 0028](decisions/0028-ten-minute-foundation.md)) are superseded and are not repeated here.
 
 ### C.4 The slip
 
@@ -333,7 +333,7 @@ This table gives the order of beats and is not a schedule. It has never carried 
 
 ### C.6 Interface
 
-Left: resources `x/cap` with bars, Attunement among them so a filled place reads as the cap it is; families `level/cap` with the runway shown as pips and "what raises this" on hover. Centre: Work / Techniques / Sites / Home groups; instant, timed and perpetual read differently on sight; a technique shows whether it is attuned or waiting for a place; buttons show `needtext` greyed when visible-but-not-startable, and an irreversible one asks before it commits. Right: the log (discoveries, cap hits with raiser names, prose). Top: bank `x/cap` with an Accelerate toggle naming the current objective, the running activity, and the waiting list behind it. Methods: the route keys currently held, each with the line that describes it.
+Left: resources `x/cap` with bars, Attunement among them so a filled place reads as the cap it is; families `level/cap` with the runway shown as pips and "what raises this" on hover. Centre: Work / Techniques / Sites / Home groups; instant, timed and perpetual read differently on sight; a technique shows whether it is attuned or waiting for a place; buttons show `needtext` greyed when visible-but-not-startable, and an irreversible one asks before it commits, naming what closes. Right: the log (discoveries, cap hits with raiser names, prose). Top: bank `x/cap` with an Accelerate toggle naming the current objective, the running activity, and the waiting list behind it once there is a second sustained activity. Character: the route keys currently held, each with the line that describes it.
 
 ---
 
@@ -360,7 +360,7 @@ expr  := boolean over g.<id> (level/count), g.<id>.max, g.t_<key>, classes, reps
 
 Six fields are derived (`max`, `rate`, `open`, `length`, `yield`, `discount`), and nothing but the recompute writes them. They are the sum of a baseline and every contribution being paid: a record's `mod` while owned, times the units held if it is a resource; a family's `perLevel` times its levels; each `at` threshold passed and each `every` period completed. A path whose second segment is `mod` patches what *that* record pays, folded in before it pays, so a late upgrade raises what early levels already gave ([ADR 0021](decisions/0021-compounding-vocabulary.md)).
 
-Kinds: resource, family, task, site, arrangement, home, class, breakthrough (core + pointers + bill), teaching, recipe, technique, purchase, flag, lead. One JSON per line module plus shared modules; the shared module holds the route-key records, and no module gates on another module's record ids ([ADR 0024](decisions/0024-route-keys.md)). Saves are **v6** and hold only authoritative history: values, experience, repetitions, the attuned list, visibility, locks, log and bank. Every derived field is recomputed on load. Saves before v6 are not loadable ([ADR 0025](decisions/0025-lifespan-and-checkpoints-cut.md)).
+Kinds: resource, family, task, site, arrangement, home, class, breakthrough (core + pointers + bill), teaching, recipe, technique, purchase, flag, lead. One JSON per line module plus shared modules; route keys are named in `src/content.ts`, and no module should gate on another module's record ids ([ADR 0024](decisions/0024-route-keys.md)). Saves are **v6** and hold only authoritative history: values, experience, repetitions, the attuned list, visibility, locks, log and bank. Every derived field is recomputed on load. Saves before v6 are not loadable ([ADR 0025](decisions/0025-lifespan-and-checkpoints-cut.md)).
 
 Engine: TypeScript: one expression evaluator shared by the browser runtime and the Part E validator; 1 s tick; one active task with a bounded waiting list; objective stops; a recompute that settles to a fixed point because occupancy counts feed back into it; attunement places; bank accrual on wall-clock; acceleration = run ticks from bank until objective or pause; strain gauges. IndexedDB with export. Vue or plain DOM is a presentation choice, not a design one.
 
@@ -373,11 +373,11 @@ Run on every content change, before any human plays:
 1. **Reachability**: walk every `require`/`need` from cold start; every record reachable; every family's entry and every cap raiser reachable before anything that needs it. (Seeded by `opening-sim.py`.)
 2. **No self-key**: no class is required by a record it unlocks.
 3. **History coverage**: all A→B→C histories; ≥ 2 B4 options with ≥ 1 specialist; every line's pure chain reachable; every bridge's two parents reachable before the bridge. (`b4-gates.py`: 15 histories pass.)
-4. **Pacing from data**: sustained-tempo time-to-Foundation at empty bank ≤ 45 min active, with the clicked time reported beside it; Circulation open by 27 min; no pre-B4 task > 2 h ordinary; B1-B4 activity budget within 60-90 h.
+4. **Pacing from data**: on honest play at empty bank, the direct routes reach Foundation in 8–13 min with Circulation open by 10, the preference routes within 20, and every ridge route reaches the waystation 12–24 min after Foundation ([ADR 0028](decisions/0028-ten-minute-foundation.md)); no timed record in this slice over 3 min; no pre-B4 task > 2 h ordinary; B1-B4 activity budget within 60-90 h.
 5. **Mandatory-core check**: no breakthrough reachable with its core family at 0 (the defect the simulator found).
 6. **Compounding**: every modifier and patch path names a record that exists; every family pays at least one effect per level; every chapter after the first patches an earlier one's payout.
 7. **Keys**: every `t_` key a gate reads is carried by a reachable record; every key a record carries is read by something; no gate names another module's record id.
-8. **Attunement**: every supported history can reach the number of places its gates ask for, and a locked pair never leaves a history with no second method.
+8. **Attunement**: every supported history can reach the number of places its gates ask for, a locked pair never leaves a history with no second method, and no route reaches more places than some route can fill at once (rule 74).
 9. **Fights**: swings follow Speed and every landed blow follows Hit, Dodge, Strike and Guard under scripted rolls; the projected win chance matches the engine's own rolls and the verdict bands fall at 95%, 75% and 50%; the sparring bout is a likely loss with the bare method and a likely win with a second held, and with every swing landing it is won in ten seconds; route fights use a fixed seed so timings repeat.
 
 Playtest questions, ranked:
@@ -402,7 +402,7 @@ Playtest questions, ranked:
 | ADR 0013 ¶2 | Clarified, not reversed: families have levels and caps; no global knowledge currency | The original refusal targeted a generic XP currency; levels/caps are what Arcanum does |
 | ADR 0002 "spent banked time stays spent" | **Historical.** On 18 Oct this plan refunded bank spent since the checkpoint; on 20 Oct [ADR 0025](decisions/0025-lifespan-and-checkpoints-cut.md) removed checkpoints and retry altogether, and both the rule and its exploit are gone | The refund removed the spend-then-die penalty; cutting the system removed the reason for either rule |
 | No lock rule | Jobs close when a better one is taken; homes close on move; class choice closes same-tier rivals; no revision | Arcanum locks at every tier; follows the fiction rather than a stage's toolset |
-| Q114/Q123 foundation "within the first day" | Within the first session; later stages ramp. The bound is the validator's 45 minutes and the figure is the simulation report's | Hybrid tempo; a measured number belongs in one place |
+| Q114/Q123 foundation "within the first day" | Within the first session; later stages ramp. The bound is the validator's ten-minute band ([ADR 0028](decisions/0028-ten-minute-foundation.md)) and the figure is the simulation report's | Hybrid tempo; a measured number belongs in one place |
 | Bank cap "a few days" | 1 h at start, raised by progression | Arcanum `offlinetime.max 3600`; the cap is a reward |
 | Five B3 milestones as authored projects | Same five, as pointers into existing records | Arcanum's tier quests are pointers |
 | ADR 0003 "no energy meter" | Kept for food; Vigor is a small stamina meter for chores only (owner, 19 Oct); qi is a continuous reservoir with run/rate | The rate economy is where homes and arrangements become felt; Vigor gives instant chores a cost without a timer |
@@ -411,7 +411,7 @@ Playtest questions, ranked:
 | ADR 0017 roster (7 at B4) | 9: adds Vein Adept (pure Earth), Grand Array Adept (pure Formation) | Same; each is one key record into a module that exists anyway |
 | ADR 0015 "mastery totals are qualifications, not trainable levels" | Kept for tags; techniques are the trainable layer beneath them, and class gates name a technique | Arcanum gates classes on skills (Necromancer: `reanimation ≥ 7`), not on tag counts alone |
 
-**Decisions recorded 20 October 2026 (ADRs 0021-0025), with 0026 (21 October) and 0027 (27 October)**
+**Decisions recorded 20 October 2026 (ADRs 0021-0025), with 0026 (21 October) and 0027-0028 (27 October)**
 
 | ADR | Decision | What it changes here |
 |---|---|---|
@@ -422,6 +422,7 @@ Playtest questions, ranked:
 | [0025: Lifespan and checkpoints cut](decisions/0025-lifespan-and-checkpoints-cut.md) | No age, lifespan, fictional calendar, checkpoint or retry; one setback rule; the bank is unchanged; save v6, older saves not loadable | **Supersedes Part A rule 10** and ADR 0002; amends ADR 0007 and ADR 0019; strips the mortality terms from rules 5 and 12, B.2, B.6, C.1, C.3, Part D and Part E |
 | [0026: Combat exchanges](decisions/0026-combat-exchanges.md) (21 Oct) | Fights as rolled swings on Speed clocks, with held methods as the preparation. Amended 27 Oct: an exact win chance and graded verdicts with a flip hint; Rest restores Life | Adds Part C.3's Fights table and Part E check 9 |
 | [0027: Locks at payment and stops](decisions/0027-locks-at-payment-and-stops.md) (27 Oct) | A timed record's lock applies when its bill is paid; confirmations name what closes; discoveries never stop activity | Amends rule 9 and ADR 0007's stops |
+| [0028: A ten-minute Foundation](decisions/0028-ten-minute-foundation.md) (27 Oct) | About ten minutes of honest play to Foundation; the validator's bands are the one bound | Replaces Part E check 4's bounds and the bound line that opens Part C |
 
 **Unchanged**: eight breakthroughs; four starters; all original B3/B4 classes and their tags (incl. Golden Cauldron open entry per Q72); mastery counting (ADR 0015, which attunement does not touch, since attunement is a place in the mind and not a record of history); one activity at a time; 1:1 bank and its accrual, delivery and cap-as-reward rules (ADR 0007); Cloudwell structure (ADR 0018); noncombat viability; optional sects; desktop text-panel presentation; no morality axis (now recorded as a decision).
 

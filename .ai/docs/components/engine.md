@@ -146,5 +146,5 @@ Not applicable: the game is single-player and client-only, with no auth. [HIGH]
 | Patches folded in before payout | `src/engine.ts:235-246` | `X.mod.Y` reaches every level and unit X already has | code comment `src/engine.ts:235` | HIGH |
 | Recompute before applying `result` | `src/engine.ts:1114-1115` | Caps raised by a completion must stand before its own payout lands | code comment | HIGH |
 | Stall guard | `src/engine.ts:692-695` | Content that can never tick must not spin the loop | code comment | HIGH |
-| Discoveries never pause | `src/engine.ts:1411-1424` | `pauseOnReveal` was removed, and the validator rejects `pause` events | `scripts/validate.ts:39`, `scripts/validate.ts:171`, ADR 0027 | HIGH |
+| Discoveries never pause | `src/engine.ts:1411-1424` | `pauseOnReveal` was removed, and the validator rejects `pause` events | `REMOVED_FIELDS` and `validateGrammar` in `scripts/validate.ts`, ADR 0027 | HIGH |
 | Fight snapshot at entry | `src/engine.ts:1180` | Stats and whole Life captured at entry, so the projected win chance describes the fight that is played even if held methods change mid-fight | ADR 0026 | HIGH |
