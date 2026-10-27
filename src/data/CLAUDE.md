@@ -5,7 +5,7 @@
 - Only the vocabulary fields in `scripts/validate.ts:25-27` are allowed; removed fields such as `pauseOnReveal` and `lifespan` are rejected by name (`scripts/validate.ts:37`).
 - A `family` uses `perLevel`, never `mod`; everything else uses `mod` (`scripts/validate.ts:162-163`).
 - Tags are route keys counted as `g.t_<tag>`; a record id may not equal a tag (`scripts/validate.ts:120`).
-- Timed tasks last 1–7200 s, and chapter-one (`opening.json`) timed actions at most 180 s (`scripts/validate.ts:186`, `scripts/validate.ts:234`).
+- Timed tasks last 1–7200 s by grammar, and the pacing gate holds every timed action, opening and ridge alike, to at most 180 s (`scripts/validate.ts:41`, `scripts/validate.ts:281`). Numbers here move the pace bands in `scripts/validate.ts:30-44`; re-run `bun run validate` after any retune.
 - Events have no `pause`; discoveries never stop activity (`scripts/validate.ts:169`).
 - `src/ui.ts` and `scripts/routes.ts` name ids from these files directly; renaming an id means updating both (`src/ui.ts:45`, `scripts/routes.ts:6-22`).
 - Ridge and shared gates currently reference opening ids (`src/data/ridge.json:141`, `src/data/shared.json:26`).

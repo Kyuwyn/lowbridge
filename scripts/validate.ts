@@ -1,4 +1,7 @@
-import { records as sourceRecords } from "../src/content";
+import { openingContext, routeKeys, records as sourceRecords } from "../src/content";
+import opening from "../src/data/opening.json";
+import ridge from "../src/data/ridge.json";
+import shared from "../src/data/shared.json";
 import { ATTUNE_SLOTS, DODGE_MAX, FIGHT_STATS, GAUGE, GameEngine, HOME_SPACE, LIFE } from "../src/engine";
 import { evaluateCondition, expressionReferences } from "../src/expression";
 import { DERIVED_FIELDS, type Changes, type GameRecord } from "../src/types";
@@ -24,16 +27,27 @@ const kinds = new Set<string>(["resource", "family", "task", "site", "arrangemen
 const recordFields = new Set(["id", "kind", "name", "desc", "flavor", "group", "tags", "require", "need", "needtext", "initial", "max",
   "buy", "cost", "length", "run", "effect", "result", "mod", "perLevel", "onStart", "at", "every", "fill", "lock", "enable", "warn",
   "attune", "space", "train", "strain", "events", "breakthrough", "autoStart", "boost", "slots", "slot", "title", "encounter", "held"]);
-/** About fifteen active minutes to Foundation, measured on the quickest sensible play. */
-export const FOUNDATION_FLOOR = 720;
-export const FOUNDATION_CEILING = 1200;
-/** Circulation must be open with room to use it, at the same share of the run the old window held. */
-export const CIRCULATION_WINDOW = 850;
+/**
+ * About ten active minutes to Foundation, measured on the quickest sensible play (owner decision, 27 October 2026).
+ * The band sits round the honest direct figures with room for a minute or two of tuning either way.
+ */
+export const FOUNDATION_FLOOR = 480;
+export const FOUNDATION_CEILING = 780;
+/** The preference routes wander and over-train; they must still reach Foundation inside this. */
+export const WANDERING_CEILING = 1200;
+/** Circulation must open with a Settling sitting's worth of room before the ceiling. */
+export const CIRCULATION_WINDOW = 600;
 /** No outing, sitting or breakthrough may hold the slot longer than this. */
 export const TIMED_CEILING = 180;
-/** Activity seconds from Foundation to the waystation, on every ridge route. */
-export const RIDGE_FLOOR = 900;
-export const RIDGE_CEILING = 2700;
+/** Activity seconds from Foundation to the waystation, on every ridge route, from either reading. */
+export const RIDGE_FLOOR = 720;
+export const RIDGE_CEILING = 1440;
+
+/** The chapters in play order, for the rule that later content compounds earlier payouts; the shared stores and knowledge are chapter one's. */
+const CHAPTERS: readonly { name: string; ids: ReadonlySet<string> }[] = [
+  { name: "The village", ids: new Set([...shared, ...opening].map(record => record.id)) },
+  { name: "The ridge", ids: new Set(ridge.map(record => record.id)) },
+];
 
 /** Fields content used to carry. Naming them beats "unknown field" when an old record is pasted in. */
 export const REMOVED_FIELDS = ["disable", "runway", "raisers", "lifespan", "age", "checkpoint", "pauseOnReveal", "pauseOnComplete", "perpetual", "secret"];
@@ -81,6 +95,8 @@ export function validateGrammar(records: GameRecord[]): string[] {
       else if (extra || field !== "value") errors.push(`${record.id}: a tag counter takes no field (${path})`);
       return;
     }
+    // `attuned` is read-only and means something only on a record that can hold an attunement place.
+    if (field === "attuned") { if (extra || !byId.get(id)?.attune) errors.push(`${record.id}: ${path} reads attunement on a record that cannot be attuned`); return; }
     if (extra || !statFields.has(field)) errors.push(`${record.id}: unsupported field in ${path}`);
   };
 
@@ -229,52 +245,108 @@ export function validateMandatoryCores(records: GameRecord[]): string[] {
   return errors;
 }
 
+/**
+ * The shell's words for content: every route key a record carries has a name and is read by some content, so no key
+ * is a promise nothing keeps (ADR 0024, ISS-004), and the Now panel marks only real records.
+ */
+export function validateContext(records: GameRecord[]): string[] {
+  const errors: string[] = [];
+  const ids = new Set(records.map(record => record.id)), carried = new Set(records.flatMap(record => record.tags ?? []));
+  const read = new Set(records.flatMap(record => expressions(record).flatMap(expression => expressionReferences(expression)))
+    .map(path => path.replace(/^g\./, "").split(".")[0]));
+  for (const tag of carried) {
+    if (!routeKeys[tag]) errors.push(`route key ${tag} has no name in routeKeys`);
+    if (!read.has(tag)) errors.push(`route key ${tag} is carried, but no requirement, bill or sign reads it`);
+  }
+  for (const tag of Object.keys(routeKeys)) if (!carried.has(tag)) errors.push(`routeKeys names ${tag}, which no record carries`);
+  for (const beat of openingContext.beats) for (const id of beat.focus) if (!ids.has(id)) errors.push(`beat ${beat.id}: focus names unknown record ${id}`);
+  return errors;
+}
+
+/** ADR 0021: every chapter after the first raises at least one earlier chapter's payout with an `X.mod.Y` patch. */
+export function validateCompounding(records: GameRecord[]): string[] {
+  const chapterOf = new Map(CHAPTERS.flatMap((chapter, index) => [...chapter.ids].map(id => [id, index] as const)));
+  return CHAPTERS.slice(1).flatMap((chapter, offset) => records
+    .filter(record => chapter.ids.has(record.id))
+    .some(record => modifierMaps(record).some(changes => Object.keys(changes ?? {}).some(path => {
+      const [target, field] = path.split(".");
+      return field === "mod" && (chapterOf.get(target!) ?? Infinity) <= offset;
+    })))
+    ? [] : [`${chapter.name} patches no earlier chapter's payout; ADR 0021 asks every later chapter for at least one X.mod.Y patch`]);
+}
+
+/**
+ * ADR 0024: across a chapter boundary the route key is the seam, so no gate in one chapter's file names a record
+ * from another's. The shared file is the common vocabulary both read; its own reveals may name what reveals them.
+ */
+export function validateModuleSeams(): string[] {
+  const modules = [{ name: "opening", records: opening as GameRecord[] }, { name: "ridge", records: ridge as GameRecord[] }];
+  const home = new Map(modules.flatMap(module => module.records.map(record => [record.id, module.name] as const)));
+  return modules.flatMap(module => module.records.flatMap(record => {
+    const gates = [record.require, record.need, record.breakthrough?.core, ...record.breakthrough?.pointers.map(pointer => pointer.when) ?? [], ...record.events?.map(event => event.when) ?? []];
+    return gates.filter((gate): gate is string => typeof gate === "string").flatMap(gate => expressionReferences(gate)
+      .map(path => path.replace(/^g\./, "").split(".")[0]!)
+      .filter(id => (home.get(id) ?? module.name) !== module.name)
+      .map(id => `${record.id}: a ${module.name} gate names ${id} from ${home.get(id)}; read a route key across chapters (ADR 0024)`));
+  }));
+}
+
 export function validateContent(records: GameRecord[] = sourceRecords): ValidationReport {
   const errors = validateGrammar(records);
   if (errors.length) return { ok: false, errors, routes: [], coverageBranches: [], ridgeRoutes: [], recordCount: records.length, reachedCount: 0, missing: records.map(record => record.id) };
-  errors.push(...validateMandatoryCores(records));
+  errors.push(...validateMandatoryCores(records), ...validateContext(records), ...validateCompounding(records), ...validateModuleSeams());
   for (const record of records) {
     if (typeof record.length === "number" && record.length > TIMED_CEILING) {
       errors.push(`${record.id}: timed action runs ${record.length}s, over the ${TIMED_CEILING} s ceiling`);
     }
   }
-  // The ceiling binds on every opening route. The preference routes wander and spend Qi on Vigor, so the
-  // floor and the Circulation window bind on the direct routes, the quickest sensible play.
+  // The Foundation band and the Circulation window bind on the direct routes, the quickest sensible play.
+  // The preference routes wander and spend Qi on Vigor, so only the wandering ceiling binds on them.
   const direct = new Set<string>(Object.keys(DIRECT_ROUTES));
   const routes = [
     ...(Object.keys(ROUTES) as OpeningRoute[]).map(name => runRoute(name, { records })),
     ...(Object.keys(DIRECT_ROUTES) as DirectRoute[]).map(name => runDirectRoute(name, { records })),
   ];
   for (const route of routes) {
+    const ceiling = direct.has(route.name) ? FOUNDATION_CEILING : WANDERING_CEILING;
     if (!route.success) errors.push(`${route.name}: Foundation unreachable (${route.reason})`);
-    else if (route.foundationSeconds! > FOUNDATION_CEILING) errors.push(`${route.name}: Foundation takes ${(route.foundationSeconds! / 60).toFixed(2)} min, over ${FOUNDATION_CEILING / 60} min`);
-    else if (direct.has(route.name) && route.foundationSeconds! < FOUNDATION_FLOOR) errors.push(`${route.name}: Foundation takes ${(route.foundationSeconds! / 60).toFixed(2)} min, under the ${FOUNDATION_FLOOR / 60}-minute target`);
+    else if (route.foundationSeconds! > ceiling) errors.push(`${route.name}: Foundation takes ${(route.foundationSeconds! / 60).toFixed(2)} min, over ${ceiling / 60} min`);
+    else if (direct.has(route.name) && route.foundationSeconds! < FOUNDATION_FLOOR) errors.push(`${route.name}: Foundation takes ${(route.foundationSeconds! / 60).toFixed(2)} min, under the ${FOUNDATION_FLOOR / 60}-minute floor`);
     if (route.state.bank.seconds > 0) errors.push(`${route.name}: route accrued bank; pacing requires only ordinary activity`);
     const opened = route.unlocks.find(unlock => unlock.id === "channel_exercise" || unlock.id === "steady_attention");
     if (!opened) errors.push(`${route.name}: Circulation never opens`);
-    else if (direct.has(route.name) && opened.at > CIRCULATION_WINDOW) errors.push(`${route.name}: Circulation opens at ${(opened.at / 60).toFixed(2)} min, after the ${(CIRCULATION_WINDOW / 60).toFixed(0)}-minute window`);
+    else if (direct.has(route.name) && opened.at > CIRCULATION_WINDOW) errors.push(`${route.name}: Circulation opens at ${(opened.at / 60).toFixed(2)} min, after the ${CIRCULATION_WINDOW / 60}-minute window`);
     const firstCap = route.capLog[0];
     if (!firstCap || firstCap.activitySeconds > 120) errors.push(`${route.name}: the first cap line arrives at ${((firstCap?.activitySeconds ?? route.activitySeconds) / 60).toFixed(2)} min, after 2 minutes`);
     else if (!firstCap.text.includes("A higher cap is possible through")) errors.push(`${route.name}: the first cap line names nothing that raises it (${firstCap.text})`);
     for (const line of route.unsourcedCapLog) errors.push(`${route.name}: cap line naming nothing that raises it: ${line.text}`);
   }
   const coverageBranches = runCoverageBranches(records);
-  const ridgeStart = routes.find(route => route.name === "channel-only")?.state;
-  const directStart = routes.find(route => route.name === "channel-direct")?.state;
+  const start = (name: string) => routes.find(route => route.name === name)?.state;
+  const ridgeStart = start("channel-only");
   const ridgeRoutes = [
     ...!ridgeStart ? [] : [...(Object.keys(RIDGE_ROUTES) as RidgeRoute[]).map(name => runRidgeRoute(name, records, ridgeStart)), ...runRidgeCoverage(records, ridgeStart)],
-    ...!directStart ? [] : (Object.keys(RIDGE_ROUTES) as RidgeRoute[]).map(name => runDirectRidgeRoute(name, records, directStart)),
+    // The quickest ridge from each reading's Foundation, so neither reading's cost on the ridge goes unmeasured.
+    ...(Object.keys(DIRECT_ROUTES) as DirectRoute[]).flatMap(from => {
+      const directStart = start(from);
+      return !directStart ? [] : (Object.keys(RIDGE_ROUTES) as RidgeRoute[]).map(name => runDirectRidgeRoute(name, records, from, directStart));
+    }),
   ];
   for (const route of ridgeRoutes) {
     if (!route.success) { errors.push(`${route.name}: the ridge waystation is unreachable (${route.reason})`); continue; }
     const elapsed = route.goalSeconds! - route.startSeconds;
     if (elapsed < RIDGE_FLOOR || elapsed > RIDGE_CEILING) errors.push(`${route.name}: the waystation takes ${(elapsed / 60).toFixed(2)} min after Foundation, outside ${RIDGE_FLOOR / 60}-${RIDGE_CEILING / 60} min`);
   }
+  // Rule 74: an attunement place no history can fill is an empty socket the slice cannot close.
+  const played = [...routes, ...coverageBranches, ...ridgeRoutes];
+  const places = Math.max(0, ...played.map(route => route.caps[ATTUNE_SLOTS] ?? 0));
+  const heldAtOnce = Math.max(0, ...played.map(route => route.heldAtOnce));
+  if (places > heldAtOnce) errors.push(`attunement places reach ${places}, but no route holds more than ${heldAtOnce} methods at once (rule 74)`);
   // The simulation is the single measured figure, so it must name records content still has.
-  for (const route of [...routes, ...coverageBranches, ...ridgeRoutes]) {
+  for (const route of played) {
     if (route.unknownIds.length) errors.push(`${route.name}: the route names records content no longer has: ${route.unknownIds.join(", ")}`);
   }
-  const reached = new Set([...routes, ...coverageBranches, ...ridgeRoutes].flatMap(route => route.reached));
+  const reached = new Set(played.flatMap(route => route.reached));
   const missing = records.filter(record => !reached.has(record.id)).map(record => record.id);
   if (missing.length) errors.push(`No cold-start reachability witness for: ${missing.join(", ")}`);
   // Replayable witnesses must actually satisfy each lead's need; mere early visibility is insufficient.
@@ -293,7 +365,7 @@ if (import.meta.main) {
       const route = report.routes.find(candidate => candidate.name === name);
       return `${name} ${route?.foundationSeconds == null ? "BLOCKED" : `${(route.foundationSeconds / 60).toFixed(2)} min`}`;
     };
-    console.log(`Foundation timing: ${timing("channel-only")}, ${timing("hollow-only")} (target ${FOUNDATION_FLOOR / 60}-${FOUNDATION_CEILING / 60} min).`);
+    console.log(`Foundation timing: ${Object.keys(DIRECT_ROUTES).map(timing).join(", ")} (band ${FOUNDATION_FLOOR / 60}-${FOUNDATION_CEILING / 60} min); ${Object.keys(ROUTES).map(timing).join(", ")} (under ${WANDERING_CEILING / 60} min).`);
     console.log(`Reachability: ${report.reachedCount}/${report.recordCount} records across distinct cold-start branches.`);
     for (const error of report.errors) console.error(`FAIL ${error}`);
     console.log(report.ok ? "OK: actual JSON and engine validation passed" : "FAILED");

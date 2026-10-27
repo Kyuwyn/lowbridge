@@ -65,6 +65,7 @@ async function offerSaveFile(page: Page, save: unknown) {
 async function chooseSaveFile(page: Page, save: unknown) {
   await offerSaveFile(page, save);
   await page.locator('[data-ui=confirmation]').waitFor({ state: 'visible' });
+  assert((await page.locator('[data-ui=confirm]').innerText()) === 'Replace', 'the import confirmation does not say it replaces the journey');
 }
 
 async function importSave(page: Page, save: unknown) {
@@ -116,6 +117,17 @@ async function click(page: Page, id: string, times = 1) {
   for (let count = 0; count < times; count++) { await button.click(); await confirmIfAsked(page); }
 }
 
+/** A tab's count is the cards on it marked New or Next, nothing else. */
+async function checkTabCounts(page: Page, label: string) {
+  for (const tab of ['tasks', 'techniques', 'home', 'character']) {
+    const button = page.locator(`button[data-tab="${tab}"]`);
+    if (await button.isHidden()) continue;
+    const shown = Number(await button.locator('.tab-count').innerText() || 0);
+    const marked = await page.locator(`#view-${tab} .task-cell:not([hidden]) .task-button:is(.is-new, .is-next)`).count();
+    assert(shown === marked, `${label}: the ${tab} tab counts ${shown}, but ${marked} cards on it are marked New or Next`);
+  }
+}
+
 try {
   for (const name of Object.keys(ROUTES) as OpeningRoute[]) {
     const expected = runRoute(name);
@@ -130,7 +142,7 @@ try {
     await page.getByRole('heading', { name: 'Lowbridge', level: 1, exact: true }).waitFor();
     await page.locator('button[data-record-id=mill_work]').waitFor();
     assert(await page.locator('[data-tab=techniques]').isHidden() && await page.locator('[data-tab=home]').isHidden(), 'Techniques or Home shows before the apprenticeship');
-    assert(await page.locator('[data-ui=waiting]').count() === 1 && await page.locator('[data-ui=waiting-empty]').isVisible(), 'the activity panel has no empty waiting list');
+    assert(await page.locator('[data-ui=waiting-block]').isHidden(), 'the Waiting list shows before there is a second sustained pursuit to queue');
     await page.locator('[data-tab=tasks]').focus();
     await page.keyboard.press('ArrowRight');
     assert(await page.locator('[data-tab=character]').getAttribute('aria-selected') === 'true', 'keyboard tab navigation did not skip hidden Techniques and Home');
@@ -154,7 +166,7 @@ try {
       assert(await modeHost.getAttribute('data-action-mode') === (record.length === undefined ? 'instant' : record.length === 'continuous' ? 'continuous' : 'timed'), `${action.id}: action mode does not match its behavior`);
       if (action.id === 'settling') {
         const rewards = await page.locator('[data-ui=foundation-rewards]').innerText();
-        for (const benefit of ['Max Circulation: 2', 'Max Lore: 2', 'Max Qi Sense: 2', 'Max Attunement: 1', 'Max Qi: 10', 'Stored time cap: 18000']) {
+        for (const benefit of ['Max Circulation: 2', 'Max Lore: 2', 'Max Qi Sense: 2', 'Max Attunement: 1', 'Max Qi: 10', 'Max time bank: 5h']) {
           assert(rewards.includes(benefit), `Foundation does not disclose ${benefit} before commitment`);
         }
       }
@@ -185,8 +197,9 @@ try {
         assert(await page.locator('button.task-button:visible').count() >= 3, `${name}: the opening shows fewer than three actions after the first chore`);
         if (name === 'channel-only') await page.screenshot({ path: join(output, 'opening-desktop.png'), fullPage: true });
       }
-      if (action.objective.kind === 'resource' && record.length !== undefined) {
-        await page.locator('[data-ui=objective-kind]').selectOption(`resource:${action.objective.id}`);
+      // Practice now runs to the knowledge's cap by default, so a route that stops at the next level says so, as a player would.
+      if ((action.objective.kind === 'resource' || action.objective.kind === 'level') && record.length !== undefined) {
+        await page.locator('[data-ui=objective-kind]').selectOption(`${action.objective.kind}:${action.objective.id}`);
         await page.locator('[data-ui=objective-target]').fill(String(action.objective.target));
       }
       if (name === 'channel-only' && action.id === 'channel_exercise' && action.elapsed > 1) {
@@ -203,8 +216,10 @@ try {
     assert(save.state.active === null, `${name}: did not pause at Foundation`);
     assert(save.state.bank.cap === 21600, `${name}: Foundation rewards missing`);
     await Bun.write(join(output, `${name}-foundation.json`), JSON.stringify(save, null, 2));
+    await checkTabCounts(page, `${name} at Foundation`);
     await page.locator('[data-tab=tasks]').click();
-    for (const group of ['work', 'practice', 'purchases', 'sites']) assert(await page.locator(`[data-group=${group}]`).isVisible(), `${name}: the ${group} group is missing at Foundation`);
+    // Purchases empty into Done once a route has bought them all, so only the groups with standing work must show.
+    for (const group of ['work', 'practice', 'sites']) assert(await page.locator(`[data-group=${group}]`).isVisible(), `${name}: the ${group} group is missing at Foundation`);
     // The spellbook holds the techniques; practice is a task group, mirrored under the knowledge it raises.
     await page.locator('[data-tab=techniques]').click();
     assert(await page.locator('[data-group=techniques]').isVisible(), `${name}: the Techniques group is missing at Foundation`);
@@ -300,6 +315,7 @@ try {
   await click(page, 'fragment_notes');
   assert(shadow.start('fragment_notes').ok, 'shadow could not start the copying');
   // Shift-click queues instead of replacing the running practice; Remove takes it off the list.
+  assert(await page.locator('[data-ui=waiting-block]').isVisible(), 'the Waiting list stays hidden with two sustained pursuits in reach');
   await (await revealAction(page, 'breath_gathering')).click({ modifiers: ['Shift'] });
   const queued = await stored(page);
   assert(queued.state.active?.id === 'fragment_notes' && queued.state.waiting.length === 1 && queued.state.waiting[0]!.id === 'breath_gathering', 'Shift-click did not queue behind the running practice');
@@ -375,6 +391,13 @@ try {
   assert((await stored(page)).state.activitySeconds === idle.state.activitySeconds, 'import replaced the journey before confirmation');
   await page.locator('[data-ui=cancel]').click();
   assert((await stored(page)).state.activitySeconds === idle.state.activitySeconds, 'cancelled import replaced the journey');
+  // Beginning again asks first, in the same danger style, and cancelling keeps the journey.
+  await openSettings(page);
+  await page.locator('[data-ui=new-game]').click();
+  await page.locator('[data-ui=confirmation]').waitFor({ state: 'visible' });
+  assert((await page.locator('[data-ui=confirm]').innerText()) === 'Begin again', 'the new-game confirmation does not say it begins again');
+  await page.locator('[data-ui=cancel]').click();
+  assert((await stored(page)).state.activitySeconds === idle.state.activitySeconds, 'cancelling a new game replaced the journey');
   await importSave(page, fresh);
   const imported = await stored(page);
   assert(imported.state.activitySeconds === 0 && imported.state.bank.seconds === 0, 'import added offline credit to a snapshot');
@@ -425,7 +448,8 @@ try {
   await mat.focus(); await page.keyboard.press('Shift+Tab'); await page.keyboard.press('Tab');
   assert(await mat.evaluate(node => node === document.activeElement), 'keyboard focus did not reach a locked action');  assert(await mat.getAttribute('aria-disabled') === 'true' && !await mat.evaluate(node => (node as HTMLButtonElement).disabled), 'a locked action is not focusable with its reason');
   assert(await page.locator('[data-record-details=practice_mat]').isVisible(), 'keyboard focus does not reveal a locked action\'s details');
-  assert((await page.locator('[data-record-details=practice_mat] .tip-need').innerText()).includes('Eight coin'), 'locked action does not state its need');
+  // A refusal names what is short: the bill gap, as the engine words it.
+  assert((await page.locator('[data-record-details=practice_mat] .tip-need').innerText()).includes(apprenticed.availability('practice_mat').reason), 'locked action does not state its need');
   await mat.evaluate(node => (node as HTMLElement).blur());
   await mat.click({ force: true });
   await page.mouse.move(0, 0);
@@ -482,6 +506,14 @@ try {
   assert(eta !== undefined && (eta < 1 ? shownEta.includes('Finishing') : Math.abs(countdown - eta) <= 1),
     `the activity panel reads "${shownEta}" against the engine's ${eta}s`);
   await page.screenshot({ path: join(output, 'instant-and-running-desktop.png'), fullPage: true });
+  // Taking a piece down asks first, says the cost is not returned, and cancelling leaves it in its place.
+  await page.locator('[data-tab=home]').click();
+  await page.locator('.place-list li[data-slot=practice] button[data-action=remove]').click();
+  await page.locator('[data-ui=confirmation]').waitFor({ state: 'visible' });
+  assert((await page.locator('[data-ui=confirmation-text]').innerText()) === bench.removeWarning('practice_mat'), 'the take-down confirmation does not give the engine\'s warning');
+  assert((await page.locator('[data-ui=confirm]').innerText()) === 'Take down', 'the take-down confirmation does not name what it does');
+  await page.locator('[data-ui=cancel]').click();
+  assert((await stored(page)).state.stats.practice_mat!.value === 1, 'cancelling a take-down still took the mat down');
   const rest = await revealAction(page, 'rest');
   await rest.click();
   assert((await stored(page)).state.active?.id === 'rest', 'clicking the self-starting Rest stopped it');
@@ -540,9 +572,9 @@ try {
   for (const id of ['shu_apprentice', 'jade_slip', 'breath_gathering']) assert(adept.start(id).ok, `spellbook fixture could not ${id}`);
   adept.advance(200);
   adept.stop();
-  // Both readings of leaf eight in hand, so taking one up is what closes the other.
+  // Both readings of leaf eight in hand, so taking one up is what closes the other; the hollow's waits for the third dusk.
   for (const id of ['channel_arrangement', 'sit_fernhollow']) adept.state.stats[id]!.value = 1;
-  adept.state.stats.sit_fernhollow!.reps = 1;
+  adept.state.stats.sit_fernhollow!.reps = 3;
   // A granted record is only discovered on the next reconcile, which any action triggers.
   assert(adept.start('sort_herbs').ok, 'spellbook fixture could not settle what it was granted');
   adept.stop();
@@ -603,27 +635,25 @@ try {
   assert(moved.state.stats.lean_to.value === 1 && moved.state.lockedIds.includes('hayloft'), 'confirming a warned action did not take it');
   assert(await page.locator('button[data-record-id=hayloft]').isHidden(), 'a locked record stays in the grid');
 
-  // A sustained fill task names the store it is filling and leaves the slot the moment that store is full.
+  // Rest is the fill task: it names the store it is filling and leaves the slot the moment that store is full.
   const filling = new GameEngine(records);
   for (let count = 0; count < 5; count++) assert(filling.start('mill_work').ok, 'fill fixture could not work the mill');
-  // Spent Vigor pulls Rest into the slot; topping Vigor up behind its back would leave a finished objective saved.
-  filling.stop();
-  filling.state.stats.vigor!.value = filling.stat('vigor').max;
-  filling.state.stats.coin!.value = filling.stat('coin').max - 1;
+  assert(filling.snapshot().active?.id === 'rest', 'spent Vigor did not pull Rest into the slot');
   await importSave(page, makeSave(filling.state, records, 1));
   await closeSettings(page);
-  const shift = await revealAction(page, 'mill_shift');
-  await shift.click();
-  assert((await page.locator('[data-ui=objective-progress]').innerText()) === 'Until Coin full', 'a fill task does not name the store it runs to');
-  await page.clock.runFor(8000);
-  const filled = await stored(page);
-  assert(filled.state.active === null && filled.state.stats.coin.value === filled.state.stats.coin.max, 'the fill task did not stop at the cap');
-  assert((await page.locator('[data-ui=last-stop]').innerText()).includes('objective complete'), 'the activity panel does not say why the fill task left the slot');
-  reports.push({ name: 'spellbook-and-warnings', attuneToggle: 'pass', unattunedUnusable: 'pass', warnConfirm: 'pass', warnCancel: 'pass', lockedLeavesGrid: 'pass', fillStopsAtCap: 'pass' });
+  assert(/^Until Vigor\b.* full$/.test(await page.locator('[data-ui=objective-progress]').innerText()), 'Rest does not name the store it runs to');
+  let untilFull = 0;
+  while (filling.snapshot().active && untilFull < 600) { filling.advance(1); untilFull++; }
+  await page.clock.runFor(untilFull * 1000);
+  const filled = await settled(page, state => state.active === null);
+  assert(filled.state.active === null && filled.state.stats.vigor.value === filled.state.stats.vigor.max, 'Rest did not stop at the cap');
+  assert((await page.locator('[data-ui=last-stop]').innerText()).includes('objective complete'), 'the activity panel does not say why Rest left the slot');
+  reports.push({ name: 'spellbook-and-warnings', attuneToggle: 'pass', unattunedUnusable: 'pass', warnConfirm: 'pass', warnCancel: 'pass', lockedLeavesGrid: 'pass', fillStopsAtCap: 'pass', takeDownConfirm: 'pass', newGameConfirm: 'pass' });
 
   // The ridge: the breakthrough panel generalises to a First Direction, Strain shows, and the class and stage follow.
   const ridge = runRidgeRoute('direction-body');
-  const ready = runRidgeRoute('direction-body', records, undefined, { maxActions: ridge.actions.findIndex(action => action.id === 'direction_body') });
+  // The action budget counts choices, not the attunements taken between them.
+  const ready = runRidgeRoute('direction-body', records, undefined, { maxActions: ridge.actions.filter(action => !action.attune).findIndex(action => action.id === 'direction_body') });
   await page.setViewportSize({ width: 1440, height: 1000 });
   await importSave(page, makeSave(ready.state, records, 1));
   await closeSettings(page);
@@ -634,14 +664,16 @@ try {
   assert((await direction.locator('[data-part=count]').innerText()).includes('3 needed'), 'the First Direction panel does not count its supporting signs');
   assert((await direction.locator('[data-part=rewards]').innerText()).includes('Body Disciple'), 'the First Direction panel does not name the standing it grants');
   await direction.locator('[data-part=start]').click();
-  // Choosing a direction closes the other three for good, so the panel asks before it begins.
+  // Choosing a direction closes the other three for good, so the panel asks before it begins, and the doors close when it is paid for.
   await confirmIfAsked(page);
+  const paid = await settled(page, state => state.lockedIds.includes('direction_sword'));
+  assert(paid.state.lockedIds.includes('direction_sword') && paid.state.stats.body_disciple!.value === 0, 'the First Direction did not close the others when it was paid for');
   const span = recordById.get('direction_body')!.length;
   assert(typeof span === 'number', 'the First Direction is no longer a timed breakthrough');
   await page.clock.runFor((span + 1) * 1000);
   const directed = await stored(page);
-  assert(directed.state.stats.body_disciple!.value === 1 && directed.state.lockedIds.includes('direction_sword'), 'the First Direction did not grant its class or close the others');
-  assert((await page.locator('[data-ui=character-stage]').innerText()) === 'Body Disciple · Foundation', 'the class title is not shown');
+  assert(directed.state.stats.body_disciple!.value === 1, 'the First Direction did not grant its class');
+  assert((await page.locator('[data-ui=character-stage]').innerText()) === recordById.get('body_disciple')!.title, 'the class title is not shown');
   assert((await page.locator('[data-ui=completion-title]').innerText()).includes('Body Disciple'), 'the completion banner does not name the direction');
   await page.locator('[data-ui=completion-dismiss]').click();
   assert(await page.locator('[data-ui=completion]').isHidden(), 'the completion banner cannot be dismissed');
@@ -649,9 +681,10 @@ try {
   await closeSettings(page);
   assert((await page.locator('[data-ui=stage]').innerText()) === 'The ridge', 'the stage label does not reach the ridge');
   await page.locator('[data-tab=character]').click();
-  assert(await page.locator('[data-ui=leads] li:visible').count() === 3, 'the waystation leads are not listed');
+  const leads = records.filter(record => record.kind === 'lead').length;
+  assert(await page.locator('[data-ui=leads] li:visible').count() === leads, `the ${leads} waystation leads are not listed`);
   await page.screenshot({ path: join(output, 'ridge-waystation-desktop.png'), fullPage: true });
-  reports.push({ name: 'ridge', directionPanel: 'pass', strainMeter: 'pass', classTitle: 'pass', stageLabel: 'pass', waystationLeads: 'pass' });
+  reports.push({ name: 'ridge', directionPanel: 'pass', locksAtPayment: 'pass', strainMeter: 'pass', classTitle: 'pass', stageLabel: 'pass', waystationLeads: 'pass' });
 
   reports.push({ name: 'action-workspace', instantChores: 'pass', autoRest: 'pass', lockedKeyboardDetails: 'pass', hoverDetails: 'pass', purchasePreservesActivity: 'pass',
     objectiveEta: 'pass', persistentActivityAcrossTabs: 'pass', outdatedImportRefused: 'pass', capWasteBadge: 'pass', doneGroupFocus: 'pass', tabWidths: [1440, 768, 390] });

@@ -81,6 +81,7 @@ A single `.item-popup` anchored near the cursor renders the detail for whatever 
 - **Spell/section group headers** are tinted by school (brown Martial, indigo Mana, blue Water, green Nature…).
 - **Dungeon difficulty** is glyph-based in the tooltip: 1-3 🦴 early, 1-6 💀 later (`gloss_dungeons`).
 - **Maxed** purchases stay in their list showing `Max` (Home) or the count in parentheses (Player → Upgrades, e.g. `Holy Candle (14)`); they do not move to a "done" group.
+- **Voice** `[0.12.12.9 data]`: of 1,719 id'd records, 73 % carry `desc` and 17 % carry `flavor`, with a median of 47 characters. The prose is short and about the economy it sits on (rule 70).
 
 ## Mobile (390×844)
 

@@ -1,5 +1,5 @@
 import { describe, expect, test } from "bun:test";
-import { ATTUNE_SLOTS, EXP_PER_LEVEL, GameEngine, HOME_SPACE } from "../src/engine";
+import { ATTUNE_SLOTS, EXP_PER_LEVEL, GameEngine, HOME_SPACE, fightVerdict } from "../src/engine";
 import { evaluateExpression, expressionReferences, parseExpression } from "../src/expression";
 import { decodeSave, makeSave } from "../src/persistence";
 import { validateGrammar } from "../scripts/validate";
@@ -202,7 +202,7 @@ describe("fill", () => {
 describe("lock and enable", () => {
   test("locking hides a record and stops it mid-run; enabling gives it back", () => {
     const game = village();
-    expect(game.warnText("move_on")).toBe("The herb beds are half a day behind you after this. This closes Gather herbs and Hayloft for good.");
+    expect(game.warnText("move_on")).toBe("The herb beds are half a day behind you after this.");
     expect(game.warnText("pouch")).toBeUndefined();
     run(game, "gather", 4);
     expect(game.state.active?.id).toBe("gather");
@@ -222,7 +222,7 @@ describe("lock and enable", () => {
 
   test("a warning stops asking once its doors have shut, and asks again if they reopen", () => {
     const game = village();
-    const asked = "The herb beds are half a day behind you after this. This closes Gather herbs and Hayloft for good.";
+    const asked = "The herb beds are half a day behind you after this.";
     expect(game.warnText("move_on")).toBe(asked);
     game.stat("vigor").value = 10;
     expect(game.start("move_on").ok).toBe(true);
@@ -233,8 +233,7 @@ describe("lock and enable", () => {
 
   test("attuning is the step that closes the sibling, so that is the step the warning covers", () => {
     const game = village();
-    expect(game.warnText("kindling_form"))
-      .toBe("Taking up the kindling reading settles the shape for good. This closes Ash form for good.");
+    expect(game.warnText("kindling_form")).toBe("Taking up the kindling reading settles the shape for good.");
     expect(game.attune("kindling_form").ok).toBe(true);
     expect(game.locked("ash_form")).toBe(true);
     expect(game.warnText("kindling_form")).toBeUndefined();
@@ -250,6 +249,28 @@ describe("lock and enable", () => {
     expect(game.start("move_on").ok).toBe(true);
     expect(game.state.waiting).toEqual([]);
     expect(game.state.active?.id).toBe("breath");
+  });
+
+  test("a timed run's locks fall when its bill is paid, and a rival's paid run leaves the waiting list with a line", () => {
+    const game = new GameEngine([
+      { id: "coin", kind: "resource", initial: { value: 20, max: 20 } },
+      { id: "body", name: "The Body", kind: "breakthrough", length: 30, max: 1, buy: { coin: 5 }, lock: ["sword"] },
+      { id: "sword", name: "The Sword", kind: "breakthrough", length: 30, max: 1, buy: { coin: 5 } },
+    ]);
+    run(game, "sword", 10);
+    expect(game.warnText("body")).toBe("This closes The Sword for good.");
+    expect(game.start("body").ok).toBe(true);
+    // The interrupted Sword waited first in line, paid and part-run; paying for the Body closed it there and then.
+    expect(game.stat("body").reps).toBe(0);
+    expect(game.locked("sword")).toBe(true);
+    expect(game.state.waiting).toEqual([]);
+    expect(game.stat("coin").value).toBe(10);
+    expect(game.state.log.filter(entry => entry.kind === "pause").map(entry => entry.text))
+      .toEqual(["The Sword left the waiting list: this chapter has closed. What it cost is not returned."]);
+    expect(game.warnText("body")).toBeUndefined();
+    game.advance(30);
+    expect(game.stat("body").reps).toBe(1);
+    expect(game.locked("sword")).toBe(true);
   });
 });
 
@@ -273,7 +294,7 @@ describe("tooltips and warnings", () => {
     const blocks = Object.fromEntries(game.tooltip("chore").map(block => [block.kind, block.lines]));
     expect(blocks.cost).toEqual(["Vigor: 2"]);
     expect(blocks.result).toEqual(["Coin: 3"]);
-    expect(blocks.mod).toEqual(["Haul sacks yield: 1 at 3"]);
+    expect(blocks.mod).toEqual(["Haul sacks yield: 1 at 3 uses"]);
     expect(blocks.flavor).toEqual(["Wen counts every sack you carry."]);
     expect(game.tooltip("margin_notes").find(block => block.kind === "mod")?.lines).toEqual(["Lore ➢ Max Coin: 3"]);
     expect(game.tooltip("breath").find(block => block.kind === "lock")?.lines).toEqual(["Stops when Qi is full"]);
@@ -417,7 +438,7 @@ describe("instant actions alongside sustained work", () => {
     expect(game.start("first").ok).toBe(true);
     expect(game.state.active?.progress).toBe(4);
     expect(game.advance(6).activitySeconds).toBe(6);
-    expect(game.availability("first").reason).toBe("coin: 2 needed.");
+    expect(game.availability("first").reason).toBe("coin: 2 needed, 0 held.");
   });
 
   test("per-run costs charge once, and goal updates do not repeat the initial bill", () => {
@@ -595,16 +616,70 @@ describe("waiting list, idle income and home places", () => {
     game.stat("coin").value = 10;
     expect(game.start("herb_rack").ok).toBe(true);
     expect(game.stat(HOME_SPACE)).toMatchObject({ value: 1, max: 2 });
-    expect(game.availability("lean_to").reason).toBe("Coin: 8 needed.");
+    expect(game.availability("lean_to").reason).toBe("Coin: 8 needed, 7 held.");
     game.stat("coin").value = 8;
     expect(game.start("lean_to").ok).toBe(true);
     expect(game.stat(HOME_SPACE).max).toBe(4);
     expect(game.homeSlots()).toEqual(["rest", "study"]);
     expect(game.stat("herb_rack").value).toBe(1);
   });
+
+  test("a floor-blocked arrangement is not a wall: it stays, with its remedy, while a stat at its own cap is one", () => {
+    const game = new GameEngine([
+      { id: "coin", name: "Coin", kind: "resource", initial: { value: 20, max: 20 } },
+      { id: "qi", name: "Qi", kind: "resource", initial: { value: 4, max: 4 } },
+      { id: "home_space", name: "Floor", kind: "resource", initial: { max: 1 } },
+      { id: "rack", name: "Herb rack", kind: "arrangement", space: 1, buy: { coin: 2 } },
+      { id: "post", name: "Practice post", kind: "arrangement", space: 1, buy: { coin: 2 },
+        need: "g.home_space.max - g.home_space >= 1", needtext: "One free span of floor." },
+      { id: "draw", name: "Draw breath", kind: "task", length: "continuous", effect: { qi: 1 }, need: "g.qi < g.qi.max", needtext: "The reservoir is full." },
+    ]);
+    expect(game.start("rack").ok).toBe(true);
+    expect(game.atLimitWall(game.record("post"))).toBe(false);
+    expect(game.availability("post").reason).toBe("1 free span of floor needed (0 of 1 free; take down Herb rack on Home).");
+    expect(game.atLimitWall(game.record("draw"))).toBe(true);
+  });
+
+  test("a refusal names what the bill is short of before it recites the need", () => {
+    const game = new GameEngine([
+      { id: "coin", name: "Coin", kind: "resource", initial: { value: 32, max: 50 } },
+      { id: "herbs", name: "Herbs", kind: "resource", initial: { value: 6.5, max: 20 } },
+      { id: "qi", name: "Qi", kind: "resource", initial: { value: 1, max: 6 } },
+      { id: "settle", kind: "breakthrough", length: 60, buy: { coin: 40, herbs: 10 },
+        need: "g.coin >= 40 && g.herbs >= 10 && g.qi >= g.qi.max", needtext: "Ten bundles, forty coin and a full reservoir." },
+    ]);
+    expect(game.availability("settle").reason).toBe("Coin: 40 needed, 32 held. Herbs: 10 needed, 6.5 held.");
+    game.stat("coin").value = 40;
+    game.stat("herbs").value = 10;
+    expect(game.availability("settle").reason).toBe("Ten bundles, forty coin and a full reservoir.");
+  });
 });
 
 describe("encounters, boosts and discounts", () => {
+  test("the win chance is exact: the engine's own rolls agree with it, and its bands sit on 0.95, 0.75 and 0.5", () => {
+    expect([0.95, 0.9499, 0.75, 0.7499, 0.5, 0.4999].map(chance => fightVerdict(chance, 1))).toEqual(["certain", "likely", "likely", "close", "close", "loss"]);
+    expect(fightVerdict(1, 0)).toBe("hopeless");
+    // Uneven hits, Speed 2.5 against 5, and Life regenerating from below its cap: a close fight, just over even.
+    const records = encounter().map(record => record.id === "hit" ? { ...record, initial: { max: 80 } }
+      : record.id === "speed" ? { ...record, initial: { max: 2.5 } }
+      : record.id === "life" ? { ...record, initial: { value: 5, max: 6, rate: 0.3 } }
+      : record.encounter ? { ...record, encounter: { ...record.encounter, foe: { ...record.encounter.foe, strike: 2, hit: 50, dodge: 10 } } } : record);
+    const projection = new GameEngine(records).fight("bandit"), fights = 3000;
+    expect(projection.winChance).toBeCloseTo(0.5379, 4);
+    expect(projection).toMatchObject({ verdict: "close", verdictText: "Close · about 54%", likely: true });
+    let won = 0, seed = 1;
+    for (let fight = 0; fight < fights; fight++) {
+      const game = new GameEngine(records);
+      game.random = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+      game.start("bandit");
+      game.advance(10);
+      if (game.state.fight?.result === "won") won++;
+    }
+    const sigma = Math.sqrt(projection.winChance * (1 - projection.winChance) / fights);
+    expect(Math.abs(won / fights - projection.winChance)).toBeLessThan(4 * sigma);
+    expect(fightVerdict(won / fights, projection.yourDamage)).toBe(projection.verdict);
+  });
+
   test("a fight is swung out second by second: a loss empties Life and spends the preparation, a win completes it", () => {
     const lost = new GameEngine(encounter());
     expect(lost.fight("bandit")).toMatchObject({ you: { strike: 2, guard: 1, speed: 5, hit: 100, dodge: 0 }, yourChance: 1, foeChance: 1,
@@ -617,7 +692,8 @@ describe("encounters, boosts and discounts", () => {
     expect(lost.stat("vigor").value).toBe(6);
     expect(lost.stat("life").value).toBe(0);
     expect(lost.state.lastStop).toBe("Bandit (lost after 0:03: your life runs out; you landed 3 of 3 swings, the bandit 3 of 3): you back off.");
-    expect(lost.availability("bandit")).toEqual({ ok: false, reason: "life: you are in no state to fight." });
+    // The refusal says when Life will be back to one whole point.
+    expect(lost.availability("bandit")).toEqual({ ok: false, reason: "life: you are in no state to fight; ready in ~50 s." });
     lost.stat("life").value = 6;
     expect(lost.availability("bandit").ok).toBe(true);
 
@@ -665,8 +741,7 @@ describe("encounters, boosts and discounts", () => {
     const game = new GameEngine(encounter().map(record => record.id === "guard" ? { ...record, initial: { max: 5 } } : record));
     game.stat("might").value = 0;
     game.recompute();
-    expect(game.fight("bandit")).toMatchObject({ winSeconds: Infinity, loseSeconds: Infinity, likely: false });
-    expect(game.tooltip("bandit").find(block => block.kind === "fight")?.lines).toContain("Likely outlasted: neither side falls inside the time limit.");
+    expect(game.fight("bandit")).toMatchObject({ winSeconds: Infinity, loseSeconds: Infinity, winChance: 0, verdict: "hopeless", likely: false });
     game.start("bandit");
     game.advance(10);
     expect(game.state.fight?.result).toBe("outlasted");
@@ -719,12 +794,11 @@ describe("encounters, boosts and discounts", () => {
   test("a held method is part of the fight while it is attuned", () => {
     const game = new GameEngine(encounter());
     expect(game.attune("brace").ok).toBe(true);
-    expect(game.fight("bandit")).toMatchObject({ held: [{ id: "brace", adds: { guard: 1 } }], you: { guard: 2 }, winSeconds: 4, loseSeconds: 6, likely: true });
+    expect(game.fight("bandit")).toMatchObject({ held: [{ id: "brace", adds: { guard: 1 } }], you: { guard: 2 }, winSeconds: 4, loseSeconds: 6, winChance: 1, verdict: "certain", likely: true });
     const fight = game.tooltip("bandit").find(block => block.kind === "fight");
     expect(fight?.label).toBe("Fight");
     expect(fight?.lines).toContain("Held methods: Brace guard +1");
     expect(fight?.lines).toContain("On average you fell the bandit in ~4 s; the bandit fells you in ~6 s.");
-    expect(fight?.lines).toContain("Likely win.");
     game.unattune("brace");
     expect(game.fight("bandit")).toMatchObject({ held: [], you: { guard: 1 }, likely: false });
   });

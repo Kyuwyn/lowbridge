@@ -1,8 +1,8 @@
 import { describe, expect, test } from "bun:test";
 import { records } from "../src/content";
 import { GameEngine } from "../src/engine";
-import { FOUNDATION_CEILING, FOUNDATION_FLOOR, REMOVED_FIELDS, RIDGE_CEILING, RIDGE_FLOOR, TIMED_CEILING, validateContent, validateGrammar, validateMandatoryCores } from "../scripts/validate";
-import { RIDGE_ROUTES, runRidgeCoverage, runRidgeRoute, runRoute, type RidgeRoute } from "../scripts/routes";
+import { FOUNDATION_CEILING, FOUNDATION_FLOOR, REMOVED_FIELDS, RIDGE_CEILING, RIDGE_FLOOR, TIMED_CEILING, validateCompounding, validateContent, validateContext, validateGrammar, validateMandatoryCores } from "../scripts/validate";
+import { RIDGE_ROUTES, runDirectRoute, runRidgeCoverage, runRidgeRoute, runRoute, type RidgeRoute } from "../scripts/routes";
 import type { GameRecord } from "../src/types";
 import { encounter, villageRecords } from "./fixtures/worlds";
 
@@ -107,7 +107,10 @@ describe("Part E validation over real opening content", () => {
       expect(route.foundationSeconds!).toBeGreaterThanOrEqual(FOUNDATION_FLOOR);
       expect(route.foundationSeconds!).toBeLessThanOrEqual(FOUNDATION_CEILING);
     }
-    for (const route of report.ridgeRoutes.filter(candidate => candidate.name.endsWith("-direct"))) {
+    // The quickest ridge is measured from both readings' Foundations.
+    const ridgeDirect = report.ridgeRoutes.filter(candidate => candidate.name.endsWith("-direct"));
+    expect(ridgeDirect.filter(route => route.name.endsWith("-hollow-direct"))).toHaveLength(Object.keys(RIDGE_ROUTES).length);
+    for (const route of ridgeDirect) {
       expect(route.goalSeconds! - route.startSeconds).toBeGreaterThanOrEqual(RIDGE_FLOOR);
       expect(route.goalSeconds! - route.startSeconds).toBeLessThanOrEqual(RIDGE_CEILING);
     }
@@ -117,6 +120,30 @@ describe("Part E validation over real opening content", () => {
     const errors = validateGrammar(changed("strongbox", record => { record.require = "g.strongbox > 0"; }));
     expect(errors.some(error => error.includes("strongbox") && error.includes("self-key"))).toBe(true);
   });
+
+  test("a later chapter that patches nothing earlier breaks ADR 0021's compounding rule", () => {
+    expect(validateCompounding(records)).toEqual([]);
+    const flat = structuredClone(records);
+    for (const record of flat) {
+      for (const changes of [record.mod, record.perLevel, record.held, ...Object.values(record.at ?? {}), ...Object.values(record.every ?? {})]) {
+        for (const path of Object.keys(changes ?? {})) if (path.split(".")[1] === "mod") delete changes![path];
+      }
+    }
+    expect(validateCompounding(flat)).toEqual(["The ridge patches no earlier chapter's payout; ADR 0021 asks every later chapter for at least one X.mod.Y patch"]);
+  });
+
+  test("a route key that no requirement, bill or sign reads is an error", () => {
+    expect(validateContext(records)).toEqual([]);
+    const unread = changed("direction_sword", record => {
+      record.breakthrough!.pointers = record.breakthrough!.pointers.filter(pointer => !pointer.when.includes("t_school_sword"));
+    });
+    expect(validateContext(unread)).toContain("route key t_school_sword is carried, but no requirement, bill or sign reads it");
+  });
+
+  test("an attunement place that no history can fill is an error", () => {
+    const report = validateContent(changed("settling", record => { record.mod = { ...record.mod, "attune_slots.max": 2 }; }));
+    expect(report.errors).toContain("attunement places reach 4, but no route holds more than 3 methods at once (rule 74)");
+  }, VALIDATION_MS);
 
   test("a valid-looking dependency cycle is rejected by actual cold-start play", () => {
     const report = validateContent(changed("jade_slip", record => { record.need = "g.coin >= 6 && g.field_kit > 0"; }));
@@ -153,10 +180,14 @@ describe("Part E validation over real opening content", () => {
       expect(route.success).toBe(true);
       const engine = new GameEngine(records, route.state);
       expect(engine.title()).toBe(titles[name]);
+      // The line's own method fills Foundation's third attunement place and is used.
+      expect(engine.isAttuned(RIDGE_ROUTES[name].method)).toBe(true);
+      expect(engine.stat(RIDGE_ROUTES[name].method).reps).toBeGreaterThan(0);
+      expect(route.heldAtOnce).toBe(engine.stat("attune_slots").max);
       const others = Object.values(RIDGE_ROUTES).map(line => line.direction).filter(id => id !== RIDGE_ROUTES[name].direction);
       for (const id of others) expect(engine.state.lockedIds).toContain(id);
       expect(engine.state.bank.cap).toBe(86400);
-      for (const lead of ["route_records", "unusual_chime", "damaged_spur"]) expect(engine.visible(lead)).toBe(true);
+      for (const lead of ["route_records", "unusual_chime", "damaged_spur", "slip_leaves"]) expect(engine.visible(lead)).toBe(true);
       expect(engine.stat("waystation_work").reps).toBeGreaterThan(0);
       expect(engine.availability("ferry_hauling").reason).toBe("This chapter has closed.");
     }
@@ -187,7 +218,7 @@ describe("Part E validation over real opening content", () => {
     weak.stat("blade_intent").value = 0;
     for (const id of ["sword_disciple", "body_disciple"]) weak.stat(id).value = 0;
     weak.recompute();
-    expect(weak.fight("ridge_bandit")).toMatchObject({ you: { strike: 3, guard: 0 }, yourDamage: 0, winSeconds: Infinity, likely: false });
+    expect(weak.fight("ridge_bandit")).toMatchObject({ you: { strike: 3 }, yourDamage: 0, winSeconds: Infinity, verdict: "hopeless", likely: false });
     // The branch spent its herbs on the direction; lay in the road's bill first.
     for (const [id, amount] of Object.entries(bandit.cost ?? {})) weak.stat(id).value = Number(amount);
     expect(weak.start("ridge_bandit").ok).toBe(true);
@@ -199,7 +230,8 @@ describe("Part E validation over real opening content", () => {
     expect(weak.state.lastStop).toContain(bandit.encounter!.failureText);
     expect(weak.stat("life").value).toBe(0);
     expect(weak.stat("ridge_bandit")).toMatchObject({ value: 0, reps: 0, paid: false });
-    expect(weak.stat("herbs").value).toBe(herbs);
+    // The herbs paid for the road are not returned; only the passive wage of the racks trickles in meanwhile.
+    expect(weak.stat("herbs").value).toBeLessThan(herbs + Number(bandit.cost!.herbs));
     // Losing spends the preparation but closes nothing: restock, and the same fight is there to be met again.
     expect(weak.locked("ridge_bandit")).toBe(false);
     for (const [id, amount] of Object.entries(bandit.cost ?? {})) weak.stat(id).value = Number(amount);
@@ -240,13 +272,13 @@ describe("Part E validation over real opening content", () => {
     expect(game.stat("sparring_bout").reps).toBe(1);
     expect(game.stat("life").value).toBe(0);
     expect(game.state.lastStop).toContain("come back when the breath runs deeper");
-    expect(game.availability("sparring_bout").reason).toBe("Life: you are in no state to fight.");
+    expect(game.availability("sparring_bout").reason).toMatch(/^Life: you are in no state to fight; ready in ~\d+ (s|min)\.$/);
   });
 
   test("pacing is measured in the engine, so a slow legal site fails the route budget", () => {
     const slower = changed("clear_channel", record => { record.length = 3000; });
     expect(validateGrammar(slower)).toEqual([]);
-    const route = runRoute("channel-only", { records: slower });
+    const route = runDirectRoute("channel-direct", { records: slower });
     expect(route.success).toBe(true);
     expect(route.foundationSeconds!).toBeGreaterThan(FOUNDATION_CEILING);
     const report = validateContent(slower);

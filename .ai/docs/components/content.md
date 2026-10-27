@@ -4,7 +4,7 @@
 Files: `src/content.ts` (54 lines), `src/data/shared.json` (164), `src/data/opening.json` (312), `src/data/ridge.json` (316). Criticality: **Core**.
 
 ## 1. Component Overview
-All game content as data: 109 records (shared 26, opening 36, ridge 47) concatenated in a fixed order, plus the opening's story beats. The same `records` array feeds the browser, the route simulator and the validator. [HIGH] (`src/content.ts:6-8`)
+All game content as data: 122 records (shared 29, opening 34, ridge 59) concatenated in a fixed order, plus the story beats from the first sack to the waystation. The same `records` array feeds the browser, the route simulator and the validator. [HIGH] (`src/content.ts:7-8`)
 
 - Complexity: **Moderate** (data, but every number is load-bearing for pacing checks).
 
@@ -13,7 +13,7 @@ All game content as data: 109 records (shared 26, opening 36, ridge 47) concaten
 |---|---|---|
 | Shared base module: resources (coin, vigor, qi, life, strike, guard, attune_slots, home_space…) and families | `src/data/shared.json:3`, `src/data/shared.json:29`, `src/data/shared.json:35`, `src/data/shared.json:81` | HIGH |
 | Opening (village → Foundation): chores, Rest, Shu apprenticeship, jade slip, three techniques carrying route keys, home arrangements, sparring bout, `settling` breakthrough | `src/data/opening.json:3-312` | HIGH |
-| Ridge (after Foundation → waystation): four First Direction breakthroughs, bandit fight, coffer, cottage | `src/data/ridge.json:134-189`, `src/data/ridge.json:284`, `src/data/ridge.json:301`, `src/data/ridge.json:307` | HIGH |
+| Ridge (after Foundation → waystation): four teachings each with an attunable method carrying a school key, four exclusive First Direction breakthroughs and their classes, four crossings, the waystation and its four leads, bandit fight, coffer, cottage | `src/data/ridge.json` | HIGH |
 | Story beats: the last beat whose `when` holds is shown | `src/content.ts:10-13` | HIGH |
 
 ## 3. Workflows & Behaviors
@@ -25,12 +25,12 @@ All game content as data: 109 records (shared 26, opening 36, ridge 47) concaten
 | BR-content:001 | Record order = shared, opening, ridge; this order is the display/reveal order | Supporting | `src/content.ts:7`, `src/engine.ts:97` |
 | BR-content:002 | Route keys are carried in `tags`; `g.t_<tag>` counts owned records carrying the tag | Core | `src/data/opening.json:125`, `src/data/opening.json:136`, `src/data/opening.json:149`, `src/engine.ts:177` |
 | BR-content:003 | A record id may not equal a tag name | Core | `scripts/validate.ts:120` |
-| BR-content:004 | Across a module boundary, gates should read route keys, never another module's record ids (ADR) | Core | `design/decisions/0024-route-keys.md:32` (currently not honoured — see `.ai/docs/issues.md`) |
+| BR-content:004 | Across a module boundary, gates should read route keys, never another module's record ids (ADR) | Core | `design/decisions/0024-route-keys.md:32` (the direction signs read school keys, but still name opening furnishings — see `.ai/docs/issues.md`) |
 | BR-content:005 | Chapter-one timed actions run at most 180 s | Supporting | `scripts/validate.ts:34`, `scripts/validate.ts:234-235` |
 | BR-content:006 | Every field must be in the validator's vocabulary; removed fields are named as such | Core | `scripts/validate.ts:25-27`, `scripts/validate.ts:37`, `scripts/validate.ts:123-124` |
 
 ## 5. Data Models
-Records follow `GameRecord` (`src/types.ts:47`). Route keys currently carried: `t_school_body` (steady_breath, settle_breath), `t_channel` and `t_school_earth` (carry_current), `t_hollow` (settle_breath) — `src/data/opening.json:125`, `src/data/opening.json:136`, `src/data/opening.json:149`. Keys read by gates: `t_hollow`, `t_channel` (`src/data/ridge.json:12`, `src/data/ridge.json:25`). There are no standalone `t_*` records. [HIGH]
+Records follow `GameRecord` (`src/types.ts:47`). Route keys carried: `t_school_body` (steady_breath, settle_breath, sink_the_load), `t_channel` and `t_school_earth` (carry_current), `t_school_earth` (read_the_grain), `t_hollow` (settle_breath), `t_school_sword` (cut_by_intent), `t_school_formation` (fix_the_layout). Keys are read by the ridge teachings' prices, the hollow's Strain discount and Rest's Composure, and the four direction signs. Their names live in `routeKeys` (`src/content.ts:22-29`); there are no standalone `t_*` records. [HIGH]
 
 `StoryBeat` (`src/content.ts:11`): `{ id, when, title, text, next }`.
 
@@ -54,8 +54,7 @@ Not applicable. [HIGH]
 | engine (types) | `GameRecord` | `src/content.ts:4` |
 
 ## 10. Legacy Warnings
-- Ridge gates name opening record ids (`cot`, `garden_plot`, `strongbox`, `lean_to`) — `src/data/ridge.json:141`, `src/data/ridge.json:301`, `src/data/ridge.json:307`. Renaming those opening records silently changes ridge gating (an unknown id inside an expression is an evaluation error the validator reports, but a *semantic* rename to a different record would not be caught). [HIGH]
-- `t_school_body` / `t_school_earth` are carried but no gate reads them yet. [HIGH]
+- Ridge direction signs name opening record ids (`cot`, `garden_plot`, `strongbox`) — `src/data/ridge.json:212`, `:229`, `:246`, `:263`. Renaming those opening records silently changes ridge gating (an unknown id inside an expression is an evaluation error the validator reports, but a *semantic* rename to a different record would not be caught). [HIGH]
 - Renaming any id the UI hardcodes (`vigor`, `qi`, `life`, `strain`, `rest`, `coin`, `settling`, `foundation`, `waystation`, `shu_apprentice`, `jade_slip`, `home_space`, `attune_slots`) is not caught by `bun run validate`; only `bun run smoke` would notice. [HIGH]
 
 ## 11. Design Rationale

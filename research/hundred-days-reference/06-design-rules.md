@@ -7,6 +7,7 @@ The one-line verdict: Hundred Days is Arcanum's engine with a **spendable lifesp
 ## F. Lifespan and time (the fork's own contribution)
 
 39. **A lifespan budget as the master resource.** `time` only rises; `age` is a budget in days (21,900 = 60 years at start) that content spends through `cost`/`result`/`run` and extends through `age`+`age.max` grants (续命). Death is an event (`g.time > g.age`) that grants a resource whose mods drain the vitals; there is no death handler. Every click is a cost, idling is meaningful, and "+5 years" is a payout a player reads without a tutorial. (02 §5, 04 §3): *copy the axis, with one sign convention and the price on the button* (rule 47).
+    Lowbridge cut this axis (ADR 0025). What transfers is the *alignment*, not the mortality: the master resource is the genre's central desire, and its price is on the button.
 40. **Recovery of the slow stat is the expensive act.** Rest costs 0.1 day/s; Deep Rest costs 1.7 day/s and is the only early source of the cultivation energies. Two records, a 17× price gap, and the opening's whole pacing curve. Extends **[A 23]** at zero content cost. (02 §1, §8): *copy*
 41. **Windowed milestone rewards.** 风灵 pays 30 years for reaching Foundation Zero Weight within 30 elapsed years; 路远 pays 50 for reaching it between 60 and 90. "How fast did you play" becomes content with no timer UI. Neither window is shown to the player. (02 §8): *beat: keep the window, show the deadline*
 42. **Prestige currency without a reset.** Achievements pay milestone points; milestone points buy centuries and caps. The Hall's function (**[A 26]**) without ever taking the save away. (02 §8, 01 Achievements): *copy if prestige is ever in scope*
@@ -46,7 +47,7 @@ The one-line verdict: Hundred Days is Arcanum's engine with a **spendable lifesp
 
 65. **Three clocks.** Time (days), Life (years remaining, percent spent), Play Time, always visible in the runner column. (01): *copy the Life clock when the lifespan axis lands*
 66. **Search once a list passes ~50 records.** Dwelling searches by tag, result or name over 325 furniture. (01): *copy at that size*
-67. **Phone layout is not optional.** The fork never touched the CSS below ~1000 px; at 390 px the columns overlap and bars are cut. Arcanum **[A 1]** has a working single column. (01): *avoid*
+67. **Phone layout is not optional.** The fork never touched the CSS below ~1000 px; at 390 px the columns overlap and bars are cut. Arcanum does not reflow either (**[A 37]**, A/01 Mobile), so neither reference is a phone model. (01): *avoid*
 68. **One notice channel.** Three permanent coloured strips, a 3-s toast, a news ticker and a bottom hint band compete on the first screen. (01): *avoid*
 
 ## K. Licensing (binding on us, not a design rule)

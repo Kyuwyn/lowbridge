@@ -1,38 +1,24 @@
 [
   {
     "id": "mill_work", "name": "Haul sacks at the mill", "kind": "task", "group": "Work",
-    "desc": "Sacks from the cart to the stones, counted into your hand at the door. Wen rounds the wage up after twenty sacks and again after forty.",
+    "desc": "Sacks from the cart to the stones, counted into your hand at the door. After five sacks Wen puts you on a small wage that comes in on its own, a coin every twenty seconds, here or away, for as long as you work for him. He rounds the sack rate up after twenty sacks, again after forty and again after eighty.",
     "flavor": "Wen pays by the sack and watches you carry every one of them.",
     "cost": { "vigor": 2 }, "result": { "coin": 3, "coin_earned": 3, "labour.exp": 4 },
-    "at": { "20": { "mill_work.yield": 1 }, "40": { "mill_work.yield": 1 } },
+    "at": { "5": { "coin.rate": 0.05, "coin_earned.rate": 0.05 }, "20": { "mill_work.yield": 1 }, "40": { "mill_work.yield": 1 }, "80": { "mill_work.yield": 1 } },
     "events": [{ "id": "wen_stops_counting", "when": "g.mill_work.reps >= 5",
-      "text": "Wen stops counting your sacks aloud. ‘Stand a shift if you'd rather. Flat wage. Nobody watches.’" }]
-  },
-  {
-    "id": "mill_shift", "name": "Stand a shift on the mill floor", "kind": "task", "group": "Work",
-    "desc": "A flat wage for as long as you stay on the floor. Steady, unwatched, and about two thirds of what the same hours of chosen sacks pay.",
-    "flavor": "Nobody counts your sacks on a shift. Nobody counts your rests either.",
-    "require": "g.mill_work.reps >= 5",
-    "length": "continuous", "fill": "coin",
-    "effect": { "coin": 0.89, "coin_earned": 0.89, "labour.exp": 1.3 }
+      "text": "Wen stops counting your sacks aloud. ‘You're on the books now. A small wage comes to you whether you're on my floor or not, and the sacks still pay by the sack. Nobody watches.’" }]
   },
   {
     "id": "sort_herbs", "name": "Sort herbs at Granny Shu's", "kind": "task", "group": "Work",
-    "desc": "Clean bundles for Shu's stall. Once you are her apprentice every sorting teaches Herb Lore as well.",
-    "cost": { "vigor": 1 }, "result": { "herbs": 1, "herbcraft.exp": 3 }
-  },
-  {
-    "id": "rack_tending", "name": "Turn the drying racks", "kind": "task", "group": "Work",
-    "desc": "Shu's loft racks want turning all day. Bundles come off them while you stay with it, at about two thirds of chosen sorting.",
-    "require": "g.shu_apprentice > 0",
-    "length": "continuous", "fill": "herbs",
-    "effect": { "herbs": 0.39, "herbcraft.exp": 1.25 }
+    "desc": "Clean bundles for Shu's stall. Once you are her apprentice every sorting teaches Herb Lore as well. After twenty-five sortings she trusts you with the stock that makes two bundles.",
+    "cost": { "vigor": 1 }, "result": { "herbs": 1, "herbcraft.exp": 3 },
+    "at": { "25": { "sort_herbs.yield": 1 } }
   },
   {
     "id": "gather_herbs", "name": "Gather herbs by the stream", "kind": "task", "group": "Work",
-    "desc": "Stems along the stream that hold a little qi; you can feel which now. One bundle more a trip after ten.",
+    "desc": "Stems along the stream that hold a little qi; you can feel which now. One bundle more a trip after ten, and another after thirty.",
     "require": "g.qi_sense >= 1", "cost": { "vigor": 3 }, "result": { "herbs": 3, "qi_sense.exp": 5, "herbcraft.exp": 4 },
-    "at": { "10": { "gather_herbs.yield": 1 } }
+    "at": { "10": { "gather_herbs.yield": 1 }, "30": { "gather_herbs.yield": 1 } }
   },
   {
     "id": "cut_timber", "name": "Cut timber beyond the mill", "kind": "task", "group": "Work",
@@ -41,53 +27,57 @@
   },
   {
     "id": "ferry_hauling", "name": "Haul freight to the ferry", "kind": "task", "group": "Work",
-    "desc": "Freight to the ferry pays better than sacks. Wen will hire a boy the day you take it.",
+    "desc": "Freight to the ferry pays better than sacks, two coin more a load after twenty loads and again after fifty. Wen will hire a boy the day you take it, and his wage stops.",
     "require": "g.foundation > 0", "cost": { "vigor": 3 }, "result": { "coin": 6, "coin_earned": 6, "labour.exp": 4 },
-    "at": { "20": { "ferry_hauling.yield": 2 } }, "lock": ["mill_work"],
-    "warn": "The ferry road closes the sack work at the mill for good.",
+    "at": { "20": { "ferry_hauling.yield": 2 }, "50": { "ferry_hauling.yield": 2 } }, "lock": ["mill_work"],
+    "mod": { "coin.rate": "-0.05 * (g.mill_work.reps >= 5)", "coin_earned.rate": "-0.05 * (g.mill_work.reps >= 5)" },
+    "warn": "The ferry road closes the sack work at the mill for good, and Wen's wage with it.",
     "events": [{ "id": "wen_hires_boy", "when": "g.ferry_hauling.reps >= 1",
-      "text": "Wen takes on a boy for the sacks before you have finished saying it. The ferry road pays better and he knows it." }]
+      "text": "Wen takes on a boy for the sacks before you have finished saying it, and your name comes off his books. The ferry road pays better and he knows it." }]
   },
   {
     "id": "rest", "name": "Rest", "kind": "task", "group": "Work",
-    "desc": "Lie down until the day's strength comes back. Vigor returns whatever you do; resting is faster, a pallet or a cot faster still.",
-    "length": "continuous", "fill": "vigor", "effect": { "vigor": 0.35 }, "autoStart": true
+    "desc": "Lie down until the day's strength comes back. Vigor returns whatever you do; resting is faster, a pallet or a cot faster still. Spending Vigor on a chore does not end the rest: it keeps going until you are full again. Resting brings Life back too, from empty to full in about five minutes. While Settle the breath is held, lying still teaches Composure as well.",
+    "length": "continuous", "fill": ["vigor", "life"],
+    "effect": { "vigor": 0.35, "life": "g.life.max / 300", "composure.exp": "0.3 * g.settle_breath.attuned" }, "autoStart": true
   },
   {
     "id": "coin_pouch", "name": "A larger coin pouch", "kind": "purchase", "group": "Purchases",
     "desc": "Thirty coin more than a loose purse holds.",
-    "require": "g.coin >= 12", "need": "g.coin >= 15", "needtext": "Fifteen coin.",
+    "require": "g.coin >= 12",
     "buy": { "coin": 15 }, "mod": { "coin.max": 30 }, "max": 1
   },
   {
     "id": "shu_apprentice", "name": "Apprentice to Granny Shu", "kind": "class", "group": "Purchases", "title": "Shu's apprentice",
-    "desc": "Mornings sorting Shu's stock, Herb Lore from her corrections, and a corner of her loft for your own things.",
-    "require": "g.sort_herbs.reps >= 3", "need": "g.coin >= 5", "needtext": "Five coin.",
-    "buy": { "coin": 5 }, "mod": { "herbcraft.open": 1 }, "max": 1,
+    "desc": "Mornings sorting Shu's stock, Herb Lore from her corrections, a corner of her loft for your own things, and a share of what dries on her racks: a bundle every fifty seconds that comes in on its own, here or away.",
+    "require": "g.sort_herbs.reps >= 3",
+    "buy": { "coin": 5 }, "mod": { "herbcraft.open": 1, "herbs.rate": 0.02 }, "max": 1,
     "events": [{ "id": "shu_takes_apprentice", "when": "g.shu_apprentice > 0",
       "text": "Granny Shu looks at your hands rather than your face. ‘You sort faster than the last one. Come in the mornings.’ A cracked jade slip turns over in her fingers. ‘Nobody will have this. Six coin, if you are foolish.’" }]
   },
   {
     "id": "jade_slip", "name": "Cracked jade slip", "kind": "purchase", "group": "Purchases",
     "desc": "Lesser Breath-Gathering Method, leaves one, two and eight of twelve. ‘Sit as water sits. Draw the breath past the throat and let it pool below the navel. Feel for what is not air.’ Leaf eight: ‘…when the pooled breath turns, do not follow it. Wait at the turning. The rest is—’ The characters after that are chipped away.",
-    "require": "g.shu_apprentice > 0", "need": "g.coin >= 6", "needtext": "Six coin.",
+    "require": "g.shu_apprentice > 0",
     "buy": { "coin": 6 }, "mod": { "lore.open": 1, "qi_sense.open": 1, "qi.open": 1 }, "max": 1,
     "events": [{ "id": "slip_acquired", "when": "g.jade_slip > 0",
       "text": "Three leaves of twelve. The breath can be practised from what survives; the turn described on the last leaf cannot yet be made." }]
   },
   {
     "id": "field_kit", "name": "Cord, stakes and a hook", "kind": "purchase", "group": "Purchases",
-    "desc": "Cord, stakes and a hook: enough for timber, and enough to work the broken channel. Labour can go a level further, and each level stacks another length of timber.",
-    "require": "g.lore >= 1", "need": "g.coin >= 20", "needtext": "Twenty coin.",
+    "desc": "Cord, stakes and a hook. Timber for a roof of your own is cut with them, and the fall at the broken channel is cleared with them. Labour can go a level further, and each level stacks another length of timber.",
+    "require": "g.lore >= 1",
     "buy": { "coin": 20 }, "mod": { "labour.max": 1, "labour.mod.timber.max": 1 }, "max": 1,
     "events": [{ "id": "lu_hears", "when": "g.field_kit > 0",
       "text": "Headman Lu hears you bought cord and a hook before you have coiled them. ‘The fall at the channel. Ten coin and the stones are yours.’" }]
   },
   {
     "id": "shu_reading", "name": "Granny Shu reads the hard characters", "kind": "purchase", "group": "Purchases",
-    "desc": "She fills in three readings the cracks obscure and will not say how she knows them. Lore reaches a level further and speeds the copying.",
-    "require": "g.lore >= 2", "need": "g.herbs >= 5", "needtext": "She wants five good bundles.",
-    "buy": { "herbs": 5 }, "mod": { "lore.max": 1, "lore.mod.fragment_notes.rate": 0.05 }, "max": 1
+    "desc": "She fills in three readings the cracks obscure and will not say how she knows them. She wants five good bundles for it. Lore reaches a level further and speeds the copying.",
+    "require": "g.lore >= 2",
+    "buy": { "herbs": 5 }, "mod": { "lore.max": 1, "lore.mod.fragment_notes.rate": 0.05 }, "max": 1,
+    "events": [{ "id": "shu_reads", "when": "g.shu_reading > 0",
+      "text": "Shu reads the cracked characters aloud without looking at them twice, then goes back to her bundles. ‘My mother had a slip like that,’ she says, and nothing else, however you ask." }]
   },
   {
     "id": "breath_gathering", "name": "Practise the slip's breath method", "kind": "task", "group": "Practice",
@@ -142,21 +132,25 @@
     "at": { "5": { "carry_current.discount": 0.15 }, "15": { "carry_current.discount": 0.15 } },
     "held": { "strike.max": 1 },
     "lock": ["settle_breath"],
-    "warn": "Attuning this settles how your body reads leaf eight: as a current to carry. The hollow's reading, Settle the breath, will not take afterwards and closes for good."
+    "warn": "Attuning this settles how your body reads leaf eight: as a current to carry. The hollow's reading, Settle the breath, will not take afterwards and closes for good.",
+    "events": [{ "id": "current_first_carried", "when": "g.carry_current.reps >= 1",
+      "text": "You take the turn up and it stays, low in the body, like a breath you no longer have to hold. Anything you set out to do next feels shorter already." }]
   },
   {
     "id": "settle_breath", "name": "Settle the breath", "kind": "technique", "group": "Techniques",
     "attune": true, "tags": ["t_hollow", "t_school_body"],
     "desc": "The hollow's reading of leaf eight: let the turn down and keep still while it settles. Three qi become Composure and Lore. Held, it adds one to Guard in a fight.",
     "flavor": "Fernhollow does the work; you only stop interrupting it.",
-    "require": "g.sit_fernhollow > 0",
+    "require": "g.sit_fernhollow.reps >= 3",
     "need": "g.composure < g.composure.max || g.lore < g.lore.max",
     "needtext": "Neither Composure nor Lore has room left for it.",
     "cost": { "qi": 3 }, "result": { "composure.exp": 30, "lore.exp": 15 },
     "at": { "5": { "settle_breath.discount": 0.15 }, "15": { "settle_breath.discount": 0.15 } },
     "held": { "guard.max": 1, "dodge.max": 5 },
     "lock": ["carry_current"],
-    "warn": "Attuning this settles how your body reads leaf eight: as a current to let settle. The channel's reading, Carry the current, will not take afterwards and closes for good."
+    "warn": "Attuning this settles how your body reads leaf eight: as a current to let settle. The channel's reading, Carry the current, will not take afterwards and closes for good.",
+    "events": [{ "id": "breath_first_settled", "when": "g.settle_breath.reps >= 1",
+      "text": "You let the turn down and keep still. It settles of its own accord, the way the ferns do, and when you open your eyes the loft is dimmer than it was." }]
   },
   {
     "id": "current_carried", "name": "A held turn", "kind": "flag", "group": "Discoveries",
@@ -165,17 +159,17 @@
   },
   {
     "id": "settling", "name": "Settle the foundation", "kind": "breakthrough", "group": "Practice",
-    "desc": "Three minutes in the loft with the reconstructed method. Ten bundles burn to keep the air still; forty coin go to Wen for the days off his floor; the reservoir must be full and is not spent. Three of the four signs below say the sitting will hold.",
+    "desc": "Three minutes in the loft with the reconstructed method. Ten bundles burn to keep the air still; forty coin go to Wen for the days off his floor; the reservoir must be full and is not spent. Three of the four signs below say the sitting will hold. Afterwards the bank keeps up to six hours of time away.",
     "flavor": "Nothing in the loft will look any different afterwards.",
     "require": "g.circulation.open > 0",
-    "need": "g.herbs >= 10 && g.coin >= 40 && g.qi >= g.qi.max",
-    "needtext": "Ten bundles, forty coin and a full reservoir.",
+    "need": "g.qi >= g.qi.max",
+    "needtext": "A full reservoir; the slip's breath method fills it.",
     "buy": { "herbs": 10, "coin": 40 }, "length": 180, "max": 1,
     "boost": { "flag": "current_carried", "multiplier": 1.5 },
     "breakthrough": { "title": "Lay the foundation", "core": "g.circulation >= 2", "coreLabel": "Circulation 2: the turn holds on its own", "required": 3,
       "pointers": [
         { "label": "Qi Sense 3, enough to feel the reservoir fill", "when": "g.qi_sense >= 3" },
-        { "label": "Lore 2, the surviving leaves read through", "when": "g.lore >= 2" },
+        { "label": "Both places walked: the broken channel and Fernhollow", "when": "g.channel_observe > 0 && g.fernhollow_observe > 0" },
         { "label": "A lean-to of your own, with a door to shut on the sitting", "when": "g.lean_to > 0" },
         { "label": "Two methods held attuned, which fills the mat's second place", "when": "g.attune_slots >= 2" }
       ] },
@@ -184,7 +178,9 @@
     "events": [{ "id": "foundation_reached", "when": "g.foundation > 0",
       "text": "The pooled breath turns, and returns, and turns again without being asked. Foundation. The method has room to grow in it now, and so does the road: the ferry crossing, and the outskirts of Old Ridge beyond it." },
       { "id": "traveller_channel", "when": "g.foundation > 0 && g.clear_channel > 0",
-        "text": "A traveller at the ferry asks after whoever cleared the fall. Headman Lu points at you without looking up." }]
+        "text": "A traveller at the ferry asks after whoever cleared the fall. Headman Lu points at you without looking up." },
+      { "id": "traveller_hollow", "when": "g.foundation > 0 && g.sit_fernhollow.reps >= 3",
+        "text": "A woman waiting for the ferry asks whether anyone still sits in Fernhollow at dusk. Granny Shu, buying salt beside her, says nobody in particular and looks at you." }]
   },
   {
     "id": "channel_observe", "name": "Walk the broken channel", "kind": "site", "group": "Sites",
@@ -220,10 +216,12 @@
     "require": "g.fernhollow_observe > 0",
     "need": "g.qi_sense < g.qi_sense.max || g.sit_fernhollow.reps < 3",
     "needtext": "The hollow's current has become familiar and Qi Sense has no room left.",
-    "length": 120, "result": { "qi_sense.exp": 240, "composure.exp": 40 },
+    "length": 90, "result": { "qi_sense.exp": 240, "composure.exp": 40 },
     "at": { "3": { "circulation.open": 1 } },
     "boost": { "flag": "current_carried", "multiplier": 1.5 },
-    "events": [{ "id": "three_dusks", "when": "g.sit_fernhollow.reps >= 3",
+    "events": [{ "id": "first_dusk", "when": "g.sit_fernhollow.reps >= 1",
+        "text": "Shu smells the ferns on your sleeves the next morning. ‘Fernhollow at dusk,’ she says. ‘My husband used to sit there. He came home quieter every time.’" },
+      { "id": "three_dusks", "when": "g.sit_fernhollow.reps >= 3",
         "text": "At the third dusk the turn can be held without being followed. The missing sentence has become an exercise." }]
   },
   {
@@ -233,7 +231,11 @@
     "require": "g.circulation.open > 0", "length": 60,
     "result": { "labour.exp": 6 }, "at": { "1": { "life.max": 1 } },
     "encounter": { "foe": { "name": "Old Tam", "life": 4, "strike": 2, "guard": 1, "speed": 1, "hit": 75, "dodge": 20 }, "success": {},
-      "failureText": "Tam lowers his pole and tells you to come back when the breath runs deeper." }
+      "failureText": "Tam lowers his pole and tells you to come back when the breath runs deeper." },
+    "events": [{ "id": "tam_first_win", "when": "g.sparring_bout.reps >= 1",
+        "text": "Tam sits down on the landing steps and rubs his wrist. ‘Forty years I've waited for somebody to do that,’ he says, and he sounds pleased about it." },
+      { "id": "tam_outgrown", "when": "g.sparring_bout.reps >= 5",
+        "text": "Tam leans his pole against the ferry post before the bout is done. ‘You've stopped practising on me,’ he says. ‘Go and find someone who can teach you something.’" }]
   },
   {
     "id": "hayloft", "name": "Hayloft above Wen's barn", "kind": "home", "group": "Home",
@@ -244,49 +246,45 @@
   {
     "id": "straw_pallet", "name": "Straw pallet", "kind": "arrangement", "group": "Home", "slot": "rest",
     "desc": "Fills the place you sleep. Resting returns a quarter more.",
-    "require": "g.shu_apprentice > 0", "need": "g.coin >= 4", "needtext": "Four coin.",
+    "require": "g.shu_apprentice > 0",
     "buy": { "coin": 4 }, "mod": { "rest.rate": 0.25 }, "max": 1
   },
   {
-    "id": "cot", "name": "A proper cot", "kind": "arrangement", "group": "Home", "slot": "rest",
+    "id": "cot", "name": "A proper cot", "kind": "arrangement", "group": "Home", "slot": "rest", "tags": ["t_furnished"],
     "desc": "Fills the place you sleep in the lean-to. Resting returns half again as much, and Vigor comes back a little faster all day.",
-    "require": "g.lean_to > 0", "need": "g.coin >= 20 && g.timber >= 3", "needtext": "Twenty coin and three timber.",
+    "require": "g.lean_to > 0",
     "buy": { "coin": 20, "timber": 3 }, "mod": { "rest.rate": 0.5, "vigor.rate": 0.02 }, "max": 1
   },
   {
     "id": "practice_mat", "name": "Practice mat", "kind": "arrangement", "group": "Home", "slot": "practice",
     "desc": "Fills the place you practise. Breath practice runs a quarter faster, a little qi gathers on its own, Composure reaches a level further, and a second method has somewhere to be held.",
     "flavor": "Without somewhere to sit with it, you rebuild the method from memory every morning.",
-    "require": "g.jade_slip > 0", "need": "g.coin >= 8", "needtext": "Eight coin.",
+    "require": "g.jade_slip > 0",
     "buy": { "coin": 8 },
     "mod": { "breath_gathering.rate": 0.25, "qi.rate": 0.005, "composure.max": 1, "attune_slots.max": 1 }, "max": 1,
-    "events": [{ "id": "second_place", "when": "g.practice_mat > 0",
-      "text": "The mat gives you somewhere to sit and, oddly, room in your head to hold a second method ready." }]
+    "events": [{ "id": "second_place", "when": "g.practice_mat > 0 && g.attune_slots >= 1",
+      "text": "With the mat under you and one method held, there turns out to be room in your head for a second. It only wants something to hold." }]
   },
   {
     "id": "herb_rack", "name": "Herb rack", "kind": "arrangement", "group": "Home",
-    "desc": "One span of lean-to floor. More bundles kept, a dried bundle more from every gathering, faster rack work, and Herb Lore a level further.",
+    "desc": "One span of lean-to floor. More bundles kept, a dried bundle more from every gathering, a few bundles that dry on it by themselves, and Herb Lore a level further.",
     "require": "g.herbcraft >= 1",
-    "need": "g.lean_to > 0 && g.coin >= 10 && g.timber >= 2 && g.home_space.max - g.home_space >= 1",
-    "needtext": "The lean-to, ten coin, two timber and one free span of floor.",
+    "need": "g.lean_to > 0", "needtext": "The lean-to first; the hayloft has no floor to spare for a rack.",
     "buy": { "coin": 10, "timber": 2 }, "space": 1,
-    "mod": { "herbs.max": 12, "gather_herbs.yield": 1, "rack_tending.rate": 0.3, "herbcraft.max": 1 }, "max": 1
+    "mod": { "herbs.max": 12, "gather_herbs.yield": 1, "herbs.rate": 0.005, "herbcraft.max": 1 }, "max": 1
   },
   {
-    "id": "garden_plot", "name": "Herb plot by the door", "kind": "arrangement", "group": "Home",
-    "desc": "One span by the door, bedded with cuttings from Shu's stock. Herbs come on by themselves whether you are home or not.",
+    "id": "garden_plot", "name": "Herb plot by the door", "kind": "arrangement", "group": "Home", "tags": ["t_furnished"],
+    "desc": "One span by the door, bedded with four bundles of cuttings from Shu's stock. Herbs come on by themselves whether you are home or not.",
     "require": "g.herbcraft >= 2",
-    "need": "g.coin >= 12 && g.timber >= 2 && g.herbs >= 4 && g.home_space.max - g.home_space >= 1",
-    "needtext": "Twelve coin, two timber, four bundles for cuttings and one free span of floor.",
     "buy": { "coin": 12, "timber": 2, "herbs": 4 }, "space": 1,
     "mod": { "herbs.rate": 0.01, "herbs.max": 4 }, "max": 1
   },
   {
     "id": "channel_arrangement", "name": "Channel stones set in the floor", "kind": "arrangement", "group": "Home",
-    "desc": "Two spans of floor for the four stones. They open Circulation, make the channel exercise half again as fast, let Stone Sense reach a level further, and give every level of Circulation another point of Vigor.",
+    "desc": "Two spans of floor for the four stones. They open Circulation, make the channel exercise half again as fast, let Stone Sense reach a level further, and give every level of Circulation another point of Vigor. Once set, the stones stay: they cannot be taken down, and they move house with you.",
     "require": "g.clear_channel > 0",
-    "need": "g.stone >= 4 && g.home_space.max - g.home_space >= 2 && g.qi_sense >= 3",
-    "needtext": "Four stones, two spans of floor, and Qi Sense 3 to feel where the flow should bend.",
+    "need": "g.qi_sense >= 3", "needtext": "Qi Sense 3, to feel where the flow should bend.",
     "buy": { "stone": 4 }, "space": 2,
     "mod": { "circulation.open": 1, "channel_exercise.rate": 0.5, "stonework.max": 1, "circulation.mod.vigor.max": 1 }, "max": 1,
     "events": [{ "id": "stones_in_the_floor", "when": "g.channel_arrangement > 0",
@@ -294,19 +292,18 @@
   },
   {
     "id": "lean_to", "name": "Lean-to", "kind": "home", "group": "Home",
-    "desc": "Four spans against the end of Wen's barn, with a door that is yours. Arrangements come with you; the hayloft closes behind you.",
-    "flavor": "In Lowbridge, a door you can shut counts as independence.",
-    "need": "g.coin >= 40 && g.timber >= 6", "needtext": "Forty coin and six timber.",
+    "desc": "Four spans against the end of Wen's barn, with a door that is yours. Its timber is cut with cord and a hook. Arrangements come with you; the hayloft closes behind you.",
     "buy": { "coin": 40, "timber": 6 }, "mod": { "home_space.max": 2 },
     "lock": ["hayloft"], "max": 1, "slots": ["rest", "practice"],
-    "warn": "Moving out of the hayloft closes it for good; the rafters go back to being Wen's."
+    "warn": "Moving out of the hayloft closes it for good; the rafters go back to being Wen's.",
+    "events": [{ "id": "lean_to_door", "when": "g.lean_to > 0",
+      "text": "You shut the lean-to's door behind you for the first time and stand there a while. In Lowbridge, a door you can shut counts as independence." }]
   },
   {
-    "id": "strongbox", "name": "Strongbox", "kind": "arrangement", "group": "Home",
+    "id": "strongbox", "name": "Strongbox", "kind": "arrangement", "group": "Home", "tags": ["t_furnished"],
     "desc": "One span of lean-to floor and room for fifty more coin. The hayloft never had a corner safe enough for one.",
     "require": "g.coin_pouch > 0",
-    "need": "g.lean_to > 0 && g.coin >= 25 && g.timber >= 2 && g.home_space.max - g.home_space >= 1",
-    "needtext": "The lean-to, twenty-five coin, two timber and one free span of floor.",
+    "need": "g.lean_to > 0", "needtext": "The lean-to first; the hayloft has no corner safe enough.",
     "buy": { "coin": 25, "timber": 2 }, "space": 1, "mod": { "coin.max": 50 }, "max": 1
   }
 ]

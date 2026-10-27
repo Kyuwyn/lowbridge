@@ -4,7 +4,7 @@ import { DODGE_MAX, FIGHT_LINES, GAUGE, GameEngine, WAITING_MAX } from './engine
 export const SAVE_FORMAT = 'lowbridge-save';
 export const SAVE_VERSION = 6;
 export const DATABASE_NAME = 'lowbridge-first-slice';
-const LOG_KINDS = ['discovery', 'story', 'cap', 'completion', 'pause', 'purchase', 'fight'];
+const LOG_KINDS = ['discovery', 'story', 'cap', 'completion', 'pause', 'purchase', 'method', 'home', 'fight'];
 const OBJECTIVE_KINDS = ['repetitions', 'level', 'resource'];
 const FIGHT_RESULTS = ['won', 'life', 'outlasted'];
 /** Everything else about a record (caps, rates, durations, yields, discounts) is recomputed on load. */

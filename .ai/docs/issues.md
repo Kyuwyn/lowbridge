@@ -3,7 +3,7 @@
 
 **Summary:** 11 candidates considered · 7 raised · 4 refuted. By severity: High 1, Medium 5, Low 1. By family: IF-4 (documentation/design drift) 6, IF-3a (implicit coupling) 1. DeepInit is report-only, so nothing here was changed in source, and only findings with HIGH certainty are raised. IF-2 (database drift) does not apply because there is no database. IF-5 (git risk) is unavailable because the repository has no commits.
 
-All references below were re-checked against the source after the live-combat change landed on 2026-10-21.
+All references below were re-checked against the source after the live-combat change landed on 2026-10-21. Lifecycles and resolutions were updated by hand on 2026-10-27, after the design-audit fixes; the next DeepInit run regenerates this file.
 
 ## Fires (raised)
 
@@ -14,7 +14,8 @@ All references below were re-checked against the source after the live-combat ch
 - **severity:** Medium
 - **criticality:** Core
 - **certainty:** HIGH
-- **lifecycle:** open
+- **lifecycle:** resolved (2026-10-27)
+- **resolution:** [ADR 0027](../../design/decisions/0027-locks-at-payment-and-stops.md) records that discoveries never stop activity and amends ADR 0007's stops. The implementation plan's away-time paragraph and the README now say an activity stops at its objective, a full store or an unaffordable drain, then the waiting list and Rest run, and only the rest is banked.
 - **baseline:** new
 - **suggested direction:** Record the decision in an ADR and update the plan and README, or restore pausing deliberately.
 
@@ -25,7 +26,8 @@ All references below were re-checked against the source after the live-combat ch
 - **severity:** Medium
 - **criticality:** Supporting
 - **certainty:** HIGH
-- **lifecycle:** open
+- **lifecycle:** resolved (2026-10-27)
+- **resolution:** The report's current-pacing paragraph now carries the 27 October `bun run validate` figures and bands (direct routes 9.47 / 10.73 min to Foundation, 119/119 records) and marks the older sections as history; [ADR 0028](../../design/decisions/0028-ten-minute-foundation.md) names it as where the measured figure lives.
 - **baseline:** new
 - **suggested direction:** Regenerate the report from `bun run validate --json`.
 
@@ -36,7 +38,8 @@ All references below were re-checked against the source after the live-combat ch
 - **severity:** Medium
 - **criticality:** Supporting
 - **certainty:** HIGH
-- **lifecycle:** open
+- **lifecycle:** resolved (2026-10-27)
+- **resolution:** One bound, recorded in [ADR 0028](../../design/decisions/0028-ten-minute-foundation.md): about ten minutes of honest play, enforced only by `bun run validate` (direct routes 480–780 s with Circulation by 600 s; preference routes within 1200 s; ridge 720–1440 s). The design plan's Part C bound and Part E check 4, the README and PRODUCT.md now say the same; `scripts/routes.ts` no longer exits on a time of its own; and with the sustained earners gone (ADR 0022 amendment) there is no sustained-only figure to report.
 - **baseline:** new
 - **suggested direction:** Pick one bound, record it, and align `routes.ts` and the plan.
 
@@ -47,7 +50,8 @@ All references below were re-checked against the source after the live-combat ch
 - **severity:** Medium
 - **criticality:** Core
 - **certainty:** HIGH
-- **lifecycle:** open
+- **lifecycle:** resolved (2026-10-27)
+- **resolution:** ADR 0024 is amended to match the code: keys are named in `routeKeys` (`src/content.ts`) rather than as records, and show by name on Character and in method details. The ridge reads every school key (its four direction signs), adds the sword and formation keys, and `bun run validate` fails a key carried but never read, a carried key without a name and a named key nothing carries. Commit 94a21fe closed the rest: the direction signs read a new `t_furnished` key carried by the cot, herb plot and strongbox instead of naming them; the coffer asks only `g.foundation > 0` and the cottage `g.foundation > 0 && g.home_space.max >= 4`; and `validateModuleSeams` (`scripts/validate.ts:282`) fails any gate in `opening.json` or `ridge.json` that names a record from the other chapter. The shared file is exempt as the vocabulary both chapters read.
 - **baseline:** new
 - **suggested direction:** Either implement the checks and key records, or amend ADR 0024 to match the code.
 
@@ -80,7 +84,8 @@ All references below were re-checked against the source after the live-combat ch
 - **severity:** Medium
 - **criticality:** Supporting
 - **certainty:** HIGH
-- **lifecycle:** open
+- **lifecycle:** resolved (2026-10-27)
+- **resolution:** `AGENTS.md`, `CLAUDE.md` and the implementation plan's scope line now name the ridge chapter, its four direction classes, the waystation and the two optional fights as in scope; sects, waystation modules and dungeons stay out.
 - **baseline:** new
 - **suggested direction:** A human should update the scope line; DeepInit carried it forward verbatim.
 

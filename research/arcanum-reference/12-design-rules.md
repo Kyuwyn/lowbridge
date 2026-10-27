@@ -58,6 +58,16 @@ Synthesis of pages 01-11. Keeps the 13 rules from `../arcanum-mechanics-2026-10-
 37. **Desktop-only layout;** mobile squeezes four columns into 390 px. (01): *beat*
 38. **Irreversible actions confirm via `warn`;** same-tier class exclusion does not warn. (02, 04): *beat*
 
+## G. Layer alignment (added 2026-10-27 from a layered craft critique of both references)
+
+Numbered after Hundred Days' 39–69 so both sets stay citable as one list.
+
+70. **Flavour comments on the mechanic.** The prose is microtext. Of 1,719 id'd records in the testing-build data, 73 % carry `desc` and 17 % carry `flavor`, with a median length of 47 characters across both `[0.12.12.9 data]`. It works because it is *about* the economy: the Neophyte bill's fee joke, `evt_helper`, tier-ups that lock the apprentice chores. (01, 04, data): *copy*
+71. **Identity lives where the numbers live.** Homes carry a line's rates, so where you live is part of your build (07). Class names promise a specialist, yet the glossary says to buy every skill, and 30 of 44 skills are capped at T4 (11). *copy home-as-identity; beat names without payoff*
+72. **Restraint is the rarest reward and the most hidden.** Mystic Savant (never Study) and Red Adept (no spellbook before Treffil) reward not-doing, and both are lost to ordinary play. Hundred Days rules 41 and 54 have the same shape. (04): *beat: make the restraint a named, visible act*
+73. **A closing fork must differ inside the stage that offers it.** Hundred Days' three scholars each pay +1 to +2 Enlightenment rate, and its wiki admits the choice is about unbuilt future content (HD 05 §4.7). *avoid*
+74. **Never grant a slot or cap that no reachable content can fill.** Generalises rule 46. *avoid*
+
 ## What the mid-game adds to the earlier conclusions
 
 - The earlier studies read Arcanum from source and the first ten minutes. The T4 save shows the *same* rules still binding four hours of play later: caps pinned, bills sized to caps, broad sweep of content, three line skills carrying depth, automation optional. The design is self-similar across tiers rather than front-loaded.
