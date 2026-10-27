@@ -117,7 +117,10 @@ export interface Encounter {
   failureText: string;
 }
 
-/** The average race between the two sides, for the tooltip and for routes; a real fight rolls every swing. */
+/**
+ * A fight as it would go if started now. The race times are averages; `winChance` is exact under the real
+ * swing rules, though a real fight still rolls every swing.
+ */
 export interface FightProjection {
   foe: Foe;
   you: Fighter;
@@ -130,8 +133,22 @@ export interface FightProjection {
   /** Average seconds for each side to fell the other; Infinity when its swings cannot hurt. */
   winSeconds: number; loseSeconds: number;
   limit: number;
+  /** Probability, 0 to 1, of felling the foe within the limit, from Life held now and the foe at full. */
+  winChance: number;
+  verdict: FightVerdict;
+  /** The verdict in the player's words: "Likely win · about 84%". */
+  verdictText: string;
+  /** The cheapest change that would improve the verdict, when there is one. */
+  flip?: string;
+  /** `winChance` is at least one half. */
   likely: boolean;
 }
+
+/** At least 0.95, 0.75 to 0.95, 0.5 to 0.75, below 0.5, and no damage at all. */
+export type FightVerdict = "certain" | "likely" | "close" | "loss" | "hopeless";
+
+/** One resource of a record's bill: what is held against what starting it spends. */
+export interface BillRow { id: string; label: string; held: number; need: number }
 
 export interface Objective {
   kind: "repetitions" | "level" | "resource";
