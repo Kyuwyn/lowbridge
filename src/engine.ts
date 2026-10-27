@@ -1,5 +1,5 @@
 import { evaluateCondition, evaluateExpression, parseExpression, type ExpressionNode } from "./expression";
-import { DERIVED_FIELDS, type AdvanceResult, type Availability, type Changes, type DerivedField, type FightProjection, type Fighter, type GameRecord, type GameState, type LogEntry, type Objective, type Stat, type TooltipBlock, type WorldState } from "./types";
+import { DERIVED_FIELDS, type AdvanceResult, type Availability, type BillRow, type Changes, type DerivedField, type FightProjection, type FightVerdict, type Fighter, type Foe, type GameRecord, type GameState, type LogEntry, type Objective, type Stat, type TooltipBlock, type WorldState } from "./types";
 
 const UNBOUNDED = 1_000_000_000_000;
 const EPSILON = 1e-9;
@@ -25,6 +25,12 @@ export const GAUGE = 5;
 export const DODGE_MAX = 60;
 const FIGHT_HELD = "A fight cannot be left halfway.";
 export const FIGHT_LINES = 200;
+/** Verdicts from worst to best; a flip is a change that moves the verdict up this list. */
+export const FIGHT_VERDICTS: readonly FightVerdict[] = ["hopeless", "loss", "close", "likely", "certain"];
+/** A run that never completes still ends a projection somewhere: a day of fight seconds. */
+const FIGHT_SECONDS_MAX = 86_400;
+/** Said of a cap that no record in the content can raise. */
+const NOTHING_RAISES = "Nothing you know of raises this further.";
 
 const derivedFields = new Set<string>(DERIVED_FIELDS);
 /** Two stores the engine fills in; content only raises their caps, and neither is ever a reward. */
@@ -288,7 +294,10 @@ export class GameEngine {
     set(HOME_SPACE, spans);
     if (this.byId.has(ATTUNE_SLOTS)) {
       const limit = Math.floor(this.stat(ATTUNE_SLOTS).max + EPSILON);
-      if (this.state.attuned.length > limit) { this.state.attuned.length = Math.max(0, limit); changed = true; }
+      if (this.state.attuned.length > limit) {
+        for (const id of this.state.attuned.splice(Math.max(0, limit))) this.log("method", `${this.record(id).name ?? id} is released: there is no place left to hold it.`);
+        changed = true;
+      }
       set(ATTUNE_SLOTS, this.state.attuned.length);
     }
     for (const record of this.records) {
@@ -336,7 +345,10 @@ export class GameEngine {
 
   // ------------------------------------------------------------ availability
 
-  /** A wall: the need fails only on at-limit comparisons (a stat against its own max), never on unmet requirements. */
+  /**
+   * A wall: the need fails only on at-limit comparisons (a stat against its own max), never on unmet requirements.
+   * Floor and attunement places are occupancy the player can free, so a comparison against them is never a wall.
+   */
   atLimitWall(record: GameRecord): boolean {
     if (!record.need || this.condition(record.need)) return false;
     const atoms: ExpressionNode[] = [];
@@ -354,7 +366,10 @@ export class GameEngine {
         else if (node.kind === "binary") { gather(node.left); gather(node.right); }
       };
       gather(atom);
-      return refs.some(ref => ref.endsWith(".max") && refs.includes(ref.slice(0, -4)));
+      return refs.some(ref => {
+        const store = ref.replace(/^g\./, "").slice(0, -4);
+        return ref.endsWith(".max") && refs.includes(ref.slice(0, -4)) && !countedStores.has(store);
+      });
     });
   }
 
@@ -419,14 +434,20 @@ export class GameEngine {
         const sources = this.capSources(resource).map(source => inSentence(source.name ?? source.id));
         return fail(`${this.record(resource).name ?? resource}: ${shown(amount)} needed, but you can hold only ${held.max}${sources.length ? `; raise it through ${sources.join(" or ")}` : ""}.`);
       }
+      // What is short is named before the need, which would otherwise recite the whole bill.
+      const short = Object.entries(payment).filter(([resource, amount]) => this.stat(resource).value + EPSILON < amount)
+        .map(([resource, amount]) => `${this.record(resource).name ?? resource}: ${shown(amount)} needed, ${Math.floor(this.stat(resource).value * 100 + EPSILON) / 100} held.`);
+      if (short.length) return fail(short.join(" "));
       if (!this.condition(record.need)) return fail(record.needtext ?? "The requirements are not met.");
-      for (const [resource, amount] of Object.entries(payment)) {
-        if (this.stat(resource).value + EPSILON < amount) return fail(`${this.record(resource).name ?? resource}: ${shown(amount)} needed.`);
-      }
     }
     const short = record.length === undefined ? undefined : this.unsustained(record);
     if (short) return fail(`${this.record(short).name ?? short} cannot sustain this activity.`);
-    if (record.encounter && this.stat(LIFE).value + EPSILON < 1) return fail(`${this.record(LIFE).name ?? LIFE}: you are in no state to fight.`);
+    if (record.encounter && this.stat(LIFE).value + EPSILON < 1) {
+      const life = this.stat(LIFE), regen = this.state.active ? this.netRate(LIFE) : life.open ? life.rate : 0;
+      const wait = regen > EPSILON ? Math.ceil((1 - life.value) / regen - EPSILON) : undefined;
+      const ready = wait === undefined ? "" : wait < 120 ? `; ready in ~${wait} s` : `; ready in ~${Math.round(wait / 60)} min`;
+      return fail(`${this.record(LIFE).name ?? LIFE}: you are in no state to fight${ready}.`);
+    }
     // An encounter cannot stop halfway, so it starts only with enough in reserve to finish.
     if (record.encounter) {
       for (const [resource, needed] of Object.entries(this.reserveNeeded(record))) {
@@ -554,8 +575,9 @@ export class GameEngine {
     if (record.length === "continuous") {
       const filling = this.fillTargets(record).find(target => this.stat(target).value < this.stat(target).max);
       if (filling) return { kind: "resource", id: filling, target: this.stat(filling).max };
+      // Practice runs to the family's current cap rather than stopping at every level.
       if (record.train && this.stat(record.train).value < this.stat(record.train).max) {
-        return { kind: "level", id: record.train, target: this.stat(record.train).value + 1 };
+        return { kind: "level", id: record.train, target: this.stat(record.train).max };
       }
       const outputs = { ...record.effect, ...Object.assign({}, ...Object.values(record.every ?? {})) } as Changes;
       const resource = Object.keys(outputs).find(path => !path.includes(".") && this.byId.get(path)?.kind === "resource" && this.value(outputs[path]!) > 0 && this.stat(path).value < this.stat(path).max);
@@ -565,7 +587,13 @@ export class GameEngine {
     return { kind: "repetitions", id, target: stat.reps + 1 };
   }
 
+  /** The player's choice. Starting something is also what clears the last fight's report and the last stop. */
   start(id: string, objective?: Objective): Availability {
+    return this.begin(id, objective, true);
+  }
+
+  /** A start the player chose, or one the slot made by itself: resuming the waiting list, or the idle filler. */
+  private begin(id: string, objective: Objective | undefined, chosenByPlayer: boolean): Availability {
     const record = this.record(id);
     // Changing the objective of the running action does not buy its first run twice.
     if (this.state.active?.id === id) {
@@ -580,8 +608,8 @@ export class GameEngine {
     if (record.length !== undefined && this.fighting()) return { ok: false, reason: FIGHT_HELD };
     const chosen = objective ?? this.defaultObjective(id);
     if (record.length !== undefined) {
-      // A finished fight's report stays until the player chooses something; Rest filling the slot does not clear it.
-      if (!record.autoStart && this.state.fight?.result) delete this.state.fight;
+      // A finished fight's report stays until the player chooses something; the slot refilling itself does not clear it.
+      if (chosenByPlayer && this.state.fight?.result) delete this.state.fight;
       const invalid = this.objectiveProblem(record, chosen);
       if (invalid) return { ok: false, reason: invalid };
       // Only another sustained activity takes over the primary activity slot; an interrupted pursuit waits first in line.
@@ -595,10 +623,7 @@ export class GameEngine {
     }
     const stat = this.stat(id);
     if (typeof record.length !== "number") this.pay(record);
-    else if (!stat.paid) {
-      this.pay(record);
-      stat.paid = true;
-    }
+    else if (!stat.paid) this.payEntry(record);
     if (!stat.started) {
       stat.started = true;
       this.effects(record.onStart);
@@ -610,7 +635,7 @@ export class GameEngine {
       this.checkActive();
       this.fillIdle();
     } else {
-      delete this.state.lastStop;
+      if (chosenByPlayer) delete this.state.lastStop;
       this.state.active = { id, progress: record.length === "continuous" ? 0 : stat.exp, objective: clone(chosen) };
       this.reconcile();
     }
@@ -654,6 +679,31 @@ export class GameEngine {
     this.log("home", `${record.name ?? id} has been taken down. Its cost is not returned.`);
     this.reconcile();
     return { ok: true, reason: "Taken down." };
+  }
+
+  /** The take-down confirmation: the bill stays spent, and a lost attunement place releases a method. */
+  removeWarning(id: string): string {
+    const name = this.record(id).name ?? id, subject = /^(A|An|The) /.test(name) ? inSentence(name) : `the ${name}`;
+    const trial = this.snapshot();
+    Object.assign(trial.stats[id]!, { value: 0, reps: 0, exp: 0, paid: false });
+    const after = new GameEngine(this.records, trial).state.attuned;
+    const released = this.state.attuned.filter(method => !after.includes(method)).map(method => this.record(method).name ?? method);
+    if (!released.length) return `Take down ${subject}? Its cost is not returned.`;
+    const room = after.length === 0 ? "no method" : after.length === 1 ? "one method" : `${after.length} methods`;
+    return `Taking down ${subject} leaves room for ${room}; ${list(released)} would be released. Its cost is not returned.`;
+  }
+
+  /** One row per resource the record's bill spends: what is held against what starting it takes. */
+  billProgress(id: string): BillRow[] {
+    return Object.entries(this.payment(this.record(id))).map(([resource, need]) =>
+      ({ id: resource, label: this.record(resource).name ?? resource, held: this.stat(resource).value, need }));
+  }
+
+  /** How far a breakthrough's sign has come, when it is a single `g.x >= N` comparison. */
+  pointerProgress(pointer: { when: string }): { value: number; target: number } | undefined {
+    const node = parseExpression(pointer.when);
+    if (node.kind !== "binary" || node.operator !== ">=" || node.left.kind !== "reference" || node.right.kind !== "literal" || typeof node.right.value !== "number") return undefined;
+    return { value: Number(this.resolve(node.left.path)), target: node.right.value };
   }
 
   /** The player's stop; a fight in progress cannot be left halfway. */
@@ -770,9 +820,7 @@ export class GameEngine {
     if (this.state.active || this.resumeWaiting()) return;
     const filler = this.records.find(record => record.autoStart && this.availability(record.id).ok);
     if (!filler) return;
-    const lastStop = this.state.lastStop;
-    this.start(filler.id);
-    if (lastStop !== undefined) this.state.lastStop = lastStop;
+    this.begin(filler.id, undefined, false);
   }
 
   /** Starts the first waiting pursuit that can run, replacing an idle filler; drops entries that can never resume. */
@@ -789,7 +837,7 @@ export class GameEngine {
       }
       if (!this.availability(entry.id).ok || !this.recovered(record)) continue;
       waiting.splice(index, 1);
-      return this.start(entry.id, entry.objective).ok;
+      return this.begin(entry.id, entry.objective, false).ok;
     }
     return false;
   }
@@ -962,10 +1010,7 @@ export class GameEngine {
         if (this.state.active === active) {
           const available = this.availability(record.id);
           if (!available.ok) this.pause(available.reason);
-          else {
-            this.pay(record);
-            stat.paid = true;
-          }
+          else this.payEntry(record);
         }
       }
     }
@@ -981,37 +1026,98 @@ export class GameEngine {
   }
 
   /**
-   * The average race, without touching state: each side's swings land at Hit × (1 − the other's Dodge) for
-   * Strike over the other's Guard, and come every GAUGE / Speed seconds. While this record's fight runs, your
-   * side is the one you entered with. A real fight rolls every swing, so this is a guide, not a promise.
+   * The fight as it would go if started now, without touching state. Each side's swings land at Hit × (1 − the
+   * other's Dodge) for Strike over the other's Guard, and come every GAUGE / Speed seconds. The race times are
+   * averages; the win chance plays out every swing the real fight would roll. While this record's fight runs,
+   * your side is the one you entered with.
    */
   fight(id: string, lifeHeld?: number): FightProjection {
     if (![LIFE, ...FIGHT_STATS].every(stat => this.byId.has(stat))) throw new Error(`A fight needs the resource records ${[LIFE, ...FIGHT_STATS].join(", ")}.`);
-    const encounter = this.record(id).encounter;
+    const record = this.record(id), encounter = record.encounter;
     if (!encounter) throw new Error(`${id} holds no fight.`);
     const { foe } = encounter, live = this.state.fight?.id === id && !this.state.fight.result ? this.state.fight : undefined;
-    const you: Fighter = live ? { ...live.you } : {
-      strike: Math.floor(this.stat(STRIKE).max + EPSILON), guard: Math.floor(this.stat(GUARD).max + EPSILON),
-      speed: this.stat(SPEED).max, hit: Math.min(100, this.stat(HIT).max), dodge: Math.min(DODGE_MAX, this.stat(DODGE).max),
-    };
-    const life = Math.floor((lifeHeld ?? live?.life ?? this.stat(LIFE).value) + EPSILON);
+    const you: Fighter = live ? { ...live.you } : this.fighter();
+    const lifeValue = lifeHeld ?? live?.life ?? this.stat(LIFE).value, life = Math.floor(lifeValue + EPSILON);
     const held: FightProjection["held"] = [];
     for (const attuned of this.state.attuned) {
-      const adds: Partial<Fighter> = {};
-      for (const [path, amount] of Object.entries(this.record(attuned).held ?? {})) {
-        const stat = FIGHT_STATS.find(key => path === `${key}.max`);
-        if (stat) adds[stat] = (adds[stat] ?? 0) + this.value(amount);
-      }
+      const adds = this.heldAdds(attuned);
       if (Object.keys(adds).length) held.push({ id: attuned, adds });
     }
-    const yourChance = you.hit / 100 * (1 - foe.dodge / 100), foeChance = foe.hit / 100 * (1 - you.dodge / 100);
-    const yourDamage = Math.max(0, you.strike - foe.guard), foeDamage = Math.max(0, foe.strike - you.guard);
+    const odds = exchange(you, foe);
     const race = (toFell: number, damage: number, chance: number, speed: number) =>
       damage > 0 && chance > 0 && speed > 0 ? Math.ceil(toFell / damage) / chance * GAUGE / speed : Infinity;
-    const winSeconds = race(foe.life, yourDamage, yourChance, you.speed), loseSeconds = race(life, foeDamage, foeChance, foe.speed);
-    const limit = this.stat(id).length;
-    return { foe, you, life, lifeMax: this.stat(LIFE).max, held, yourChance, foeChance, yourDamage, foeDamage, winSeconds, loseSeconds,
-      limit, likely: winSeconds <= limit && winSeconds <= loseSeconds };
+    const winSeconds = race(foe.life, odds.yourDamage, odds.yourChance, you.speed), loseSeconds = race(life, odds.foeDamage, odds.foeChance, foe.speed);
+    const winChance = this.winChance(record, you, lifeValue), verdict = fightVerdict(winChance, odds.yourDamage);
+    const projection: FightProjection = { foe, you, life, lifeMax: this.stat(LIFE).max, held, ...odds, winSeconds, loseSeconds,
+      limit: this.stat(id).length, winChance, verdict, verdictText: this.verdictText(winChance, verdict, you, foe), likely: winChance + EPSILON >= 0.5 };
+    const flip = live ? undefined : this.flip(record, projection, lifeValue);
+    if (flip) projection.flip = flip;
+    return projection;
+  }
+
+  /** The fight stats you would enter a fight with now, plus what a method not yet held would add. */
+  private fighter(adds: Partial<Fighter> = {}): Fighter {
+    const max = (id: (typeof FIGHT_STATS)[number]) => this.stat(id).max + (adds[id] ?? 0);
+    return { strike: Math.floor(max(STRIKE) + EPSILON), guard: Math.floor(max(GUARD) + EPSILON), speed: max(SPEED),
+      hit: Math.min(100, max(HIT)), dodge: Math.min(DODGE_MAX, max(DODGE)) };
+  }
+
+  /** What a technique's `held` table adds to the fight stats while it holds a place. */
+  private heldAdds(id: string): Partial<Fighter> {
+    const adds: Partial<Fighter> = {};
+    for (const [path, amount] of Object.entries(this.record(id).held ?? {})) {
+      const stat = FIGHT_STATS.find(key => path === `${key}.max`);
+      if (stat) adds[stat] = (adds[stat] ?? 0) + this.value(amount);
+    }
+    return adds;
+  }
+
+  /** The exact chance of a win if this fight began now with these stats and this much Life. */
+  private winChance(record: GameRecord, you: Fighter, life: number): number {
+    const run = this.stat(record.id), lifeStat = this.stat(LIFE), speed = this.speed(record);
+    // The run ends on the second its progress reaches its length, so that is the fight's last second.
+    const seconds = speed > EPSILON ? Math.max(1, Math.ceil((run.length - run.exp) / speed - EPSILON)) : FIGHT_SECONDS_MAX;
+    return winChance({ you, foe: record.encounter!.foe, life, lifeMax: lifeStat.max, regen: lifeStat.open ? lifeStat.rate : 0,
+      seconds: Math.min(seconds, FIGHT_SECONDS_MAX) });
+  }
+
+  private verdictText(chance: number, verdict: FightVerdict, you: Fighter, foe: Fighter): string {
+    if (verdict === "hopeless") return `Cannot win: ${this.record(STRIKE).name ?? STRIKE} ${you.strike} does not pass ${this.record(GUARD).name ?? GUARD} ${foe.guard}`;
+    if (chance <= 0) return "Cannot win inside the time limit";
+    if (chance >= 1 - EPSILON) return "Certain win";
+    return `${{ certain: "Near-certain win", likely: "Likely win", close: "Close", loss: "Likely loss" }[verdict]} · ${percent(chance)}`;
+  }
+
+  /**
+   * The cheapest change that would move the verdict up a band, cheapest first: resting to full Life, holding a
+   * method in a free attunement place, then a higher Strike and what raises it.
+   */
+  private flip(record: GameRecord, projection: FightProjection, life: number): string | undefined {
+    if (projection.verdict === "certain") return undefined;
+    const { foe } = projection, rank = FIGHT_VERDICTS.indexOf(projection.verdict);
+    const better = (chance: number, you: Fighter) => FIGHT_VERDICTS.indexOf(fightVerdict(chance, Math.max(0, you.strike - foe.guard))) > rank;
+    const lifeMax = this.stat(LIFE).max;
+    if (life + EPSILON < lifeMax) {
+      const rested = this.winChance(record, projection.you, lifeMax);
+      if (better(rested, projection.you)) return `Rested to full ${this.record(LIFE).name ?? LIFE}: ${percent(rested)}`;
+    }
+    if (this.byId.has(ATTUNE_SLOTS) && this.state.attuned.length < Math.floor(this.stat(ATTUNE_SLOTS).max + EPSILON)) {
+      let best: { name: string; chance: number } | undefined;
+      for (const method of this.records) {
+        if (!method.attune || this.isAttuned(method.id) || !this.visible(method.id)) continue;
+        const adds = this.heldAdds(method.id);
+        if (!Object.keys(adds).length) continue;
+        const you = this.fighter(adds), chance = this.winChance(record, you, life);
+        if (better(chance, you) && (!best || chance > best.chance)) best = { name: method.name ?? method.id, chance };
+      }
+      if (best) return `Holding ${best.name} as well: ${percent(best.chance)}`;
+    }
+    const strikeName = this.record(STRIKE).name ?? STRIKE, sources = this.capSources(STRIKE).map(source => source.name ?? source.id);
+    const raisers = sources.length ? `raised by ${sources.join(" or ")}` : "nothing you know of raises it further";
+    if (projection.verdict === "hopeless") return `${strikeName} ${foe.guard + 1} passes ${this.record(GUARD).name ?? GUARD} ${foe.guard}: ${raisers}`;
+    if (!sources.length) return undefined;
+    const stronger = { ...projection.you, strike: projection.you.strike + 1 }, chance = this.winChance(record, stronger, life);
+    return better(chance, stronger) ? `${strikeName} ${stronger.strike}: ${percent(chance)}; ${raisers}` : undefined;
   }
 
   /** A fight is under way in the activity slot and has not yet been decided. */
@@ -1023,8 +1129,7 @@ export class GameEngine {
   /** A fight is entered on the first second of its run, with the stats and whole Life held then. */
   private enterFight(record: GameRecord): void {
     if (this.state.fight?.id === record.id && !this.state.fight.result) return;
-    const projection = this.fight(record.id);
-    this.state.fight = { id: record.id, you: projection.you, life: projection.life, foeLife: projection.foe.life,
+    this.state.fight = { id: record.id, you: this.fighter(), life: Math.floor(this.stat(LIFE).value + EPSILON), foeLife: record.encounter!.foe.life,
       yourGauge: 0, foeGauge: 0, seconds: 0, swings: 0, landed: 0, foeSwings: 0, foeLanded: 0, lines: [] };
   }
 
@@ -1033,7 +1138,7 @@ export class GameEngine {
    * when level. Your blows fall on the live Life store. Returns true once a side has fallen.
    */
   private playSwings(record: GameRecord): boolean {
-    const fight = this.state.fight!, { foe } = record.encounter!, projection = this.fight(record.id), name = record.name ?? record.id;
+    const fight = this.state.fight!, { foe } = record.encounter!, projection = exchange(fight.you, foe), name = record.name ?? record.id;
     const Foe = `${foe.name.charAt(0).toUpperCase()}${foe.name.slice(1)}`, lifeName = this.record(LIFE).name ?? LIFE;
     fight.seconds++;
     fight.yourGauge += fight.you.speed;
@@ -1118,19 +1223,38 @@ export class GameEngine {
     this.thresholdEffects(record, stat.reps);
     if (stat.reps === 1) {
       this.effects(record.mod);
-      this.applyLocks(record);
+      // A timed run's locks fell when its bill was paid.
+      if (typeof record.length !== "number") this.applyLocks(record);
     }
     this.recompute();
     return undefined;
   }
 
-  /** Locking removes a record from the world; enabling gives it back. */
+  /**
+   * A timed run's entry bill. Paying it is the commitment, so the run's locks fall then, the way a technique's
+   * fall when it is taken up, and the confirmation that names them lands on the click that pays.
+   */
+  private payEntry(record: GameRecord): void {
+    const stat = this.stat(record.id);
+    this.pay(record);
+    stat.paid = true;
+    if (stat.reps === 0) this.applyLocks(record);
+  }
+
+  /** Locking removes a record from the world, including its place in the waiting list; enabling gives it back. */
   private applyLocks(record: GameRecord): void {
     for (const id of record.lock ?? []) {
       if (!this.byId.has(id) || this.locked(id)) continue;
       this.state.lockedIds.push(id);
-      this.state.waiting = this.state.waiting.filter(entry => entry.id !== id);
-      this.state.attuned = this.state.attuned.filter(entry => entry !== id);
+      const name = this.record(id).name ?? id;
+      if (this.state.waiting.some(entry => entry.id === id)) {
+        this.state.waiting = this.state.waiting.filter(entry => entry.id !== id);
+        this.log("pause", `${name} left the waiting list: this chapter has closed.${this.stat(id).paid ? " What it cost is not returned." : ""}`);
+      }
+      if (this.isAttuned(id)) {
+        this.state.attuned = this.state.attuned.filter(entry => entry !== id);
+        this.log("method", `${name} is released: this chapter has closed.`);
+      }
     }
     for (const id of record.enable ?? []) {
       this.state.lockedIds = this.state.lockedIds.filter(entry => entry !== id);
@@ -1389,15 +1513,14 @@ export class GameEngine {
         .map(([key, amount]) => `${key} +${shown(amount)}${key === HIT || key === DODGE ? "%" : ""}`).join(" ")}`);
       const yours = projection.winSeconds === Infinity ? `your swings cannot hurt ${foe.name}` : `you fell ${foe.name} in ~${Math.round(projection.winSeconds)} s`;
       const theirs = projection.loseSeconds === Infinity ? `${foe.name} cannot hurt you` : `${foe.name} fells you in ~${Math.round(projection.loseSeconds)} s`;
-      const outlasted = Math.min(projection.winSeconds, projection.loseSeconds) > projection.limit;
       block("fight", [
+        projection.verdictText,
+        projection.flip,
         `${foe.name.charAt(0).toUpperCase()}${foe.name.slice(1)}: life ${foe.life}, ${foeStats}`,
         `You: ${lifeName} ${projection.life}/${shown(projection.lifeMax)}, ${yourStats}${live ? " (as you entered)" : ""}`,
         held.length && !live ? `Held methods: ${held.join(", ")}` : undefined,
         `Your swings land ${Math.round(projection.yourChance * 100)}% of the time for ${projection.yourDamage}; ${foe.name}'s land ${Math.round(projection.foeChance * 100)}% for ${projection.foeDamage}.`,
         `On average ${yours}; ${theirs}.`,
-        projection.likely ? "Likely win." : outlasted ? `Likely outlasted: neither side falls inside the time limit.` : "Likely loss.",
-        !live && !projection.likely && projection.life < projection.lifeMax && this.fight(id, projection.lifeMax).likely ? `Rested to full ${lifeName}, you would likely win.` : undefined,
       ], "Fight");
     }
     // A store or a knowledge is not an action, so its "cannot be started" reason is not a need.
@@ -1513,4 +1636,81 @@ function clock(seconds: number): string {
   const whole = Math.max(0, Math.ceil(seconds));
   const pad = (value: number) => String(value).padStart(2, "0");
   return `${pad(Math.floor(whole / 3600))}:${pad(Math.floor(whole / 60) % 60)}:${pad(whole % 60)}`;
+}
+
+/** What one swing of each side is worth: its chance to land and what it takes when it does. */
+function exchange(you: Fighter, foe: Fighter): Pick<FightProjection, "yourChance" | "foeChance" | "yourDamage" | "foeDamage"> {
+  return { yourChance: you.hit / 100 * (1 - foe.dodge / 100), foeChance: foe.hit / 100 * (1 - you.dodge / 100),
+    yourDamage: Math.max(0, you.strike - foe.guard), foeDamage: Math.max(0, foe.strike - you.guard) };
+}
+
+/** The band a win chance falls in; a fight your swings cannot hurt is hopeless whatever else holds. */
+export function fightVerdict(winChance: number, yourDamage: number): FightVerdict {
+  if (yourDamage <= 0) return "hopeless";
+  const chance = winChance + EPSILON;
+  return chance >= 0.95 ? "certain" : chance >= 0.75 ? "likely" : chance >= 0.5 ? "close" : "loss";
+}
+
+/** "about 84%"; a chance short of certain never reads 100, and one above nothing never reads 0. */
+function percent(chance: number): string {
+  return chance < 0.005 ? "under 1%" : `about ${Math.min(99, Math.round(chance * 100))}%`;
+}
+
+interface Race { you: Fighter; foe: Foe; life: number; lifeMax: number; regen: number; seconds: number }
+
+/**
+ * The exact chance that the foe falls before your Life drops below 1 or the seconds run out, under the rules
+ * `playSwings` rolls (ADR 0026 §3). Swings come on gauges that fill whatever lands, so the order of swings is
+ * fixed and only the two Life totals vary: their distribution is carried swing by swing, with your Life
+ * regenerating at the start of each second and kept in bounds exactly as the store keeps it.
+ */
+function winChance({ you, foe, life, lifeMax, regen, seconds }: Race): number {
+  const { yourChance, foeChance, yourDamage, foeDamage } = exchange(you, foe);
+  if (yourDamage <= 0 || yourChance <= 0) return 0;
+  const store = (value: number): number => {
+    const kept = Math.max(0, Math.min(lifeMax, value));
+    return lifeMax - kept < EPSILON ? lifeMax : kept;
+  };
+  interface Side { life: number; foeLife: number; chance: number }
+  // Life totals that differ only by rounding in the order regeneration and blows were added are one total.
+  const add = (into: Map<string, Side>, life: number, foeLife: number, chance: number): void => {
+    if (chance <= 0) return;
+    const key = `${Math.round(life / EPSILON)}:${foeLife}`, side = into.get(key);
+    if (side) side.chance += chance; else into.set(key, { life, foeLife, chance });
+  };
+  let sides = new Map<string, Side>();
+  add(sides, life, foe.life, 1);
+  let won = 0, yourGauge = 0, foeGauge = 0;
+  for (let second = 0; second < seconds && sides.size; second++) {
+    if (regen) {
+      const rested = new Map<string, Side>();
+      for (const side of sides.values()) add(rested, store(side.life + regen), side.foeLife, side.chance);
+      sides = rested;
+    }
+    yourGauge += you.speed;
+    foeGauge += foe.speed;
+    for (;;) {
+      const yours = yourGauge + EPSILON >= GAUGE, theirs = foeGauge + EPSILON >= GAUGE;
+      if (!yours && !theirs) break;
+      const next = new Map<string, Side>();
+      if (yours && (!theirs || yourGauge + EPSILON >= foeGauge)) {
+        yourGauge -= GAUGE;
+        for (const side of sides.values()) {
+          const foeLife = Math.max(0, side.foeLife - yourDamage);
+          if (foeLife === 0) won += side.chance * yourChance;
+          else add(next, side.life, foeLife, side.chance * yourChance);
+          add(next, side.life, side.foeLife, side.chance * (1 - yourChance));
+        }
+      } else {
+        foeGauge -= GAUGE;
+        for (const side of sides.values()) {
+          const hurt = store(side.life - foeDamage);
+          if (Math.floor(hurt + EPSILON) >= 1) add(next, hurt, side.foeLife, side.chance * foeChance);
+          add(next, side.life, side.foeLife, side.chance * (1 - foeChance));
+        }
+      }
+      sides = next;
+    }
+  }
+  return Math.min(1, won);
 }

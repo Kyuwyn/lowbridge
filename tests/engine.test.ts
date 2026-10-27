@@ -422,7 +422,7 @@ describe("instant actions alongside sustained work", () => {
     expect(game.start("first").ok).toBe(true);
     expect(game.state.active?.progress).toBe(4);
     expect(game.advance(6).activitySeconds).toBe(6);
-    expect(game.availability("first").reason).toBe("coin: 2 needed.");
+    expect(game.availability("first").reason).toBe("coin: 2 needed, 0 held.");
   });
 
   test("per-run costs charge once, and goal updates do not repeat the initial bill", () => {
@@ -600,7 +600,7 @@ describe("waiting list, idle income and home places", () => {
     game.stat("coin").value = 10;
     expect(game.start("herb_rack").ok).toBe(true);
     expect(game.stat(HOME_SPACE)).toMatchObject({ value: 1, max: 2 });
-    expect(game.availability("lean_to").reason).toBe("Coin: 8 needed.");
+    expect(game.availability("lean_to").reason).toBe("Coin: 8 needed, 7 held.");
     game.stat("coin").value = 8;
     expect(game.start("lean_to").ok).toBe(true);
     expect(game.stat(HOME_SPACE).max).toBe(4);
@@ -622,7 +622,8 @@ describe("encounters, boosts and discounts", () => {
     expect(lost.stat("vigor").value).toBe(6);
     expect(lost.stat("life").value).toBe(0);
     expect(lost.state.lastStop).toBe("Bandit (lost after 0:03: your life runs out; you landed 3 of 3 swings, the bandit 3 of 3): you back off.");
-    expect(lost.availability("bandit")).toEqual({ ok: false, reason: "life: you are in no state to fight." });
+    // The refusal says when Life will be back to one whole point.
+    expect(lost.availability("bandit")).toEqual({ ok: false, reason: "life: you are in no state to fight; ready in ~50 s." });
     lost.stat("life").value = 6;
     expect(lost.availability("bandit").ok).toBe(true);
 
@@ -670,8 +671,7 @@ describe("encounters, boosts and discounts", () => {
     const game = new GameEngine(encounter().map(record => record.id === "guard" ? { ...record, initial: { max: 5 } } : record));
     game.stat("might").value = 0;
     game.recompute();
-    expect(game.fight("bandit")).toMatchObject({ winSeconds: Infinity, loseSeconds: Infinity, likely: false });
-    expect(game.tooltip("bandit").find(block => block.kind === "fight")?.lines).toContain("Likely outlasted: neither side falls inside the time limit.");
+    expect(game.fight("bandit")).toMatchObject({ winSeconds: Infinity, loseSeconds: Infinity, winChance: 0, verdict: "hopeless", likely: false });
     game.start("bandit");
     game.advance(10);
     expect(game.state.fight?.result).toBe("outlasted");
@@ -724,12 +724,11 @@ describe("encounters, boosts and discounts", () => {
   test("a held method is part of the fight while it is attuned", () => {
     const game = new GameEngine(encounter());
     expect(game.attune("brace").ok).toBe(true);
-    expect(game.fight("bandit")).toMatchObject({ held: [{ id: "brace", adds: { guard: 1 } }], you: { guard: 2 }, winSeconds: 4, loseSeconds: 6, likely: true });
+    expect(game.fight("bandit")).toMatchObject({ held: [{ id: "brace", adds: { guard: 1 } }], you: { guard: 2 }, winSeconds: 4, loseSeconds: 6, winChance: 1, verdict: "certain", likely: true });
     const fight = game.tooltip("bandit").find(block => block.kind === "fight");
     expect(fight?.label).toBe("Fight");
     expect(fight?.lines).toContain("Held methods: Brace guard +1");
     expect(fight?.lines).toContain("On average you fell the bandit in ~4 s; the bandit fells you in ~6 s.");
-    expect(fight?.lines).toContain("Likely win.");
     game.unattune("brace");
     expect(game.fight("bandit")).toMatchObject({ held: [], you: { guard: 1 }, likely: false });
   });

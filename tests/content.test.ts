@@ -240,7 +240,7 @@ describe("Part E validation over real opening content", () => {
     expect(game.stat("sparring_bout").reps).toBe(1);
     expect(game.stat("life").value).toBe(0);
     expect(game.state.lastStop).toContain("come back when the breath runs deeper");
-    expect(game.availability("sparring_bout").reason).toBe("Life: you are in no state to fight.");
+    expect(game.availability("sparring_bout").reason).toMatch(/^Life: you are in no state to fight; ready in ~\d+ (s|min)\.$/);
   });
 
   test("pacing is measured in the engine, so a slow legal site fails the route budget", () => {
