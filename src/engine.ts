@@ -1655,8 +1655,9 @@ export class GameEngine {
   private changeLine(path: string, value: number, suffix: string): string {
     const parts = path.split("."), id = parts[0]!, field = parts[1] ?? "value", record = this.byId.get(id), name = record?.name ?? id;
     if (field === "mod" && parts.length > 2) return `${name} ➢ ${this.changeLine(parts.slice(2).join("."), value, suffix)}`;
-    // A switch thrown once reads as its name: "Foundation", "Strain opens", not "Foundation: 1".
-    if (value === 1 && suffix !== "/s" && (field === "open" || (field === "value" && record?.kind === "flag"))) return `${this.pathLabel(path)}${suffix}`;
+    // A switch thrown once reads as its name: "Foundation", "Body Disciple", "Strain opens", not "Foundation: 1".
+    const once = record !== undefined && (record.kind === "flag" || oneShotKinds.has(record.kind));
+    if (value === 1 && suffix !== "/s" && (field === "open" || (field === "value" && once))) return `${this.pathLabel(path)}${suffix}`;
     if (id === "bank") return `${this.pathLabel(path)}: ${span(value)}${suffix}`;
     if (field === "rate") return `${this.quantity(path, value, true)} ${name}${record?.kind === "resource" ? "/s" : record?.kind === "family" ? " experience" : " speed"}${suffix}`;
     if (field === "discount") return `${this.quantity(path, value, true)} ${name} cost${suffix}`;
