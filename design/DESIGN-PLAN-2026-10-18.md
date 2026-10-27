@@ -39,6 +39,7 @@ Reading order: §0 (what changed and how it was checked), then A (the machine), 
 | QoL pass, 19 Oct: acceleration was a one-shot button with no cost preview; an empty Vigor meter left the slot idle until the player found Rest; no time-to-objective, net rate or return summary; owned records cluttered the grid | Both routes played under a virtual clock; three owner decisions taken together | **Changed.** Accelerate is a toggle beside the bank naming the objective (C.6): while on, each real second also spends one banked second on the running activity; it clears when the activity stops. Rest is an `autoStart` filler: it begins by itself whenever the slot is empty and Vigor is below its cap, and ends at full Vigor or when a sustained activity replaces it (chosen over a manual nudge; the one automation ahead of rule 13's B2 queue). Owned purchases and completed one-off visits move to a closed Done group. Route timings of that date are a superseded snapshot; Circulation still opened inside the 27-minute window. No Part C number changed. |
 | Revision of 20 Oct: five decisions taken together | The prior-review complaint list in the design-intent report §3-§5, re-read against `research/arcanum-reference/12-design-rules.md` | **Accepted.** [ADR 0021](decisions/0021-compounding-vocabulary.md) adds patching so later content compounds earlier content; [ADR 0022](decisions/0022-chore-tempo.md) keeps chores instant and adds one sustained `fill` earner per good, and replaces rule 9; [ADR 0023](decisions/0023-techniques-and-attunement.md) separates learning a method from holding it in a scarce attunement place and using it; [ADR 0024](decisions/0024-route-keys.md) makes `t_` route keys carried by methods the only cross-module history gate; [ADR 0025](decisions/0025-lifespan-and-checkpoints-cut.md) cuts age, lifespan, checkpoints and retry and replaces rule 10. Part A is now sixteen rules. |
 | Combat system, 21 Oct: ADR 0008 left resolution open, and the ridge bandit's single `power ≥ threshold` comparison told the player nothing about how to prepare | The worked numbers in [ADR 0026](decisions/0026-combat-exchanges.md) replayed through `bun test` (engine fixture and the real sparring bout), and `bun run validate` with Foundation timings unchanged | **Accepted, then revised the same day.** [ADR 0026](decisions/0026-combat-exchanges.md): fights are swung out over Life, Strike, Guard, Speed, Hit and Dodge, each side on its own readiness clock, with every swing rolled; attuned methods add through `held`; a no-stakes sparring bout opens with Circulation and the bandit is rebuilt on the same model. The fight plays in its own Fight tab. Part A is now seventeen rules. |
+| Docs pass, 27 Oct: Part C's tables had drifted from the shipped JSON (2-minute walks, trades and family caps that no longer exist, the bandit as the only way to his cache, a direction sign naming opening furnishings) | Every chapter-one record in `src/data/opening.json` and `src/data/shared.json` read against C.1, C.3 and C.5; `bun run validate` after commit 94a21fe (122/122 records reachable) | **Corrected to the JSON.** C.1, C.3 and C.5 now list the records, costs, lengths, results and curves that run, including Wen's wage counting as wages until the ferry road, Rest's Composure while *Settle the breath* is held, the `t_furnished` key on the cot, herb plot and strongbox, and the cache traced without a fight by the Earth and Formation teachings. The JSON stays the record of what runs. |
 
 Simulations: `design/validation/b4-gates.py` checks all 15 histories and B4 eligibility; `design/validation/opening-sim.py` is retained as the historical paper model. The route measurement that matters is produced by `bun run validate` and reported in [`playtest/SIMULATION-REPORT.md`](../playtest/SIMULATION-REPORT.md), which carries the complete unlock order. Every route timing taken before 20 October 2026 is superseded and awaits re-measurement: [ADR 0022](decisions/0022-chore-tempo.md) gave every good a second way to earn it, and the old routes could only click.
 
@@ -105,8 +106,8 @@ A breakthrough pays caps, unlocks and bank cap. It has no life term ([ADR 0025](
 
 | # | Name | Core (mandatory) | Supporting: N of M | Bill | Closes | Class |
 |---|---|---|---|---|---|---|
-| 1 | **Foundation** | Circulation ≥ 2 | 3 of 4 (Part C) | 10 herbs, full qi, Settling 2 min | mill work once ferry hauling is taken up | none; unlocks Circulation runway to 5, Cottage, Old Ridge lead, four B2 teaching records |
-| 2 | **First Direction** | intended line's entry technique ≥ 3 and its introduction used | 3 of 4: {Lore ≥ 4, any tier-2 arrangement, Old Ridge first observation, 200 coin lifetime} | 20 herbs, 10 line material, 60 coin | the other three starters; village job once ridge work is taken | Body Disciple / Sword Disciple / Earth Listener / Formation Student |
+| 1 | **Foundation** | Circulation ≥ 2 | 3 of 4 (Part C) | 10 herbs and 40 coin, full qi (not spent); Settling 3 min | mill work once ferry hauling is taken up | none; raises the Circulation cap by 2 and opens the ferry road, Old Ridge, the Cottage and four B2 teaching records |
+| 2 | **First Direction** | the line's family at 4 (Circulation, Blade Intent, Ground Reading or Array Craft) and its drills begun | 3 of 4: {Lore 4; a furnished home (a cot, a herb plot or a strongbox, read as `g.t_furnished >= 1`); a method of the line's school used (two for the body); two hundred coin earned in wages} | 20 herbs, 12 line material, 60 coin | the other three directions | Body Disciple / Sword Disciple / Earth Listener / Formation Student |
 | 3 | **Second Direction** | intended class's technique gate (B.3): entry ≥ 8 for depth, bridge ≥ 3 for hybrids | 3 of 5 (ADR 0016's five, as pointers: reliable method = entry at cap; returning-chime site cleared; study arrangement installed; survey spur reopened; a paid commission) | 40 herbs, 20 line material, 150 coin | same-tier rivals | Iron Marrow / Mountain Vessel / Blade Body / Spirit Blade / Earth Array / Deep Listener / Array Keeper / Pill Refiner |
 | 4 | **Cloudwell** | ADR 0018's three conditions + intended class's technique gate (mastery technique ≥ 3 for depth, bridge ≥ 5 for hybrids) | — | per approach (ADR 0018) | same-tier rivals; waystation job once basin work is taken | Jade Body / Sword Heart / Vein Adept / Grand Array / Mountain Heart / Stone Ward / Spirit Warden / Spirit Alchemist / Golden Cauldron |
 | 5-8 | as CAMPAIGN-OUTLINE's roles | — | 3 of 5 | — | — | one per line per tier; B6 requires a permanent-transformation record |
@@ -159,7 +160,7 @@ Build order: **Body tier 1-3, Earth tier 1-3, the Rooting bridge and its classes
 |---|---|---|---|---|---|
 | 0 | Hayloft | 2 | — | start | — |
 | 1 | Lean-to | 4 | — | 40 coin + 6 timber | Hayloft (on move) |
-| 2 | Cottage | 8 | qi +0.1/min | Foundation + Lean-to + 300 coin | Lean-to (on move) |
+| 2 | Cottage | 8 | qi +0.1/min | Foundation + 4 spans of floor (the Lean-to's) + 300 coin | Lean-to (on move) |
 | 3 | Ridge Room | 10 | Ground Reading rate +10%, Lore rate −10% | B2 | none (relocation; village home retained) |
 | 4 | Basin Lodging | 12 | coin −1/min rent | B3 | — |
 | line homes | Mountain Hermitage, Blade Hall, Array Court, Still-room | 20-40 | line caps/rates | line tier 3 class | — |
@@ -182,32 +183,40 @@ Bound: cold start to Foundation in about ten minutes of honest play, then the ri
 
 | Quantity | Entry | Runway / cap | Per-level payout | Raised by | Gates |
 |---|---|---|---|---|---|
-| Coin | start | 20 | — | Pouch → 50; Strongbox → 100 | purchases |
-| Herbs | start | 12 | — | Herb Rack → 24 | Foundation bill |
-| Timber | field kit | 6 | — | — | Lean-to, racks |
-| Stone | channel | 8 | — | — | channel arrangement |
-| Vigor | start (10/10) | 10 | — | Circulation +2 per level | every chore; +0.05/s while active, +0.25/s resting |
-| Qi | slip | 2 + Qi Sense level | — | Foundation → +10 | Foundation bill; every technique spends it |
-| Attunement | slip | 1 place | — | practice mat +1; Foundation +1 | a technique cannot be used unheld; Foundation's fourth pointer |
+| Coin | start | 20 | — | Pouch +30 (50); Strongbox +50 (100); the ridge's coffer +200 | purchases and bills |
+| Coin earned | start (a ledger line) | unbounded | — | every wage: sacks +3, freight +6, Wen's wage +0.05/s until the ferry road; trades and bounties do not count | the First Direction sign "Two hundred coin earned in wages" |
+| Herbs | start | 12 | — | Herb Lore +2 per level; herb rack +12; herb plot +4 | Shu's reading, Foundation bill, ridge teachings |
+| Timber | field kit or Foundation | 6 | — | Labour +1 per level, +1 more per level once the field kit patches Labour | lean-to, furnishings |
+| Stone | first channel walk | 8 | — | Stone Sense +2 per level | channel stones |
+| Vigor | start (10/10, +0.2/s) | 10 | — | Circulation +2 and +0.01/s per level (+1 more per level once the channel stones patch it); Labour +1 and +0.005/s per level; cot +0.02/s | every chore; Rest adds +0.35/s, faster with a pallet (+25%) or a cot (+50%) |
+| Qi | slip | 2 | — | Qi Sense +1 and +0.0005/s per level; Composure +0.002/s per level; practice mat +0.005/s; Foundation +10 | Foundation wants it full; every technique spends it |
+| Attunement | Qi Sense 1 | 1 place | — | practice mat +1; Foundation +1 | a technique cannot be used unheld; Foundation's fourth pointer |
+| Strain | Foundation (10/10, +0.02/s) | 10 | — | Composure +1 and +0.002/s per level | ridge outings |
 | Life | Circulation opens (6/6, +0.02/s) | 6 | — | Circulation +2 per level; Foundation +4; first sparring win +1; Rest refills it in about five minutes | a fight needs 1 to start; only fights spend it |
 | Strike | Circulation opens | 1 | — | Circulation +1 per level; *Steady the breath* and *Carry the current* +1 while attuned | fights (never in the ledger) |
 | Guard | Circulation opens | 0 | — | Circulation +1 per level; *Settle the breath* +1 while attuned | fights (never in the ledger) |
 | Speed | Circulation opens | 1 (a swing every 5 s) | — | Body Disciple +0.2 and Sword Disciple +0.1 (ridge) | fights (never in the ledger) |
 | Hit | Circulation opens | 80% | — | Circulation +2 per level; Sword Disciple +10 (ridge) | fights (never in the ledger) |
 | Dodge | Circulation opens | 5% (60% at most) | — | Circulation +1 per level; *Settle the breath* +5 while attuned; Body Disciple +5 (ridge) | fights (never in the ledger) |
-| Lore | slip (`require`), nothing to `need` | 0→3 | lv1: field kit, herb rack visible; lv2: Granny Shu's reading; lv3: pointer | Shu's reading → 4; Foundation adds +2 (5 without Shu, 6 with) | teaching records |
-| Qi Sense | slip | 0→3 | lv1: gather herbs, channel observation; lv2: hollow observation; each lv +1 qi cap | channel discovery +1; hollow sitting +2; Foundation +2 | sites |
-| Circulation | `require`: slip; `need`: channel arrangement **or** steady-attention | 0→3 | each lv: Vigor cap +2 | Foundation → 5 | **Foundation core** |
-| Home space | — | 2 (Hayloft) | — | Lean-to 4 | arrangements |
-| Bank | start | 1 h | — | Foundation 6 h | acceleration |
+| Lore | slip | 0→5 | Copy the slip +10% speed; each ridge teaching 5% cheaper; two ridge practices +5% | Shu's reading +1; Foundation +2 | lv1: field kit; lv2: Shu's reading; lv3: the ridge teachings; lv4: a First Direction sign |
+| Qi Sense | slip | 0→5 | qi cap +1, qi +0.0005/s; the three walks and sits +5% speed; *Steady the breath* +1 Vigor; at 3: qi costs −10% | Foundation +2 | lv1: gathering, the channel walk, *Steady the breath*, Attunement, Composure; lv2: the hollow; lv3: channel stones, steady attention, a Foundation pointer |
+| Circulation | `require`: slip; `need`: channel stones **or** three dusks in Fernhollow | 0→5 | Vigor cap +2 and +0.01/s; Life +2; Strike +1; Guard +1; Hit +2; Dodge +1; Settling +5% speed; ridge payouts | Foundation +2; the body teaching +2 (ridge) | **Foundation core** at 2 |
+| Herb Lore | Shu's apprenticeship | 0→5 | herbs cap +2; at 2: herb costs −10% | herb rack +1 | lv1: herb rack; lv2: herb plot |
+| Labour | start | 0→5 | Vigor cap +1 and +0.005/s; timber cap +1; at 3: Vigor costs −10% | field kit +1; Foundation +1 | — |
+| Stone Sense | first channel walk | 0→5 | stone cap +2; channel circulation +5%, clearing the fall +10% speed; at 2: stone costs −10% | channel stones +1 | — |
+| Composure | Qi Sense 1 | 0→5 | qi +0.002/s; breath practice +5%; Strain cap +1 and +0.002/s; at 2: Strain costs −10% | practice mat +1; Foundation +1 | — |
+| Home space | start | 2 (Hayloft) | — | Lean-to +2 (4); Cottage +4 (ridge) | arrangements |
+| Bank | start | 1 h | — | Foundation +5 h (6 h) | acceleration |
 
-Practice runway: level *n* needs 60·*n* seconds of continuous practice at base rate; arrangements raise rate. Part C defines the opening's per-level modifiers: Qi Sense adds +1 qi capacity and Circulation adds +2 Vigor cap per level. Lore levels open the listed gates. The additional B.1 cross-feeders and line resources are reserved for later modules.
+The shared file also declares the four ridge materials (cap 10 each), which appear with their teachings; they belong to the ridge chapter.
+
+Practice runway: level *n* costs 60·*n* experience, and each practice pays the experience per second its record names (breath practice 8, the slip and the channel and attention exercises 6), scaled by its speed. A family's cap is its level cap; Lore levels open the listed gates. The additional B.1 cross-feeders and line resources are reserved for later modules.
 
 ### C.2 Places and people
 
 - **Lowbridge**: a village where the mill stream meets the ferry road; the wilds beyond the ridge. Home: the hayloft above Miller Wen's barn.
 - **Miller Wen**: Mill Work; later the ferry hauling and commissions.
-- **Granny Shu**: herb-wife and peddler. Her stall offers herb-sorting from minute 0; on the third sort she mentions the cracked slip "nobody wants" (6 coin). At Lore 2 she reads its hard characters (raises Lore cap to 4).
+- **Granny Shu**: herb-wife and peddler. Her stall offers herb-sorting from minute 0; after three sorts she takes you on as her apprentice (5 coin), and then sells you the cracked slip "nobody wants" (6 coin). At Lore 2 she reads its hard characters for five bundles (Lore cap +1).
 - **Headman Lu**: posts the Mill Channel bounty.
 - **Mill Channel**: the damaged stream channel: awkward terrain, clear qi.
 - **Fernhollow**: the sheltered hollow: accessible, faint qi.
@@ -218,61 +227,60 @@ Practice runway: level *n* needs 60·*n* seconds of continuous practice at base 
 
 | id | require | cost | result | at |
 |---|---|---|---|---|
-| mill_work "Haul sacks at the mill" | — | vigor 2 | coin +3 | 10: +1; 30: +1 |
-| sort_herbs "Sort herbs at Granny Shu's" | — | vigor 1 | herbs +1 | 3: log line about the slip |
-| gather_herbs | Qi Sense ≥ 1 | vigor 3 | herbs +3; Qi Sense exp +5 | 10: +1 |
-| cut_timber | field_kit | vigor 4 | timber +2 | — |
-| ferry_hauling | foundation | vigor 3 | coin +6; first run closes mill_work ("Wen hires a boy") | 20: +2 |
+| mill_work "Haul sacks at the mill" | — | vigor 2 | coin +3 (counted as wages); Labour exp +4 | 5: Wen's wage, +0.05 coin/s and +0.05/s coin earned; 20, 40, 80: +1 coin each |
+| sort_herbs "Sort herbs at Granny Shu's" | — | vigor 1 | herbs +1; Herb Lore exp +3 | 25: +1 bundle |
+| gather_herbs "Gather herbs by the stream" | Qi Sense ≥ 1 | vigor 3 | herbs +3; Qi Sense exp +5; Herb Lore exp +4 | 10: +1; 30: +1 |
+| cut_timber "Cut timber beyond the mill" | field_kit | vigor 4 | timber +2; Labour exp +5 | — |
+| ferry_hauling "Haul freight to the ferry" | foundation | vigor 3 | coin +6 (counted as wages); Labour exp +4; the first load closes mill_work and ends Wen's wage (its `mod` cancels both rates; "Wen hires a boy") | 20: +2; 50: +2 |
 
 **Passive income** (rule 9 as amended: no sustained earner in chapter one; small rates that never take the slot and accrue while away)
 
 | source | good | from | pays |
 |---|---|---|---|
-| Wen's wage (`mill_work` at 5 sacks) | coin | the fifth sack | +0.05/s, a coin every twenty seconds |
+| Wen's wage (`mill_work` at 5 sacks) | coin | the fifth sack, until ferry hauling is taken | +0.05/s, a coin every twenty seconds; counted toward coin earned in wages |
 | Shu's racks (`shu_apprentice`) | herbs | apprenticeship | +0.02/s, a bundle every fifty seconds |
 | herb rack, herb plot | herbs | lean-to furnishings | +0.005/s and +0.01/s |
+| practice mat | qi | the mat | +0.005/s |
 
 Clicking a chore stays the best-paying tempo; the passive rates are the unattended floor, so the slice's measured pace stops depending on how fast the route script clicks. A sustained activity that cannot pay one more second of its drain is refused rather than started, and the activity it displaces waits at the front of the list rather than being lost.
 
-| id | require | need (needtext) | effect |
+| id | require | need (refusal) | effect |
 |---|---|---|---|
-| rest "Rest" (continuous) | — | Vigor or Life below cap ("Vigor and Life are already full.") | Vigor +0.35/s on top of its own +0.2/s; Life max/300 per second (empty to full in about five minutes); Composure experience once the hollow's reading is held; stops when both are full |
+| rest "Rest" (continuous, `autoStart`, fills Vigor and Life) | — | refused when both are full ("Vigor and Life are already full.") | Vigor +0.35/s on top of its own +0.2/s; Life max/300 per second (empty to full in about five minutes); Composure exp +0.3/s while *Settle the breath* is attuned (`g.settle_breath.attuned`); stops when both are full |
 
-**Trade** (instant)
+**Purchases** (instant; the bill is the price)
 
-| id | require | cost | result |
+| id | require | cost | mod |
 |---|---|---|---|
-| sell_herbs "Sell a bundle" | sort_herbs reps ≥ 1 | herbs 1 | coin +1 |
-| buy_herbs "Buy a bundle" | sort_herbs reps ≥ 1 | coin 2 | herbs +1 |
-| sell_timber "Sell timber" | field_kit | timber 1 | coin +2 |
-
-**Purchases**
-
-| id | require | need (needtext) | cost | mod |
-|---|---|---|---|---|
-| coin_pouch | coin ≥ 20 (shown on cap hit) | coin ≥ 15 | 15 | coin cap +30 |
-| jade_slip "Cracked Jade Slip" | sort_herbs reps ≥ 3 | coin ≥ 6 ("six coin") | 6 | opens Lore 0/3, Qi Sense 0/3, qi 0/2; unlocks breath_gathering, fragment_notes |
-| field_kit "Cord, stakes, hook" | Lore ≥ 1 | coin ≥ 20 | 20 | unlocks cut_timber, clear_channel |
-| shu_reading "Granny Shu reads the hard characters" | Lore ≥ 2 | herbs ≥ 5 ("she wants five good bundles") | 5 herbs | Lore cap +1 |
+| coin_pouch "A larger coin pouch" | coin ≥ 12 | 15 coin | coin cap +30 |
+| shu_apprentice "Apprentice to Granny Shu" (class) | sort_herbs reps ≥ 3 | 5 coin | opens Herb Lore; herbs +0.02/s |
+| jade_slip "Cracked jade slip" | shu_apprentice | 6 coin | opens Lore, Qi Sense and qi; unlocks breath_gathering, fragment_notes, the practice mat |
+| field_kit "Cord, stakes and a hook" | Lore ≥ 1 | 20 coin | Labour cap +1, and Labour's timber cap +1 more per level; unlocks cut_timber and timber |
+| shu_reading "Granny Shu reads the hard characters" | Lore ≥ 2 | 5 herbs | Lore cap +1; Copy the slip +5% speed per Lore level |
 
 **Practice** (continuous; stop at chosen objective)
 
-| id | require | need (needtext) | run / effect | cap |
+| id | require | need (needtext) | effect per second | cap |
 |---|---|---|---|---|
-| breath_gathering "Practise the slip's breath method" | jade_slip | Qi Sense < cap **or** qi below capacity ("the slip says nothing more; the next character is missing; the qi reservoir is full") | Qi Sense exp 1/s below its cap; qi +1 per 30 s, including at the knowledge wall | — |
-| fragment_notes "Copy and study the slip" | jade_slip | Lore < cap | Lore exp 1/s | — |
-| channel_exercise "Circulate at the channel stones" | channel_arrangement | Circulation < cap | Circulation exp 1/s (+50% at home) | — |
-| steady_attention "Steady-attention exercise" | fernhollow sits ≥ 3 | Qi Sense ≥ 3 | first start opens Circulation 0/3; Circulation exp 1/s; `faint_trace` on the first level actually earned here | — |
-| settling "Settle the foundation" | foundation unlocker | — | 2 min; the breakthrough act | — |
+| breath_gathering "Practise the slip's breath method" | jade_slip | Qi Sense below its cap **or** qi below its cap ("The reservoir is full and the slip says nothing more; the next character is missing.") | Qi Sense exp +8; qi +1 every second, including at the knowledge wall | — |
+| fragment_notes "Copy and compare the slip" | jade_slip | Lore below its cap ("The surviving leaves have given up all they hold.") | Lore exp +6; Composure exp +0.6 | — |
+| channel_exercise "Circulate at the channel stones" | channel_arrangement | Circulation below its cap ("This reading of the method has reached its limit.") | Circulation exp +6; Stone Sense exp +1.2; +50% speed from the stones | — |
+| steady_attention "Steady-attention exercise" | sit_fernhollow reps ≥ 3 | Qi Sense ≥ 3 and Circulation below its cap ("Qi Sense 3, and room left in Circulation.") | Circulation exp +6; `faint_trace` once Circulation reaches 2 after this exercise has run | — |
 
-**Sites**
+**Breakthrough**
+
+| id | require | need (needtext) | bill | length | result |
+|---|---|---|---|---|---|
+| settling "Settle the foundation" | Circulation open | qi full ("A full reservoir; the slip's breath method fills it.") | 10 herbs, 40 coin, paid at the start | 3 min (1.5× with a carried turn) | Foundation; see below |
+
+**Sites** (timed; every one runs 1.5× with a carried turn)
 
 | id | require | need (needtext) | length | result |
 |---|---|---|---|---|
-| channel_observe "Walk the broken channel" | Qi Sense ≥ 1 | — | 2 min | stone +2; first: Qi Sense cap +1; discovery *flow pattern*; unlocks clear_channel |
-| clear_channel "Clear the fall and reset the stones" | channel_observe | field_kit ("you need cord and a hook") | 5 min | coin +10 (bounty); stone +4; discovery *the stones hum where the flow bends*; unlocks channel_arrangement |
-| fernhollow_observe "Sit quietly in Fernhollow" | Qi Sense ≥ 2 | — | 2 min | discovery *a faint current, easy to lose*; unlocks sit_fernhollow |
-| sit_fernhollow "Sit the hollow at dusk" | fernhollow_observe | Qi Sense < cap or sits < 3 | 90 s | Qi Sense exp +240; first: Qi Sense cap +2; at 3: unlocks steady_attention |
+| channel_observe "Walk the broken channel" | Qi Sense ≥ 1 | — | 90 s, once | stone +2; Stone Sense exp +40; discovery *flow pattern*; unlocks clear_channel |
+| clear_channel "Clear the fall and reset the stones" | channel_observe | field_kit ("Cord and a hook, at the least.") | 2 min, once | coin +10 (bounty); stone +4; Stone Sense exp +80; discovery *the stones hum where the flow bends*; unlocks channel_arrangement |
+| fernhollow_observe "Sit quietly in Fernhollow" | Qi Sense ≥ 2 | — | 90 s, once | Composure exp +30; discovery *a faint current, easy to lose*; unlocks sit_fernhollow |
+| sit_fernhollow "Sit the hollow at dusk" | fernhollow_observe | Qi Sense below its cap or fewer than 3 sits ("The hollow's current has become familiar and Qi Sense has no room left.") | 90 s | Qi Sense exp +240; Composure exp +40; the third sit opens Circulation and unlocks steady_attention and settle_breath |
 
 **Fights** (rule 17: timed, swung out across the run; optional, nothing required behind them)
 
@@ -281,33 +289,37 @@ Clicking a chore stays the best-paying tempo; the passive rates are the unattend
 | sparring_bout "Spar with the ferry hand" | Circulation open | Old Tam 4 / 2 / 1 / 1 / 75% / 20% | none; repeatable | 1 min | Labour exp +6 every bout; first win: Life cap +1 |
 | ridge_bandit "Face the man on the porters' path" (ridge module) | ridge_outskirts | the man on the path 10 / 8 / 5 / 1 / 80% / 15% | vigor 4, herbs 3; Strain 0.06/s | 1 min | coin +15; the path cleared, opening his cache |
 
-With the bare *Steady the breath* at Circulation 0 the bout is a likely loss (about 23%); a second method held makes it a likely win (about 84% with *Carry the current*, 88% with *Settle the breath*). The bandit needs Strike 6 to pass his Guard of 5. The direct routes reach Foundation at Circulation 2 with Strike 5 or 4, so there he reads "Cannot win"; the Body and Sword lines make him a near-certain win by their crossing, the Earth and Formation lines add no Strike. Because every swing is rolled, a likely win can still be lost; a loss costs the preparation and closes nothing.
+With the bare *Steady the breath* at Circulation 0 the bout is a likely loss (about 23%); a second method held makes it a likely win (about 84% with *Carry the current*, 88% with *Settle the breath*). The bandit needs Strike 6 to pass his Guard of 5. The direct routes reach Foundation at Circulation 2 with Strike 5 or 4, so there he reads "Cannot win"; the Body and Sword lines make him a near-certain win by their crossing, the Earth and Formation lines add no Strike. He is optional: the Earth and Formation teachings trace his cache without a fight (*Read the path for his cache*, *Mark out the path for his cache*: 90 s each at 0.04 Strain/s, setting `cache_found`), and the cache opens on `bandit_cleared` or `cache_found`. Because every swing is rolled, a likely win can still be lost; a loss costs the preparation and closes nothing.
 
 **Methods** (rule 15: learned from the route, attuned into a place, used instantly for qi. Rule 16: each carries the route keys a later module reads.)
 
-| id | require | cost → result | keys carried | locks |
-|---|---|---|---|---|
-| steady_breath "Steady the breath" | slip + Qi Sense ≥ 1 | qi 2 → vigor 4; grows with Qi Sense and with use | `t_school_body` | — |
-| carry_current "Carry the current" | channel_arrangement | qi 3 → a held turn; the next timed run goes 1.5× | `t_channel`, `t_school_earth` | settle_breath |
-| settle_breath "Settle the breath" | sit_fernhollow | qi 3 → Composure and Lore experience | `t_hollow`, `t_school_body` | carry_current |
+| id | require | need (needtext) | cost → result | at | held | keys carried | locks |
+|---|---|---|---|---|---|---|---|
+| steady_breath "Steady the breath" | slip + Qi Sense ≥ 1 | Vigor below its cap ("You are rested.") | qi 2 → vigor 4, +1 per Qi Sense level | 10, 25: +1 vigor | Strike +1 | `t_school_body` | — |
+| carry_current "Carry the current" | channel_arrangement | no turn already held | qi 3 → a held turn; the next timed run goes 1.5× | 5, 15: −15% cost | Strike +1 | `t_channel`, `t_school_earth` | settle_breath |
+| settle_breath "Settle the breath" | sit_fernhollow reps ≥ 3 | room in Composure or Lore | qi 3 → Composure exp +30, Lore exp +15; while attuned, Rest teaches Composure | 5, 15: −15% cost | Guard +1, Dodge +5 | `t_hollow`, `t_school_body` | carry_current |
 
 The two readings of leaf eight close each other for good, and each `warn`s in words before it is attuned. *Steady the breath* carries no reading, so both routes share it. Attunement starts at one place; the practice mat adds one and Foundation adds another, which a ridge method fills: each of the four ridge teachings makes one attunable technique visible, carrying its school's key ([ADR 0023](decisions/0023-techniques-and-attunement.md), [ADR 0024](decisions/0024-route-keys.md)).
 
-**Home arrangements** (Hayloft space 2)
+**Home** (the Hayloft has 2 spans of floor and a place to sleep and a place to practise; a slotted furnishing fills its place and takes no floor)
 
-| id | require | need | cost | space | mod |
+| id | require | need | cost | space or place | mod |
 |---|---|---|---|---|---|
-| practice_mat | — | coin ≥ 8, space | 8 | 1 | breath_gathering rate +25%; **a second attunement place** |
-| herb_rack | Lore ≥ 1 | coin 10, timber 2, space | 10 + 2 timber | 1 | herbs cap +12; gather_herbs +1 bundle |
-| channel_arrangement "Channel stones set in the floor" | clear_channel | stone ≥ 4, space ≥ 2, Qi Sense ≥ 3 ("four stones, two spans of floor, and Qi Sense 3 to feel where the flow bends") | 4 stone | 2 | opens Circulation 0/3; Circulation rate at home +50%; unlocks channel_exercise |
-| lean_to (home tier 1) | — | coin 40, timber 6 | 40 + 6 timber | space 4 | closes Hayloft on move |
-| strongbox | lean_to | coin 25, timber 2, space | 25 + 2 timber | 1 | coin cap +50 |
+| hayloft "Hayloft above Wen's barn" (home tier 0) | start | — | — | 2 spans; rest and practice places | — |
+| straw_pallet "Straw pallet" | shu_apprentice | — | 4 coin | rest place | Rest +25% |
+| practice_mat "Practice mat" | jade_slip | — | 8 coin | practice place | breath practice +25%; qi +0.005/s; Composure cap +1; **a second attunement place** |
+| lean_to "Lean-to" (home tier 1) | — | — | 40 coin + 6 timber | home space +2 (4); rest and practice places | closes the Hayloft on move (`warn`) |
+| cot "A proper cot" | lean_to | — | 20 coin + 3 timber | rest place | Rest +50%; Vigor +0.02/s; carries `t_furnished` |
+| herb_rack "Herb rack" | Herb Lore ≥ 1 | lean_to ("The lean-to first; the hayloft has no floor to spare for a rack.") | 10 coin + 2 timber | 1 | herbs cap +12; gather_herbs +1 bundle; herbs +0.005/s; Herb Lore cap +1 |
+| garden_plot "Herb plot by the door" | Herb Lore ≥ 2 | — | 12 coin + 2 timber + 4 herbs | 1 | herbs +0.01/s; herbs cap +4; carries `t_furnished` |
+| strongbox "Strongbox" | coin_pouch | lean_to ("The lean-to first; the hayloft has no corner safe enough.") | 25 coin + 2 timber | 1 | coin cap +50; carries `t_furnished` |
+| channel_arrangement "Channel stones set in the floor" | clear_channel | Qi Sense ≥ 3 ("Qi Sense 3, to feel where the flow should bend.") | 4 stone | 2 | opens Circulation; channel_exercise +50%; Stone Sense cap +1; Circulation +1 Vigor cap per level; unlocks channel_exercise and carry_current |
 
-Any furnishing that does not open a family can be taken down: its space is freed and its modifier reversed, and its cost is not returned. The channel stones stay once set. Stopping or replacing a paid site visit or Settling keeps its progress; starting it again resumes without paying again.
+The `t_furnished` key ("Furnished home") is what the ridge's direction signs read, so the ridge never names an opening furnishing ([ADR 0024](decisions/0024-route-keys.md)). Any furnishing that does not open a family can be taken down: its space is freed and its modifier reversed, and its cost is not returned. The channel stones stay once set. Stopping or replacing a paid site visit or Settling keeps its progress; starting it again resumes without paying again.
 
 **Foundation (breakthrough 1)**
 
-Visible once Circulation is open. **Core:** Circulation ≥ 2, the reconstructed method. **Supporting, 3 of 4:** Qi Sense ≥ 3 · both places walked · a lean-to of your own · **two methods held attuned**. The fourth pointer is the one §3.6 was missing: it cannot be satisfied by more of the work already done, only by acquiring a second method and committing a place to it (rule 15). **Bill:** herbs and coin paid at the start; qi must be full and is not consumed. On completion: Circulation cap +2; Lore cap +2; Qi Sense cap +2; qi cap +10; one more attunement place; strain opens; bank cap to 6 h; the ferry crossing and the road to Old Ridge. A banner lists what changed; nothing pauses. The ridge chapter beyond Foundation is playable to the waystation, whose leads point at the next slice.
+Visible once Circulation is open. **Core:** Circulation ≥ 2, the reconstructed method. **Supporting, 3 of 4:** Qi Sense ≥ 3 · both places walked · a lean-to of your own · **two methods held attuned**. The fourth pointer is the one §3.6 was missing: it cannot be satisfied by more of the work already done, only by acquiring a second method and committing a place to it (rule 15). **Bill:** 10 herbs and 40 coin paid at the start; qi must be full and is not consumed; the sitting takes three minutes. On completion: Circulation, Lore and Qi Sense caps +2; Labour and Composure caps +1; qi cap +10; Life +4; one more attunement place; Strain opens; bank cap to 6 h; the ferry crossing and the road to Old Ridge. A banner lists what changed; nothing pauses. The ridge chapter beyond Foundation is playable to the waystation, whose leads point at the next slice.
 
 Neither route can skip the method: Circulation ≥ 2 is reachable only through the channel stones or steady attention, and both routes stay open to a player who visits both places. The route timings for this slice are measured by `bun run validate` and reported in [`playtest/SIMULATION-REPORT.md`](../playtest/SIMULATION-REPORT.md); figures taken before the 27 October honest-play routes ([ADR 0028](decisions/0028-ten-minute-foundation.md)) are superseded and are not repeated here.
 
@@ -323,11 +335,11 @@ This table gives the order of beats and is not a schedule. It has never carried 
 
 | # | beat |
 |---|---|
-| 1 | Hayloft. Three actions: Haul sacks (2 vigor → 3 coin), Sort herbs (1 vigor → 1 bundle), Rest. Vigor 10/10, coin 0/20. The first sort reveals the herb trades; the fifth sack puts you on Wen's wage, which then comes in on its own. |
-| 2 | Third sort: Granny Shu mentions the slip (6 coin). Slip bought: Lore 0/3, Qi Sense 0/3, qi 0/2 appear; Breath-gathering and Copy-the-slip appear. |
-| 3 | Lore 1: field kit and herb rack visible. Qi Sense 1: gather herbs and the channel walk appear. |
-| 4 | Qi Sense 2: the hollow appears. Qi Sense 3/3 is the **wall**: "the next character is missing." Two leads. |
-| 5 | Channel: walk (flow pattern, cap → 4), work for the pouch and kit, clear the fall (bounty), set the stones (Circulation opens 0/3, and *Carry the current* becomes learnable). Hollow: sit three dusks (cap → 5), steady attention (Circulation opens 0/3, faint trace on the first level earned, and *Settle the breath* becomes learnable). |
+| 1 | Hayloft. Three actions: Haul sacks (2 vigor → 3 coin), Sort herbs (1 vigor → 1 bundle), Rest. Vigor 10/10, coin 0/20. The fifth sack puts you on Wen's wage, which then comes in on its own until the ferry road closes the mill. |
+| 2 | Third sort: Granny Shu offers an apprenticeship (5 coin), and then the slip (6 coin). Slip bought: Lore 0/5, Qi Sense 0/5, qi 0/2 appear; breath practice, Copy the slip and the practice mat appear. |
+| 3 | Lore 1: the field kit is visible. Qi Sense 1: gathering, the channel walk, *Steady the breath* and Attunement appear. |
+| 4 | Qi Sense 2: the hollow appears. Qi Sense 3 is what the channel stones and steady attention ask for, and a Foundation pointer. Two leads. |
+| 5 | Channel: walk (flow pattern, two stones), work for the kit, clear the fall (bounty), set the stones (Circulation opens 0/5, and *Carry the current* becomes learnable). Hollow: walk, then sit three dusks (the third opens Circulation 0/5, and steady attention and *Settle the breath* become learnable); steady attention leaves the faint trace once Circulation reaches 2. |
 | 6 | The first real commitment: a place in Attunement, and which reading of leaf eight goes into it. The other closes, with a warning first. |
 | 7 | Circulate to 2; "Lay the foundation" shows the core and 3 of 4 with the bill as held/needed rows; fill any gap. Settle. Foundation: a banner lists what it changed and the road onward opens; nothing pauses. |
 
@@ -360,7 +372,7 @@ expr  := boolean over g.<id> (level/count), g.<id>.max, g.t_<key>, classes, reps
 
 Six fields are derived (`max`, `rate`, `open`, `length`, `yield`, `discount`), and nothing but the recompute writes them. They are the sum of a baseline and every contribution being paid: a record's `mod` while owned, times the units held if it is a resource; a family's `perLevel` times its levels; each `at` threshold passed and each `every` period completed. A path whose second segment is `mod` patches what *that* record pays, folded in before it pays, so a late upgrade raises what early levels already gave ([ADR 0021](decisions/0021-compounding-vocabulary.md)).
 
-Kinds: resource, family, task, site, arrangement, home, class, breakthrough (core + pointers + bill), teaching, recipe, technique, purchase, flag, lead. One JSON per line module plus shared modules; route keys are named in `src/content.ts`, and no module should gate on another module's record ids ([ADR 0024](decisions/0024-route-keys.md)). Saves are **v6** and hold only authoritative history: values, experience, repetitions, the attuned list, visibility, locks, log and bank. Every derived field is recomputed on load. Saves before v6 are not loadable ([ADR 0025](decisions/0025-lifespan-and-checkpoints-cut.md)).
+Kinds: resource, family, task, site, arrangement, home, class, breakthrough (core + pointers + bill), teaching, recipe, technique, purchase, flag, lead. One JSON per line module plus shared modules; route keys are named in `src/content.ts`, and no gate in a chapter's file names another chapter's record id, which `bun run validate` enforces; the shared file is the vocabulary both read, and its own reveals may name chapter records ([ADR 0024](decisions/0024-route-keys.md)). A technique's `g.<id>.attuned` reads 1 while it holds an attunement place; it is read-only and allowed only on records with `attune`. Saves are **v6** and hold only authoritative history: values, experience, repetitions, the attuned list, visibility, locks, log and bank. Every derived field is recomputed on load. Saves before v6 are not loadable ([ADR 0025](decisions/0025-lifespan-and-checkpoints-cut.md)).
 
 Engine: TypeScript: one expression evaluator shared by the browser runtime and the Part E validator; 1 s tick; one active task with a bounded waiting list; objective stops; a recompute that settles to a fixed point because occupancy counts feed back into it; attunement places; bank accrual on wall-clock; acceleration = run ticks from bank until objective or pause; strain gauges. IndexedDB with export. Vue or plain DOM is a presentation choice, not a design one.
 
@@ -416,11 +428,11 @@ Playtest questions, ranked:
 | ADR | Decision | What it changes here |
 |---|---|---|
 | [0021: Compounding vocabulary](decisions/0021-compounding-vocabulary.md) | Six derived fields rebuilt from authoritative history; four contribution sources with their scales; `X.mod.Y` patches what a record pays and is folded in before it pays, so it repays earned levels | Adds Part A rule 14; amends rule 1, Part D's grammar and Part E check 6 |
-| [0022: Chore tempo](decisions/0022-chore-tempo.md) | Tempo is `length`; chores stay instant and Vigor-paid; one slot with a six-deep waiting list and an `autoStart` Rest; a run that cannot sustain itself is refused. Amended 27 Oct: chapter one's earners become passive rates; loop-scaled earners belong to later chapters | **Supersedes Part A rule 9**; amends rule 13 (the waiting list is not a B2 reward), Part C.3, C.5, C.6 and Part E check 4 |
-| [0023: Techniques and attunement](decisions/0023-techniques-and-attunement.md) | Learn, attune, use: a technique must hold a scarce place in Attunement before it can be used, and the two readings of leaf eight lock each other with a warning. Amended 27 Oct: each ridge direction teaches one method, filling Foundation's third place | Adds Part A rule 15; amends rule 2 and B.1, adds Part C.3's Methods table and Foundation's fourth pointer, and Part E check 8 |
-| [0024: Route keys](decisions/0024-route-keys.md) | History crosses a module boundary as a `t_` tag counter carried by a method; later content reads keys, never another module's record ids. Amended 27 Oct: the ridge reads the school keys and adds sword and formation | Adds Part A rule 16; amends Part C.3 and Part E check 7 |
+| [0022: Chore tempo](decisions/0022-chore-tempo.md) | Tempo is `length`; chores stay instant and Vigor-paid; one slot with a six-deep waiting list and an `autoStart` Rest; a run that cannot sustain itself is refused. Amended 27 Oct: chapter one's earners become passive rates; loop-scaled earners belong to later chapters; Wen's wage counts as wages and ends at the ferry road | **Supersedes Part A rule 9**; amends rule 13 (the waiting list is not a B2 reward), Part C.3, C.5, C.6 and Part E check 4 |
+| [0023: Techniques and attunement](decisions/0023-techniques-and-attunement.md) | Learn, attune, use: a technique must hold a scarce place in Attunement before it can be used, and the two readings of leaf eight lock each other with a warning. Amended 27 Oct: each ridge direction teaches one method, filling Foundation's third place; `g.<id>.attuned` reads a held method, and Rest teaches Composure while *Settle the breath* is held | Adds Part A rule 15; amends rule 2 and B.1, adds Part C.3's Methods table and Foundation's fourth pointer, and Part E check 8 |
+| [0024: Route keys](decisions/0024-route-keys.md) | History crosses a module boundary as a `t_` tag counter carried by a method; later content reads keys, never another module's record ids. Amended 27 Oct: the ridge reads the school keys and adds sword and formation; `t_furnished` carries the furnished-home sign; the validator forbids a gate naming another chapter's record | Adds Part A rule 16; amends Part C.3 and Part E check 7 |
 | [0025: Lifespan and checkpoints cut](decisions/0025-lifespan-and-checkpoints-cut.md) | No age, lifespan, fictional calendar, checkpoint or retry; one setback rule; the bank is unchanged; save v6, older saves not loadable | **Supersedes Part A rule 10** and ADR 0002; amends ADR 0007 and ADR 0019; strips the mortality terms from rules 5 and 12, B.2, B.6, C.1, C.3, Part D and Part E |
-| [0026: Combat exchanges](decisions/0026-combat-exchanges.md) (21 Oct) | Fights as rolled swings on Speed clocks, with held methods as the preparation. Amended 27 Oct: an exact win chance and graded verdicts with a flip hint; Rest restores Life | Adds Part C.3's Fights table and Part E check 9 |
+| [0026: Combat exchanges](decisions/0026-combat-exchanges.md) (21 Oct) | Fights as rolled swings on Speed clocks, with held methods as the preparation. Amended 27 Oct: an exact win chance and graded verdicts with a flip hint; Rest restores Life; the bandit is optional, since Earth and Formation trace his cache without a fight | Adds Part C.3's Fights table and Part E check 9 |
 | [0027: Locks at payment and stops](decisions/0027-locks-at-payment-and-stops.md) (27 Oct) | A timed record's lock applies when its bill is paid; confirmations name what closes; discoveries never stop activity | Amends rule 9 and ADR 0007's stops |
 | [0028: A ten-minute Foundation](decisions/0028-ten-minute-foundation.md) (27 Oct) | About ten minutes of honest play to Foundation; the validator's bands are the one bound | Replaces Part E check 4's bounds and the bound line that opens Part C |
 

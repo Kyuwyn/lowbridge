@@ -50,8 +50,8 @@ All references below were re-checked against the source after the live-combat ch
 - **severity:** Medium
 - **criticality:** Core
 - **certainty:** HIGH
-- **lifecycle:** partly resolved (2026-10-27)
-- **resolution:** ADR 0024 is amended to match the code: keys are named in `routeKeys` (`src/content.ts`) rather than as records, and show by name on Character and in method details. The ridge now reads every school key (its four direction signs), adds the sword and formation keys, and `bun run validate` fails a key carried but never read, a carried key without a name and a named key nothing carries. Still open: the ridge's direction signs name opening furnishings (`cot`, `garden_plot`, `strongbox`), and no check forbids a gate naming another module's record id.
+- **lifecycle:** resolved (2026-10-27)
+- **resolution:** ADR 0024 is amended to match the code: keys are named in `routeKeys` (`src/content.ts`) rather than as records, and show by name on Character and in method details. The ridge reads every school key (its four direction signs), adds the sword and formation keys, and `bun run validate` fails a key carried but never read, a carried key without a name and a named key nothing carries. Commit 94a21fe closed the rest: the direction signs read a new `t_furnished` key carried by the cot, herb plot and strongbox instead of naming them; the coffer asks only `g.foundation > 0` and the cottage `g.foundation > 0 && g.home_space.max >= 4`; and `validateModuleSeams` (`scripts/validate.ts:282`) fails any gate in `opening.json` or `ridge.json` that names a record from the other chapter. The shared file is exempt as the vocabulary both chapters read.
 - **baseline:** new
 - **suggested direction:** Either implement the checks and key records, or amend ADR 0024 to match the code.
 

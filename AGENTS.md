@@ -8,22 +8,24 @@ Browser incremental, plain DOM, no runtime deps. One-way graph: `content → eng
 | Component | Files | Role |
 |---|---|---|
 | engine | `src/engine.ts`, `src/expression.ts`, `src/types.ts` | `GameEngine`: all rules, time, combat, tooltips |
-| content | `src/data/{shared,opening,ridge}.json`, `src/content.ts` | 119 declarative records (29/34/56), concatenated in that order |
+| content | `src/data/{shared,opening,ridge}.json`, `src/content.ts` | 122 declarative records (29/34/59), concatenated in that order |
 | persistence | `src/persistence.ts` | Save v6 sparse delta in IndexedDB (`current` + `backup`) |
 | ui | `src/main.ts`, `src/ui.ts`, `src/style.css`, `index.html` | Boot, Web Lock, ticker, DOM view; holds no game rules |
 | tooling | `scripts/validate.ts`, `scripts/routes.ts`, `scripts/browser-smoke.ts` | Content gate: grammar, pacing, reachability by playing the real engine |
 
-Checks on 2026-10-27 (audit-tooling, as reported by its owner): `bun run typecheck` clean; `bun test` 97/97; `bun run validate` OK (Foundation 9.47 / 10.73 min on the direct routes, 119/119 reachable).
+Checks on 2026-10-27: `bun run validate` OK after commit 94a21fe (Foundation 9.47 / 10.73 min on the direct routes, ridge waystation 15.90–20.17 min after Foundation, 122/122 reachable); `bun run typecheck` clean and `bun test` 97/97 as last reported on audit-tooling.
 
 ## Non-obvious facts (verify before changing)
 
 - Derived fields (`max`, `rate`, `open`, `length`, `yield`, `discount`) are never saved; `recompute` rebuilds them (fixed point, ≤8 passes) on every change and load (`src/types.ts:28-29`, `src/engine.ts:229-285`).
 - `X.mod.Y` patches raise another record's payout table, including levels already earned (`src/engine.ts:56-77`). The ridge patches chapter one: Body Disciple patches Labour, Earth Listener Stone Sense, Formation Student the pallet, cot, mat and herb plot (`src/data/ridge.json:276-294`).
 - Tempo comes from `length`: absent means instant, a number means timed, `"continuous"` means perpetual. One slot plus a waiting list of 6 that keeps running while away; the `autoStart` Rest fills idle time and fills both Vigor and Life (`src/engine.ts:6`, `src/engine.ts:782-822`, `src/engine.ts:869`).
-- Chapter one has no sustained earners: `mill_shift` and `rack_tending` are gone. Coin and herbs trickle in through passive rates on the fifth sack and Shu's apprenticeship, which accrue while away (`src/data/opening.json:7`, `src/data/opening.json:53`, ADR 0022 amendment).
+- Chapter one has no sustained earners: `mill_shift` and `rack_tending` are gone. Coin and herbs trickle in through passive rates on the fifth sack and Shu's apprenticeship, which accrue while away. Wen's wage also raises `coin_earned.rate`, so it counts toward the directions' wages sign, and `ferry_hauling`'s `mod` cancels both rates once taken (`src/data/opening.json:7`, `src/data/opening.json:33`, `src/data/opening.json:53`, ADR 0022 amendments).
 - Discoveries are logged and **never pause** activity; the validator rejects `pause` on events (`src/engine.ts:1411-1424`, `validateGrammar` in `scripts/validate.ts`, ADR 0027).
 - A timed record's `lock` applies when its bill is first paid, not on completion; removed waiting entries and released methods are logged (`src/engine.ts:1283-1300`, ADR 0027). `warnText` asks while anything it locks is still open, and a content `warn` replaces the generated sentence, so it must name what closes.
-- `g.t_<tag>` counts owned, unlocked records carrying the tag (a technique once used); a record id equal to a tag is a validation error. Key names live in `routeKeys` in `src/content.ts`, the ridge's direction signs read the school keys, and a key carried but never read fails validation (`src/engine.ts:186-193`, `validateGrammar` and `validateContext` in `scripts/validate.ts`).
+- `g.t_<tag>` counts owned, unlocked records carrying the tag (a technique once used); a record id equal to a tag is a validation error. Key names live in `routeKeys` in `src/content.ts`, the ridge's direction signs read the school keys and `t_furnished` (cot, herb plot, strongbox), and a key carried but never read fails validation (`src/engine.ts:186-193`, `validateGrammar` and `validateContext` in `scripts/validate.ts`).
+- No gate (`require`, `need`, breakthrough core or pointer, event `when`) in `opening.json` or `ridge.json` may name a record from the other chapter's file; `shared.json` is exempt (`validateModuleSeams`, `scripts/validate.ts:282`, ADR 0024).
+- `g.<id>.attuned` is a read-only expression field, 1 while that method holds an attunement place; the validator allows it only on records with `attune`. Rest's Composure reads `g.settle_breath.attuned` (`src/engine.ts:207`, `scripts/validate.ts:99`, ADR 0023).
 - Reveal order is array order in the JSON files (`src/engine.ts:97`).
 - Any JSON field outside the vocabulary fails validation; removed fields are named (`recordFields` and `REMOVED_FIELDS` in `scripts/validate.ts`).
 - Pacing is enforced by `bun run validate` (ADR 0028, about ten minutes of honest play): Foundation 480–780 s and Circulation by 600 s on the direct routes; preference routes within 1200 s; every timed action ≤180 s; every ridge route 720–1440 s from Foundation to the waystation, from either reading (`FOUNDATION_FLOOR` … `RIDGE_CEILING` in `scripts/validate.ts`). `scripts/routes.ts` enforces no band of its own.
@@ -32,7 +34,8 @@ Checks on 2026-10-27 (audit-tooling, as reported by its owner): `bun run typeche
 - Older save versions are refused by name, not migrated (`src/persistence.ts:155-160`).
 - One tab per profile (Web Locks); every action calls `settle()` before touching the engine (`src/main.ts:87-92`, `src/main.ts:160-161`).
 - `src/ui.ts` names content ids directly (`home_space`, `jade_slip`, `vigor`…); renaming them breaks rendering, and `validate` will not notice (`src/ui.ts:45`, `src/ui.ts:907`).
-- The ridge chapter is implemented: four teachings, each with an attunable method carrying a school key, four exclusive First Directions with classes, crossings, the waystation and its four leads, and the bandit fight (`src/data/ridge.json`, ADRs 0023, 0024, 0026).
+- At ≤650 px the centre column is `display: contents`, so banners sit above the activity slot and Body panel and the tabbed activity panel follows; `#activities` (skip link and **Continue** target) is the activity panel, not `<main>` (`src/style.css:484`, `src/ui.ts:213`).
+- The ridge chapter is implemented: four teachings, each with an attunable method carrying a school key, four exclusive First Directions with classes, crossings, the waystation and its four leads, and the optional bandit fight, whose cache the earth and formation teachings can trace without fighting (`cache_found`) (`src/data/ridge.json`, ADRs 0023, 0024, 0026).
 - `playtest/SIMULATION-REPORT.md`'s current-pacing paragraph carries the 27 October `bun run validate` figures; its older sections are history. When they disagree, trust `bun run validate` output.
 
 ## Where to look

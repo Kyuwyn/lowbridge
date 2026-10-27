@@ -72,7 +72,7 @@ Not applicable. [HIGH]
 ## 10. Legacy Warnings
 - One pacing bound: the validator's bands (ADR 0028). `routes.ts` and the design plan defer to it. [HIGH]
 - Route preferences hardcode content ids; renames are caught only by the `unknownIds` check. [HIGH] (`scripts/routes.ts`)
-- The validator checks route keys for names and readers, but not that no gate names another module's record id (ADR 0024). See ISS-004. [HIGH]
+- The validator checks route keys for names and readers, and `validateModuleSeams` fails a gate in `opening.json` or `ridge.json` naming the other chapter's record (ADR 0024; ISS-004 resolved). `shared.json` is exempt. [HIGH] (`scripts/validate.ts:282`)
 - The Python simulators are deliberately historical approximations, not a baseline. [HIGH] (`design/validation/opening-sim.py:11-13`)
 
 ## 11. Design Rationale

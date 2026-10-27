@@ -174,7 +174,7 @@ One block per ADR in `design/decisions/`. **Status** and **Date** are quoted fro
 - **Status:** Accepted key vocabulary: tag counters, the records that carry them, and the rule that later content reads keys rather than record ids
 - **Date:** 20 October 2026
 - **Source:** `design/decisions/0024-route-keys.md`
-- **Code shows:** `g.t_<tag>` counters (`src/engine.ts:186-193`), key names in `routeKeys` (`src/content.ts:22-29`), school keys read by the ridge's direction signs. `validateContext` fails a carried key without a name or never read, and a named key nothing carries. The "no cross-module id gates" rule is **not in force** (see ISS-004)
+- **Code shows:** `g.t_<tag>` counters (`src/engine.ts:186-193`), key names in `routeKeys` (`src/content.ts:22-29`), school keys and `t_furnished` read by the ridge's direction signs. `validateContext` fails a carried key without a name or never read, and a named key nothing carries; `validateModuleSeams` fails a chapter gate naming another chapter's record (`scripts/validate.ts:282`; ISS-004 resolved)
 - **Evidence:** `design/decisions/0024-route-keys.md:32`
 - **Certainty:** [HIGH]
 

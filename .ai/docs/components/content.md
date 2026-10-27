@@ -4,7 +4,7 @@
 Files: `src/content.ts` (54 lines), `src/data/shared.json` (164), `src/data/opening.json` (312), `src/data/ridge.json` (316). Criticality: **Core**.
 
 ## 1. Component Overview
-All game content as data: 119 records (shared 29, opening 34, ridge 56) concatenated in a fixed order, plus the story beats from the first sack to the waystation. The same `records` array feeds the browser, the route simulator and the validator. [HIGH] (`src/content.ts:7-8`)
+All game content as data: 122 records (shared 29, opening 34, ridge 59) concatenated in a fixed order, plus the story beats from the first sack to the waystation. The same `records` array feeds the browser, the route simulator and the validator. [HIGH] (`src/content.ts:7-8`)
 
 - Complexity: **Moderate** (data, but every number is load-bearing for pacing checks).
 
