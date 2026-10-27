@@ -1,6 +1,6 @@
 import { GAUGE, WAITING_MAX, type GameEngine } from "./engine";
 import type { ActiveTask, GameRecord, GameState, LogEntry, Objective, Stat, TooltipBlock, TooltipBlockKind } from "./types";
-import { openingContext } from "./content";
+import { openingContext, routeKeys } from "./content";
 
 export interface UICallbacks {
   beforeChange?(): void;
@@ -87,6 +87,15 @@ function meter(className = "") {
 function modeOf(record: GameRecord): Mode {
   return record.length === undefined ? "instant" : record.length === "continuous" ? "continuous" : "timed";
 }
+/** Sustained before instant, as the slot reads them; a self-starting filler like Rest is a control and goes last. */
+function sortRank(record: GameRecord): number {
+  return record.autoStart ? 2 : modeOf(record) === "continuous" ? 0 : 1;
+}
+/** The journal's kind labels, in the player's words rather than the engine's. */
+const journalKinds: Record<LogEntry["kind"], string> = {
+  discovery: "Discovery", story: "Story", cap: "Limit", completion: "Done", pause: "Stopped",
+  purchase: "Acquired", method: "Method", home: "Home", fight: "Fight",
+};
 /** Where a record's primary cell lives; practice is mirrored under its knowledge on Character as well. */
 function recordTab(record: GameRecord): Tab {
   return record.group === "Home" ? "home" : record.kind === "technique" ? "techniques" : "tasks";
@@ -125,6 +134,8 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
   // Why the last save action failed. Held rather than written straight to the node, so that the message
   // survives every later render and is replaced only by the next action, not by whichever call ran last.
   let settingsError = "";
+  // The journal speaks for itself only when it grows; replaying the latest line every tick would talk over refusals.
+  let announcedLogId = engine.state.log.at(-1)?.id ?? 0;
   const root = document.querySelector<HTMLElement>("#app");
   if (!root) throw new Error("Lowbridge needs an #app element.");
   root.innerHTML = `
@@ -147,27 +158,28 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
             <details class="ledger-section" open><summary><h3>Materials</h3></summary><div data-ui="materials"></div></details>
             <details class="ledger-section" open data-ui="families-panel" hidden><summary><h3>Knowledge <span>Level / limit</span></h3></summary><div class="family-list" data-ui="families"></div></details>
           </section>
-          <section class="panel location-panel"><div class="panel-heading"><h2>Lowbridge</h2></div><p>The mill stream meets the ferry road. Beyond the barns, the water runs toward the wilds.</p><span class="location-foot" data-ui="location-stage"></span></section>
+          <section class="panel location-panel"><div class="panel-heading"><h2 data-ui="location-place"></h2></div><p data-ui="location-text"></p></section>
         </aside>
         <main class="centre-column" id="activities" tabindex="-1">
-          <section class="confirmation" data-ui="confirmation" role="alertdialog" aria-labelledby="confirmation-text" hidden><p id="confirmation-text" data-ui="confirmation-text"></p><div class="banner-actions"><button type="button" class="danger-button" data-ui="confirm">Confirm</button><button type="button" data-ui="cancel">Cancel</button></div></section>
+          <dialog class="confirmation" data-ui="confirmation" role="alertdialog" aria-labelledby="confirmation-text"><p id="confirmation-text" data-ui="confirmation-text"></p><div class="banner-actions"><button type="button" class="danger-button" data-ui="confirm">Confirm</button><button type="button" data-ui="cancel">Cancel</button></div></dialog>
           <section class="completion-banner" data-ui="completion" hidden><div><strong data-ui="completion-title">Foundation reached</strong><span data-ui="completion-text">The method holds.</span></div><div class="banner-actions"><button type="button" data-ui="review-foundation">Review Foundation</button><button type="button" class="text-button" data-ui="completion-dismiss">Dismiss</button></div></section>
-          <section class="return-banner" data-ui="return" hidden><div><strong data-ui="return-title"></strong><ul class="return-list" data-ui="return-list"></ul></div><button type="button" data-ui="return-dismiss">Continue</button></section>
+          <section class="return-banner" data-ui="return" role="region" aria-labelledby="return-title" hidden><div><strong id="return-title" data-ui="return-title"></strong><ul class="return-list" data-ui="return-list"></ul></div><button type="button" data-ui="return-dismiss">Continue</button></section>
           <section class="return-banner notice-banner" data-ui="notice" role="status" hidden><div><p class="notice-story" data-ui="notice-story"></p><p class="notice-new" data-ui="notice-text"></p></div><button type="button" data-ui="notice-dismiss">Dismiss</button></section>
           <section class="panel activity-panel"><nav class="activity-nav" role="tablist" aria-label="Game views" data-ui="tabs"></nav><div data-ui="tab-panels"></div></section>
         </main>
         <aside class="status-column" aria-label="Current activity and character">
           <section class="panel activity-slot"><div class="panel-heading"><h2>Current activity</h2><span class="activity-state" data-ui="active-mode">Idle</span></div><div class="slot-body"><h3 data-ui="objective-name">No activity</h3><p class="slot-goal" data-ui="objective-progress"></p><div data-ui="active-meter"></div><p class="slot-progress numeric" data-ui="active-progress"></p><p class="slot-eta" data-ui="active-eta" hidden></p><p class="slot-current" data-ui="carried" hidden></p>
             <div class="objective-editor" data-ui="objective-editor" hidden><label>Stop when <select data-ui="objective-kind"></select></label><label data-ui="objective-target-label">Target <input type="number" data-ui="objective-target" inputmode="numeric" /></label><p class="slot-error" data-ui="objective-error" role="status"></p></div>
-            <div class="slot-actions"><button type="button" data-ui="stop" data-action="stop">Stop</button><button type="button" class="text-button" data-ui="locate-active" hidden>Show activity</button></div><p class="slot-note" data-ui="bank-note"></p><p class="slot-last" data-ui="last-stop" hidden></p>
+            <div class="slot-actions"><button type="button" data-ui="stop" data-action="stop" aria-describedby="stop-reason">Stop</button><button type="button" class="text-button" data-ui="locate-active" hidden>Show activity</button></div><p class="slot-reason" id="stop-reason" data-ui="stop-reason" hidden></p><p class="slot-note" data-ui="bank-note"></p><p class="slot-last" data-ui="last-stop" hidden></p>
             <div class="waiting"><h4>Waiting</h4><ol class="waiting-list" data-ui="waiting"></ol><p class="empty-state" data-ui="waiting-empty">Nothing is waiting. Shift-click an action to queue it.</p></div></div></section>
           <section class="panel body-panel"><div class="panel-heading"><h2>Body</h2><span>Held / max</span></div><div class="body-list" data-ui="body"></div></section>
           <section class="panel character-status"><div class="panel-heading"><h2>Character</h2><span data-ui="character-stage">Mortal</span></div><div class="status-body"><dl class="status-list"><div class="home-status"><dt>Home</dt><dd data-ui="home-name"></dd></div><div><dt>Floor space</dt><dd data-ui="home-space"></dd></div></dl></div></section>
           <section class="panel journal-panel" aria-labelledby="journal-heading"><div class="panel-heading"><h2 id="journal-heading">Journal</h2><select data-ui="journal-filter" aria-label="Journal entries"><option value="key">Story, discoveries &amp; limits</option><option value="all">All entries</option></select></div><ol class="journal-list" data-ui="journal"></ol><p class="empty-state journal-empty" data-ui="journal-empty">The mill wheel turns below the hayloft.</p></section>
         </aside>
       </div>
-      <footer class="game-footer"><span>Lowbridge · Village to Foundation</span><span data-ui="activity-time"></span></footer>
+      <footer class="game-footer"><span data-ui="bound"></span><span data-ui="activity-time"></span></footer>
       <p class="sr-only" role="status" aria-live="polite" aria-atomic="true" data-ui="announcement"></p>
+      <p class="sr-only" aria-live="polite" aria-atomic="true" data-ui="journal-announcement"></p>
     </div>`;
 
   function ui<T extends HTMLElement = HTMLElement>(key: string): T {
@@ -177,6 +189,8 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
   }
   function label(id: string): string { return engine.records.find(record => record.id === id)?.name ?? id.replaceAll("_", " "); }
   function current(id: string): number { return engine.state.stats[id]?.value ?? 0; }
+  /** Timed work is counted in effort; the player reads it in real seconds at the current completion rate. */
+  function realSeconds(record: GameRecord, work: number): number { return work / Math.max(engine.speed(record), 1e-9); }
   function announce(message: string): void {
     if (message && message !== latestAnnouncement) { latestAnnouncement = message; setText(ui("announcement"), message); }
   }
@@ -202,7 +216,7 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
     pendingConfirmation = action;
     confirmationTrigger = document.activeElement instanceof HTMLElement ? document.activeElement : null;
     root!.querySelector<HTMLDetailsElement>(".settings")!.open = false;
-    setText(ui("confirmation-text"), message); ui("confirmation").hidden = false; ui("cancel").focus();
+    setText(ui("confirmation-text"), message); ui<HTMLDialogElement>("confirmation").showModal(); ui("cancel").focus();
   }
   /**
    * Every step the engine warns about asks before it happens, and cancelling leaves the game exactly as
@@ -226,11 +240,14 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
     });
   });
   ui("new-game").addEventListener("click", () => confirmAction("Begin again in the hayloft? This replaces the current save. An exported save can be imported later.", () => settingsAction(callbacks.onNewGame)));
-  ui("cancel").addEventListener("click", () => { pendingConfirmation = null; ui("confirmation").hidden = true; confirmationTrigger?.focus(); });
+  function closeConfirmation(): void { pendingConfirmation = null; const dialog = ui<HTMLDialogElement>("confirmation"); if (dialog.open) dialog.close(); }
+  ui("cancel").addEventListener("click", () => { closeConfirmation(); confirmationTrigger?.focus(); });
   ui("confirm").addEventListener("click", () => {
-    const action = pendingConfirmation; pendingConfirmation = null; ui("confirmation").hidden = true;
+    const action = pendingConfirmation; closeConfirmation();
     if (action) void Promise.resolve(action()).then(() => confirmationTrigger?.focus());
   });
+  // Escape on a modal dialog is a cancel, and must leave the game exactly as it was.
+  ui("confirmation").addEventListener("cancel", event => { event.preventDefault(); ui("cancel").click(); });
   ui("accelerate").addEventListener("click", () => {
     void change(() => { const result = engine.setAccelerating(!engine.state.bank.accelerating); if (!result.ok) announce(result.reason); });
   });
@@ -257,6 +274,8 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
   ui("bank-meter").append(bankMeter.root); ui("active-meter").append(activeMeter.root);
   let seenIds = new Set(engine.state.visibleIds);
   let filterResource: string | null = null;
+  /** Records the Now panel's next step points at; their cards carry a Next mark. */
+  let nextIds = new Set<string>();
   const tabViews = new Map<Tab, { button: HTMLButtonElement; count: HTMLSpanElement; badge: HTMLSpanElement; panel: HTMLDivElement }>();
   function markTabSeen(id: Tab): void {
     for (const cell of cells) if (cell.tab === id && engine.visible(cell.record.id)) seenIds.add(cell.record.id);
@@ -424,7 +443,8 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
       return { text: `${duration(active.progress)} elapsed`, value: 1, max: 1 };
     }
     const length = engine.stat(record.id).length;
-    return { text: `${duration(active.progress)} / ${duration(length)} this completion`, value: active.progress, max: length };
+    // Same clock as the card and tooltip: real seconds at the current completion rate, not units of work.
+    return { text: `${duration(realSeconds(record, active.progress))} / ${duration(realSeconds(record, length))} this completion`, value: active.progress, max: length };
   }
   /** The Fight tab shows the fight under way, or the last one until the player starts something else; it opens itself when a fight begins. */
   function renderFight(): void {
@@ -491,7 +511,7 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
       try { localStorage.setItem(groupsKey, JSON.stringify([...closedGroups])); } catch { /* A preference only. */ }
     });
     const members = engine.records.filter(record => !notActions.has(record.kind) && definition.matches(record))
-      .sort((a, b) => Number(modeOf(b) === "continuous") - Number(modeOf(a) === "continuous"));
+      .sort((a, b) => sortRank(a) - sortRank(b));
     return { definition, ...group, cells: members.map(record => createCell(record, group.grid, definition.tab)) };
   });
   const cells = groupViews.flatMap(view => view.cells);
@@ -541,6 +561,8 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
     const tip = attachTip(cell, tipId); tip.dataset.recordDetails = record.id;
     const modeLine = element("p", "tip-mode"); tip.append(modeLine);
     const blocks = blockList("tip-blocks"); tip.append(blocks.root);
+    const keyNames = (record.tags ?? []).map(tag => routeKeys[tag]?.name ?? tag);
+    if (keyNames.length) tip.append(element("p", "tip-keys", `Route keys: ${keyNames.join(", ")}`));
     const countLine = element("p", "tip-count"); tip.append(countLine);
     let remove: HTMLButtonElement | undefined;
     if (engine.removable(record)) {
@@ -609,10 +631,10 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
       if (locked && !record.autoStart && record.kind !== "technique" && engine.atLimitWall(record)) { cell.hidden = true; return false; }
       // A queued pursuit lives in the Waiting list; its grid cell is a dead duplicate.
       if (!running && engine.state.waiting.some(entry => entry.id === record.id)) { cell.hidden = true; return false; }
-      const resume = !running && stat.paid, waste = !locked && !owned ? wasteText(stat) : "";
+      const resume = !running && stat.paid, waste = !locked && !owned ? wasteText(stat) : "", isNext = nextIds.has(record.id) && !owned && !running;
       const place = engine.state.waiting.findIndex(entry => entry.id === record.id) + 1;
       if (queue) queue.hidden = running || owned || place > 0 || Boolean(record.autoStart);
-      const isNew = !seenIds.has(record.id) && !owned && !running && record.id !== "rest";
+      const isNew = !seenIds.has(record.id) && !owned && !running && record.id !== "rest" && !isNext;
       const matchesResource = Boolean(filterResource && recordTouchesResource(record, filterResource));
       const home = (doneWith(record, stat) ? doneGroups.get(tab)?.grid : undefined) ?? grid;
       if (cell.parentElement !== home) home.append(cell);
@@ -627,12 +649,12 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
       button.classList.toggle("is-running", running); button.classList.toggle("is-owned", owned);
       button.classList.toggle("is-locked", locked); button.classList.toggle("is-runnable", !running && !owned && !locked);
       button.classList.toggle("is-capped", Boolean(waste)); button.classList.toggle("is-new", isNew);
-      button.classList.toggle("is-resource-match", matchesResource);
+      button.classList.toggle("is-resource-match", matchesResource); button.classList.toggle("is-next", isNext);
       button.disabled = owned;
       if (locked) button.setAttribute("aria-disabled", "true"); else button.removeAttribute("aria-disabled");
       if (mode !== "instant") button.setAttribute("aria-pressed", String(running));
       setText(sub, locked ? availability.reason : cardSummary(detail, mode));
-      setText(badge, running ? "Running" : owned ? ownedText : place ? `Waiting #${place}` : resume ? `Resume ${clock(stat.exp)}` : waste || (isNew ? "New" : "")); badge.hidden = !badge.textContent;
+      setText(badge, running ? "Running" : owned ? ownedText : place ? `Waiting #${place}` : resume ? `Resume ${clock(realSeconds(record, stat.exp))}` : waste || (isNext ? "Next" : isNew ? "New" : "")); badge.hidden = !badge.textContent;
       const progress = running ? activityProgress(record) : resume ? { value: stat.exp, max: stat.length } : { value: 0, max: 1 };
       fill.style.width = `${progress.max > 0 ? Math.min(100, progress.value / progress.max * 100) : 0}%`;
       setText(modeLine, modeText);
@@ -651,11 +673,12 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
     const heading = element("div", "resource-heading"), amount = element("span", "resource-value numeric");
     heading.append(element("span", "resource-name", record.name ?? record.id), amount);
     const bar = meter(body ? `${record.id}-meter` : ""), note = element("p", "resource-rate");
-    row.tabIndex = 0; row.setAttribute("aria-describedby", `ledger-tip-${record.id}`);
+    row.tabIndex = 0; row.setAttribute("role", "button"); row.setAttribute("aria-pressed", "false");
+    row.setAttribute("aria-label", `${record.name ?? record.id}: mark the actions that use it`); row.setAttribute("aria-describedby", `ledger-tip-${record.id}`);
     row.append(heading, bar.root);
     if (body) row.append(note);
     const tip = attachTip(row, `ledger-tip-${record.id}`), detail = blockList("tip-blocks"), tipFlow = element("p", "tip-flow");
-    tip.append(detail.root, tipFlow);
+    tip.append(detail.root, tipFlow, element("p", "tip-count", `Select to mark every action that uses ${record.name ?? record.id}; select again or press Escape to clear.`));
     row.addEventListener("click", () => {
       filterResource = filterResource === record.id ? null : record.id;
       render();
@@ -676,8 +699,10 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
     heading.append(element("span", "family-name", record.name ?? record.id), amount);
     const pips = element("div", "family-pips"); pips.setAttribute("aria-hidden", "true");
     const exp = element("p", "family-exp");
-    row.tabIndex = 0; row.setAttribute("aria-describedby", `ledger-tip-${record.id}`);
+    row.tabIndex = 0; row.setAttribute("role", "button");
+    row.setAttribute("aria-label", `${record.name ?? record.id}: open on Character`); row.setAttribute("aria-describedby", `ledger-tip-${record.id}`);
     row.append(heading, pips, exp);
+    row.addEventListener("keydown", event => { if (event.key === "Enter" || event.key === " ") { event.preventDefault(); selectTab("character"); } });
     const tip = attachTip(row, `ledger-tip-${record.id}`), detail = blockList("tip-blocks");
     tip.append(detail.root);
     // Knowledge is explained in full beside the practice that raises it, on Character.
@@ -687,7 +712,16 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
   });
 
   characterPanel.innerHTML = `<div class="view-intro"><h2 data-ui="character-title">A life in Lowbridge</h2><p data-ui="scene-description"></p></div><div class="character-facts"><dl><div><dt>Stage</dt><dd data-ui="character-stage-detail"></dd></div><div><dt>Activity</dt><dd data-ui="character-time"></dd></div></dl></div><section class="character-methods" data-ui="character-methods" hidden><div class="section-heading"><h3>Cultivation</h3><span>What each knowledge gives, and the practice that raises it</span></div><div data-ui="family-explanations"></div></section><details class="slip" data-ui="slip" hidden><summary>The Cracked Jade Slip · leaves 1, 2, 8</summary><blockquote><p><em>Lesser Breath-Gathering Method.</em> “Sit as water sits. Draw the breath past the throat and let it pool below the navel. Feel for what is not air.”</p><p>Leaf 8: “…when the pooled breath turns, do not follow it. Wait at the turning. The rest is…” The remaining characters are chipped away.</p></blockquote></details><section class="foundation-record" data-ui="completion-detail" hidden><div class="section-heading"><h3 data-ui="completion-heading">Beyond Foundation</h3><span data-ui="completion-stage">The ridge lies ahead</span></div><div class="completion-copy"><p>The pooled breath turns and returns. A method that once ended in a broken sentence has become your own.</p><p class="completion-note" data-ui="completion-note"></p></div><ul class="lead-list" data-ui="leads"></ul></section>`;
-  setText(ui("scene-description"), openingContext.introduction);
+  /** Route keys in words: what the held methods are made of, which later teachings ask about (ADR 0024). */
+  const keySection = element("section", "route-keys"); keySection.dataset.ui = "route-keys"; keySection.hidden = true;
+  const keyHeading = element("div", "section-heading"), keyList = element("ul", "lead-list");
+  keyHeading.append(element("h3", "", "Route keys"), element("span", "", "What your methods are made of; later teachings ask for these"));
+  keySection.append(keyHeading, keyList); ui("character-methods").insertAdjacentElement("afterend", keySection);
+  const keyItems = Object.entries(routeKeys).map(([tag, key]) => {
+    const item = element("li"), carriers = element("p");
+    item.append(element("h4", "", key.name), element("p", "", key.desc), carriers); keyList.append(item);
+    return { tag, item, carriers };
+  });
   /** A knowledge and the practice that raises it, together: the mechanical half of cultivation. */
   const familyExplanations = engine.records.filter(record => record.kind === "family").map(record => {
     const row = element("article", "family-explanation"), heading = element("h4"), detail = blockList("knowledge-block");
@@ -715,7 +749,7 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
   const breakthroughPanels = engine.records.filter(record => record.breakthrough).map((record, index) => {
     const breakthrough = record.breakthrough!, primary = index === 0, settlingLabel = record.id === "settling";
     const panel = element("section", "foundation-panel");
-    panel.innerHTML = `<div class="section-heading"><h3 data-part="title"></h3><span class="mode-badge mode-timed">Timed breakthrough</span></div><div class="foundation-body"><div class="foundation-checks"><div><h4>The core</h4><ul class="foundation-list" data-part="core"></ul></div><div><h4 data-part="count"></h4><ul class="foundation-list" data-part="pointers"></ul></div></div><div class="foundation-footer"><div><p class="card-facts" data-part="bill"></p><p class="foundation-rewards" data-part="rewards"></p><p class="card-requirement" data-part="need"></p></div><button type="button" class="primary-button card-button" data-part="start" data-action="start"></button></div><details class="action-details"><summary>Breakthrough details</summary><p class="card-description" data-part="description"></p></details></div>`;
+    panel.innerHTML = `<div class="section-heading"><h3 data-part="title"></h3><span class="mode-badge mode-timed">Timed breakthrough</span></div><div class="foundation-body"><div class="foundation-checks"><div><h4>The core</h4><ul class="foundation-list" data-part="core"></ul></div><div><h4 data-part="count"></h4><ul class="foundation-list" data-part="pointers"></ul></div></div><div class="foundation-footer"><div><p class="card-facts" data-part="bill"></p><h4 class="foundation-rewards-heading">On completion</h4><ul class="foundation-rewards" data-part="rewards"></ul><p class="card-requirement" data-part="need"></p></div><button type="button" class="primary-button card-button" data-part="start" data-action="start"></button></div><details class="action-details"><summary>Breakthrough details</summary><p class="card-description" data-part="description"></p></details></div>`;
     const part = <T extends HTMLElement = HTMLElement>(name: string) => {
       const node = panel.querySelector<T>(`[data-part="${name}"]`)!;
       if (primary) node.dataset.ui = `foundation-${name}`;
@@ -732,6 +766,7 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
     parts.start.addEventListener("click", () => askFirst(record.id, () => change(() => { engine.start(record.id); })));
     ui("breakthroughs").append(panel);
     const granted = Object.keys(record.result ?? {}).filter(id => !id.includes(".") && engine.record(id).kind === "class").map(id => label(id));
+    let rewardsKey = "";
     function update(active: ActiveTask | null): void {
       const stat = engine.stat(record.id);
       panel.hidden = !engine.visible(record.id) || stat.value >= stat.max;
@@ -741,12 +776,13 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
       setText(parts.count, `Supporting signs · ${met}/${breakthrough.pointers.length} · ${breakthrough.required} needed`);
       const availability = engine.availability(record.id), running = active?.id === record.id, detail = engine.tooltip(record.id);
       setText(parts.bill, [...blockLines(detail, "cost", "time"), stat.paid ? "paid" : ""].filter(Boolean).join(" · "));
-      setText(parts.rewards, `On completion: ${[...blockLines(detail, "mod", "result"), ...granted.map(name => `the standing of ${name}`)].join("; ")}.`);
+      const rewards = [...blockLines(detail, "mod", "result"), ...granted.map(name => `The standing of ${name}`)];
+      if (rewards.join("\u0000") !== rewardsKey) { rewardsKey = rewards.join("\u0000"); parts.rewards.replaceChildren(...rewards.map(line => element("li", "", line))); }
       setText(parts.need, availability.reason || record.needtext || ""); parts.need.hidden = availability.ok || running;
       parts.start.disabled = !availability.ok || running;
       setText(parts.start, settlingLabel
-        ? running ? "Settling…" : stat.paid ? `Resume settling · ${clock(stat.exp)}` : "Settle the foundation"
-        : running ? "Breaking through…" : stat.paid ? `Resume · ${clock(stat.exp)}` : `Begin: ${record.name ?? record.id}`);
+        ? running ? "Settling…" : stat.paid ? `Resume settling · ${clock(realSeconds(record, stat.exp))}` : "Settle the foundation"
+        : running ? "Breaking through…" : stat.paid ? `Resume · ${clock(realSeconds(record, stat.exp))}` : `Begin: ${record.name ?? record.id}`);
     }
     return { record, update };
   });
@@ -840,7 +876,7 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
       const record = engine.record(entry.id), stat = engine.stat(entry.id);
       view.row.dataset.recordId = entry.id;
       setText(view.name, label(entry.id));
-      setText(view.detail, [`until ${objectiveText(entry.objective)}`, stat.paid ? `resumes at ${clock(stat.exp)} / ${clock(stat.length)}` : "",
+      setText(view.detail, [`until ${objectiveText(entry.objective)}`, stat.paid ? `resumes at ${clock(realSeconds(record, stat.exp))} / ${clock(realSeconds(record, stat.length))}` : "",
         engine.availability(entry.id).ok ? "" : engine.availability(entry.id).reason].filter(Boolean).join(" · "));
       view.remove.setAttribute("aria-label", `Remove ${record.name ?? entry.id} from the waiting list`);
     });
@@ -870,9 +906,10 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
     const rate = engine.netRate(id), stat = engine.stat(id);
     if (Math.abs(rate) < 1e-9) return "";
     const signed = `${rate > 0 ? "+" : "−"}${Math.abs(rate) < 0.1 ? `${rateNumber(Math.abs(rate) * 60)}/min` : `${rateNumber(Math.abs(rate))}/s`}`;
-    if (rate > 0 && stat.value < stat.max) return `${signed} · full in ~${duration((stat.max - stat.value) / rate)}`;
-    if (rate < 0 && stat.value > 0) return `${signed} · empty in ~${duration(stat.value / -rate)}`;
-    return signed;
+    if ((rate > 0 && stat.value >= stat.max) || (rate < 0 && stat.value <= 0)) return signed;
+    // "~0s" beside a meter that is visibly short of full reads as a stall.
+    const left = rate > 0 ? (stat.max - stat.value) / rate : stat.value / -rate, when = left < 1 ? "under a second" : `~${duration(left)}`;
+    return `${signed} · ${rate > 0 ? "full" : "empty"} in ${when}`;
   }
   /** Wall-clock seconds until the objective stops: acceleration spends one banked second per real second. */
   function wallClockToObjective(): number | undefined {
@@ -889,7 +926,10 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
     setText(ui("save-status"), saveStatus); setText(ui("bank-amount"), `${duration(state.bank.seconds)} / ${duration(state.bank.cap)}`); bankMeter.update(state.bank.seconds, state.bank.cap);
     ui("bank").classList.toggle("is-full", bankFull && !active); ui("bank").classList.toggle("is-accelerating", accelerating);
     setText(ui("stage"), current("waystation") > 0 ? "The ridge" : foundationReached ? "Foundation" : "The village");
-    setText(ui("location-stage"), foundationReached ? "The opening · Foundation reached" : "The opening · toward Foundation");
+    const scene = [...openingContext.scenes].reverse().find(candidate => engine.condition(candidate.when)) ?? openingContext.scenes[0]!;
+    setText(ui("location-place"), scene.place); setText(ui("location-text"), scene.location);
+    setText(ui("character-title"), scene.title); setText(ui("scene-description"), scene.introduction);
+    setText(ui("bound"), `${openingContext.title} · ${scene.bound}`);
     setText(ui("activity-time"), `${duration(state.activitySeconds)} of activity`);
     for (const id of ["export", "import", "new-game"]) ui<HTMLButtonElement>(id).disabled = settingsBusy;
     const feedback = ui("settings-feedback");
@@ -913,12 +953,14 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
     const accelerate = ui<HTMLButtonElement>("accelerate");
     accelerate.disabled = !active || (state.bank.seconds < 1 && !accelerating);
     accelerate.setAttribute("aria-pressed", String(accelerating));
-    setText(accelerate, accelerating && active ? `Accelerating · ${objectiveText(active.objective)}` : active && state.bank.seconds >= 1 ? `Accelerate · ${objectiveText(active.objective)}` : "Accelerate");
-    accelerate.title = accelerating ? "Stop spending the bank." : active ? "Spend one banked second per real second on this objective." : "Start an activity to spend the bank on it.";
-    const stop = ui<HTMLButtonElement>("stop");
+    // A disabled control cannot be hovered on touch or focused by keyboard, so its reason is part of its label.
+    setText(accelerate, accelerating && active ? `Accelerating · ${objectiveText(active.objective)}` : !active ? "Accelerate · needs an activity"
+      : state.bank.seconds < 1 ? "Accelerate · bank empty" : `Accelerate · ${objectiveText(active.objective)}`);
+    const stop = ui<HTMLButtonElement>("stop"), stopReason = ui("stop-reason");
     const fighting = engine.fighting();
     stop.disabled = !active || filler || fighting;
-    stop.title = filler ? "Rest ends by itself when Vigor is full, or when another activity replaces it." : fighting ? "A fight cannot be left halfway." : "";
+    setText(stopReason, filler ? "Rest ends by itself when Vigor is full, or when another activity replaces it." : fighting ? "A fight cannot be left halfway." : "");
+    stopReason.hidden = !stopReason.textContent;
     setText(ui("bank-note"), !active ? bankFull ? "The bank is full; further idle time is not kept." : "Unused time gathers in the bank."
       : accelerating ? "Spending the bank: two activity seconds pass each real second." : state.bank.seconds < 1 ? "The bank is empty; the activity runs at ordinary speed." : "Accelerate, beside the bank, spends banked time on this objective.");
     ui("last-stop").hidden = !state.lastStop; if (state.lastStop) setText(ui("last-stop"), state.lastStop);
@@ -930,7 +972,7 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
     renderPlaces();
     renderWaiting();
     const beat = [...openingContext.beats].reverse().find(beat => engine.condition(beat.when)) ?? openingContext.beats[0]!;
-    setText(nowTitle, beat.title); setText(nowText, beat.text); setText(nowNext, beat.next);
+    setText(nowTitle, beat.title); setText(nowText, beat.text); setText(nowNext, beat.next); nextIds = new Set(beat.focus);
     // The newest moment of news: its story first, then what it made known, in one banner.
     const newest = [...state.log].reverse().find(entry => noticeKinds.has(entry.kind));
     if (seenDiscovery > (state.log.at(-1)?.id ?? 0)) seenDiscovery = 0;
@@ -948,7 +990,7 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
       const stat = engine.stat(view.record.id); view.row.hidden = !engine.visible(view.record.id);
       setText(view.amount, `${held(stat.value)} / ${number(stat.max)}`); view.bar.update(stat.value, stat.max);
       const capped = stat.value >= stat.max; view.row.classList.toggle("at-cap", capped);
-      view.row.classList.toggle("is-filtering", filterResource === view.record.id);
+      view.row.classList.toggle("is-filtering", filterResource === view.record.id); view.row.setAttribute("aria-pressed", String(filterResource === view.record.id));
       const rate = resourceRate(view.record.id);
       if (view.body) { setText(view.note, rate); view.note.hidden = !rate; }
       view.detail.update(engine.tooltip(view.record.id));
@@ -1030,6 +1072,13 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
       ? "These leads continue beyond the ridge waystation. Their journeys are not yet available."
       : "Old Ridge rises beyond the porters' path. Walk its outskirts to find the teachings that choose a First Direction; any one of them carries you to the waystation.");
     ui("slip").hidden = current("jade_slip") === 0; ui("character-methods").hidden = visibleFamilies === 0;
+    let keysHeld = 0;
+    for (const { tag, item, carriers } of keyItems) {
+      const holders = engine.records.filter(record => record.tags?.includes(tag) && current(record.id) > 0 && !engine.locked(record.id)).map(record => record.name ?? record.id);
+      item.hidden = holders.length === 0; if (!item.hidden) keysHeld++;
+      setText(carriers, `Carried by ${holders.join(" and ")}.`);
+    }
+    keySection.hidden = keysHeld === 0;
     setText(ui("character-stage-detail"), !foundationReached ? "Mortal, no breakthrough yet" : latest && latest.id !== "settling" ? `Foundation · ${latest.breakthrough?.title ?? latest.name}` : "Foundation");
     setText(ui("character-time"), duration(state.activitySeconds));
     for (const { record, item, description } of leadItems) {
@@ -1043,11 +1092,12 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
       let node = logNodes.get(entry.id);
       if (!node) { node = element("li", "journal-entry"); const meta = element("div", "journal-meta"); meta.append(element("span"), element("span", "journal-time")); node.append(meta, element("p", "journal-text")); logNodes.set(entry.id, node); }
       node.dataset.kind = entry.kind; const meta = node.firstElementChild!;
-      setText(meta.firstElementChild as HTMLElement, entry.kind === "cap" ? "Limit" : entry.kind === "story" ? "Story" : entry.kind === "fight" ? "Fight" : entry.kind); setText(meta.lastElementChild as HTMLElement, duration(entry.activitySeconds)); setText(node.lastElementChild as HTMLElement, entry.text);
+      setText(meta.firstElementChild as HTMLElement, journalKinds[entry.kind]); setText(meta.lastElementChild as HTMLElement, duration(entry.activitySeconds)); setText(node.lastElementChild as HTMLElement, entry.text);
       if (journal.children[index] !== node) journal.insertBefore(node, journal.children[index] ?? null);
     });
     ui("journal-empty").hidden = entries.length > 0;
-    const lastMeaningful = [...state.log].reverse().find(entry => entry.kind !== "completion"); if (lastMeaningful) announce(lastMeaningful.text);
+    const lastMeaningful = [...state.log].reverse().find(entry => entry.kind !== "completion");
+    if (lastMeaningful && lastMeaningful.id > announcedLogId) { announcedLogId = lastMeaningful.id; setText(ui("journal-announcement"), lastMeaningful.text); }
   }
   /** What a return visit settled: shown once, above the game views, until dismissed. */
   function showReturn(summary: ReturnSummary): void {
@@ -1072,6 +1122,7 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
     setText(ui("return-title"), `While you were away · ${duration(summary.awaySeconds)}`);
     ui("return-list").replaceChildren(...lines.map(text => element("li", "", text)));
     ui("return").hidden = false;
+    announce(`While you were away for ${duration(summary.awaySeconds)}: ${lines.join(" ")}`);
   }
   render();
   return {
@@ -1079,8 +1130,9 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
     showReturn,
     setEngine(next: GameEngine) {
       engine = next; editorFor = undefined; previous.clear(); seenIds = new Set(engine.state.visibleIds); filterResource = null;
+      announcedLogId = engine.state.log.at(-1)?.id ?? 0;
       // A confirmation left open belongs to the journey that has just been replaced.
-      pendingConfirmation = null; ui("confirmation").hidden = true;
+      closeConfirmation();
       ui("return").hidden = true; render();
     },
     destroy() { disposed = true; root.replaceChildren(); },

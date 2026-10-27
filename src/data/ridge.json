@@ -286,15 +286,15 @@
   },
   {
     "id": "route_records", "name": "Surviving route records toward the Cloudwell basin", "kind": "lead", "group": "Leads",
-    "desc": "The keeper's ledgers name a basin beyond the ridge. That road belongs to the next stage of the journey.", "require": "g.waystation > 0"
+    "desc": "The keeper's ledgers name a basin beyond the ridge.", "require": "g.waystation > 0"
   },
   {
     "id": "unusual_chime", "name": "An unusual chime", "kind": "lead", "group": "Leads",
-    "desc": "At dusk something rings once from higher up the ridge. Finding it belongs to the next stage of the journey.", "require": "g.waystation > 0"
+    "desc": "At dusk something rings once from higher up the ridge.", "require": "g.waystation > 0"
   },
   {
     "id": "damaged_spur", "name": "The damaged spur", "kind": "lead", "group": "Leads",
-    "desc": "A spur of the old path ends at a slide. Whatever lies past it belongs to the next stage of the journey.", "require": "g.waystation > 0"
+    "desc": "A spur of the old path ends at a slide.", "require": "g.waystation > 0"
   },
   {
     "id": "ridge_bandit", "name": "Face the man on the porters' path", "kind": "site", "group": "Fights",

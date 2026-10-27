@@ -1,4 +1,4 @@
-import { records as sourceRecords } from "../src/content";
+import { openingContext, routeKeys, records as sourceRecords } from "../src/content";
 import { ATTUNE_SLOTS, DODGE_MAX, FIGHT_STATS, GAUGE, GameEngine, HOME_SPACE, LIFE } from "../src/engine";
 import { evaluateCondition, expressionReferences } from "../src/expression";
 import { DERIVED_FIELDS, type Changes, type GameRecord } from "../src/types";
@@ -229,10 +229,20 @@ export function validateMandatoryCores(records: GameRecord[]): string[] {
   return errors;
 }
 
+/** The shell's words for content: every route key a record carries has a name, and the Now panel marks only real records. */
+export function validateContext(records: GameRecord[]): string[] {
+  const errors: string[] = [];
+  const ids = new Set(records.map(record => record.id)), carried = new Set(records.flatMap(record => record.tags ?? []));
+  for (const tag of carried) if (!routeKeys[tag]) errors.push(`route key ${tag} has no name in routeKeys`);
+  for (const tag of Object.keys(routeKeys)) if (!carried.has(tag)) errors.push(`routeKeys names ${tag}, which no record carries`);
+  for (const beat of openingContext.beats) for (const id of beat.focus) if (!ids.has(id)) errors.push(`beat ${beat.id}: focus names unknown record ${id}`);
+  return errors;
+}
+
 export function validateContent(records: GameRecord[] = sourceRecords): ValidationReport {
   const errors = validateGrammar(records);
   if (errors.length) return { ok: false, errors, routes: [], coverageBranches: [], ridgeRoutes: [], recordCount: records.length, reachedCount: 0, missing: records.map(record => record.id) };
-  errors.push(...validateMandatoryCores(records));
+  errors.push(...validateMandatoryCores(records), ...validateContext(records));
   for (const record of records) {
     if (typeof record.length === "number" && record.length > TIMED_CEILING) {
       errors.push(`${record.id}: timed action runs ${record.length}s, over the ${TIMED_CEILING} s ceiling`);

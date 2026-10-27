@@ -922,7 +922,7 @@
         "max": 1,
         "rate": 1,
         "open": true,
-        "length": 600,
+        "length": 120,
         "yield": 0,
         "discount": 0
       },
@@ -1146,7 +1146,21 @@
         "max": 1000000000000,
         "rate": 1,
         "open": true,
-        "length": 420,
+        "length": 90,
+        "yield": 0,
+        "discount": 0
+      },
+      "dig_marrow_herbs": {
+        "value": 0,
+        "exp": 0,
+        "reps": 0,
+        "ticks": 0,
+        "started": false,
+        "paid": false,
+        "max": 1000000000000,
+        "rate": 1,
+        "open": true,
+        "length": 1,
         "yield": 0,
         "discount": 0
       },
@@ -1160,7 +1174,21 @@
         "max": 1000000000000,
         "rate": 1.1,
         "open": true,
-        "length": 420,
+        "length": 90,
+        "yield": 0,
+        "discount": 0
+      },
+      "scrape_whetstone_grit": {
+        "value": 0,
+        "exp": 0,
+        "reps": 0,
+        "ticks": 0,
+        "started": false,
+        "paid": false,
+        "max": 1000000000000,
+        "rate": 1,
+        "open": true,
+        "length": 1,
         "yield": 0,
         "discount": 0
       },
@@ -1174,7 +1202,21 @@
         "max": 1000000000000,
         "rate": 1,
         "open": true,
-        "length": 420,
+        "length": 90,
+        "yield": 0,
+        "discount": 0
+      },
+      "pry_veined_ore": {
+        "value": 0,
+        "exp": 0,
+        "reps": 0,
+        "ticks": 0,
+        "started": false,
+        "paid": false,
+        "max": 1000000000000,
+        "rate": 1,
+        "open": true,
+        "length": 1,
         "yield": 0,
         "discount": 0
       },
@@ -1188,7 +1230,21 @@
         "max": 1000000000000,
         "rate": 1.1,
         "open": true,
-        "length": 420,
+        "length": 90,
+        "yield": 0,
+        "discount": 0
+      },
+      "ink_tokens": {
+        "value": 0,
+        "exp": 0,
+        "reps": 0,
+        "ticks": 0,
+        "started": false,
+        "paid": false,
+        "max": 1000000000000,
+        "rate": 1,
+        "open": true,
+        "length": 1,
         "yield": 0,
         "discount": 0
       },
@@ -1202,7 +1258,7 @@
         "max": 1,
         "rate": 1.1,
         "open": true,
-        "length": 1020,
+        "length": 180,
         "yield": 0,
         "discount": 0
       },
@@ -1216,7 +1272,7 @@
         "max": 1,
         "rate": 1,
         "open": true,
-        "length": 1020,
+        "length": 180,
         "yield": 0,
         "discount": 0
       },
@@ -1230,7 +1286,7 @@
         "max": 1,
         "rate": 1,
         "open": true,
-        "length": 1020,
+        "length": 180,
         "yield": 0,
         "discount": 0
       },
@@ -1244,7 +1300,7 @@
         "max": 1,
         "rate": 1,
         "open": true,
-        "length": 1020,
+        "length": 180,
         "yield": 0,
         "discount": 0
       },
@@ -1314,7 +1370,7 @@
         "max": 1,
         "rate": 1.05,
         "open": true,
-        "length": 1800,
+        "length": 180,
         "yield": 0,
         "discount": 0
       },
@@ -1328,7 +1384,7 @@
         "max": 1,
         "rate": 1,
         "open": true,
-        "length": 1800,
+        "length": 180,
         "yield": 0,
         "discount": 0
       },
@@ -1342,7 +1398,7 @@
         "max": 1,
         "rate": 1,
         "open": true,
-        "length": 1800,
+        "length": 180,
         "yield": 0,
         "discount": 0
       },
@@ -1356,7 +1412,7 @@
         "max": 1,
         "rate": 1,
         "open": true,
-        "length": 1800,
+        "length": 180,
         "yield": 0,
         "discount": 0
       },
@@ -1689,7 +1745,7 @@
       {
         "id": 4,
         "kind": "purchase",
-        "text": "Apprentice to Granny Shu is now part of your life in Lowbridge.",
+        "text": "Apprentice to Granny Shu is now part of your life.",
         "activitySeconds": 19
       },
       {
@@ -1743,7 +1799,7 @@
       {
         "id": 13,
         "kind": "purchase",
-        "text": "Straw pallet is now part of your life in Lowbridge.",
+        "text": "Straw pallet is now part of your life.",
         "activitySeconds": 31
       },
       {
@@ -1761,7 +1817,7 @@
       {
         "id": 16,
         "kind": "purchase",
-        "text": "Cracked jade slip is now part of your life in Lowbridge.",
+        "text": "Cracked jade slip is now part of your life.",
         "activitySeconds": 31
       },
       {
@@ -1880,7 +1936,7 @@
       },
       {
         "id": 36,
-        "kind": "purchase",
+        "kind": "method",
         "text": "Steady the breath is attuned.",
         "activitySeconds": 46
       },
@@ -2265,7 +2321,7 @@
       {
         "id": 100,
         "kind": "purchase",
-        "text": "Granny Shu reads the hard characters is now part of your life in Lowbridge.",
+        "text": "Granny Shu reads the hard characters is now part of your life.",
         "activitySeconds": 665
       },
       {
@@ -2295,7 +2351,7 @@
       {
         "id": 105,
         "kind": "purchase",
-        "text": "A larger coin pouch is now part of your life in Lowbridge.",
+        "text": "A larger coin pouch is now part of your life.",
         "activitySeconds": 701
       },
       {
@@ -2331,7 +2387,7 @@
       {
         "id": 111,
         "kind": "purchase",
-        "text": "Practice mat is now part of your life in Lowbridge.",
+        "text": "Practice mat is now part of your life.",
         "activitySeconds": 750
       },
       {
@@ -2342,7 +2398,7 @@
       },
       {
         "id": 113,
-        "kind": "purchase",
+        "kind": "method",
         "text": "Settle the breath is attuned.",
         "activitySeconds": 750
       },

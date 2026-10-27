@@ -243,6 +243,11 @@ describe("lock and enable", () => {
     expect(game.warnText("kindling_form")).toBeUndefined();
   });
 
+  test("a warning that already names what closes does not name it again", () => {
+    const named = villageRecords.map(record => record.id === "kindling_form" ? { ...record, warn: "Ash form will not take after the kindling reading." } : record);
+    expect(new GameEngine(named).warnText("kindling_form")).toBe("Ash form will not take after the kindling reading.");
+  });
+
   test("a locked record leaves the waiting list rather than resuming", () => {
     const game = village();
     expect(game.start("breath", { kind: "level", id: "lore", target: 4 }).ok).toBe(true);

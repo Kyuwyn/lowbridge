@@ -526,7 +526,7 @@ export class GameEngine {
     this.state.attuned.push(id);
     // Taking up a technique is how it is acquired, so this is where its locks fall.
     this.applyLocks(record);
-    this.log("purchase", `${record.name ?? id} is attuned.`);
+    this.log("method", `${record.name ?? id} is attuned.`);
     this.reconcile();
     return { ok: true, reason: "Attuned." };
   }
@@ -542,7 +542,7 @@ export class GameEngine {
       this.release();
       this.log("pause", this.state.lastStop);
     }
-    this.log("purchase", `${name} is released.`);
+    this.log("method", `${name} is released.`);
     this.reconcile();
     return { ok: true, reason: "Released." };
   }
@@ -605,7 +605,7 @@ export class GameEngine {
     }
     if (record.length === undefined) {
       this.complete(record);
-      if (oneShotKinds.has(record.kind)) this.log("purchase", `${record.name ?? id} is now part of your life in Lowbridge.`);
+      if (oneShotKinds.has(record.kind)) this.log("purchase", `${record.name ?? id} is now part of your life.`);
       this.reconcile();
       this.checkActive();
       this.fillIdle();
@@ -651,7 +651,7 @@ export class GameEngine {
     if (!this.removable(record)) return { ok: false, reason: "This cannot be taken down." };
     if (stat.value < 1) return { ok: false, reason: "This is not installed." };
     Object.assign(stat, { value: 0, reps: 0, exp: 0, paid: false });
-    this.log("purchase", `${record.name ?? id} has been taken down. Its cost is not returned.`);
+    this.log("home", `${record.name ?? id} has been taken down. Its cost is not returned.`);
     this.reconcile();
     return { ok: true, reason: "Taken down." };
   }
@@ -1341,10 +1341,10 @@ export class GameEngine {
     // The warning is about the transition, not the record: once every door it names has shut there is
     // nothing left to confirm, so a repeatable chore stops asking after the haul that closed the mill.
     if (doors.length && doors.every(target => this.locked(target))) return undefined;
-    const lost = doors.filter(target => this.visible(target)).map(target => this.record(target).name ?? target);
-    const parts: string[] = [];
-    if (record.warn) parts.push(record.warn);
-    if (lost.length) parts.push(`This closes ${list(lost)} for good.`);
+    // A loss the authored warning already names is not named twice.
+    const said = (record.warn ?? "").toLowerCase();
+    const lost = doors.filter(target => this.visible(target)).map(target => this.record(target).name ?? target).filter(name => !said.includes(name.toLowerCase()));
+    const parts = [record.warn, lost.length ? `This closes ${list(lost)} for good.` : undefined].filter(Boolean);
     return parts.length ? parts.join(" ") : undefined;
   }
 
@@ -1367,7 +1367,8 @@ export class GameEngine {
     block("title", [name, record.kind === "family" ? `Level ${shown(stat.value)}/${shown(stat.max)}`
       : record.kind === "resource" ? `${shown(stat.value)}${unbounded ? "" : `/${shown(stat.max)}`}`
       : unbounded ? (stat.reps ? `${stat.reps} completed` : undefined) : `${shown(stat.value)}/${shown(stat.max)}`]);
-    block("type", [[kindLabel(record), ...record.tags ?? []].join(", "), record.group, record.slot ? `Place: ${record.slot}` : undefined,
+    // Route keys are not a type; the UI names them in words beside the blocks.
+    block("type", [kindLabel(record), record.slot ? `Place: ${record.slot}` : undefined,
       record.attune ? (this.isAttuned(id) ? "Attuned" : "Needs an attunement slot") : undefined]);
     block("rate", [
       record.kind === "family" && stat.open ? `Experience: ${shown(stat.exp)}/${EXP_PER_LEVEL * (stat.value + 1)}` : undefined,
@@ -1428,6 +1429,10 @@ export class GameEngine {
   private lines(changes: Changes | undefined, suffix = ""): string[] {
     return Object.entries(changes ?? {}).filter(([path]) => this.worthShowing(path)).map(([path, amount]) => {
       const value = typeof amount === "number" ? amount : this.safeValue(amount);
+      const [id, field = "value"] = path.split("."), record = this.byId.get(id!);
+      // A switch thrown once reads as its name: "Foundation", "Strain opens", not "Foundation: 1".
+      if (value === 1 && !suffix && (field === "open" || (field === "value" && record?.kind === "flag"))) return this.pathLabel(path);
+      if (id === "bank" && value !== undefined) return `${this.pathLabel(path)}: ${span(value)}${suffix}`;
       return `${this.pathLabel(path)}: ${value === undefined ? amount : amountText(value)}${suffix}`;
     });
   }
@@ -1455,7 +1460,7 @@ export class GameEngine {
   /** A modifier path in the player's words: `qi.max` is "Max Qi", `scrolls.mod.lore.rate` is "Scrolls ➢ Lore rate". */
   pathLabel(path: string): string {
     const parts = path.split("."), id = parts[0]!, field = parts[1] ?? "value";
-    if (id === "bank") return field === "value" || field === "seconds" ? "Stored time" : "Stored time cap";
+    if (id === "bank") return field === "value" || field === "seconds" ? "Time bank" : "Max time bank";
     const name = this.byId.get(id)?.name ?? id;
     if (field === "mod" && parts.length > 2) return `${name} ➢ ${this.pathLabel(parts.slice(2).join("."))}`;
     switch (field) {
@@ -1491,6 +1496,12 @@ function kindLabel(record: GameRecord): string {
 function amountText(value: number): string {
   if (value === 0 || Math.abs(value) >= 0.01) return String(Math.round(value * 100) / 100);
   return value.toFixed(Math.min(6, Math.max(2, 1 - Math.floor(Math.log10(Math.abs(value))))));
+}
+
+/** Banked time in the toolbar's own units: "5h", "1h 30m", "45m". */
+function span(seconds: number): string {
+  const whole = Math.round(seconds), hours = Math.floor(whole / 3600), minutes = Math.floor((whole % 3600) / 60), rest = whole % 60;
+  return [hours ? `${hours}h` : "", minutes ? `${minutes}m` : "", rest || !whole ? `${rest}s` : ""].filter(Boolean).join(" ");
 }
 
 /** Fights are short: "0:15". */

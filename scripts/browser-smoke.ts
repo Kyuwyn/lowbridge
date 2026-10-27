@@ -154,7 +154,7 @@ try {
       assert(await modeHost.getAttribute('data-action-mode') === (record.length === undefined ? 'instant' : record.length === 'continuous' ? 'continuous' : 'timed'), `${action.id}: action mode does not match its behavior`);
       if (action.id === 'settling') {
         const rewards = await page.locator('[data-ui=foundation-rewards]').innerText();
-        for (const benefit of ['Max Circulation: 2', 'Max Lore: 2', 'Max Qi Sense: 2', 'Max Attunement: 1', 'Max Qi: 10', 'Stored time cap: 18000']) {
+        for (const benefit of ['Max Circulation: 2', 'Max Lore: 2', 'Max Qi Sense: 2', 'Max Attunement: 1', 'Max Qi: 10', 'Max time bank: 5h']) {
           assert(rewards.includes(benefit), `Foundation does not disclose ${benefit} before commitment`);
         }
       }

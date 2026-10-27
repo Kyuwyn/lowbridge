@@ -148,7 +148,7 @@ export interface ActiveTask {
 
 export interface LogEntry {
   id: number;
-  kind: "discovery" | "story" | "cap" | "completion" | "pause" | "purchase" | "fight";
+  kind: "discovery" | "story" | "cap" | "completion" | "pause" | "purchase" | "method" | "home" | "fight";
   text: string;
   activitySeconds: number;
 }
