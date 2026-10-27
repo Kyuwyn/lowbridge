@@ -215,7 +215,7 @@
     "require": "g.fernhollow_observe > 0",
     "need": "g.qi_sense < g.qi_sense.max || g.sit_fernhollow.reps < 3",
     "needtext": "The hollow's current has become familiar and Qi Sense has no room left.",
-    "length": 120, "result": { "qi_sense.exp": 240, "composure.exp": 40 },
+    "length": 90, "result": { "qi_sense.exp": 240, "composure.exp": 40 },
     "at": { "3": { "circulation.open": 1 } },
     "boost": { "flag": "current_carried", "multiplier": 1.5 },
     "events": [{ "id": "first_dusk", "when": "g.sit_fernhollow.reps >= 1",

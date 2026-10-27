@@ -7,14 +7,14 @@ export const ROUTES = {
   "channel-only": {
     prefer: ["settling", "coin_pouch", "shu_apprentice", "jade_slip", "practice_mat", "steady_breath", "fragment_notes", "breath_gathering",
       "field_kit", "cut_timber", "channel_observe", "clear_channel", "channel_arrangement", "carry_current", "channel_exercise",
-      "lean_to", "herb_rack", "straw_pallet", "mill_shift"],
+      "lean_to", "herb_rack", "straw_pallet"],
     avoid: ["fernhollow_observe", "sit_fernhollow", "steady_attention", "settle_breath", "shu_reading", "strongbox",
       "garden_plot", "cot", "sparring_bout"],
   },
   "hollow-only": {
     prefer: ["settling", "coin_pouch", "shu_apprentice", "jade_slip", "breath_gathering", "fragment_notes", "practice_mat", "steady_breath",
       "fernhollow_observe", "sit_fernhollow", "steady_attention", "settle_breath", "shu_reading", "field_kit", "cut_timber",
-      "lean_to", "straw_pallet", "rack_tending"],
+      "lean_to", "straw_pallet"],
     avoid: ["clear_channel", "channel_arrangement", "channel_exercise", "carry_current", "channel_observe", "herb_rack",
       "strongbox", "garden_plot", "cot", "sparring_bout"],
   },
@@ -24,34 +24,36 @@ export type OpeningRoute = keyof typeof ROUTES;
 
 /**
  * The quickest sensible play of each opening: only what the Foundation panel asks for, chores clicked during every
- * long run, and the carried current spent on the next site. Pacing floors bind on these, not on the preference routes.
+ * long run, the next pursuit started as soon as one ends, and the carried current spent on the next site.
+ * Pacing floors bind on these, not on the preference routes.
  */
 export const DIRECT_ROUTES = {
   "channel-direct": {
     preferences: {
       prefer: ["settling", "shu_apprentice", "jade_slip", "straw_pallet", "coin_pouch", "practice_mat", "steady_breath", "field_kit",
-        "channel_observe", "clear_channel", "channel_arrangement", "carry_current", "channel_exercise", "fragment_notes", "breath_gathering", "mill_shift"],
-      // Settling takes 3 of 4, and the cheap three are Qi Sense 3, Lore 2 and two methods held, so the lean-to is a detour.
-      avoid: ["fernhollow_observe", "sit_fernhollow", "steady_attention", "settle_breath", "lean_to", "herb_rack", "strongbox",
+        "channel_observe", "clear_channel", "channel_arrangement", "carry_current", "channel_exercise", "fernhollow_observe", "fragment_notes", "breath_gathering"],
+      // Settling takes 3 of 4. A 90-second walk to Fernhollow is cheaper than forty coin and six timber, so the lean-to is the detour.
+      avoid: ["sit_fernhollow", "steady_attention", "settle_breath", "lean_to", "herb_rack", "strongbox",
         "cot", "garden_plot", "shu_reading", "cut_timber"],
       others: 999,
     },
     // The mat is the second attunement place, so both methods can be worn at once.
     attune: ["carry_current", "steady_breath"],
     qiSense: 4,
-    enough: { fragment_notes: "g.lore >= 2", carry_current: "g.current_carried > 0" },
+    // Lore 1 buys the field kit the channel stones need; Circulation 2 is the core.
+    enough: { fragment_notes: "g.lore >= 1", carry_current: "g.current_carried > 0", channel_exercise: "g.circulation >= 2" },
   },
   "hollow-direct": {
     preferences: {
       prefer: ["settling", "shu_apprentice", "jade_slip", "straw_pallet", "coin_pouch", "practice_mat", "steady_breath",
-        "fernhollow_observe", "sit_fernhollow", "steady_attention", "settle_breath", "fragment_notes", "breath_gathering", "mill_shift"],
-      // The field kit is the channel route's signature; the hollow never needs it, or the lean-to behind it.
-      avoid: ["channel_observe", "clear_channel", "channel_arrangement", "channel_exercise", "carry_current", "field_kit", "cut_timber",
+        "fernhollow_observe", "sit_fernhollow", "channel_observe", "steady_attention", "settle_breath", "breath_gathering"],
+      // The hollow's Foundation asks for no Lore and no timber, so neither the notes nor the field kit and the lean-to behind it.
+      avoid: ["clear_channel", "channel_arrangement", "channel_exercise", "carry_current", "field_kit", "cut_timber",
         "lean_to", "herb_rack", "strongbox", "cot", "garden_plot"],
       others: 999,
     },
     attune: ["settle_breath", "steady_breath"],
-    enough: { fragment_notes: "g.lore >= 2", steady_attention: "g.circulation >= 2" },
+    enough: { steady_attention: "g.circulation >= 2" },
   },
 } satisfies Record<string, Pick<RouteOptions, "preferences" | "enough" | "qiSense" | "attune">>;
 export type DirectRoute = keyof typeof DIRECT_ROUTES;
@@ -78,6 +80,8 @@ export interface RouteResult {
   caps: Record<string, number>;
   repetitions: Record<string, number>;
   levels: Record<string, number>;
+  /** The most methods this route held attuned at one time. */
+  heldAtOnce: number;
   capLog: LogEntry[];
   unsourcedCapLog: LogEntry[];
   /** Ids this route names that content no longer has; a renamed record shows up here, not as a crash. */
@@ -106,10 +110,11 @@ function objectiveFor(engine: GameEngine, record: GameRecord, focused: boolean, 
   return { kind: "repetitions", id: record.id, target: engine.stat(record.id).reps + 1 };
 }
 
-/** A focused player practises no further than Foundation needs; coverage branches explore past it. */
+/** A focused player practises no further than the village needs; coverage branches explore past it. */
 function productive(engine: GameEngine, record: GameRecord, focused: boolean, qiSense = 3): boolean {
   if (record.kind === "resource" || record.kind === "family" || record.kind === "flag" || record.kind === "lead") return false;
   if (focused) {
+    // Lore 2 opens everything the village sells: the field kit at 1 and Shu's reading at 2.
     if (record.id === "fragment_notes" && held(engine, "lore") >= 2) return false;
     if (record.id === "breath_gathering" && held(engine, "qi_sense") >= qiSense && held(engine, "qi") >= held(engine, "qi", "max")) return false;
   }
@@ -197,6 +202,15 @@ export function runRoute(name: string, options: RouteOptions = {}): RouteResult 
     const when = enough[id];
     return when !== undefined && (typeof when === "function" ? when(engine) : engine.condition(when));
   };
+  /** Timber is cut only toward the next piece the route still means to build, never into a full stack. */
+  const timberShort = (): boolean => {
+    for (const id of preferences.prefer) {
+      if (held(engine, id) > 0 || engine.locked(id) || satisfied(id)) continue;
+      const timber = engine.billProgress(id).find(row => row.id === "timber");
+      if (timber) return timber.held < timber.need;
+    }
+    return false;
+  };
   const actions: RouteResult["actions"] = [];
   const unlocks: RouteResult["unlocks"] = [];
   const seen = new Set<string>();
@@ -209,6 +223,7 @@ export function runRoute(name: string, options: RouteOptions = {}): RouteResult 
   let foundationSeconds: number | null = null;
   let goalSeconds: number | null = null;
   let reason = "No productive available action";
+  let heldAtOnce = 0;
   const observe = () => {
     for (const entry of engine.state.log) log.set(entry.id, { ...entry });
     for (const record of records) {
@@ -222,6 +237,7 @@ export function runRoute(name: string, options: RouteOptions = {}): RouteResult 
         ? engine.condition(record.need)
         : record.kind === "resource" || record.kind === "flag" || stat.reps > 0 || stat.value > 0 || stat.ticks > 0) reached.add(record.id);
     }
+    heldAtOnce = Math.max(heldAtOnce, engine.state.attuned.length);
     if (foundationSeconds === null && held(engine, "foundation") > 0) foundationSeconds = engine.state.activitySeconds;
     if (goalSeconds === null && held(engine, goal) > 0) goalSeconds = engine.state.activitySeconds;
   };
@@ -252,7 +268,8 @@ export function runRoute(name: string, options: RouteOptions = {}): RouteResult 
   holdTechniques();
   const candidates = (instantOnly: boolean) => records
     // A parked pursuit is left to resume by itself; clicking it again would only run it until it stops.
-    .filter(record => (!instantOnly || record.length === undefined) && productive(engine, record, focused, options.qiSense)
+    .filter(record => (!instantOnly || record.length === undefined)
+      && (record.id === "cut_timber" ? timberShort() : productive(engine, record, focused, options.qiSense))
       && !satisfied(record.id) && !engine.state.waiting.some(entry => entry.id === record.id)
       && engine.availability(record.id).ok && preference(engine, record.id, preferences) < 900)
     .filter(record => record.id !== "settling" || beforeGoal.every(id => engine.stat(id).reps > 0))
@@ -307,7 +324,9 @@ export function runRoute(name: string, options: RouteOptions = {}): RouteResult 
     engine.start(selected.id, objective);
     observe();
     // Instant actions leave the slot alone; an auto-started filler keeps running behind the next click, as in play.
-    while (engine.state.active && selected.length !== undefined) {
+    // An attentive player starts the next pursuit at once rather than sitting out the Rest that fills the slot.
+    while (engine.state.active && selected.length !== undefined
+      && (!attentive || engine.state.active.id === selected.id || !engine.record(engine.state.active.id).autoStart)) {
       if (attentive && preludeIndex >= prelude.length) chores();
       engine.advance(1);
       observe();
@@ -329,6 +348,7 @@ export function runRoute(name: string, options: RouteOptions = {}): RouteResult 
     caps: Object.fromEntries(records.filter(record => record.kind === "family" || record.kind === "resource").map(record => [record.id, engine.stat(record.id).max])),
     repetitions: Object.fromEntries(records.filter(record => engine.stat(record.id).reps > 0).map(record => [record.id, engine.stat(record.id).reps])),
     levels: Object.fromEntries(records.filter(record => record.kind === "family").map(record => [record.id, engine.stat(record.id).value])),
+    heldAtOnce,
     capLog, unsourcedCapLog: capLog.filter(entry => /unknown|unseen|no visible|not yet|not been discovered|undiscovered|elsewhere/i.test(entry.text)),
     unknownIds: [...unknownIds], log: fullLog,
     state: structuredClone(engine.state),
@@ -342,17 +362,16 @@ export function runCoverageBranches(records: GameRecord[] = sourceRecords): Rout
     // The cot needs the rest place free, so this branch never lays the straw pallet.
     runRoute("furnished-hollow", {
       records, maxSeconds: 36000, maxActions: 4000, focused: false,
-      preferences: { prefer: [...homeBase, "practice_mat", "herb_rack", "garden_plot", "cot", "rack_tending", "shu_reading", "channel_observe", "clear_channel", "fernhollow_observe", "sit_fernhollow", "steady_attention", "steady_breath", "settle_breath", "settling"], avoid: ["channel_arrangement", "channel_exercise", "straw_pallet", "mill_shift", "sparring_bout"] },
+      preferences: { prefer: [...homeBase, "practice_mat", "herb_rack", "garden_plot", "cot", "shu_reading", "channel_observe", "clear_channel", "fernhollow_observe", "sit_fernhollow", "steady_attention", "steady_breath", "settle_breath", "settling"], avoid: ["channel_arrangement", "channel_exercise", "straw_pallet", "sparring_bout"] },
       beforeFoundation: ["practice_mat", "herb_rack", "lean_to", "strongbox", "garden_plot", "cot"],
       // The mat follows the slip now, so the slip has to be bought before the prelude can reach for it.
       prelude: ["sort_herbs", "sort_herbs", "sort_herbs", "mill_work", "mill_work", "mill_work", "shu_apprentice", "rest", "mill_work", "mill_work", "rest", "mill_work", "mill_work", "jade_slip", "rest", "mill_work", "mill_work", "practice_mat"],
       afterFoundation: ["ferry_hauling"],
     }),
-    // The other half of the optional content: the mill shift, the strongbox, and the channel stones.
+    // The other half of the optional content: the strongbox and the channel stones.
     runRoute("stones-and-storage", {
       records, maxSeconds: 36000, maxActions: 4000, focused: false,
-      preferences: { prefer: [...homeBase, "herb_rack", "mill_shift", "shu_reading", "channel_observe", "clear_channel", "channel_arrangement", "channel_exercise", "fernhollow_observe", "steady_breath", "carry_current", "settling"], avoid: ["practice_mat", "sit_fernhollow", "steady_attention", "garden_plot", "cot", "sparring_bout"] },
-      // The mill shift stops itself once Coin is full, so it is not something Foundation can wait on.
+      preferences: { prefer: [...homeBase, "herb_rack", "shu_reading", "channel_observe", "clear_channel", "channel_arrangement", "channel_exercise", "fernhollow_observe", "steady_breath", "carry_current", "settling"], avoid: ["practice_mat", "sit_fernhollow", "steady_attention", "garden_plot", "cot", "sparring_bout"] },
       beforeFoundation: ["herb_rack", "lean_to", "strongbox", "channel_arrangement"],
       prelude: ["sort_herbs", "sort_herbs", "sort_herbs", "mill_work", "mill_work", "shu_apprentice"],
       afterFoundation: ["ferry_hauling"],
@@ -360,31 +379,31 @@ export function runCoverageBranches(records: GameRecord[] = sourceRecords): Rout
   ];
 }
 
-/** One First Direction each, continued from the channel-only life at Foundation. */
+/** One First Direction each, continued from a life at Foundation. */
 export const RIDGE_ROUTES = {
-  "direction-body": { teaching: "body_teaching", arrangement: "load_frame", drills: "body_drills", site: "survey_marker", direction: "direction_body", crossing: "cross_body", entry: "circulation", material: "marrow_herbs", chore: "dig_marrow_herbs" },
-  "direction-sword": { teaching: "sword_teaching", arrangement: "practice_post", drills: "blade_drills", site: "inscription_face", direction: "direction_sword", crossing: "cross_sword", entry: "blade_intent", material: "whetstone_grit", chore: "scrape_whetstone_grit" },
-  "direction-earth": { teaching: "earth_teaching", arrangement: "survey_stakes", drills: "ground_drills", site: "stable_point", direction: "direction_earth", crossing: "cross_earth", entry: "ground_reading", material: "veined_ore", chore: "pry_veined_ore" },
-  "direction-formation": { teaching: "formation_teaching", arrangement: "drawing_board", drills: "array_drills", site: "fixed_layout", direction: "direction_formation", crossing: "cross_formation", entry: "array_craft", material: "inked_tokens", chore: "ink_tokens" },
+  "direction-body": { teaching: "body_teaching", arrangement: "load_frame", drills: "body_drills", site: "survey_marker", direction: "direction_body", crossing: "cross_body", entry: "circulation", material: "marrow_herbs", chore: "dig_marrow_herbs", method: "sink_the_load" },
+  "direction-sword": { teaching: "sword_teaching", arrangement: "practice_post", drills: "blade_drills", site: "inscription_face", direction: "direction_sword", crossing: "cross_sword", entry: "blade_intent", material: "whetstone_grit", chore: "scrape_whetstone_grit", method: "cut_by_intent" },
+  "direction-earth": { teaching: "earth_teaching", arrangement: "survey_stakes", drills: "ground_drills", site: "stable_point", direction: "direction_earth", crossing: "cross_earth", entry: "ground_reading", material: "veined_ore", chore: "pry_veined_ore", method: "read_the_grain" },
+  "direction-formation": { teaching: "formation_teaching", arrangement: "drawing_board", drills: "array_drills", site: "fixed_layout", direction: "direction_formation", crossing: "cross_formation", entry: "array_craft", material: "inked_tokens", chore: "ink_tokens", method: "fix_the_layout" },
 } as const;
 export type RidgeRoute = keyof typeof RIDGE_ROUTES;
 type RidgeLine = (typeof RIDGE_ROUTES)[RidgeRoute];
 
 function ridgeOptions(line: RidgeLine, records: GameRecord[], start: GameState, extra: readonly string[] = []): RouteOptions {
+  const stocked = `g.${line.material} >= 12 || g.${line.direction} > 0 && g.${line.material} >= 3`;
   return {
     records, start, goal: "waystation", maxSeconds: 21600, focused: false,
     preferences: {
-      prefer: [line.direction, line.crossing, ...extra, "ridge_outskirts", line.teaching, "lean_to", "strongbox", line.arrangement, "coffer", "cottage", "herb_rack",
-        line.drills, line.chore, line.site, "fragment_notes", "cut_timber", "ferry_hauling"],
+      prefer: [line.direction, line.crossing, ...extra, "ridge_outskirts", line.teaching, "field_kit", "lean_to", "strongbox", line.arrangement, "coffer", "cottage", "herb_rack",
+        line.drills, line.method, line.chore, line.site, "fragment_notes", "cut_timber", "ferry_hauling"],
       avoid: [], others: 999,
     },
     // A sensible player stops each pursuit once the First Direction bill and core are covered.
     enough: {
       // The direction asks for the entry knowledge *and* the drills begun, so reaching the level is not enough.
       [line.drills]: `g.${line.entry} >= 4 && g.${line.drills}.reps > 0`,
-      [line.site]: `g.${line.material} >= 12 || g.${line.direction} > 0 && g.${line.material} >= 3`,
-      [line.chore]: `g.${line.material} >= 12 || g.${line.direction} > 0 && g.${line.material} >= 3`,
-      fragment_notes: "g.lore >= 3", cut_timber: "g.timber >= 8", ferry_hauling: "g.coin >= g.coin.max",
+      [line.site]: stocked, [line.chore]: stocked, [line.method]: stocked,
+      fragment_notes: "g.lore >= 3", ferry_hauling: "g.coin >= g.coin.max",
       // The Lean-to's four spans hold the channel stones and one more piece; the strongbox claims it first, or wages stop at fifty.
       herb_rack: "g.strongbox < 1 && g.cottage < 1", [line.arrangement]: "g.strongbox < 1 && g.cottage < 1",
     },
@@ -397,27 +416,27 @@ export function runRidgeRoute(name: RidgeRoute, records: GameRecord[] = sourceRe
 }
 
 /**
- * The quickest sensible ridge play: no cottage or coffer, the strongbox before line furniture, chores during every run,
- * and the bandit fought once the projected fight is won, for the cache that shortens a Body or Sword bill.
+ * The quickest sensible ridge play from either direct Foundation: no cottage or coffer, the strongbox before line
+ * furniture, the line's method attuned in Foundation's third place, chores during every run, the next pursuit started
+ * as soon as one ends, and the bandit fought once the projected fight is won, for the cache that shortens the bill.
  */
-export function runDirectRidgeRoute(name: RidgeRoute, records: GameRecord[] = sourceRecords, start = runDirectRoute("channel-direct", { records }).state): RouteResult {
+export function runDirectRidgeRoute(name: RidgeRoute, records: GameRecord[] = sourceRecords, from: DirectRoute = "channel-direct", start = runDirectRoute(from, { records }).state): RouteResult {
   const line = RIDGE_ROUTES[name];
   const beatable = (engine: GameEngine) => engine.has("ridge_bandit") && engine.visible("ridge_bandit") && engine.fight("ridge_bandit").likely;
   // Four from the cache count once the bandit can be beaten and the cache is still unsearched.
   const stocked = (engine: GameEngine) => held(engine, line.material) >= 12 || held(engine, line.direction) > 0 && held(engine, line.material) >= 3
     || held(engine, "ridge_cache") < 1 && beatable(engine) && held(engine, line.material) >= 8;
-  return runRoute(`${name}-direct`, {
+  return runRoute(from === "channel-direct" ? `${name}-direct` : `${name}-hollow-direct`, {
     records, start, goal: "waystation", maxSeconds: 21600, focused: false, attentive: true,
     preferences: {
-      prefer: [line.direction, line.crossing, "ridge_cache", "ridge_bandit", "ridge_outskirts", line.teaching, "lean_to", "strongbox", line.arrangement,
-        line.drills, line.chore, line.site, "fragment_notes", "cut_timber", "ferry_hauling"],
+      prefer: [line.direction, line.crossing, "ridge_cache", "ridge_bandit", "ridge_outskirts", line.teaching, "field_kit", "lean_to", "strongbox", line.arrangement,
+        line.drills, line.method, line.chore, line.site, "fragment_notes", "cut_timber", "ferry_hauling"],
       avoid: ["steady_breath"], others: 999,
     },
     enough: {
       [line.drills]: `g.${line.entry} >= 4 && g.${line.drills}.reps > 0`,
-      [line.site]: stocked, [line.chore]: stocked,
+      [line.site]: stocked, [line.chore]: stocked, [line.method]: stocked,
       fragment_notes: "g.lore >= 3", ferry_hauling: "g.coin >= g.coin.max",
-      cut_timber: `g.lean_to > 0 && g.strongbox > 0 && g.${line.arrangement} > 0`,
       [line.arrangement]: "g.strongbox < 1",
       ridge_bandit: engine => !beatable(engine),
     },
@@ -444,13 +463,17 @@ export function compactRoute(result: RouteResult) {
   return { ...report, actionCount: actions.length, bank: state.bank };
 }
 
+/** A readable trace of every opening; the pace bands themselves are enforced only by `bun run validate`. */
 if (import.meta.main) {
-  const results = (Object.keys(ROUTES) as OpeningRoute[]).map(name => runRoute(name));
+  const results = [
+    ...(Object.keys(ROUTES) as OpeningRoute[]).map(name => runRoute(name)),
+    ...(Object.keys(DIRECT_ROUTES) as DirectRoute[]).map(name => runDirectRoute(name)),
+  ];
   if (process.argv.includes("--json")) console.log(JSON.stringify(results.map(compactRoute), null, 2));
   else for (const result of results) {
     console.log(`${result.name}: Foundation ${result.success ? "YES" : "NO"}; ${(result.activitySeconds / 60).toFixed(2)} active min; ${result.reason}`);
     console.log(`  ${result.unlocks.map(item => `${(item.at / 60).toFixed(2)}m ${item.id}`).join(" → ")}`);
     console.log(`  ${result.unsourcedCapLog.length} cap lines naming nothing that raises them`);
   }
-  if (results.some(result => !result.success || (result.foundationSeconds ?? Infinity) > 2700)) process.exitCode = 1;
+  if (results.some(result => !result.success)) process.exitCode = 1;
 }
