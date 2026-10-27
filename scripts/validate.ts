@@ -327,6 +327,9 @@ export function validateContext(records: GameRecord[]): string[] {
   }
   for (const tag of Object.keys(routeKeys)) if (!carried.has(tag)) errors.push(`routeKeys names ${tag}, which no record carries`);
   for (const beat of openingContext.beats) for (const id of beat.focus) if (!ids.has(id)) errors.push(`beat ${beat.id}: focus names unknown record ${id}`);
+  const listed = new Set(openingContext.breakthroughs);
+  for (const id of listed) if (records.find(record => record.id === id)?.kind !== "breakthrough") errors.push(`openingContext.breakthroughs names ${id}, which is not a breakthrough`);
+  for (const record of records) if (record.kind === "breakthrough" && !listed.has(record.id)) errors.push(`breakthrough ${record.id} is missing from openingContext.breakthroughs, the journey's order`);
   return errors;
 }
 

@@ -311,6 +311,16 @@ h1, h2, h3, h4, p, blockquote, dl, dd { margin: 0; }
 .waiting-detail { flex-basis: 100%; color: var(--muted); font-size: .68rem; }
 .waiting-row button { min-height: 0; padding: 0 .3rem; font-size: .66rem; }
 .waiting-runway { color: #a9c1b0; font-size: .7rem; line-height: 1.5; margin-top: .3rem; }
+.hobby { margin-top: .6rem; padding-top: .45rem; border-top: 1px dashed #3a4a3d; }
+.hobby-line { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .3rem .8rem; color: #c6d9c0; font-size: .72rem; line-height: 1.5; }
+.hobby-line .text-button { min-height: 0; padding: 0 .3rem; font-size: .66rem; }
+.task-hobby { position: absolute; left: 4px; bottom: 4px; min-height: 0; padding: 0 .35rem; font-size: .62rem; line-height: 1.7; color: #c6d9c0; background: transparent; border-color: var(--line); }
+.task-hobby[aria-pressed="true"] { color: #e7f0d8; background: #39513c; border-color: #7fa37c; }
+.task-cell.is-hobby .task-button { border-color: #5f8a6f; }
+.task-cell.has-hobby .task-button { padding-bottom: 1.5rem; }
+.in-effect { margin-top: .35rem; padding-top: .35rem; border-top: 1px dashed #3a4a3d; }
+.in-effect-line { color: #a9c1b0; font-size: .7rem; line-height: 1.5; }
+.in-effect-line::before { content: "In effect: "; color: #8f9c8a; }
 .task-queue { position: absolute; right: 4px; bottom: 4px; min-height: 0; padding: 0 .3rem; font-size: .6rem; line-height: 1.6; color: var(--muted); background: transparent; border-color: var(--line); }
 .notice-banner p { color: #dae9bb; font-size: .78rem; line-height: 1.55; }
 .notice-banner .notice-story { color: #e7efcf; font-size: .82rem; }
@@ -454,7 +464,7 @@ h1, h2, h3, h4, p, blockquote, dl, dd { margin: 0; }
   .slot-body { display: grid; grid-template-columns: 1fr auto; gap: .2rem .9rem; padding: .7rem; }
   .slot-body h3, .slot-goal, .slot-progress, [data-ui="active-meter"] { grid-column: 1; }
   .slot-body .slot-actions { grid-column: 2; grid-row: 1 / 3; flex-direction: column; margin: 0; }
-  .slot-note, .slot-reason, .slot-last, .slot-eta, .slot-current, .waiting, .objective-editor { grid-column: 1 / -1; }
+  .slot-note, .slot-reason, .slot-last, .slot-eta, .slot-current, .waiting, .hobby, .objective-editor { grid-column: 1 / -1; }
   .slot-note { margin-top: .35rem; }
   .slot-body .text-button { grid-column: 1; justify-self: start; margin-top: .2rem; }
   .active-meter { margin-top: .4rem; }

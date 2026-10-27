@@ -33,18 +33,20 @@ const groups: { id: string; title: string; tab: Tab; matches(record: GameRecord)
   { id: "work", title: "Village work", tab: "tasks", matches: record => record.group === "Work" },
   { id: "practice", title: "Practice", tab: "tasks", matches: record => record.group === "Practice" && record.kind === "task" },
   { id: "sites", title: "Places beyond the village", tab: "tasks", matches: record => record.group === "Sites" },
+  { id: "commissions", title: "Commissions", tab: "tasks", matches: record => record.group === "Commissions" },
   { id: "fights", title: "Fights", tab: "tasks", matches: record => record.group === "Fights" },
   { id: "purchases", title: "Purchases", tab: "tasks", matches: record => record.group === "Purchases" && record.kind !== "class" },
   { id: "classes", title: "Standing", tab: "tasks", matches: record => record.kind === "class" },
   { id: "trade", title: "Village trade", tab: "tasks", matches: record => record.group === "Trade" },
-  { id: "techniques", title: "Techniques", tab: "techniques", matches: record => record.kind === "technique" },
+  { id: "techniques", title: "Techniques", tab: "techniques", matches: record => record.kind === "technique" && !record.stance },
+  { id: "stances", title: "Stances", tab: "techniques", matches: record => record.kind === "technique" && record.stance === true },
   { id: "shelter", title: "Shelter", tab: "home", matches: record => record.group === "Home" && record.kind === "home" },
   { id: "arrangements", title: "Arrangements", tab: "home", matches: record => record.group === "Home" && record.kind === "arrangement" },
   { id: "workbench", title: "Workbench", tab: "craft", matches: record => record.kind === "recipe" },
   { id: "preparations", title: "Preparations", tab: "craft", matches: record => record.kind === "preparation" },
 ];
 const notActions = new Set(["resource", "family", "flag", "breakthrough", "lead"]);
-const bodyIds = ["vigor", "qi", "life", "strain"];
+const bodyIds = ["vigor", "qi", "life", "strain", "focus"];
 /** The slip's leaf eight as each reading completes it: the chipped sentence is finished by the method you settle on. */
 const rebuiltLeaf: Record<string, string> = {
   carry_current: "“…when the pooled breath turns, do not follow it. Wait at the turning. The rest is to take it up and carry it where you are going.”",
@@ -204,7 +206,7 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
           <section class="panel ledger"><div class="panel-heading"><h2>Resources</h2><span>Held / max</span></div>
             <details class="ledger-section" open><summary><h3>Currency</h3></summary><div data-ui="currency"></div></details>
             <details class="ledger-section" open><summary><h3>Materials</h3></summary><div data-ui="materials"></div></details>
-            <details class="ledger-section" open data-ui="preparations-panel" hidden><summary><h3>Preparations</h3></summary><div data-ui="preparations"></div></details>
+            <details class="ledger-section" open data-ui="preparations-panel" hidden><summary><h3>Preparations</h3></summary><div data-ui="preparations"></div><div class="in-effect" data-ui="in-effect" hidden></div></details>
             <details class="ledger-section" open data-ui="families-panel" hidden><summary><h3>Knowledge <span>Level / limit</span></h3></summary><div class="family-list" data-ui="families"></div></details>
           </section>
           <section class="panel location-panel"><div class="panel-heading"><h2 data-ui="location-place"></h2></div><p data-ui="location-text"></p></section>
@@ -220,6 +222,7 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
           <section class="panel activity-slot"><div class="panel-heading"><h2>Current activity</h2><span class="activity-state" data-ui="active-mode">Idle</span></div><div class="slot-body"><h3 data-ui="objective-name">No activity</h3><p class="slot-goal" data-ui="objective-progress"></p><div data-ui="active-meter"></div><p class="slot-progress numeric" data-ui="active-progress"></p><p class="slot-eta" data-ui="active-eta" hidden></p><p class="slot-current" data-ui="carried" hidden></p>
             <div class="objective-editor" data-ui="objective-editor" hidden><label>Stop when <select data-ui="objective-kind"></select></label><label data-ui="objective-target-label">Target <input type="number" data-ui="objective-target" inputmode="numeric" /></label><p class="slot-error" data-ui="objective-error" role="status"></p></div>
             <div class="slot-actions"><button type="button" data-ui="stop" data-action="stop" aria-describedby="stop-reason">Stop</button><button type="button" class="text-button" data-ui="locate-active" hidden>Show activity</button></div><p class="slot-reason" id="stop-reason" data-ui="stop-reason" hidden></p><p class="slot-note" data-ui="bank-note"></p><p class="slot-last" data-ui="last-stop" hidden></p>
+            <div class="hobby" data-ui="hobby" hidden><p class="hobby-line"><span data-ui="hobby-name"></span><button type="button" class="text-button" data-ui="hobby-stop" data-action="hobby-stop">Stop</button></p></div>
             <div class="waiting" data-ui="waiting-block" hidden><h4>Waiting</h4><ol class="waiting-list" data-ui="waiting"></ol><p class="empty-state" data-ui="waiting-empty">Nothing is waiting. Shift-click an action to queue it; the list keeps running while you are away.</p><p class="waiting-runway" data-ui="waiting-runway" hidden></p></div></div></section>
           <section class="panel body-panel"><div class="panel-heading"><h2>Body</h2><span>Held / max</span></div><div class="body-list" data-ui="body"></div></section>
           <section class="panel character-status"><div class="panel-heading"><h2>Character</h2><span data-ui="character-stage">Mortal</span></div><div class="status-body"><dl class="status-list" data-ui="status-list"><div class="home-status"><dt>Home</dt><dd data-ui="home-name"></dd></div><div><dt>Floor space</dt><dd data-ui="home-space"></dd></div></dl></div></section>
@@ -562,6 +565,10 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
       setText(view.gaugeText, `Readiness · swings every ${number(Math.round(GAUGE / side.speed * 10) / 10)} s`);
       setText(view.stats, `Strike ${side.strike} · Guard ${side.guard} · Speed ${number(side.speed)} · Hit ${number(side.hit)}% · Dodge ${number(side.dodge)}%`);
     }
+    if (foe.technique) {
+      const ordinal = ({ 2: "second", 3: "third", 4: "fourth", 5: "fifth" } as Record<number, string>)[foe.technique.every] ?? `${foe.technique.every}th`;
+      setText(fightFoe.stats, `${fightFoe.stats.textContent} · every ${ordinal} swing: ${foe.technique.name}, Strike ${foe.technique.strike}`);
+    }
     const projection = fight.result ? undefined : engine.fight(record.id);
     setText(fightYou.odds, projection ? `Your swings land ${Math.round(projection.yourChance * 100)}% for ${projection.yourDamage}.` : `Landed ${fight.landed} of ${fight.swings} swings.`);
     setText(fightFoe.odds, projection ? `Theirs land ${Math.round(projection.foeChance * 100)}% for ${projection.foeDamage}.` : `Landed ${fight.foeLanded} of ${fight.foeSwings} swings.`);
@@ -632,12 +639,20 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
     info.type = "button"; info.setAttribute("aria-label", `Details for ${name}`); info.setAttribute("aria-controls", tipId); info.setAttribute("aria-expanded", "false");
     cell.append(button, info); grid.append(cell);
     let queue: HTMLButtonElement | undefined;
-    if (mode !== "instant") {
+    if (mode !== "instant" && !record.stance) {
       queue = element("button", "task-queue", "Queue");
       queue.type = "button"; queue.dataset.action = "queue"; queue.dataset.queueId = record.id;
       queue.setAttribute("aria-label", `Queue ${name}`);
       queue.addEventListener("click", () => { void change(() => { const result = engine.queue(record.id); announce(result.ok ? `${name} is waiting.` : result.reason); }); });
       cell.append(queue);
+    }
+    let hobby: HTMLButtonElement | undefined;
+    if (record.hobby) {
+      hobby = element("button", "task-hobby", "Hobby");
+      hobby.type = "button"; hobby.dataset.action = "hobby"; hobby.dataset.hobbyId = record.id; hobby.hidden = true;
+      hobby.setAttribute("aria-label", `Run ${name} as the hobby`);
+      hobby.addEventListener("click", () => { void change(() => { const result = engine.startHobby(record.id); announce(result.ok ? `${name} is the hobby now, at half pace.` : result.reason); }); });
+      cell.insertBefore(hobby, info);
     }
     let attune: HTMLButtonElement | undefined;
     if (record.attune) {
@@ -694,6 +709,13 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
     });
     button.addEventListener("click", event => {
       see();
+      if (record.stance) {
+        void change(() => {
+          const result = engine.state.stance === record.id ? engine.dropStance() : engine.takeStance(record.id);
+          announce(result.ok ? (engine.state.stance === record.id ? `${name} is taken.` : `${name} is dropped.`) : result.reason);
+        });
+        return;
+      }
       if (queue && event.shiftKey) { queue.click(); return; }
       if (engine.state.active?.id === record.id) { if (!record.autoStart) void change(() => { const result = engine.stop(); if (!result.ok) announce(result.reason); }); return; }
       const available = engine.availability(record.id);
@@ -748,6 +770,25 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
         setText(attune, held ? "Unattune" : "Attune");
         attune.setAttribute("aria-pressed", String(held));
         attune.setAttribute("aria-label", `${held ? "Unattune" : "Attune"} ${name}`);
+      }
+      if (record.stance) {
+        // A stance is held, not spent: the card is a toggle, Take or Taken, and never a run.
+        const taken = engine.state.stance === record.id;
+        cell.classList.toggle("is-attuned", taken);
+        setText(sub, taken ? "Taken: its numbers stand until another stance replaces it." : "Take it before a fight; the one stance taken replaces any other.");
+        button.classList.toggle("is-running", false); button.classList.toggle("is-owned", false); button.classList.toggle("is-locked", locked); button.classList.toggle("is-runnable", !locked);
+        button.disabled = false; button.setAttribute("aria-pressed", String(taken));
+        setText(badge, taken ? "Taken" : locked ? "" : isNew ? "New" : ""); badge.hidden = !badge.textContent;
+        setText(modeLine, "Stance · held, not spent"); blocks.update(detail); countLine.hidden = true;
+        return { marked: isNew, match: false };
+      }
+      if (hobby) {
+        const asHobby = engine.state.hobby === record.id;
+        hobby.hidden = running || owned || !engine.has("hobby_slots") || engine.stat("hobby_slots").max < 1;
+        setText(hobby, asHobby ? "Hobby · running" : "Hobby");
+        hobby.disabled = asHobby;
+        hobby.setAttribute("aria-pressed", String(asHobby));
+        cell.classList.toggle("is-hobby", asHobby); cell.classList.toggle("has-hobby", !hobby.hidden);
       }
       button.classList.toggle("is-running", running); button.classList.toggle("is-owned", owned);
       button.classList.toggle("is-locked", locked); button.classList.toggle("is-runnable", !running && !owned && !locked);
@@ -850,15 +891,17 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
     row.append(check, words);
     return { row, update(ok: boolean, shown = text) { setText(words, shown); row.classList.toggle("complete", ok); setText(check, ok ? "✓" : "○"); row.setAttribute("aria-label", `${ok ? "Met" : "Unmet"}: ${shown}`); } };
   }
-  /** The standings a record's result grants, by name. */
+  /** The titles a breakthrough has granted, by its result or by the events that read them from what was held. */
   function standingsOf(record: GameRecord): string[] {
-    return Object.keys(record.result ?? {}).filter(id => !id.includes(".") && engine.record(id).kind === "class").map(id => label(id));
+    const granted = [...Object.keys(record.result ?? {}), ...(record.events ?? []).flatMap(event => Object.keys(event.changes ?? {}))];
+    return [...new Set(granted)].filter(id => !id.includes(".") && engine.has(id) && engine.record(id).kind === "class" && current(id) > 0).map(id => label(id));
   }
   const breakthroughs = element("div", "breakthrough-list"); breakthroughs.dataset.ui = "breakthroughs";
   groupViews.find(view => view.definition.id === "practice")!.details.insertAdjacentElement("afterend", breakthroughs);
-  /** One panel per breakthrough; the first (Foundation) keeps the `foundation-*` hooks the smoke test drives. */
-  const breakthroughPanels = engine.records.filter(record => record.breakthrough).map((record, index) => {
-    const breakthrough = record.breakthrough!, primary = index === 0, settlingLabel = record.id === "settling";
+  /** One panel per breakthrough; Foundation's keeps the `foundation-*` hooks the smoke test drives. */
+  const journeyRank = (id: string) => { const index = openingContext.breakthroughs.indexOf(id); return index < 0 ? openingContext.breakthroughs.length : index; };
+  const breakthroughPanels = engine.records.filter(record => record.breakthrough).sort((a, b) => journeyRank(a.id) - journeyRank(b.id)).map(record => {
+    const breakthrough = record.breakthrough!, settlingLabel = record.id === "settling", primary = settlingLabel;
     const panel = element("section", "foundation-panel");
     panel.innerHTML = `<div class="section-heading"><h3 data-part="title"></h3><span class="mode-badge mode-timed">Timed breakthrough</span></div><div class="foundation-body"><div class="foundation-checks"><div><h4>The core</h4><ul class="foundation-list" data-part="core"></ul></div><div><h4 data-part="count"></h4><ul class="foundation-list" data-part="pointers"></ul></div></div><div class="foundation-footer"><div><h4 class="foundation-bill-heading">The bill</h4><ul class="foundation-list foundation-bill" data-part="bill"></ul><p class="card-facts" data-part="time"></p><h4 class="foundation-rewards-heading">On completion</h4><ul class="foundation-rewards" data-part="rewards"></ul><p class="card-requirement" data-part="need"></p></div><button type="button" class="primary-button card-button" data-part="start" data-action="start"></button></div><details class="action-details"><summary>Breakthrough details</summary><p class="card-description" data-part="description"></p></details></div>`;
     const part = <T extends HTMLElement = HTMLElement>(name: string) => {
@@ -1005,10 +1048,21 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
       view.remove.setAttribute("aria-label", `Remove ${record.name ?? entry.id} from the waiting list`);
     });
     ui("waiting-empty").hidden = waiting.length > 0;
+    renderHobby();
     ui("waiting-block").hidden = !queueing;
     const runway = queueing && engine.state.active ? unattendedSeconds() : 0, note = ui("waiting-runway");
     note.hidden = runway < 1;
     if (!note.hidden) setText(note, `Runs ~${duration(runway)} unattended, then time gathers in the bank.`);
+  }
+  /** The hobby place under the slot: a practice at half pace, with its own Stop. It shows only once the place exists. */
+  ui("hobby-stop").addEventListener("click", () => { void change(() => { const result = engine.stopHobby(); if (!result.ok) announce(result.reason); }); });
+  function renderHobby(): void {
+    const block = ui("hobby"), place = engine.records.some(record => record.id === "hobby_slots") && engine.stat("hobby_slots").max >= 1;
+    block.hidden = !place;
+    if (!place) return;
+    const hobby = engine.state.hobby;
+    setText(ui("hobby-name"), hobby ? `Hobby: ${label(hobby)} (half pace)` : "Hobby: none. A marked practice can run here at half pace.");
+    ui<HTMLButtonElement>("hobby-stop").hidden = !hobby;
   }
   let runwayKey = "", runwayEnd = 0;
   /**
@@ -1036,13 +1090,16 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
   });
   let seenCompletion = "";
   try { seenCompletion = localStorage.getItem(seenCompletionKey) ?? ""; } catch { /* A preference only. */ }
-  /** The breakthrough reached most recently, in content order. */
+  /** The breakthrough reached most recently, in the journey's order. */
   function latestBreakthrough(): GameRecord | undefined {
-    return [...breakthroughPanels].reverse().find(view => current(view.record.id) > 0)?.record;
+    const rank = (id: string) => { const index = openingContext.breakthroughs.indexOf(id); return index < 0 ? -1 : index; };
+    return [...breakthroughPanels].sort((a, b) => rank(b.record.id) - rank(a.record.id)).find(view => current(view.record.id) > 0)?.record;
   }
-  /** What the completion banner celebrates: arriving at the waystation ends the stage, else the latest breakthrough. */
+  /** What the completion banner celebrates: Reedmarket, the latest breakthrough, or arriving at the waystation, which ends the ridge. */
   function latestCompletion(): GameRecord | undefined {
-    return current("waystation") > 0 ? engine.record("waystation") : latestBreakthrough();
+    if (current("reedmarket") > 0) return engine.record("reedmarket");
+    const reached = latestBreakthrough();
+    return current("waystation") > 0 && reached?.id !== "second_direction" ? engine.record("waystation") : reached;
   }
   ui("completion-dismiss").addEventListener("click", () => {
     const latest = latestCompletion();
@@ -1071,10 +1128,17 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
       text = "The method holds. What was an incomplete reading is now your own.";
       heading = "What Foundation changed"; changes = blockLines(engine.tooltip(completion.id), "mod");
       review = "Review Foundation";
+    } else if (completion.id === "reedmarket") {
+      title = label("reedmarket");
+      text = [engine.title(), `${duration(engine.state.activitySeconds)} of activity`].join(" · ");
+      story = "A street of stalls at the basin's edge, and three leaves of the slip somewhere beyond it.";
+      review = "Review the road ahead";
     } else {
-      title = standings.join(" · ") || label(completion.id);
-      text = `${completion.breakthrough?.title ?? label(completion.id)}. The direction holds, and the way up to the ridge waystation is open.`;
-      heading = "What the direction changed"; changes = [...blockLines(engine.tooltip(completion.id), "mod"), ...standings.map(name => `The standing of ${name}`)];
+      const second = completion.id === "second_direction";
+      title = `${completion.breakthrough?.title ?? label(completion.id)}${standings.length ? `: ${standings.join(" · ")}` : ""}`;
+      text = second ? "The title is read from what you hold. A fifth method can be held, a hobby runs beside the slot, and the terrace above the slide is open."
+        : `${completion.breakthrough?.title ?? label(completion.id)}. The direction holds, and the way up to the ridge waystation is open to a held method of its school.`;
+      heading = "What the direction changed"; changes = [...blockLines(engine.tooltip(completion.id), "mod"), ...standings.map(name => `The title of ${name}`)];
       review = "Review your path";
     }
     ui("completion").dataset.completion = completion.id;
@@ -1115,7 +1179,7 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
     const filler = active ? engine.record(active.id).autoStart === true : false;
     setText(ui("save-status"), saveStatus); setText(ui("bank-amount"), `${duration(state.bank.seconds)} / ${duration(state.bank.cap)}`); bankMeter.update(state.bank.seconds, state.bank.cap);
     ui("bank").classList.toggle("is-full", bankFull && !active); ui("bank").classList.toggle("is-accelerating", accelerating);
-    setText(ui("stage"), current("waystation") > 0 ? "The ridge" : foundationReached ? "Foundation" : "The village");
+    setText(ui("stage"), current("reedmarket") > 0 ? "Reedmarket" : current("second_direction") > 0 ? "The basin road" : current("waystation") > 0 ? "The ridge" : foundationReached ? "Foundation" : "The village");
     const scene = [...openingContext.scenes].reverse().find(candidate => engine.condition(candidate.when)) ?? openingContext.scenes[0]!;
     // The scene sets the stage's accent, so the climb from the village reads in the chrome as well as the copy.
     shell.dataset.stage = scene.id;
@@ -1196,6 +1260,11 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
       const before = previous.get(view.record.id); previous.set(view.record.id, stat.value);
       if (!view.body && before !== undefined && stat.value > before + 1e-9) pulse(view.row, "tick-up", 600);
     }
+    // Preparations in effect: what is standing and for how long, under what is kept.
+    const inEffect = ui("in-effect");
+    const effectLines = engine.state.effects.map(effect => `${label(effect.id)} · ${clock(effect.remaining)} left`);
+    inEffect.hidden = effectLines.length === 0;
+    if (effectLines.length) { inEffect.replaceChildren(...effectLines.map(line => element("p", "in-effect-line", line))); visiblePreparations++; }
     ui("preparations-panel").hidden = visiblePreparations === 0;
     let visibleFamilies = 0;
     for (const view of familyRows) {
@@ -1237,7 +1306,11 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
     // How many methods are held ready, of how many can be; absent until the content defines attunement at all.
     const slots = engine.records.some(record => record.id === "attune_slots") ? engine.stat("attune_slots") : undefined;
     techniqueHead.gauge.hidden = !slots;
-    if (slots) { setText(techniqueHead.value, `${number(slots.value)} / ${number(slots.max)}`); syncPips(techniqueHead.pips, slots.value, slots.max, "gauge-pip"); }
+    if (slots) {
+      const stance = engine.state.stance ? engine.record(engine.state.stance) : undefined;
+      setText(techniqueHead.value, `${number(slots.value)} / ${number(slots.max)}${stance ? ` · Stance: ${stance.name ?? stance.id}` : ""}`);
+      syncPips(techniqueHead.pips, slots.value, slots.max, "gauge-pip");
+    }
     tabViews.get("techniques")!.button.hidden = !techniquesVisible;
     tabViews.get("home")!.button.hidden = !apprenticed;
     tabViews.get("craft")!.button.hidden = !craftVisible;
@@ -1262,15 +1335,23 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
     const completion = latestCompletion();
     ui("completion").hidden = !completion || seenCompletion === completion.id; ui("completion-detail").hidden = !foundationReached;
     if (completion) renderCompletion(completion);
-    const atWaystation = current("waystation") > 0;
-    setText(ui("completion-heading"), atWaystation ? "Beyond the waystation" : "Beyond Foundation");
-    setText(ui("completion-stage"), atWaystation ? "Stage complete" : "The ridge lies ahead");
-    setText(ui("completion-lead"), atWaystation
-      ? "You came up the ridge by a direction of your own choosing, and the waystation keeper has written it down beside your name."
-      : "The pooled breath turns and returns. A method that once ended in a broken sentence has become your own.");
-    setText(ui("completion-note"), atWaystation
-      ? "The keeper's ledgers, the chime at dusk, the broken spur and the slip's missing leaves are where the road goes next. For now the waystation is a place to work, trade and rest."
-      : "Old Ridge rises beyond the porters' path. Walk its outskirts to find the teachings that choose a First Direction; any one of them carries you to the waystation.");
+    const atWaystation = current("waystation") > 0, atReedmarket = current("reedmarket") > 0, secondTaken = current("second_direction") > 0;
+    setText(ui("completion-heading"), atReedmarket ? "Beyond Reedmarket" : secondTaken ? "Beyond the Second Direction" : atWaystation ? "Beyond the waystation" : "Beyond Foundation");
+    setText(ui("completion-stage"), atReedmarket ? "Stage complete" : secondTaken ? "The terrace lies ahead" : atWaystation ? "The basin road lies ahead" : "The ridge lies ahead");
+    setText(ui("completion-lead"), atReedmarket
+      ? "The terrace came down into reed beds and a street of stalls. Reedmarket's porters pay better than Han, and the basin is beyond."
+      : secondTaken
+        ? "The Second Direction has read a title from what you hold. A fifth method can be held, and a hobby runs beside the slot."
+        : atWaystation
+          ? "You came up the ridge by a method you held, and the waystation keeper has written it down beside your name."
+          : "The pooled breath turns and returns. A method that once ended in a broken sentence has become your own.");
+    setText(ui("completion-note"), atReedmarket
+      ? "The three leaves the ledger could not place are somewhere in the basin. That is the next stage of the journey."
+      : secondTaken
+        ? "The terrace above the slide is a day's carry to Reedmarket, on the Cloudwell basin's edge."
+        : atWaystation
+          ? "Four things on Han's board: route records toward the basin, a chime at dusk, a spur that ends at a slide, and the slip's other nine leaves. Each sphere carried to five opens a deeper teaching; two spheres deepened and three methods held take the Second Direction."
+          : "Old Ridge rises beyond the porters' path. Walk its outskirts to find the teachings; any sphere carried to four takes the First Direction, and a held method of its school carries you to the waystation.");
     ui("slip").hidden = current("jade_slip") === 0; ui("character-methods").hidden = visibleFamilies === 0;
     // A reading is settled once its rival has closed, which happens the moment it is first attuned.
     const reading = Object.keys(rebuiltLeaf).find(id => engine.has(id) && !engine.locked(id) && (engine.record(id).lock ?? []).some(other => engine.locked(other)));

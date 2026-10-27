@@ -18,6 +18,7 @@ Chromium **156.0.8078.4**, Playwright **1.64.1**. Both routes were driven throug
 |---|---:|---:|---:|---:|---:|
 | Channel | **38m 50s** | 31m 20s | +7m 30s | 13.28s | 40 |
 | Hollow | **40m 20s** | 30m 50s | +9m 30s | 12.48s | 28 |
+| Basin (27 October, `basin` report) | a Second Direction fixture from the pill route (`second-direction.json`): the stage label, the Pill Refiner title, the Focus meter, the hobby line with Stop, a settling draught in effect, the Commissions and Stances groups and the Rooted stance taken; then the terrace walked under the fake clock to Reedmarket, the scene moving with it | — | — | — | `basin-techniques-desktop.png`, `basin-reedmarket-desktop.png`, `basin-reedmarket-mobile.png` |
 
 The short test wall times come from Playwright's virtual clock. They are not ordinary-speed play durations. Both routes start with an empty bank, spend no bank, finish with Circulation 2 and Lore 3, receive lifespan 85 and a six-hour bank capacity, and pause at Foundation. Qi Sense finishes at 4 on channel and 5 on hollow. The browser result matches the engine simulation exactly.
 

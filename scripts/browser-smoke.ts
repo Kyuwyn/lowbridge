@@ -2,7 +2,7 @@ import { chromium, type Page } from 'playwright';
 import { mkdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import { startServer } from './serve';
-import { runRidgeRoute, runRoute, ROUTES, type OpeningRoute } from './routes';
+import { runDeepRoute, runRidgeRoute, runRoute, ROUTES, type OpeningRoute } from './routes';
 import { records, recordById } from '../src/content';
 import { GameEngine } from '../src/engine';
 import { decodeSave, makeSave, DATABASE_NAME, SAVE_VERSION, type SaveFile } from '../src/persistence';
@@ -650,31 +650,31 @@ try {
   assert((await page.locator('[data-ui=last-stop]').innerText()).includes('objective complete'), 'the activity panel does not say why Rest left the slot');
   reports.push({ name: 'spellbook-and-warnings', attuneToggle: 'pass', unattunedUnusable: 'pass', warnConfirm: 'pass', warnCancel: 'pass', lockedLeavesGrid: 'pass', fillStopsAtCap: 'pass', takeDownConfirm: 'pass', newGameConfirm: 'pass' });
 
-  // The ridge: the breakthrough panel generalises to a First Direction, Strain shows, and the class and stage follow.
+  // The ridge: the breakthrough panel generalises to the one First Direction, Strain shows, and the derived title and stage follow.
   const ridge = runRidgeRoute('direction-body');
   // The action budget counts choices, not the attunements taken between them.
-  const ready = runRidgeRoute('direction-body', records, undefined, { maxActions: ridge.actions.filter(action => !action.attune).findIndex(action => action.id === 'direction_body') });
+  const ready = runRidgeRoute('direction-body', records, undefined, { maxActions: ridge.actions.filter(action => !action.attune).findIndex(action => action.id === 'first_direction') });
   await page.setViewportSize({ width: 1440, height: 1000 });
   await importSave(page, makeSave(ready.state, records, 1));
   await closeSettings(page);
   assert(await page.locator('[data-ui=body] [data-resource=strain]').isVisible(), 'the Strain meter is missing after Foundation');
   await page.locator('[data-tab=tasks]').click();
-  const direction = page.locator('section.foundation-panel[data-record-id=direction_body]');
+  const direction = page.locator('section.foundation-panel[data-record-id=first_direction]');
   assert(await direction.isVisible() && await page.locator('[data-ui=foundation]').isHidden(), 'the First Direction panel does not replace the Foundation panel');
   assert((await direction.locator('[data-part=count]').innerText()).includes('3 needed'), 'the First Direction panel does not count its supporting signs');
-  assert((await direction.locator('[data-part=rewards]').innerText()).includes('Body Disciple'), 'the First Direction panel does not name the standing it grants');
+  assert((await direction.locator('[data-part=rewards]').innerText()).includes('Attunement'), 'the First Direction panel does not name the place it grants');
   await direction.locator('[data-part=start]').click();
-  // Choosing a direction closes the other three for good, so the panel asks before it begins, and the doors close when it is paid for.
+  // The Direction closes nothing, so no confirmation is asked; the title is read from what is carried when it completes.
   await confirmIfAsked(page);
-  const paid = await settled(page, state => state.lockedIds.includes('direction_sword'));
-  assert(paid.state.lockedIds.includes('direction_sword') && paid.state.stats.body_disciple!.value === 0, 'the First Direction did not close the others when it was paid for');
-  const span = recordById.get('direction_body')!.length;
+  const paid = await settled(page, state => state.stats.first_direction!.paid === true);
+  assert(paid.state.lockedIds.every(id => !id.endsWith('_teaching')) && paid.state.stats.body_disciple!.value === 0, 'the First Direction closed a teaching or named a title before it was taken');
+  const span = recordById.get('first_direction')!.length;
   assert(typeof span === 'number', 'the First Direction is no longer a timed breakthrough');
   await page.clock.runFor((span + 1) * 1000);
   const directed = await stored(page);
-  assert(directed.state.stats.body_disciple!.value === 1, 'the First Direction did not grant its class');
-  assert((await page.locator('[data-ui=character-stage]').innerText()) === recordById.get('body_disciple')!.title, 'the class title is not shown');
-  assert((await page.locator('[data-ui=completion-title]').innerText()).includes('Body Disciple'), 'the completion banner does not name the direction');
+  assert(directed.state.stats.body_disciple!.value === 1 && directed.state.stats.first_title!.value === 1, 'the First Direction did not read its title from the body carried to four');
+  assert((await page.locator('[data-ui=character-stage]').innerText()) === recordById.get('body_disciple')!.title, 'the derived title is not shown');
+  assert((await page.locator('[data-ui=completion-title]').innerText()).includes('First Direction'), 'the completion banner does not name the direction');
   await page.locator('[data-ui=completion-dismiss]').click();
   assert(await page.locator('[data-ui=completion]').isHidden(), 'the completion banner cannot be dismissed');
   await importSave(page, makeSave(ridge.state, records, 1));
@@ -684,7 +684,59 @@ try {
   const leads = records.filter(record => record.kind === 'lead').length;
   assert(await page.locator('[data-ui=leads] li:visible').count() === leads, `the ${leads} waystation leads are not listed`);
   await page.screenshot({ path: join(output, 'ridge-waystation-desktop.png'), fullPage: true });
-  reports.push({ name: 'ridge', directionPanel: 'pass', locksAtPayment: 'pass', strainMeter: 'pass', classTitle: 'pass', stageLabel: 'pass', waystationLeads: 'pass' });
+  reports.push({ name: 'ridge', directionPanel: 'pass', closesNothing: 'pass', strainMeter: 'pass', derivedTitle: 'pass', stageLabel: 'pass', waystationLeads: 'pass' });
+
+  // The basin road: a life at the Second Direction shows Focus, the hobby place, the Commissions and Stances groups and the title; the terrace then reaches Reedmarket.
+  const deep = runDeepRoute('pill', records, ridge.state);
+  assert(deep.success, `the pill route did not reach the Second Direction (${deep.reason})`);
+  const arrived = new GameEngine(records, deep.state);
+  const basinEngine = new GameEngine(records, deep.state);
+  // The fixture holds the Second Direction, a hobby, a stance and a draught in effect, but has not yet walked the terrace.
+  for (const id of ['terrace_bypass', 'reedmarket_work', 'trade_pale_root', 'haul_the_stores']) Object.assign(basinEngine.stat(id), { value: 0, reps: 0, paid: false, exp: 0 });
+  basinEngine.stat('reedmarket').value = 0; basinEngine.state.visibleIds = basinEngine.state.visibleIds.filter(id => !['reedmarket', 'reedmarket_work', 'trade_pale_root'].includes(id));
+  basinEngine.state.eventIds = basinEngine.state.eventIds.filter(id => id !== 'reedmarket_arrival');
+  basinEngine.stop();
+  for (const id of ['vigor', 'strain', 'focus', 'life', 'qi']) basinEngine.stat(id).value = basinEngine.stat(id).max;
+  basinEngine.stat('herbs').value = basinEngine.stat('herbs').max; basinEngine.stat('settling_draught').value = 1;
+  basinEngine.takeStance('rooted_stance');
+  if (!basinEngine.state.hobby) for (const id of ['refining_drills', 'breath_gathering', 'fragment_notes', 'body_drills']) if (basinEngine.startHobby(id).ok) break;
+  assert(basinEngine.state.hobby !== null, 'the fixture has no hobby running');
+  assert(basinEngine.start('take_settling_draught').ok, 'the fixture could not drink a settling draught');
+  basinEngine.recompute();
+  const basinSave = makeSave(basinEngine.state, records, 1);
+  await Bun.write(join(output, 'second-direction.json'), JSON.stringify(basinSave, null, 2));
+  await importSave(page, basinSave);
+  await closeSettings(page);
+  assert((await page.locator('[data-ui=stage]').innerText()) === 'The basin road', 'the stage label does not reach the basin road');
+  assert((await page.locator('[data-ui=character-stage]').innerText()) === recordById.get('pill_refiner')!.title, 'the Second Direction title is not shown');
+  assert(await page.locator('[data-ui=body] [data-resource=focus]').isVisible(), 'the Focus meter is missing at the waystation');
+  const hobbyLine = page.locator('[data-ui=hobby]');
+  assert(await hobbyLine.isVisible() && (await hobbyLine.innerText()).includes('half pace') && await page.locator('[data-ui=hobby-stop]').isVisible(), 'the hobby line with its Stop is missing');
+  assert((await page.locator('[data-ui=in-effect]').innerText()).includes('left'), 'the draught in effect is not listed under Preparations');
+  await page.locator('[data-tab=tasks]').click();
+  assert(await page.locator('[data-group=commissions]').isVisible(), 'the Commissions group is missing');
+  await page.locator('[data-tab=techniques]').click();
+  assert(await page.locator('[data-group=stances]').isVisible(), 'the Stances group is missing');
+  await page.screenshot({ path: join(output, 'basin-techniques-desktop.png'), fullPage: true });
+  const rooted = page.locator('[data-group=stances] .task-button[data-record-id=rooted_stance]');
+  assert((await rooted.innerText()).includes('Taken') && (await page.locator('[data-ui=attune-count]').innerText()).includes('Stance: Rooted stance'), 'the taken stance is not shown as taken');
+  await page.locator('[data-tab=tasks]').click();
+  await revealAction(page, 'terrace_bypass');
+  await page.locator('.task-button[data-record-id=terrace_bypass]').click();
+  await confirmIfAsked(page);
+  const walking = await settled(page, state => state.active?.id === 'terrace_bypass');
+  assert(walking.state.active?.id === 'terrace_bypass', 'the terrace to Reedmarket did not start');
+  const terrace = recordById.get('terrace_bypass')!.length as number;
+  await page.clock.runFor((terrace + 2) * 1000);
+  const reed = await settled(page, state => state.stats.reedmarket!.value === 1);
+  assert(reed.state.stats.reedmarket!.value === 1, `the terrace did not reach Reedmarket (active ${reed.state.active?.id ?? 'none'}, progress ${reed.state.active?.progress ?? reed.state.stats.terrace_bypass!.exp}, last stop: ${reed.state.lastStop ?? 'none'})`);
+  assert((await page.locator('[data-ui=stage]').innerText()) === 'Reedmarket', 'the stage label does not reach Reedmarket');
+  assert((await page.locator('[data-ui=location-place]').innerText()) === 'Reedmarket', 'the scene does not move to Reedmarket');
+  await page.screenshot({ path: join(output, 'basin-reedmarket-desktop.png'), fullPage: true });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.screenshot({ path: join(output, 'basin-reedmarket-mobile.png'), fullPage: true });
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  reports.push({ name: 'basin', stageLabel: 'pass', secondTitle: 'pass', focusMeter: 'pass', hobbyLine: 'pass', inEffect: 'pass', commissionsGroup: 'pass', stancesGroup: 'pass', stanceTaken: 'pass', reedmarket: 'pass', arrivedTitle: arrived.title() });
 
   reports.push({ name: 'action-workspace', instantChores: 'pass', autoRest: 'pass', lockedKeyboardDetails: 'pass', hoverDetails: 'pass', purchasePreservesActivity: 'pass',
     objectiveEta: 'pass', persistentActivityAcrossTabs: 'pass', outdatedImportRefused: 'pass', capWasteBadge: 'pass', doneGroupFocus: 'pass', tabWidths: [1440, 768, 390] });

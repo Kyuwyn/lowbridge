@@ -38,7 +38,9 @@ export const routeKeys: Record<string, RouteKey> = {
   t_commission: { name: "A commission done", desc: "A piece of work done for Keeper Han and paid for." },
 };
 
-export const openingContext: { title: string; place: string; scenes: Scene[]; beats: StoryBeat[] } = {
+export const openingContext: { title: string; place: string; scenes: Scene[]; beats: StoryBeat[]; breakthroughs: string[] } = {
+  /** The breakthroughs in the order the journey takes them; the shell celebrates the latest one held. */
+  breakthroughs: ["settling", "first_direction", "second_direction"],
   title: "Lowbridge",
   place: "Hayloft above Miller Wen’s barn",
   scenes: [

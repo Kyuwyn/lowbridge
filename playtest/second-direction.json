@@ -1,0 +1,1743 @@
+{
+  "format": "lowbridge-save",
+  "version": 7,
+  "savedAt": 1,
+  "activitySeconds": 4411,
+  "wallRemainder": 0,
+  "bank": 0,
+  "items": {
+    "coin": {
+      "value": 300,
+      "seen": true
+    },
+    "herbs": {
+      "value": 44,
+      "seen": true
+    },
+    "timber": {
+      "value": 6,
+      "seen": true
+    },
+    "stone": {
+      "value": 6,
+      "seen": true
+    },
+    "qi": {
+      "value": 19,
+      "seen": true
+    },
+    "attune_slots": {
+      "value": 4,
+      "seen": true
+    },
+    "vigor": {
+      "value": 42,
+      "seen": true
+    },
+    "strain": {
+      "value": 18,
+      "seen": true
+    },
+    "focus": {
+      "value": 10,
+      "seen": true
+    },
+    "hobby_slots": {
+      "value": 1,
+      "seen": true
+    },
+    "life": {
+      "value": 24,
+      "seen": true
+    },
+    "strike": {
+      "seen": true
+    },
+    "guard": {
+      "seen": true
+    },
+    "speed": {
+      "seen": true
+    },
+    "hit": {
+      "seen": true
+    },
+    "dodge": {
+      "seen": true
+    },
+    "marrow_herbs": {
+      "value": 13,
+      "seen": true
+    },
+    "walking_staff": {
+      "value": 1,
+      "seen": true
+    },
+    "herb_poultice": {
+      "seen": true
+    },
+    "marrow_tonic": {
+      "seen": true
+    },
+    "pale_root": {
+      "value": 3,
+      "seen": true
+    },
+    "settling_draught": {
+      "seen": true
+    },
+    "marrow_draught": {
+      "seen": true
+    },
+    "clear_pill": {
+      "seen": true
+    },
+    "home_space": {
+      "value": 7,
+      "seen": true
+    },
+    "coin_earned": {
+      "value": 4427.500000000005,
+      "seen": true
+    },
+    "lore": {
+      "value": 6,
+      "exp": 1.2000000000000455,
+      "seen": true
+    },
+    "qi_sense": {
+      "value": 7,
+      "seen": true
+    },
+    "circulation": {
+      "value": 6,
+      "exp": 80,
+      "seen": true
+    },
+    "herbcraft": {
+      "value": 5,
+      "exp": 31,
+      "seen": true
+    },
+    "labour": {
+      "value": 7,
+      "seen": true
+    },
+    "stonework": {
+      "value": 2,
+      "exp": 120.42000000000007,
+      "seen": true
+    },
+    "composure": {
+      "value": 2,
+      "exp": 56.120000000000374,
+      "seen": true
+    },
+    "refining": {
+      "value": 7,
+      "exp": 120,
+      "seen": true
+    },
+    "foundation": {
+      "value": 1,
+      "seen": true
+    },
+    "waystation": {
+      "value": 1,
+      "seen": true
+    },
+    "route_records": {
+      "value": 1,
+      "seen": true
+    },
+    "unusual_chime": {
+      "value": 1,
+      "seen": true
+    },
+    "damaged_spur": {
+      "value": 1,
+      "seen": true
+    },
+    "slip_leaves": {
+      "value": 1,
+      "seen": true
+    },
+    "coffer": {
+      "value": 1,
+      "reps": 1,
+      "started": true,
+      "seen": true
+    },
+    "cottage": {
+      "value": 1,
+      "reps": 1,
+      "started": true,
+      "seen": true
+    },
+    "reading_desk": {
+      "value": 1,
+      "reps": 1,
+      "started": true,
+      "seen": true
+    },
+    "workbench": {
+      "value": 1,
+      "reps": 1,
+      "started": true,
+      "seen": true
+    },
+    "first_direction": {
+      "value": 1,
+      "reps": 1,
+      "ticks": 161,
+      "started": true,
+      "seen": true
+    },
+    "mill_work": {
+      "value": 30,
+      "reps": 30,
+      "started": true,
+      "seen": true,
+      "locked": true
+    },
+    "sort_herbs": {
+      "value": 311,
+      "reps": 311,
+      "started": true,
+      "seen": true
+    },
+    "gather_herbs": {
+      "value": 7,
+      "reps": 7,
+      "started": true,
+      "seen": true
+    },
+    "cut_timber": {
+      "value": 18,
+      "reps": 18,
+      "started": true,
+      "seen": true
+    },
+    "ferry_hauling": {
+      "value": 83,
+      "reps": 83,
+      "started": true,
+      "seen": true,
+      "locked": true
+    },
+    "rest": {
+      "ticks": 576,
+      "started": true,
+      "seen": true
+    },
+    "coin_pouch": {
+      "value": 1,
+      "reps": 1,
+      "started": true,
+      "seen": true
+    },
+    "shu_apprentice": {
+      "value": 1,
+      "reps": 1,
+      "started": true,
+      "seen": true
+    },
+    "jade_slip": {
+      "value": 1,
+      "reps": 1,
+      "started": true,
+      "seen": true
+    },
+    "field_kit": {
+      "value": 1,
+      "reps": 1,
+      "started": true,
+      "seen": true
+    },
+    "shu_reading": {
+      "seen": true
+    },
+    "breath_gathering": {
+      "value": 7,
+      "reps": 7,
+      "ticks": 213,
+      "started": true,
+      "seen": true
+    },
+    "fragment_notes": {
+      "value": 6,
+      "reps": 6,
+      "ticks": 160,
+      "started": true,
+      "seen": true
+    },
+    "channel_exercise": {
+      "value": 5,
+      "reps": 5,
+      "ticks": 95,
+      "started": true,
+      "seen": true
+    },
+    "steady_breath": {
+      "value": 68,
+      "reps": 68,
+      "started": true,
+      "seen": true
+    },
+    "carry_current": {
+      "value": 1,
+      "reps": 1,
+      "started": true,
+      "seen": true
+    },
+    "settle_breath": {
+      "locked": true
+    },
+    "current_carried": {
+      "seen": true
+    },
+    "settling": {
+      "value": 1,
+      "reps": 1,
+      "ticks": 96,
+      "started": true,
+      "seen": true
+    },
+    "channel_observe": {
+      "value": 1,
+      "reps": 1,
+      "ticks": 79,
+      "started": true,
+      "seen": true
+    },
+    "clear_channel": {
+      "value": 1,
+      "reps": 1,
+      "ticks": 120,
+      "started": true,
+      "seen": true
+    },
+    "fernhollow_observe": {
+      "seen": true
+    },
+    "sparring_bout": {
+      "seen": true
+    },
+    "hayloft": {
+      "seen": true,
+      "locked": true
+    },
+    "straw_pallet": {
+      "value": 1,
+      "reps": 1,
+      "started": true,
+      "seen": true
+    },
+    "cot": {
+      "seen": true
+    },
+    "practice_mat": {
+      "value": 1,
+      "reps": 1,
+      "started": true,
+      "seen": true
+    },
+    "herb_rack": {
+      "value": 1,
+      "reps": 1,
+      "started": true,
+      "seen": true
+    },
+    "garden_plot": {
+      "seen": true
+    },
+    "channel_arrangement": {
+      "value": 1,
+      "reps": 1,
+      "started": true,
+      "seen": true
+    },
+    "lean_to": {
+      "value": 1,
+      "reps": 1,
+      "started": true,
+      "seen": true,
+      "locked": true
+    },
+    "strongbox": {
+      "value": 1,
+      "reps": 1,
+      "started": true,
+      "seen": true
+    },
+    "ridge_outskirts": {
+      "value": 1,
+      "reps": 1,
+      "ticks": 120,
+      "started": true,
+      "seen": true
+    },
+    "body_teaching": {
+      "value": 1,
+      "reps": 1,
+      "started": true,
+      "seen": true
+    },
+    "sword_teaching": {
+      "seen": true
+    },
+    "earth_teaching": {
+      "seen": true
+    },
+    "formation_teaching": {
+      "seen": true
+    },
+    "sink_the_load": {
+      "value": 2,
+      "reps": 2,
+      "started": true,
+      "seen": true
+    },
+    "rise_with_load": {
+      "seen": true,
+      "locked": true
+    },
+    "load_frame": {
+      "value": 1,
+      "reps": 1,
+      "started": true,
+      "seen": true
+    },
+    "body_drills": {
+      "value": 1,
+      "reps": 1,
+      "ticks": 96,
+      "started": true,
+      "seen": true
+    },
+    "survey_marker": {
+      "value": 2,
+      "reps": 2,
+      "ticks": 180,
+      "started": true,
+      "seen": true
+    },
+    "dig_marrow_herbs": {
+      "value": 8,
+      "reps": 8,
+      "started": true,
+      "seen": true
+    },
+    "first_title": {
+      "value": 1,
+      "seen": true
+    },
+    "body_disciple": {
+      "value": 1,
+      "seen": true
+    },
+    "cross_body": {
+      "value": 1,
+      "reps": 1,
+      "ticks": 85,
+      "started": true,
+      "seen": true
+    },
+    "waystation_work": {
+      "value": 298,
+      "reps": 298,
+      "started": true,
+      "seen": true,
+      "locked": true
+    },
+    "trade_marrow_herbs": {
+      "value": 1,
+      "reps": 1,
+      "started": true,
+      "seen": true
+    },
+    "ridge_bandit": {
+      "seen": true
+    },
+    "craft_walking_staff": {
+      "value": 1,
+      "reps": 1,
+      "ticks": 60,
+      "started": true,
+      "seen": true
+    },
+    "craft_herb_poultice": {
+      "seen": true
+    },
+    "craft_marrow_tonic": {
+      "seen": true
+    },
+    "take_herb_poultice": {
+      "seen": true
+    },
+    "take_marrow_tonic": {
+      "seen": true
+    },
+    "landslide_rise": {
+      "value": 1,
+      "reps": 1,
+      "ticks": 150,
+      "started": true,
+      "seen": true
+    },
+    "bypass_known": {
+      "value": 1,
+      "seen": true
+    },
+    "terrace_bypass": {
+      "ticks": 240,
+      "started": true,
+      "seen": true
+    },
+    "reedmarket_work": {
+      "started": true
+    },
+    "chime_watch": {
+      "value": 1,
+      "reps": 1,
+      "ticks": 120,
+      "started": true,
+      "seen": true
+    },
+    "chime_timed": {
+      "value": 1,
+      "seen": true
+    },
+    "relay_test": {
+      "seen": true
+    },
+    "spur_clearing": {
+      "value": 1,
+      "reps": 1,
+      "ticks": 180,
+      "started": true,
+      "seen": true
+    },
+    "spur_reopened": {
+      "value": 1,
+      "seen": true
+    },
+    "pale_root_bank": {
+      "value": 2,
+      "reps": 2,
+      "ticks": 180,
+      "started": true,
+      "seen": true
+    },
+    "dig_pale_root": {
+      "value": 6,
+      "reps": 6,
+      "started": true,
+      "seen": true
+    },
+    "trade_pale_root": {
+      "started": true
+    },
+    "shu_three_leaves": {
+      "value": 1,
+      "reps": 1,
+      "started": true,
+      "seen": true
+    },
+    "spur_leaf": {
+      "value": 1,
+      "reps": 1,
+      "started": true,
+      "seen": true
+    },
+    "keeper_leaf": {
+      "seen": true
+    },
+    "conditioning_sheets": {
+      "value": 1,
+      "reps": 1,
+      "started": true,
+      "seen": true
+    },
+    "clay_vessel": {
+      "value": 1,
+      "reps": 1,
+      "started": true,
+      "seen": true
+    },
+    "refining_drills": {
+      "value": 7,
+      "reps": 7,
+      "ticks": 720,
+      "started": true,
+      "seen": true
+    },
+    "temper_the_marrow": {
+      "seen": true,
+      "locked": true
+    },
+    "carry_without_rest": {
+      "value": 10,
+      "reps": 10,
+      "started": true,
+      "seen": true
+    },
+    "draw_the_essence": {
+      "value": 3,
+      "reps": 3,
+      "started": true,
+      "seen": true
+    },
+    "temper_the_fire": {
+      "seen": true,
+      "locked": true
+    },
+    "scree_climb": {
+      "value": 2,
+      "reps": 2,
+      "ticks": 480,
+      "started": true,
+      "seen": true
+    },
+    "haul_the_stores": {
+      "ticks": 120,
+      "started": true,
+      "seen": true
+    },
+    "stock_the_still_room": {
+      "value": 1,
+      "reps": 1,
+      "ticks": 120,
+      "started": true,
+      "seen": true
+    },
+    "craft_settling_draught": {
+      "value": 5,
+      "reps": 5,
+      "ticks": 150,
+      "started": true,
+      "seen": true
+    },
+    "craft_marrow_draught": {
+      "value": 1,
+      "reps": 1,
+      "ticks": 30,
+      "started": true,
+      "seen": true
+    },
+    "craft_clear_pill": {
+      "value": 1,
+      "reps": 1,
+      "ticks": 60,
+      "started": true,
+      "seen": true
+    },
+    "craft_specimen_case": {
+      "seen": true
+    },
+    "take_settling_draught": {
+      "value": 4,
+      "reps": 4,
+      "started": true,
+      "seen": true
+    },
+    "take_marrow_draught": {
+      "value": 1,
+      "reps": 1,
+      "started": true,
+      "seen": true
+    },
+    "take_clear_pill": {
+      "value": 1,
+      "reps": 1,
+      "started": true,
+      "seen": true
+    },
+    "rooted_stance": {
+      "seen": true
+    },
+    "open_stance": {
+      "seen": true
+    },
+    "pressing_stance": {
+      "seen": true
+    },
+    "spur_pair": {
+      "seen": true
+    },
+    "ridge_room": {
+      "value": 1,
+      "reps": 1,
+      "started": true,
+      "seen": true
+    },
+    "second_direction": {
+      "value": 1,
+      "reps": 1,
+      "ticks": 300,
+      "started": true,
+      "seen": true
+    },
+    "second_title": {
+      "value": 1,
+      "seen": true
+    },
+    "pill_refiner": {
+      "value": 1,
+      "seen": true
+    }
+  },
+  "active": null,
+  "waiting": [],
+  "attuned": [
+    "steady_breath",
+    "sink_the_load",
+    "carry_without_rest",
+    "draw_the_essence"
+  ],
+  "events": [
+    "shu_takes_apprentice",
+    "wen_stops_counting",
+    "slip_acquired",
+    "lore_hand_found",
+    "qi_first_felt",
+    "shu_sees_method",
+    "qi_hollow_within_reach",
+    "flow_pattern",
+    "second_place",
+    "lu_hears",
+    "channel_hum",
+    "stones_in_the_floor",
+    "turn_holds",
+    "current_first_carried",
+    "lean_to_door",
+    "foundation_reached",
+    "traveller_channel",
+    "outskirts_texts",
+    "wen_hires_boy",
+    "cottage_moved_in",
+    "body_direction",
+    "keeper_board",
+    "body_arrival",
+    "chime_placed",
+    "spur_cleared",
+    "title_pill_refiner",
+    "bypass_seen"
+  ],
+  "capHits": [
+    "vigor:10",
+    "qi:2",
+    "qi:3",
+    "qi:4",
+    "qi:5",
+    "herbs:12",
+    "vigor:11",
+    "vigor:14",
+    "life:8",
+    "vigor:17",
+    "life:10",
+    "vigor:20",
+    "life:12",
+    "vigor:23",
+    "life:14",
+    "circulation:5",
+    "vigor:26",
+    "life:16",
+    "life:20",
+    "strain:11",
+    "life:22",
+    "vigor:27",
+    "vigor:30",
+    "life:24",
+    "vigor:31",
+    "coin:300",
+    "vigor:34",
+    "herbs:26",
+    "herbs:28",
+    "herbs:30",
+    "herbs:32",
+    "focus:8",
+    "herbs:34",
+    "qi_sense:7",
+    "qi:19",
+    "labour:7",
+    "walking_staff:1",
+    "vigor:42",
+    "refining:5",
+    "herbs:44",
+    "strain:16",
+    "strain:18",
+    "focus:10"
+  ],
+  "log": [
+    {
+      "id": 197,
+      "kind": "completion",
+      "text": "Herb Lore reaches level 1.",
+      "activitySeconds": 1464
+    },
+    {
+      "id": 198,
+      "kind": "discovery",
+      "text": "Herb rack is now known.",
+      "activitySeconds": 1464
+    },
+    {
+      "id": 199,
+      "kind": "purchase",
+      "text": "Herb rack is now part of your life.",
+      "activitySeconds": 1464
+    },
+    {
+      "id": 200,
+      "kind": "completion",
+      "text": "Take a First Direction: objective complete.",
+      "activitySeconds": 1625
+    },
+    {
+      "id": 201,
+      "kind": "story",
+      "text": "The load settles into the frame of the body itself. Body Disciple. The main approach no longer looks steep.",
+      "activitySeconds": 1625
+    },
+    {
+      "id": 202,
+      "kind": "discovery",
+      "text": "Body Disciple is now known.",
+      "activitySeconds": 1625
+    },
+    {
+      "id": 203,
+      "kind": "discovery",
+      "text": "Reinforced ascent of the main approach is now known.",
+      "activitySeconds": 1625
+    },
+    {
+      "id": 204,
+      "kind": "completion",
+      "text": "Rest: objective complete.",
+      "activitySeconds": 1630
+    },
+    {
+      "id": 205,
+      "kind": "cap",
+      "text": "Vigor has reached 34/34. A higher cap is possible through Circulation or Labour.",
+      "activitySeconds": 1630
+    },
+    {
+      "id": 206,
+      "kind": "completion",
+      "text": "Reinforced ascent of the main approach: objective complete.",
+      "activitySeconds": 1715
+    },
+    {
+      "id": 207,
+      "kind": "discovery",
+      "text": "Focus is now known.",
+      "activitySeconds": 1715
+    },
+    {
+      "id": 208,
+      "kind": "story",
+      "text": "Keeper Han writes your name in the ledger and turns it round so you can read what is on the board beside it: route records toward the basin, a chime that rings at dusk, a spur that ends at a slide, and the slip's other nine leaves. ‘Any of them,’ he says. ‘All of them, if you stay.’",
+      "activitySeconds": 1715
+    },
+    {
+      "id": 209,
+      "kind": "discovery",
+      "text": "Surviving route records toward the Cloudwell basin is now known.",
+      "activitySeconds": 1715
+    },
+    {
+      "id": 210,
+      "kind": "discovery",
+      "text": "An unusual chime is now known.",
+      "activitySeconds": 1715
+    },
+    {
+      "id": 211,
+      "kind": "discovery",
+      "text": "The damaged spur is now known.",
+      "activitySeconds": 1715
+    },
+    {
+      "id": 212,
+      "kind": "discovery",
+      "text": "The slip's other nine leaves is now known.",
+      "activitySeconds": 1715
+    },
+    {
+      "id": 213,
+      "kind": "story",
+      "text": "You reach the top with the load still on your back and set it down inside the waystation's door. The service passage opens with a shoulder; the way back is ordinary now.",
+      "activitySeconds": 1715
+    },
+    {
+      "id": 214,
+      "kind": "discovery",
+      "text": "Work the waystation stores is now known.",
+      "activitySeconds": 1715
+    },
+    {
+      "id": 215,
+      "kind": "discovery",
+      "text": "Trade marrow herbs is now known.",
+      "activitySeconds": 1715
+    },
+    {
+      "id": 216,
+      "kind": "discovery",
+      "text": "Climb the rise above the slide is now known.",
+      "activitySeconds": 1715
+    },
+    {
+      "id": 217,
+      "kind": "discovery",
+      "text": "Sit out the dusk chime is now known.",
+      "activitySeconds": 1715
+    },
+    {
+      "id": 218,
+      "kind": "discovery",
+      "text": "Clear the slide on the spur is now known.",
+      "activitySeconds": 1715
+    },
+    {
+      "id": 219,
+      "kind": "discovery",
+      "text": "Shu's three leaves is now known.",
+      "activitySeconds": 1715
+    },
+    {
+      "id": 220,
+      "kind": "discovery",
+      "text": "Keeper Han's leaf is now known.",
+      "activitySeconds": 1715
+    },
+    {
+      "id": 221,
+      "kind": "discovery",
+      "text": "The conditioning sheets is now known.",
+      "activitySeconds": 1715
+    },
+    {
+      "id": 222,
+      "kind": "discovery",
+      "text": "Haul Han's stores up from the landing is now known.",
+      "activitySeconds": 1715
+    },
+    {
+      "id": 223,
+      "kind": "discovery",
+      "text": "Rooted stance is now known.",
+      "activitySeconds": 1715
+    },
+    {
+      "id": 224,
+      "kind": "discovery",
+      "text": "Open stance is now known.",
+      "activitySeconds": 1715
+    },
+    {
+      "id": 225,
+      "kind": "discovery",
+      "text": "Pressing stance is now known.",
+      "activitySeconds": 1715
+    },
+    {
+      "id": 226,
+      "kind": "discovery",
+      "text": "Two men at the spur is now known.",
+      "activitySeconds": 1715
+    },
+    {
+      "id": 227,
+      "kind": "discovery",
+      "text": "A room at the waystation is now known.",
+      "activitySeconds": 1715
+    },
+    {
+      "id": 228,
+      "kind": "discovery",
+      "text": "Take the Second Direction is now known.",
+      "activitySeconds": 1715
+    },
+    {
+      "id": 229,
+      "kind": "completion",
+      "text": "Labour reaches level 4.",
+      "activitySeconds": 1715
+    },
+    {
+      "id": 230,
+      "kind": "cap",
+      "text": "Herbs has reached 26/26. A higher cap is possible through Herb Lore or a room at the waystation.",
+      "activitySeconds": 1745
+    },
+    {
+      "id": 231,
+      "kind": "completion",
+      "text": "Herb Lore reaches level 2.",
+      "activitySeconds": 1830
+    },
+    {
+      "id": 232,
+      "kind": "discovery",
+      "text": "Herb plot by the door is now known.",
+      "activitySeconds": 1830
+    },
+    {
+      "id": 233,
+      "kind": "cap",
+      "text": "Herbs has reached 28/28. A higher cap is possible through Herb Lore or Herb plot by the door or a room at the waystation.",
+      "activitySeconds": 1833
+    },
+    {
+      "id": 234,
+      "kind": "completion",
+      "text": "Haul Han's stores up from the landing: objective complete.",
+      "activitySeconds": 1835
+    },
+    {
+      "id": 235,
+      "kind": "completion",
+      "text": "Lore reaches level 4.",
+      "activitySeconds": 1866
+    },
+    {
+      "id": 236,
+      "kind": "completion",
+      "text": "Copy and compare the slip: objective complete.",
+      "activitySeconds": 1866
+    },
+    {
+      "id": 237,
+      "kind": "completion",
+      "text": "Lore reaches level 5.",
+      "activitySeconds": 1901
+    },
+    {
+      "id": 238,
+      "kind": "completion",
+      "text": "Copy and compare the slip: objective complete.",
+      "activitySeconds": 1901
+    },
+    {
+      "id": 239,
+      "kind": "discovery",
+      "text": "Fit Han's specimen case is now known.",
+      "activitySeconds": 1901
+    },
+    {
+      "id": 240,
+      "kind": "purchase",
+      "text": "The conditioning sheets is now part of your life.",
+      "activitySeconds": 1901
+    },
+    {
+      "id": 241,
+      "kind": "discovery",
+      "text": "Temper the marrow is now known.",
+      "activitySeconds": 1901
+    },
+    {
+      "id": 242,
+      "kind": "discovery",
+      "text": "Carry without rest is now known.",
+      "activitySeconds": 1901
+    },
+    {
+      "id": 243,
+      "kind": "discovery",
+      "text": "Climb the scree under load is now known.",
+      "activitySeconds": 1901
+    },
+    {
+      "id": 244,
+      "kind": "method",
+      "text": "Carry without rest is attuned.",
+      "activitySeconds": 1901
+    },
+    {
+      "id": 245,
+      "kind": "purchase",
+      "text": "Shu's three leaves is now part of your life.",
+      "activitySeconds": 1901
+    },
+    {
+      "id": 246,
+      "kind": "discovery",
+      "text": "Pale root is now known.",
+      "activitySeconds": 1901
+    },
+    {
+      "id": 247,
+      "kind": "discovery",
+      "text": "Settling draught is now known.",
+      "activitySeconds": 1901
+    },
+    {
+      "id": 248,
+      "kind": "discovery",
+      "text": "Marrow draught is now known.",
+      "activitySeconds": 1901
+    },
+    {
+      "id": 249,
+      "kind": "discovery",
+      "text": "Clear pill is now known.",
+      "activitySeconds": 1901
+    },
+    {
+      "id": 250,
+      "kind": "discovery",
+      "text": "Refining is now known.",
+      "activitySeconds": 1901
+    },
+    {
+      "id": 251,
+      "kind": "discovery",
+      "text": "Clay refining vessel is now known.",
+      "activitySeconds": 1901
+    },
+    {
+      "id": 252,
+      "kind": "discovery",
+      "text": "Steep, reduce, taste is now known.",
+      "activitySeconds": 1901
+    },
+    {
+      "id": 253,
+      "kind": "discovery",
+      "text": "Steep a settling draught is now known.",
+      "activitySeconds": 1901
+    },
+    {
+      "id": 254,
+      "kind": "discovery",
+      "text": "Drink a settling draught is now known.",
+      "activitySeconds": 1901
+    },
+    {
+      "id": 255,
+      "kind": "completion",
+      "text": "Herb Lore reaches level 3.",
+      "activitySeconds": 2000
+    },
+    {
+      "id": 256,
+      "kind": "cap",
+      "text": "Herbs has reached 30/30. A higher cap is possible through Herb Lore or Herb plot by the door or a room at the waystation.",
+      "activitySeconds": 2002
+    },
+    {
+      "id": 257,
+      "kind": "completion",
+      "text": "Climb the scree under load: objective complete.",
+      "activitySeconds": 2141
+    },
+    {
+      "id": 258,
+      "kind": "completion",
+      "text": "Herb Lore reaches level 4.",
+      "activitySeconds": 2213
+    },
+    {
+      "id": 259,
+      "kind": "cap",
+      "text": "Herbs has reached 32/32. A higher cap is possible through Herb Lore or Herb plot by the door or a room at the waystation.",
+      "activitySeconds": 2216
+    },
+    {
+      "id": 260,
+      "kind": "pause",
+      "text": "Climb the scree under load is waiting: Strain cannot sustain this activity.",
+      "activitySeconds": 2267
+    },
+    {
+      "id": 261,
+      "kind": "cap",
+      "text": "Focus has reached 8/8. A higher cap is possible through Take the Second Direction.",
+      "activitySeconds": 2268
+    },
+    {
+      "id": 262,
+      "kind": "completion",
+      "text": "Lore reaches level 6.",
+      "activitySeconds": 2308
+    },
+    {
+      "id": 263,
+      "kind": "completion",
+      "text": "Copy and compare the slip: objective complete.",
+      "activitySeconds": 2308
+    },
+    {
+      "id": 264,
+      "kind": "completion",
+      "text": "Qi Sense reaches level 4.",
+      "activitySeconds": 2320
+    },
+    {
+      "id": 265,
+      "kind": "completion",
+      "text": "Practise the slip's breath method: objective complete.",
+      "activitySeconds": 2320
+    },
+    {
+      "id": 266,
+      "kind": "completion",
+      "text": "Composure reaches level 2.",
+      "activitySeconds": 2440
+    },
+    {
+      "id": 267,
+      "kind": "completion",
+      "text": "Sit out the dusk chime: objective complete.",
+      "activitySeconds": 2440
+    },
+    {
+      "id": 268,
+      "kind": "story",
+      "text": "The chime rings once as the light goes, and this time you feel where: a standing stone up the ridge, struck by nothing you can see. It rings at the same breath of dusk every day.",
+      "activitySeconds": 2440
+    },
+    {
+      "id": 269,
+      "kind": "discovery",
+      "text": "Test the old relay stone is now known.",
+      "activitySeconds": 2440
+    },
+    {
+      "id": 270,
+      "kind": "completion",
+      "text": "Herb Lore reaches level 5.",
+      "activitySeconds": 2484
+    },
+    {
+      "id": 271,
+      "kind": "cap",
+      "text": "Herbs has reached 34/34. A higher cap is possible through Herb Lore or Herb plot by the door or a room at the waystation.",
+      "activitySeconds": 2487
+    },
+    {
+      "id": 272,
+      "kind": "completion",
+      "text": "Climb the scree under load: objective complete.",
+      "activitySeconds": 2554
+    },
+    {
+      "id": 273,
+      "kind": "completion",
+      "text": "Labour reaches level 5.",
+      "activitySeconds": 2570
+    },
+    {
+      "id": 274,
+      "kind": "completion",
+      "text": "Qi Sense reaches level 5.",
+      "activitySeconds": 2573
+    },
+    {
+      "id": 275,
+      "kind": "completion",
+      "text": "Practise the slip's breath method: objective complete.",
+      "activitySeconds": 2573
+    },
+    {
+      "id": 276,
+      "kind": "completion",
+      "text": "Qi Sense reaches level 6.",
+      "activitySeconds": 2601
+    },
+    {
+      "id": 277,
+      "kind": "completion",
+      "text": "Practise the slip's breath method: objective complete.",
+      "activitySeconds": 2601
+    },
+    {
+      "id": 278,
+      "kind": "completion",
+      "text": "Labour reaches level 6.",
+      "activitySeconds": 2605
+    },
+    {
+      "id": 279,
+      "kind": "completion",
+      "text": "Qi Sense reaches level 7.",
+      "activitySeconds": 2633
+    },
+    {
+      "id": 280,
+      "kind": "completion",
+      "text": "Practise the slip's breath method: objective complete.",
+      "activitySeconds": 2633
+    },
+    {
+      "id": 281,
+      "kind": "cap",
+      "text": "Qi Sense has reached 7/7. Nothing you know of raises this further.",
+      "activitySeconds": 2633
+    },
+    {
+      "id": 282,
+      "kind": "completion",
+      "text": "Practise the slip's breath method: objective complete.",
+      "activitySeconds": 2651
+    },
+    {
+      "id": 283,
+      "kind": "cap",
+      "text": "Qi has reached 19/19. Further ways to raise this cap have not been discovered.",
+      "activitySeconds": 2651
+    },
+    {
+      "id": 284,
+      "kind": "completion",
+      "text": "Practise the slip's breath method: objective complete.",
+      "activitySeconds": 2669
+    },
+    {
+      "id": 285,
+      "kind": "completion",
+      "text": "Practise the slip's breath method: objective complete.",
+      "activitySeconds": 2685
+    },
+    {
+      "id": 286,
+      "kind": "purchase",
+      "text": "Reading desk is now part of your life.",
+      "activitySeconds": 2685
+    },
+    {
+      "id": 287,
+      "kind": "purchase",
+      "text": "Clay refining vessel is now part of your life.",
+      "activitySeconds": 2685
+    },
+    {
+      "id": 288,
+      "kind": "completion",
+      "text": "Labour reaches level 7.",
+      "activitySeconds": 2685
+    },
+    {
+      "id": 289,
+      "kind": "cap",
+      "text": "Labour has reached 7/7. Nothing you know of raises this further.",
+      "activitySeconds": 2685
+    },
+    {
+      "id": 290,
+      "kind": "completion",
+      "text": "Practise the slip's breath method: objective complete.",
+      "activitySeconds": 2693
+    },
+    {
+      "id": 291,
+      "kind": "purchase",
+      "text": "Workbench is now part of your life.",
+      "activitySeconds": 2693
+    },
+    {
+      "id": 292,
+      "kind": "purchase",
+      "text": "A room at the waystation is now part of your life.",
+      "activitySeconds": 2693
+    },
+    {
+      "id": 293,
+      "kind": "completion",
+      "text": "Refining reaches level 1.",
+      "activitySeconds": 2709
+    },
+    {
+      "id": 294,
+      "kind": "completion",
+      "text": "Steep, reduce, taste: objective complete.",
+      "activitySeconds": 2709
+    },
+    {
+      "id": 295,
+      "kind": "discovery",
+      "text": "Draw the essence is now known.",
+      "activitySeconds": 2709
+    },
+    {
+      "id": 296,
+      "kind": "discovery",
+      "text": "Temper the fire is now known.",
+      "activitySeconds": 2709
+    },
+    {
+      "id": 297,
+      "kind": "method",
+      "text": "Carry the current is released.",
+      "activitySeconds": 2709
+    },
+    {
+      "id": 298,
+      "kind": "method",
+      "text": "Draw the essence is attuned.",
+      "activitySeconds": 2709
+    },
+    {
+      "id": 299,
+      "kind": "completion",
+      "text": "Cut a walking staff: objective complete.",
+      "activitySeconds": 2769
+    },
+    {
+      "id": 300,
+      "kind": "cap",
+      "text": "Walking staff has reached 1/1. Nothing you know of raises this further.",
+      "activitySeconds": 2769
+    },
+    {
+      "id": 301,
+      "kind": "cap",
+      "text": "Vigor has reached 42/42. A higher cap is possible through Circulation.",
+      "activitySeconds": 2821
+    },
+    {
+      "id": 302,
+      "kind": "completion",
+      "text": "Clear the slide on the spur: objective complete.",
+      "activitySeconds": 2949
+    },
+    {
+      "id": 303,
+      "kind": "story",
+      "text": "The last of the slide goes over the edge and the spur runs on to a survey shelter nobody has opened in years. There is a leaf of the slip on its shelf, and below the shelter a bank of pale root.",
+      "activitySeconds": 2949
+    },
+    {
+      "id": 304,
+      "kind": "discovery",
+      "text": "Dig the pale-root bank is now known.",
+      "activitySeconds": 2949
+    },
+    {
+      "id": 305,
+      "kind": "discovery",
+      "text": "The shelter's leaf is now known.",
+      "activitySeconds": 2949
+    },
+    {
+      "id": 306,
+      "kind": "purchase",
+      "text": "The shelter's leaf is now part of your life.",
+      "activitySeconds": 2949
+    },
+    {
+      "id": 307,
+      "kind": "completion",
+      "text": "Refining reaches level 2.",
+      "activitySeconds": 2981
+    },
+    {
+      "id": 308,
+      "kind": "completion",
+      "text": "Steep, reduce, taste: objective complete.",
+      "activitySeconds": 2981
+    },
+    {
+      "id": 309,
+      "kind": "discovery",
+      "text": "Reduce a marrow draught is now known.",
+      "activitySeconds": 2981
+    },
+    {
+      "id": 310,
+      "kind": "discovery",
+      "text": "Drink a marrow draught is now known.",
+      "activitySeconds": 2981
+    },
+    {
+      "id": 311,
+      "kind": "completion",
+      "text": "Refining reaches level 3.",
+      "activitySeconds": 3029
+    },
+    {
+      "id": 312,
+      "kind": "completion",
+      "text": "Steep, reduce, taste: objective complete.",
+      "activitySeconds": 3029
+    },
+    {
+      "id": 313,
+      "kind": "discovery",
+      "text": "Stock Han's still-room is now known.",
+      "activitySeconds": 3029
+    },
+    {
+      "id": 314,
+      "kind": "discovery",
+      "text": "Roll a clear pill is now known.",
+      "activitySeconds": 3029
+    },
+    {
+      "id": 315,
+      "kind": "discovery",
+      "text": "Take a clear pill is now known.",
+      "activitySeconds": 3029
+    },
+    {
+      "id": 316,
+      "kind": "completion",
+      "text": "Refining reaches level 4.",
+      "activitySeconds": 3093
+    },
+    {
+      "id": 317,
+      "kind": "completion",
+      "text": "Steep, reduce, taste: objective complete.",
+      "activitySeconds": 3093
+    },
+    {
+      "id": 318,
+      "kind": "completion",
+      "text": "Refining reaches level 5.",
+      "activitySeconds": 3173
+    },
+    {
+      "id": 319,
+      "kind": "completion",
+      "text": "Steep, reduce, taste: objective complete.",
+      "activitySeconds": 3173
+    },
+    {
+      "id": 320,
+      "kind": "cap",
+      "text": "Refining has reached 5/5. A higher cap is possible through Dig the pale-root bank or Take the Second Direction.",
+      "activitySeconds": 3173
+    },
+    {
+      "id": 321,
+      "kind": "completion",
+      "text": "Dig the pale-root bank: objective complete.",
+      "activitySeconds": 3263
+    },
+    {
+      "id": 322,
+      "kind": "discovery",
+      "text": "Dig pale root by hand is now known.",
+      "activitySeconds": 3263
+    },
+    {
+      "id": 323,
+      "kind": "cap",
+      "text": "Herbs has reached 44/44. A higher cap is possible through Herb Lore or Herb plot by the door.",
+      "activitySeconds": 3333
+    },
+    {
+      "id": 324,
+      "kind": "completion",
+      "text": "Dig the pale-root bank: objective complete.",
+      "activitySeconds": 3353
+    },
+    {
+      "id": 325,
+      "kind": "completion",
+      "text": "Steep a settling draught: objective complete.",
+      "activitySeconds": 3383
+    },
+    {
+      "id": 326,
+      "kind": "completion",
+      "text": "Steep a settling draught: objective complete.",
+      "activitySeconds": 3413
+    },
+    {
+      "id": 327,
+      "kind": "completion",
+      "text": "Steep a settling draught: objective complete.",
+      "activitySeconds": 3443
+    },
+    {
+      "id": 328,
+      "kind": "completion",
+      "text": "Stock Han's still-room: objective complete.",
+      "activitySeconds": 3563
+    },
+    {
+      "id": 329,
+      "kind": "completion",
+      "text": "Steep a settling draught: objective complete.",
+      "activitySeconds": 3593
+    },
+    {
+      "id": 330,
+      "kind": "completion",
+      "text": "Steep a settling draught: objective complete.",
+      "activitySeconds": 3623
+    },
+    {
+      "id": 331,
+      "kind": "completion",
+      "text": "Practise the slip's breath method: objective complete.",
+      "activitySeconds": 3631
+    },
+    {
+      "id": 332,
+      "kind": "completion",
+      "text": "Drink a settling draught wears off.",
+      "activitySeconds": 3683
+    },
+    {
+      "id": 333,
+      "kind": "cap",
+      "text": "Strain has reached 16/16. A higher cap is possible through Composure or Take the Second Direction.",
+      "activitySeconds": 3785
+    },
+    {
+      "id": 334,
+      "kind": "completion",
+      "text": "Take the Second Direction: objective complete.",
+      "activitySeconds": 3931
+    },
+    {
+      "id": 335,
+      "kind": "discovery",
+      "text": "Hobby is now known.",
+      "activitySeconds": 3931
+    },
+    {
+      "id": 336,
+      "kind": "story",
+      "text": "Heat, root and breath in the one vessel. Pill Refiner. Shu's eye for a bundle is an eye for a root: every level of Herb Lore holds a pale root more.",
+      "activitySeconds": 3931
+    },
+    {
+      "id": 337,
+      "kind": "discovery",
+      "text": "Pill Refiner is now known.",
+      "activitySeconds": 3931
+    },
+    {
+      "id": 338,
+      "kind": "method",
+      "text": "Steep, reduce, taste is taken up as a hobby.",
+      "activitySeconds": 3931
+    },
+    {
+      "id": 339,
+      "kind": "completion",
+      "text": "Reduce a marrow draught: objective complete.",
+      "activitySeconds": 3961
+    },
+    {
+      "id": 340,
+      "kind": "completion",
+      "text": "Drink a settling draught wears off.",
+      "activitySeconds": 3983
+    },
+    {
+      "id": 341,
+      "kind": "cap",
+      "text": "Strain has reached 18/18. A higher cap is possible through Composure.",
+      "activitySeconds": 4015
+    },
+    {
+      "id": 342,
+      "kind": "completion",
+      "text": "Roll a clear pill: objective complete.",
+      "activitySeconds": 4021
+    },
+    {
+      "id": 343,
+      "kind": "cap",
+      "text": "Focus has reached 10/10. Further ways to raise this cap have not been discovered.",
+      "activitySeconds": 4021
+    },
+    {
+      "id": 344,
+      "kind": "completion",
+      "text": "Rest: objective complete.",
+      "activitySeconds": 4021
+    },
+    {
+      "id": 345,
+      "kind": "completion",
+      "text": "Refining reaches level 6.",
+      "activitySeconds": 4123
+    },
+    {
+      "id": 346,
+      "kind": "completion",
+      "text": "Climb the rise above the slide: objective complete.",
+      "activitySeconds": 4171
+    },
+    {
+      "id": 347,
+      "kind": "story",
+      "text": "From the top of the rise the slide is a grey fan below you, and beyond it a terrace runs level along the ridge's flank as far as the eye follows. The ledger called it a day's carry to the market.",
+      "activitySeconds": 4171
+    },
+    {
+      "id": 348,
+      "kind": "discovery",
+      "text": "Trace the terrace to Reedmarket is now known.",
+      "activitySeconds": 4171
+    },
+    {
+      "id": 349,
+      "kind": "completion",
+      "text": "Drink a marrow draught wears off.",
+      "activitySeconds": 4261
+    },
+    {
+      "id": 350,
+      "kind": "completion",
+      "text": "Drink a settling draught wears off.",
+      "activitySeconds": 4283
+    },
+    {
+      "id": 351,
+      "kind": "completion",
+      "text": "Refining reaches level 7.",
+      "activitySeconds": 4347
+    },
+    {
+      "id": 352,
+      "kind": "completion",
+      "text": "Trace the terrace to Reedmarket: objective complete.",
+      "activitySeconds": 4411
+    },
+    {
+      "id": 353,
+      "kind": "story",
+      "text": "The terrace drops into reed beds and the reed beds into a street of stalls at the basin's edge. Reedmarket. A porter takes your bundles without asking where you came from, and pays.",
+      "activitySeconds": 4411
+    },
+    {
+      "id": 354,
+      "kind": "discovery",
+      "text": "Carry for the market porters is now known.",
+      "activitySeconds": 4411
+    },
+    {
+      "id": 355,
+      "kind": "discovery",
+      "text": "Trade pale root is now known.",
+      "activitySeconds": 4411
+    },
+    {
+      "id": 356,
+      "kind": "method",
+      "text": "You take the Rooted stance.",
+      "activitySeconds": 4411
+    }
+  ],
+  "lastStop": "Trace the terrace to Reedmarket: objective complete.",
+  "hobby": "refining_drills",
+  "effects": [
+    {
+      "id": "take_settling_draught",
+      "remaining": 300
+    }
+  ],
+  "stance": "rooted_stance"
+}

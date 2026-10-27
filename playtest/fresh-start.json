@@ -1,6 +1,6 @@
 {
   "format": "lowbridge-save",
-  "version": 6,
+  "version": 7,
   "savedAt": 1792364600000,
   "activitySeconds": 0,
   "wallRemainder": 0,
@@ -38,6 +38,9 @@
     },
     "lean_to": {
       "seen": true
+    },
+    "first_title": {
+      "seen": true
     }
   },
   "active": null,
@@ -45,5 +48,8 @@
   "attuned": [],
   "events": [],
   "capHits": [],
-  "log": []
+  "log": [],
+  "hobby": null,
+  "effects": [],
+  "stance": null
 }
