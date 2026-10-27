@@ -9,7 +9,7 @@ This folder **extends** the two earlier studies rather than replacing them:
 
 What this folder adds that neither had: a **hands-on mid-game view** (a T4 save loaded into the live testing build), the **complete testing-build data** (82 files, 3,389 records), the **game's own mechanics glossary**, and per-system pages written as a reference rather than as a review response.
 
-A second reference sits beside this one: `../hundred-days-reference/` catalogues **Hundred Days / 筑基**, a Chinese cultivation idle game forked from Arcanum's engine. Its design rules are numbered 39–69, continuing the 1–38 in `12-design-rules.md`.
+A second reference sits beside this one: `../hundred-days-reference/` catalogues **Hundred Days / 筑基**, a Chinese cultivation idle game forked from Arcanum's engine. Its design rules are numbered 39–69, continuing the 1–38 in `12-design-rules.md`. Rules 70–74, under "G. Layer alignment" in `12-design-rules.md`, were added on 27 October 2026 from a layered craft critique of both references, so the numbered rules now run 1–74.
 
 ## Sources
 
@@ -38,7 +38,7 @@ Three versions are in play (0.12.0.0 wiki, 0.12.3.1 pinned source in the earlier
 | [09 Spells and spellcraft](09-spells-and-spellcraft.md) | Spell schema, schools, memorize vs quickslot, spell-list levels, spellcraft rules. |
 | [10 Automation and time](10-automation-and-time.md) | Action slots, Goals/Hobbies/Waiting, Autofocus, stored time, fast-forward, chronomancy, the Hall (prestige). |
 | [11 Mid-game snapshot: Wizrobe](11-midgame-snapshot-wizrobe.md) | What a real T4 save looks like in numbers; what it says about pacing and shape. |
-| [12 Design rules](12-design-rules.md) | The rules the reference implies, what to copy, what to beat. |
+| [12 Design rules](12-design-rules.md) | The rules the reference implies, what to copy, what to beat: 1–38, plus 70–74 on layer alignment across both references. |
 
 ## Generated and raw material
 

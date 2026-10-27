@@ -54,7 +54,7 @@ One block per ADR in `design/decisions/`. **Status** and **Date** are quoted fro
 - **Status:** Accepted bank accrual, one-for-one exchange, prompt spending, and retry rules; exact capacity, presentation, and implementation remain in design
 - **Date:** 18 October 2026
 - **Source:** `design/decisions/0007-away-time-and-acceleration.md`
-- **Code shows:** Bank accrual while idle, one-for-one acceleration (`src/engine.ts:677-733`). Its "pauses at a meaningful discovery" clause is **not implemented** (see issues)
+- **Code shows:** Bank accrual while idle, one-for-one acceleration (`src/engine.ts:782-837`). Its "pauses at a meaningful discovery" clause is not implemented by design: ADR 0027 amends it, and discoveries never stop activity
 - **Evidence:** `design/decisions/0007-away-time-and-acceleration.md:7`
 - **Certainty:** [HIGH]
 
@@ -157,10 +157,10 @@ One block per ADR in `design/decisions/`. **Status** and **Date** are quoted fro
 - **Certainty:** [HIGH]
 
 ### ADR-0022 — Chore tempo
-- **Status:** Accepted tempo vocabulary: instant Vigor-paid chores kept as they are, plus one sustained `fill` earner per good, the one-slot and waiting-list rules, and the sustainability guards
-- **Date:** 20 October 2026
+- **Status:** Accepted tempo vocabulary: instant Vigor-paid chores, the one-slot and waiting-list rules, and the sustainability guards. Amended 27 October 2026: chapter one's sustained earners became passive rates; loop-scaled earners belong to later chapters
+- **Date:** 20 October 2026, amended 27 October 2026
 - **Source:** `design/decisions/0022-chore-tempo.md`
-- **Code shows:** One slot, waiting list, `autoStart` rest, `fill`; tempo from `length` (`src/engine.ts:557-606`, `src/engine.ts:764`)
+- **Code shows:** One slot, waiting list, `autoStart` Rest filling Vigor and Life; tempo from `length`; passive coin and herb rates on `mill_work` at 5 and `shu_apprentice` (`src/engine.ts:641-700`, `src/engine.ts:869`, `src/data/opening.json:7`, `src/data/opening.json:53`)
 - **Certainty:** [HIGH]
 
 ### ADR-0023 — Techniques and attunement
@@ -186,11 +186,18 @@ One block per ADR in `design/decisions/`. **Status** and **Date** are quoted fro
 - **Evidence:** `design/decisions/0025-lifespan-and-checkpoints-cut.md:23`
 - **Certainty:** [HIGH]
 
-### ADR-0026 — Combat as deterministic exchanges
-- **Status:** Accepted for chapter 1 and the ridge; every number is content and provisional
-- **Date:** 21 October 2026
+### ADR-0026 — Combat as rolled swings on Speed clocks
+- **Status:** Accepted for chapter 1 and the ridge; every number is content and provisional. Amended 27 October 2026: exact win chance with graded verdicts and a flip hint; Rest restores Life; a finished fight survives automatic starts
+- **Date:** 21 October 2026, amended 27 October 2026
 - **Source:** `design/decisions/0026-combat-exchanges.md`
-- **Code shows:** `fight()` with Life/Strike/Guard (`src/engine.ts:984-1017`); played one exchange at a time on stats captured at entry, and saved mid-fight (`src/engine.ts:1062-1079`, `src/persistence.ts:109-123`)
+- **Code shows:** `fight()` projection with `winChance`, `verdict`, `verdictText` and `flip` (`src/engine.ts:1084-1172`, `src/engine.ts:1760-1764`); swings on stats captured at entry, saved mid-fight (`src/engine.ts:1180`, `src/persistence.ts:109-123`)
+- **Certainty:** [HIGH]
+
+### ADR-0027 — Locks at payment, confirmations that name what closes, and stops
+- **Status:** Accepted
+- **Date:** 27 October 2026
+- **Source:** `design/decisions/0027-locks-at-payment-and-stops.md`
+- **Code shows:** Timed locks applied in `payEntry` (`src/engine.ts:1283-1292`); `warnText` and `removeWarning`; discoveries logged without stopping, `pause` on events rejected (`scripts/validate.ts:171`)
 - **Certainty:** [HIGH]
 
 ## Design rationale visible in code

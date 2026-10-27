@@ -1,6 +1,6 @@
 ADR 0024: Route keys
 
-Status: Accepted key vocabulary: tag counters, the records that carry them, and the rule that later content reads keys rather than record ids. The opening's four keys are named; later slices' keys are open. Date: 20 October 2026. Basis: the prior-review complaints recorded in the design-intent report §3.2 and §3.6, and rules 1, 2, 3, 11, 15, 30, 36 and 38 of [`research/arcanum-reference/12-design-rules.md`](../../research/arcanum-reference/12-design-rules.md).
+Status: Accepted key vocabulary: tag counters, the records that carry them, and the rule that later content reads keys rather than record ids. The opening's four keys and the ridge's two are named; later slices' keys are open. Date: 20 October 2026. Amended 27 October 2026 after the design audits: the ridge reads the school keys, adds two, and gives the body key a third carrier; see **Amendment** below. Basis: the prior-review complaints recorded in the design-intent report §3.2 and §3.6, and rules 1, 2, 3, 11, 15, 30, 36 and 38 of [`research/arcanum-reference/12-design-rules.md`](../../research/arcanum-reference/12-design-rules.md).
 
 **Context.** Two complaints come from the same habit of gating on raw record ids. The adversarial review's first finding was that "a 'fully specified first slice' (`Part C`) that soft-locks at Minute 4 cannot be handed to an implementer": `fragment_notes` reached back through `shu_reading` to `lore ≥ 2`, and `channel_return` existed with nothing reading it (§3.2). The independent review's verdict was that "on both routes, the '3 of 4 supporting preparations' collapses to one real choice" (§3.6). Both were fixed by hand, and both can recur the moment a second module is authored, because nothing in the grammar said what a later record is allowed to look at. A B2 teaching that wants "someone who learned the channel's way" had no way to ask except by naming `clear_channel`, which welds the next slice to this one's record list.
 
@@ -10,20 +10,24 @@ Status: Accepted key vocabulary: tag counters, the records that carry them, and 
 - Rule 1: **one record vocabulary**, *copy*. Rule 2: **visibility ≠ actionability**, *copy*. Rule 36: **play generates documentation**, *copy at the scale that fits*.
 - Rule 15: **hidden consequences early**, *beat: keep the consequence, surface the warning*. Rule 38: **irreversible actions confirm via `warn`**, *beat*.
 
-**Decision.** A **route key** is a tag counter. A record lists the keys it carries in `tags`; the engine keeps `g.t_<tag>` equal to the number of owned records carrying that tag, and the `t_` prefix is reserved for exactly this. Each key is also a record of its own, so it has a name and a line of description, appears among the player's Methods when it is first held, and can be pointed at in a requirement the player can read (rules 1, 2 and 36).
+**Decision.** A **route key** is a tag counter. A record lists the keys it carries in `tags`; the engine keeps `g.t_<tag>` equal to the number of owned records carrying that tag, and the `t_` prefix is reserved for exactly this. Each key also has a name and a line of description, so it appears in the player's account of their methods when it is first held, and can be pointed at in a requirement the player can read (rules 1, 2 and 36).
 
 **Later content reads keys, not record ids.** A gate that wants to know what a player learned asks `g.t_school_body >= 1`, never `g.clear_channel > 0`. Within one module, gating on a record id stays normal and useful; across a module boundary, the key is the seam. This is the promise a later author can keep without reading the earlier module, and §3.2's deadlock is exactly what happens when it is broken.
 
-**The opening's four keys** divide along two axes, so a later record can ask either question:
+**The opening's four keys** divide along two axes, so a later record can ask either question. The ridge adds two more school keys, one for each direction whose school the opening did not teach:
 
 | Key | Means | Carried by |
 |---|---|---|
 | `t_channel` | reads the missing turn as a current to be **carried** | Carry the current |
 | `t_hollow` | reads the missing turn as a current to be **let settle** | Settle the breath |
-| `t_school_earth` | a discipline that comes from stone and moving ground | Carry the current |
-| `t_school_body` | a discipline that comes from breath and the frame that carries it | Steady the breath, Settle the breath |
+| `t_school_earth` | a discipline that comes from stone and moving ground | Carry the current; *Read the grain* (ridge) |
+| `t_school_body` | a discipline that comes from breath and the frame that carries it | Steady the breath, Settle the breath; *Sink the breath under the load* (ridge) |
+| `t_school_sword` | a discipline that meets what comes up the path with an edge of intent | *Cut by intent* (ridge) |
+| `t_school_formation` | a discipline that holds a small place still inside a fixed layout | *Fix a layout* (ridge) |
 
-A key counts up to two carriers, so a later method can reinforce a reading rather than only confirming it.
+A technique counts toward its keys once it has been used. The counter has no ceiling: the body key has three carriers, so a later gate can ask for two of them and a method can reinforce a reading rather than only confirming it.
+
+**The ridge reads the keys.** Each First Direction's outskirts sign is a school-key count, never a record id: the body direction asks `g.t_school_body >= 2`, the sword, earth and formation directions ask for one method of their school. The leaf-eight reading also prices the ridge: the body teaching costs a bundle less with `t_hollow`, the earth teaching a bundle less with `t_channel`; the hollow reading makes ridge outings drain Strain 20% slower, and lets Rest teach Composure. Every key a method carries is now read by something.
 
 **Keys are carried by methods, so committing to one is the choice.** Because a key rides on a technique, holding it means attuning it ([ADR 0023](0023-techniques-and-attunement.md)), and the two readings of leaf eight `lock` each other with a `warn`. The route a player took stops being a flag they happened to trip and becomes a method they chose to hold and could have held differently. That is what §3.6 asked for, and which keeps rule 15's consequence while surfacing it (rule 38's *beat*). *Steady the breath* carries only a school key and no reading, so both routes share a foundation while differing in what they commit to.
 
@@ -33,4 +37,6 @@ A key counts up to two carriers, so a later method can reinforce a reading rathe
 
 **Supersessions.** Formalises the design plan §0 dispositions for F1 (the Lore deadlock and the removal of `channel_return`) as a rule rather than a fix, and amends design plan Part C.3, where the routes' discoveries become keys carried by methods. Keeps the owner decision confirmed 18 October 2026 that the channel and hollow readings retain separate acquisition routes through B2; the `lock` between the two techniques makes that structural rather than conventional. Does not change [ADR 0003](0003-opening-anchors.md)'s route fiction.
 
-Still open: the keys each later slice grants, whether a key should ever be read as an exclusion (`g.t_hollow == 0`, the reference's "never studied" shape), and whether the two-carrier ceiling is right once a second module exists.
+**Amendment, 27 October 2026.** The audits (ISS-004) found the school keys carried but never read. The ridge now reads all six keys as above, adds the sword and formation keys with their carriers, and gives the body key a third carrier, which retires the "up to two carriers" ceiling this decision first stated. Keys are named and described in `routeKeys` in `src/content.ts` rather than as records; Character's **Route keys** section and each method's details show them by name, and `bun run validate` fails a carried key without a name or a named key nothing carries.
+
+Still open: the keys each later slice grants; whether a key should ever be read as an exclusion (`g.t_hollow == 0`, the reference's "never studied" shape); and the remaining checks of the Consequences above (every key read, no gate naming another module's record id), which the validator does not yet run while ridge gates still name opening furnishings.

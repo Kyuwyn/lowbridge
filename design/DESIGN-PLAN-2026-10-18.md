@@ -56,7 +56,7 @@ Seventeen rules. Everything else is content.
 6. **Advancement closes what the fiction removes.** A job is closed when a better one is taken up; a home tier when the player moves; a class choice closes its same-tier rivals. Earlier *places* stay open and gain new uses (ADR 0006/0012). No revision of earlier classes. No hidden quizzes.
 7. **One open-entry fallback, shaped like Arcanum's mage line.** Golden Cauldron is enterable from any history, gated on the shared family (`Lore ≥ 8`) and an escalating herb/coin bill; newcomers reach Alchemy 1 (broad: +1 to every open family cap, utility preparations); Pill Refiner → Golden Cauldron reaches Alchemy 2 (the deep recipes). It never raises a line's exclusive family above 5.
 8. **Repetition has a curve inside the cap.** Work tasks improve at reachable rep thresholds and some sour late.
-9. **Tempo is `length`, and every good has both.** No `length` is *instant*: the click pays and lands, never taking the slot. A `length` in seconds is *timed*: its entry bill is paid once, so stopping keeps the progress and restarting does not pay twice. `length: continuous` is *perpetual*. Chores stay instant and Vigor-paid with their `at` curves (cap 10; +0.05/s on its own, +0.2/s more while resting), and clicking them remains the best-paying tempo. Each good also has one sustained `fill` earner (`mill_shift` for coin, `rack_tending` for herbs): continuous, holding the slot, earning at about **two-thirds of attentive click income**, and ending when the good it fills hits its cap, so the opening has an income floor that does not depend on click rate. One sustained activity at a time; the one it displaces goes to the front of a six-deep waiting list; when a run ends the slot takes the next item, and Rest `autoStart`s into an empty one and ends at full Vigor. A run that cannot pay one more second of its drain is refused rather than started, and a run carrying an `encounter` is refused unless the whole reserve is there. There is no food meter. Qi is a reservoir: techniques spend it, breath-gathering and arrangements return it. `boost` names a held flag that makes the next timed run faster and spends it. The time bank is 1:1 (accepted), starts at **1 hour**, and is a capped resource raised by progression. ([ADR 0022](decisions/0022-chore-tempo.md), replacing the 18 October rule 9.)
+9. **Tempo is `length`, and income does not need the slot.** No `length` is *instant*: the click pays and lands, never taking the slot. A `length` in seconds is *timed*: its entry bill is paid once, so stopping keeps the progress and restarting does not pay twice, and its `lock` applies when that bill is paid ([ADR 0027](decisions/0027-locks-at-payment-and-stops.md)). `length: continuous` is *perpetual*. Chores stay instant and Vigor-paid with their `at` curves (cap 10; +0.2/s on its own, +0.35/s more while resting), and clicking them remains the best-paying tempo. Chapter one has no sustained earner: a small passive rate rides on the same unlocks (Wen's wage after the fifth sack, Shu's share once apprenticed), runs whether or not the slot is busy and while away, and so gives the opening an income floor that does not depend on click rate. Sustained earners return in later chapters, where loops completed raise their yield through `at`/`every` and make them the idle filler. One sustained activity at a time; the one it displaces goes to the front of a six-deep waiting list; when a run ends the slot takes the next item, and Rest `autoStart`s into an empty one and ends when Vigor and Life are full. A run that cannot pay one more second of its drain is refused rather than started, and a run carrying an `encounter` is refused unless the whole reserve is there. There is no food meter. Qi is a reservoir: techniques spend it, breath-gathering and arrangements return it. `boost` names a held flag that makes the next timed run faster and spends it. The time bank is 1:1 (accepted), starts at **1 hour**, and is a capped resource raised by progression. ([ADR 0022](decisions/0022-chore-tempo.md) as amended 27 October, replacing the 18 October rule 9.)
 10. **A setback costs time and used preparation, never the journey.** A failed attempt (an ordinary obstacle, a defining trial, a fight) keeps every discovery, key, level and point of attunement and returns the player to the choice. Nothing ends a run: there is no age, no lifespan, no checkpoint and no retry. ([ADR 0025](decisions/0025-lifespan-and-checkpoints-cut.md), replacing the 18 October rule 10.)
 11. **See it before you can do it.** `require` shows a record; `need` + `needtext` says what is missing. Every cap hit posts one line naming the raiser if it is visible, and every patched per-level value names what patched it.
 12. **Expeditions have a strain budget.** From B2, sites carry strain gauges (Arcanum's stressors): a site run drains one or two gauges; rest and techniques restore them; an emptied gauge ends the outing with its discoveries kept. Cloudwell's three stages are strain events.
@@ -224,18 +224,19 @@ Practice runway: level *n* needs 60·*n* seconds of continuous practice at base 
 | cut_timber | field_kit | vigor 4 | timber +2 | — |
 | ferry_hauling | foundation | vigor 3 | coin +6; first run closes mill_work ("Wen hires a boy") | 20: +2 |
 
-**Sustained earners** (rule 9: continuous, one per good, holding the slot and ending when the good they `fill` reaches its cap)
+**Passive income** (rule 9 as amended: no sustained earner in chapter one; small rates that never take the slot and accrue while away)
 
-| id | fills | require | pays |
+| source | good | from | pays |
 |---|---|---|---|
-| mill_shift "Take a shift at the mill" | coin | — | about ⅔ of attentive mill_work income per second |
-| rack_tending "Tend Shu's racks" | herbs | — | about ⅔ of attentive sort_herbs income per second |
+| Wen's wage (`mill_work` at 5 sacks) | coin | the fifth sack | +0.05/s, a coin every twenty seconds |
+| Shu's racks (`shu_apprentice`) | herbs | apprenticeship | +0.02/s, a bundle every fifty seconds |
+| herb rack, herb plot | herbs | lean-to furnishings | +0.005/s and +0.01/s |
 
-Clicking a chore stays the best-paying tempo; the earners are the unattended floor, so the slice's measured pace stops depending on how fast the route script clicks. Content owns both rates and keeps them near two-thirds as the chores' `at` curves raise what a click is worth. A sustained activity that cannot pay one more second of its drain is refused rather than started, and the activity it displaces waits at the front of the list rather than being lost.
+Clicking a chore stays the best-paying tempo; the passive rates are the unattended floor, so the slice's measured pace stops depending on how fast the route script clicks. A sustained activity that cannot pay one more second of its drain is refused rather than started, and the activity it displaces waits at the front of the list rather than being lost.
 
 | id | require | need (needtext) | effect |
 |---|---|---|---|
-| rest "Rest" (continuous) | — | Vigor below cap ("You are rested.") | Vigor +0.2/s on top of the +0.05/s any activity gives; stops at full Vigor by default |
+| rest "Rest" (continuous) | — | Vigor or Life below cap ("Vigor and Life are already full.") | Vigor +0.35/s on top of its own +0.2/s; Life max/300 per second (empty to full in about five minutes); Composure experience once the hollow's reading is held; stops when both are full |
 
 **Trade** (instant)
 
@@ -322,13 +323,13 @@ This table gives the order of beats and is not a schedule. It has never carried 
 
 | # | beat |
 |---|---|
-| 1 | Hayloft. Three actions: Haul sacks (2 vigor → 3 coin), Sort herbs (1 vigor → 1 bundle), Rest. Vigor 10/10, coin 0/20. The first sort reveals the herb trades, and the mill shift and the racks offer the same two goods without the clicking. |
+| 1 | Hayloft. Three actions: Haul sacks (2 vigor → 3 coin), Sort herbs (1 vigor → 1 bundle), Rest. Vigor 10/10, coin 0/20. The first sort reveals the herb trades; the fifth sack puts you on Wen's wage, which then comes in on its own. |
 | 2 | Third sort: Granny Shu mentions the slip (6 coin). Slip bought: Lore 0/3, Qi Sense 0/3, qi 0/2 appear; Breath-gathering and Copy-the-slip appear. |
 | 3 | Lore 1: field kit and herb rack visible. Qi Sense 1: gather herbs and the channel walk appear. |
 | 4 | Qi Sense 2: the hollow appears. Qi Sense 3/3 is the **wall**: "the next character is missing." Two leads. |
 | 5 | Channel: walk (flow pattern, cap → 4), work for the pouch and kit, clear the fall (bounty), set the stones (Circulation opens 0/3, and *Carry the current* becomes learnable). Hollow: sit three dusks (cap → 5), steady attention (Circulation opens 0/3, faint trace on the first level earned, and *Settle the breath* becomes learnable). |
 | 6 | The first real commitment: a place in Attunement, and which reading of leaf eight goes into it. The other closes, with a warning first. |
-| 7 | Circulate to 2; "Lay the foundation" shows the core and 3 of 4; fill any gap. Settle. Foundation, the road onward, decision pause. |
+| 7 | Circulate to 2; "Lay the foundation" shows the core and 3 of 4 with the bill as held/needed rows; fill any gap. Settle. Foundation: a banner lists what it changed and the road onward opens; nothing pauses. |
 
 ### C.6 Interface
 
@@ -377,7 +378,7 @@ Run on every content change, before any human plays:
 6. **Compounding**: every modifier and patch path names a record that exists; every family pays at least one effect per level; every chapter after the first patches an earlier one's payout.
 7. **Keys**: every `t_` key a gate reads is carried by a reachable record; every key a record carries is read by something; no gate names another module's record id.
 8. **Attunement**: every supported history can reach the number of places its gates ask for, and a locked pair never leaves a history with no second method.
-9. **Fights**: swings follow Speed and every landed blow follows Hit, Dodge, Strike and Guard under scripted rolls; the sparring bout projects a likely loss with the bare method and a likely win with a second held, and with every swing landing it is won in ten seconds; route fights use a fixed seed so timings repeat.
+9. **Fights**: swings follow Speed and every landed blow follows Hit, Dodge, Strike and Guard under scripted rolls; the projected win chance matches the engine's own rolls and the verdict bands fall at 95%, 75% and 50%; the sparring bout is a likely loss with the bare method and a likely win with a second held, and with every swing landing it is won in ten seconds; route fights use a fixed seed so timings repeat.
 
 Playtest questions, ranked:
 
@@ -386,7 +387,7 @@ Playtest questions, ranked:
 3. Objective stops with an empty bank across a simulated return visit: clean?
 4. Foundation's bill, lock (mill work closing when ferry hauling is taken) and new leads: a threshold, or a loss?
 5. Is `needtext` enough to keep a stuck player from leaving?
-6. With a sustained earner beside every chore, does anyone still click? Does the player who does feel rewarded rather than obliged?
+6. With a wage that runs on its own, does anyone still click? Does the player who does feel rewarded rather than obliged?
 7. Is the attunement place a real commitment? Does closing one reading of leaf eight land as a decision rather than a lockout?
 8. With nothing able to end a journey, is the cap-and-bill economy enough pressure to make a commitment feel consequential ([ADR 0025](decisions/0025-lifespan-and-checkpoints-cut.md))?
 
@@ -405,20 +406,22 @@ Playtest questions, ranked:
 | Bank cap "a few days" | 1 h at start, raised by progression | Arcanum `offlinetime.max 3600`; the cap is a reward |
 | Five B3 milestones as authored projects | Same five, as pointers into existing records | Arcanum's tier quests are pointers |
 | ADR 0003 "no energy meter" | Kept for food; Vigor is a small stamina meter for chores only (owner, 19 Oct); qi is a continuous reservoir with run/rate | The rate economy is where homes and arrangements become felt; Vigor gives instant chores a cost without a timer |
-| Rule 9 "every task is timed" (this plan, 18 Oct) | **Historical.** Replaced the same day by instant chores, then superseded on 20 Oct by [ADR 0022](decisions/0022-chore-tempo.md): tempo is `length`, instant chores are kept, each good gains one sustained `fill` earner, and the slot keeps a waiting list | Timed chores made the opening a wait with nothing to click; chores that could only be clicked made the measured pace a property of the route script |
+| Rule 9 "every task is timed" (this plan, 18 Oct) | **Historical.** Replaced the same day by instant chores, then superseded on 20 Oct by [ADR 0022](decisions/0022-chore-tempo.md): tempo is `length`, instant chores are kept, each good gained one sustained `fill` earner, and the slot keeps a waiting list. On 27 Oct the earners gave way to passive rates (ADR 0022 amendment) | Timed chores made the opening a wait with nothing to click; chores that could only be clicked made the measured pace a property of the route script; the earners went unused on every direct route |
 | ADR 0016 roster (5 at B3) | 8: adds Blade Body (Sword-Body bridge), Deep Listener (pure Earth), Array Keeper (pure Formation) | Every line must support "three from one line" (Arcanum's stated optimal play); Sword starters had one B3 route |
 | ADR 0017 roster (7 at B4) | 9: adds Vein Adept (pure Earth), Grand Array Adept (pure Formation) | Same; each is one key record into a module that exists anyway |
 | ADR 0015 "mastery totals are qualifications, not trainable levels" | Kept for tags; techniques are the trainable layer beneath them, and class gates name a technique | Arcanum gates classes on skills (Necromancer: `reanimation ≥ 7`), not on tag counts alone |
 
-**Decisions recorded 20 October 2026 (ADRs 0021-0025)**
+**Decisions recorded 20 October 2026 (ADRs 0021-0025), with 0026 (21 October) and 0027 (27 October)**
 
 | ADR | Decision | What it changes here |
 |---|---|---|
 | [0021: Compounding vocabulary](decisions/0021-compounding-vocabulary.md) | Six derived fields rebuilt from authoritative history; four contribution sources with their scales; `X.mod.Y` patches what a record pays and is folded in before it pays, so it repays earned levels | Adds Part A rule 14; amends rule 1, Part D's grammar and Part E check 6 |
-| [0022: Chore tempo](decisions/0022-chore-tempo.md) | Tempo is `length`; chores stay instant and Vigor-paid, plus one sustained `fill` earner per good at ~⅔ of attentive click income; one slot with a six-deep waiting list and an `autoStart` Rest; a run that cannot sustain itself is refused | **Supersedes Part A rule 9**; amends rule 13 (the waiting list is not a B2 reward), Part C.3, C.5, C.6 and Part E check 4 |
-| [0023: Techniques and attunement](decisions/0023-techniques-and-attunement.md) | Learn, attune, use: a technique must hold a scarce place in Attunement before it can be used, and the two readings of leaf eight lock each other with a warning | Adds Part A rule 15; amends rule 2 and B.1, adds Part C.3's Methods table and Foundation's fourth pointer, and Part E check 8 |
-| [0024: Route keys](decisions/0024-route-keys.md) | History crosses a module boundary as a `t_` tag counter carried by a method; later content reads keys, never another module's record ids | Adds Part A rule 16; amends Part C.3 and Part E check 7 |
+| [0022: Chore tempo](decisions/0022-chore-tempo.md) | Tempo is `length`; chores stay instant and Vigor-paid; one slot with a six-deep waiting list and an `autoStart` Rest; a run that cannot sustain itself is refused. Amended 27 Oct: chapter one's earners become passive rates; loop-scaled earners belong to later chapters | **Supersedes Part A rule 9**; amends rule 13 (the waiting list is not a B2 reward), Part C.3, C.5, C.6 and Part E check 4 |
+| [0023: Techniques and attunement](decisions/0023-techniques-and-attunement.md) | Learn, attune, use: a technique must hold a scarce place in Attunement before it can be used, and the two readings of leaf eight lock each other with a warning. Amended 27 Oct: each ridge direction teaches one method, filling Foundation's third place | Adds Part A rule 15; amends rule 2 and B.1, adds Part C.3's Methods table and Foundation's fourth pointer, and Part E check 8 |
+| [0024: Route keys](decisions/0024-route-keys.md) | History crosses a module boundary as a `t_` tag counter carried by a method; later content reads keys, never another module's record ids. Amended 27 Oct: the ridge reads the school keys and adds sword and formation | Adds Part A rule 16; amends Part C.3 and Part E check 7 |
 | [0025: Lifespan and checkpoints cut](decisions/0025-lifespan-and-checkpoints-cut.md) | No age, lifespan, fictional calendar, checkpoint or retry; one setback rule; the bank is unchanged; save v6, older saves not loadable | **Supersedes Part A rule 10** and ADR 0002; amends ADR 0007 and ADR 0019; strips the mortality terms from rules 5 and 12, B.2, B.6, C.1, C.3, Part D and Part E |
+| [0026: Combat exchanges](decisions/0026-combat-exchanges.md) (21 Oct) | Fights as rolled swings on Speed clocks, with held methods as the preparation. Amended 27 Oct: an exact win chance and graded verdicts with a flip hint; Rest restores Life | Adds Part C.3's Fights table and Part E check 9 |
+| [0027: Locks at payment and stops](decisions/0027-locks-at-payment-and-stops.md) (27 Oct) | A timed record's lock applies when its bill is paid; confirmations name what closes; discoveries never stop activity | Amends rule 9 and ADR 0007's stops |
 
 **Unchanged**: eight breakthroughs; four starters; all original B3/B4 classes and their tags (incl. Golden Cauldron open entry per Q72); mastery counting (ADR 0015, which attunement does not touch, since attunement is a place in the mind and not a record of history); one activity at a time; 1:1 bank and its accrual, delivery and cap-as-reward rules (ADR 0007); Cloudwell structure (ADR 0018); noncombat viability; optional sects; desktop text-panel presentation; no morality axis (now recorded as a decision).
 

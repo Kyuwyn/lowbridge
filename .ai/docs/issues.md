@@ -3,7 +3,7 @@
 
 **Summary:** 11 candidates considered · 7 raised · 4 refuted. By severity: High 1, Medium 5, Low 1. By family: IF-4 (documentation/design drift) 6, IF-3a (implicit coupling) 1. DeepInit is report-only, so nothing here was changed in source, and only findings with HIGH certainty are raised. IF-2 (database drift) does not apply because there is no database. IF-5 (git risk) is unavailable because the repository has no commits.
 
-All references below were re-checked against the source after the live-combat change landed on 2026-10-21.
+All references below were re-checked against the source after the live-combat change landed on 2026-10-21. Lifecycles and resolutions were updated by hand on 2026-10-27, after the design-audit fixes; the next DeepInit run regenerates this file.
 
 ## Fires (raised)
 
@@ -14,7 +14,8 @@ All references below were re-checked against the source after the live-combat ch
 - **severity:** Medium
 - **criticality:** Core
 - **certainty:** HIGH
-- **lifecycle:** open
+- **lifecycle:** resolved (2026-10-27)
+- **resolution:** [ADR 0027](../../design/decisions/0027-locks-at-payment-and-stops.md) records that discoveries never stop activity and amends ADR 0007's stops. The implementation plan's away-time paragraph and the README now say an activity stops at its objective, a full store or an unaffordable drain, then the waiting list and Rest run, and only the rest is banked.
 - **baseline:** new
 - **suggested direction:** Record the decision in an ADR and update the plan and README, or restore pausing deliberately.
 
@@ -80,7 +81,8 @@ All references below were re-checked against the source after the live-combat ch
 - **severity:** Medium
 - **criticality:** Supporting
 - **certainty:** HIGH
-- **lifecycle:** open
+- **lifecycle:** resolved (2026-10-27)
+- **resolution:** `AGENTS.md`, `CLAUDE.md` and the implementation plan's scope line now name the ridge chapter, its four direction classes, the waystation and the two optional fights as in scope; sects, waystation modules and dungeons stay out.
 - **baseline:** new
 - **suggested direction:** A human should update the scope line; DeepInit carried it forward verbatim.
 

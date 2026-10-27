@@ -25,7 +25,7 @@ Lineage: Arcanum (MIT, Justin Lacy) → 筑基 by Pldada (Chinese, `Mostlai/Hund
 | [03 Data model and content](03-data-model-and-content.md) | 4,520 records / 57 types; which Arcanum fields survive, the 101 new ones and what they do; every new content type with a real record; the expression language as used; resource groups; the save format. |
 | [04 Engine behind the curtain](04-engine-behind-the-curtain.md) | What the fork changed in Arcanum's source: module inventory, tick and tempo, life/age/death, the new runtime systems, combat, persistence and services, licensing. |
 | [05 Community wiki notes](05-community-wiki-notes.md) | How the wiki is built (generated pages with reverse links), full translations of the tips, FAQ and monster prefixes, what the wiki knows that the data does not. |
-| [06 Design rules](06-design-rules.md) | Rules 39–69, continuing Arcanum's 1–38: what to copy, beat, avoid. |
+| [06 Design rules](06-design-rules.md) | Rules 39–69, continuing Arcanum's 1–38: what to copy, beat, avoid. Rules 70–74, on layer alignment across both games, follow in `../arcanum-reference/12-design-rules.md`. |
 
 ## Generated and raw material
 

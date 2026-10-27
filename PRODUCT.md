@@ -20,8 +20,8 @@ A weak-to-strong cultivation power fantasy built on Arcanum's machine (capped re
 
 ## Operating Context
 
-- Played in text: a grid of action buttons grouped by kind across Tasks, Techniques, Home and Character, with Fight tabs once Circulation opens.
-- Two tempos: instant actions (chores, trades, techniques) and sustained ones that hold one activity slot with a waiting list of 6.
+- Played in text: a grid of action buttons grouped by kind across Tasks, Techniques, Home and Character, with a Fight tab once a fight begins.
+- Two tempos: instant actions (chores, trades, techniques) and sustained ones that hold one activity slot with a waiting list of 6, which keeps running while the player is away. Small passive wages accrue alongside.
 - Unused real time goes into a bank; Accelerate spends it on the current objective. A visit after time away opens with a summary.
 - One tab per profile; saves live in IndexedDB with Export/Import.
 
@@ -42,7 +42,7 @@ A weak-to-strong cultivation power fantasy built on Arcanum's machine (capped re
 
 ## Evidence on Hand
 
-- Design reference wikis: `research/arcanum-reference/`, `research/hundred-days-reference/` (design rules 1–69).
+- Design reference wikis: `research/arcanum-reference/`, `research/hundred-days-reference/` (design rules 1–74; 70–74 cover both games).
 - Route measurements: `bun run validate`. The figures in `playtest/SIMULATION-REPORT.md` are stale.
 - Playtest sheet and UI revision notes in `playtest/`.
 - No players, testimonials or press exist yet; do not invent them.
