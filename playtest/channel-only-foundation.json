@@ -3,41 +3,41 @@
   "state": {
     "stats": {
       "coin": {
-        "value": 10,
+        "value": 7.050000000000144,
         "exp": 0,
         "reps": 0,
         "ticks": 0,
         "started": false,
         "paid": false,
         "max": 50,
-        "rate": 0,
+        "rate": 0.05,
         "open": true,
         "length": 1,
         "yield": 0,
         "discount": 0
       },
       "herbs": {
-        "value": 2,
+        "value": 4.699999999999987,
         "exp": 0,
         "reps": 0,
         "ticks": 0,
         "started": false,
         "paid": false,
         "max": 12,
-        "rate": 0,
+        "rate": 0.02,
         "open": true,
         "length": 1,
         "yield": 0,
         "discount": 0
       },
       "timber": {
-        "value": 10,
+        "value": 2,
         "exp": 0,
         "reps": 0,
         "ticks": 0,
         "started": false,
         "paid": false,
-        "max": 10,
+        "max": 8,
         "rate": 0,
         "open": true,
         "length": 1,
@@ -59,7 +59,7 @@
         "discount": 0.1
       },
       "qi": {
-        "value": 5,
+        "value": 5.253499999999998,
         "exp": 0,
         "reps": 0,
         "ticks": 0,
@@ -87,14 +87,14 @@
         "discount": 0
       },
       "vigor": {
-        "value": 27,
+        "value": 26,
         "exp": 0,
         "reps": 0,
         "ticks": 0,
         "started": false,
         "paid": false,
-        "max": 27,
-        "rate": 0.26,
+        "max": 26,
+        "rate": 0.255,
         "open": true,
         "length": 1,
         "yield": 0,
@@ -115,7 +115,7 @@
         "discount": 0
       },
       "life": {
-        "value": 13.799999999999834,
+        "value": 20,
         "exp": 0,
         "reps": 0,
         "ticks": 0,
@@ -261,7 +261,7 @@
         "ticks": 0,
         "started": false,
         "paid": false,
-        "max": 2,
+        "max": 4,
         "rate": 0,
         "open": true,
         "length": 1,
@@ -269,7 +269,7 @@
         "discount": 0
       },
       "coin_earned": {
-        "value": 99.5055,
+        "value": 100,
         "exp": 0,
         "reps": 0,
         "ticks": 0,
@@ -298,7 +298,7 @@
       },
       "qi_sense": {
         "value": 3,
-        "exp": 0,
+        "exp": 90,
         "reps": 0,
         "ticks": 0,
         "started": false,
@@ -326,7 +326,7 @@
       },
       "herbcraft": {
         "value": 0,
-        "exp": 7.5,
+        "exp": 0,
         "reps": 0,
         "ticks": 0,
         "started": false,
@@ -339,8 +339,8 @@
         "discount": 0
       },
       "labour": {
-        "value": 2,
-        "exp": 103.43500000000014,
+        "value": 1,
+        "exp": 80,
         "reps": 0,
         "ticks": 0,
         "started": false,
@@ -409,9 +409,9 @@
         "discount": 0
       },
       "mill_work": {
-        "value": 5,
+        "value": 30,
         "exp": 0,
-        "reps": 5,
+        "reps": 30,
         "ticks": 0,
         "started": true,
         "paid": false,
@@ -419,21 +419,7 @@
         "rate": 1,
         "open": true,
         "length": 1,
-        "yield": 0,
-        "discount": 0
-      },
-      "mill_shift": {
-        "value": 0,
-        "exp": 0,
-        "reps": 0,
-        "ticks": 91,
-        "started": true,
-        "paid": false,
-        "max": 1000000000000,
-        "rate": 1.1,
-        "open": true,
-        "length": 0,
-        "yield": 0,
+        "yield": 1,
         "discount": 0
       },
       "sort_herbs": {
@@ -447,20 +433,6 @@
         "rate": 1,
         "open": true,
         "length": 1,
-        "yield": 0,
-        "discount": 0
-      },
-      "rack_tending": {
-        "value": 0,
-        "exp": 0,
-        "reps": 0,
-        "ticks": 6,
-        "started": true,
-        "paid": false,
-        "max": 1000000000000,
-        "rate": 1,
-        "open": true,
-        "length": 0,
         "yield": 0,
         "discount": 0
       },
@@ -479,9 +451,9 @@
         "discount": 0
       },
       "cut_timber": {
-        "value": 28,
+        "value": 4,
         "exp": 0,
-        "reps": 28,
+        "reps": 4,
         "ticks": 0,
         "started": true,
         "paid": false,
@@ -510,7 +482,7 @@
         "value": 0,
         "exp": 0,
         "reps": 0,
-        "ticks": 171,
+        "ticks": 247,
         "started": true,
         "paid": false,
         "max": 1000000000000,
@@ -594,7 +566,7 @@
         "value": 3,
         "exp": 0,
         "reps": 3,
-        "ticks": 45,
+        "ticks": 54,
         "started": true,
         "paid": false,
         "max": 1000000000000,
@@ -647,11 +619,11 @@
         "discount": 0
       },
       "steady_breath": {
-        "value": 0,
+        "value": 3,
         "exp": 0,
-        "reps": 0,
+        "reps": 3,
         "ticks": 0,
-        "started": false,
+        "started": true,
         "paid": false,
         "max": 1000000000000,
         "rate": 1,
@@ -661,11 +633,11 @@
         "discount": 0
       },
       "carry_current": {
-        "value": 0,
+        "value": 1,
         "exp": 0,
-        "reps": 0,
+        "reps": 1,
         "ticks": 0,
-        "started": false,
+        "started": true,
         "paid": false,
         "max": 1000000000000,
         "rate": 1,
@@ -706,7 +678,7 @@
         "value": 1,
         "exp": 0,
         "reps": 1,
-        "ticks": 144,
+        "ticks": 96,
         "started": true,
         "paid": false,
         "max": 1,
@@ -768,7 +740,7 @@
         "max": 1000000000000,
         "rate": 1.15,
         "open": true,
-        "length": 120,
+        "length": 90,
         "yield": 0,
         "discount": 0
       },
@@ -885,11 +857,11 @@
         "discount": 0
       },
       "lean_to": {
-        "value": 0,
+        "value": 1,
         "exp": 0,
-        "reps": 0,
+        "reps": 1,
         "ticks": 0,
-        "started": false,
+        "started": true,
         "paid": false,
         "max": 1,
         "rate": 1,
@@ -1020,6 +992,62 @@
         "max": 5,
         "rate": 1,
         "open": false,
+        "length": 1,
+        "yield": 0,
+        "discount": 0
+      },
+      "sink_the_load": {
+        "value": 0,
+        "exp": 0,
+        "reps": 0,
+        "ticks": 0,
+        "started": false,
+        "paid": false,
+        "max": 1000000000000,
+        "rate": 1,
+        "open": true,
+        "length": 1,
+        "yield": 0,
+        "discount": 0
+      },
+      "cut_by_intent": {
+        "value": 0,
+        "exp": 0,
+        "reps": 0,
+        "ticks": 0,
+        "started": false,
+        "paid": false,
+        "max": 1000000000000,
+        "rate": 1,
+        "open": true,
+        "length": 1,
+        "yield": 0,
+        "discount": 0
+      },
+      "read_the_grain": {
+        "value": 0,
+        "exp": 0,
+        "reps": 0,
+        "ticks": 0,
+        "started": false,
+        "paid": false,
+        "max": 1000000000000,
+        "rate": 1,
+        "open": true,
+        "length": 1,
+        "yield": 0,
+        "discount": 0
+      },
+      "fix_the_layout": {
+        "value": 0,
+        "exp": 0,
+        "reps": 0,
+        "ticks": 0,
+        "started": false,
+        "paid": false,
+        "max": 1000000000000,
+        "rate": 1,
+        "open": true,
         "length": 1,
         "yield": 0,
         "discount": 0
@@ -1370,7 +1398,7 @@
         "max": 1,
         "rate": 1.05,
         "open": true,
-        "length": 180,
+        "length": 90,
         "yield": 0,
         "discount": 0
       },
@@ -1384,7 +1412,7 @@
         "max": 1,
         "rate": 1,
         "open": true,
-        "length": 180,
+        "length": 90,
         "yield": 0,
         "discount": 0
       },
@@ -1398,7 +1426,7 @@
         "max": 1,
         "rate": 1,
         "open": true,
-        "length": 180,
+        "length": 90,
         "yield": 0,
         "discount": 0
       },
@@ -1412,7 +1440,7 @@
         "max": 1,
         "rate": 1,
         "open": true,
-        "length": 180,
+        "length": 90,
         "yield": 0,
         "discount": 0
       },
@@ -1542,6 +1570,20 @@
         "yield": 0,
         "discount": 0
       },
+      "slip_leaves": {
+        "value": 0,
+        "exp": 0,
+        "reps": 0,
+        "ticks": 0,
+        "started": false,
+        "paid": false,
+        "max": 1000000000000,
+        "rate": 1,
+        "open": true,
+        "length": 1,
+        "yield": 0,
+        "discount": 0
+      },
       "ridge_bandit": {
         "value": 0,
         "exp": 0,
@@ -1629,7 +1671,7 @@
     },
     "active": null,
     "waiting": [],
-    "activitySeconds": 780,
+    "activitySeconds": 720,
     "visibleIds": [
       "coin",
       "herbs",
@@ -1656,9 +1698,7 @@
       "composure",
       "foundation",
       "mill_work",
-      "mill_shift",
       "sort_herbs",
-      "rack_tending",
       "gather_herbs",
       "cut_timber",
       "ferry_hauling",
@@ -1673,6 +1713,7 @@
       "channel_exercise",
       "steady_breath",
       "carry_current",
+      "current_carried",
       "settling",
       "channel_observe",
       "clear_channel",
@@ -1680,14 +1721,17 @@
       "sparring_bout",
       "hayloft",
       "straw_pallet",
+      "cot",
       "practice_mat",
       "channel_arrangement",
       "lean_to",
       "strongbox",
-      "ridge_outskirts"
+      "ridge_outskirts",
+      "cottage"
     ],
     "lockedIds": [
-      "settle_breath"
+      "settle_breath",
+      "hayloft"
     ],
     "attuned": [
       "steady_breath",
@@ -1699,6 +1743,7 @@
       "slip_acquired",
       "lore_hand_found",
       "qi_first_felt",
+      "shu_sees_method",
       "qi_hollow_within_reach",
       "flow_pattern",
       "second_place",
@@ -1706,27 +1751,31 @@
       "channel_hum",
       "stones_in_the_floor",
       "turn_holds",
+      "current_first_carried",
+      "lean_to_door",
       "foundation_reached",
       "traveller_channel"
     ],
     "capHits": [
       "vigor:10",
-      "herbs:12",
       "qi:2",
       "qi:3",
       "qi:4",
       "qi:5",
-      "coin:20",
+      "herbs:12",
       "vigor:11",
-      "coin:50",
-      "timber:8",
       "vigor:14",
+      "life:8",
       "vigor:17",
+      "life:10",
       "vigor:20",
-      "timber:10",
-      "vigor:24",
+      "life:12",
+      "vigor:23",
+      "life:14",
       "circulation:5",
-      "vigor:27"
+      "vigor:26",
+      "life:16",
+      "life:20"
     ],
     "log": [
       {
@@ -1761,705 +1810,783 @@
       },
       {
         "id": 6,
-        "kind": "discovery",
-        "text": "Turn the drying racks is now known.",
-        "activitySeconds": 19
-      },
-      {
-        "id": 7,
         "kind": "story",
         "text": "Granny Shu looks at your hands rather than your face. ‘You sort faster than the last one. Come in the mornings.’ A cracked jade slip turns over in her fingers. ‘Nobody will have this. Six coin, if you are foolish.’",
         "activitySeconds": 19
       },
       {
-        "id": 8,
+        "id": 7,
         "kind": "discovery",
         "text": "Cracked jade slip is now known.",
         "activitySeconds": 19
       },
       {
-        "id": 9,
+        "id": 8,
         "kind": "discovery",
         "text": "Straw pallet is now known.",
         "activitySeconds": 19
       },
       {
+        "id": 9,
+        "kind": "purchase",
+        "text": "Straw pallet is now part of your life.",
+        "activitySeconds": 19
+      },
+      {
         "id": 10,
-        "kind": "completion",
-        "text": "Turn the drying racks: objective complete.",
-        "activitySeconds": 25
+        "kind": "story",
+        "text": "Wen stops counting your sacks aloud. ‘You're on the books now. A small wage comes to you whether you're on my floor or not, and the sacks still pay by the sack. Nobody watches.’",
+        "activitySeconds": 19
       },
       {
         "id": 11,
-        "kind": "cap",
-        "text": "Herbs has reached 12/12. A higher cap is possible through Herb Lore.",
-        "activitySeconds": 25
+        "kind": "purchase",
+        "text": "Cracked jade slip is now part of your life.",
+        "activitySeconds": 19
       },
       {
         "id": 12,
-        "kind": "completion",
-        "text": "Rest: objective complete.",
-        "activitySeconds": 31
+        "kind": "discovery",
+        "text": "Qi is now known.",
+        "activitySeconds": 19
       },
       {
         "id": 13,
-        "kind": "purchase",
-        "text": "Straw pallet is now part of your life.",
-        "activitySeconds": 31
+        "kind": "discovery",
+        "text": "Lore is now known.",
+        "activitySeconds": 19
       },
       {
         "id": 14,
-        "kind": "story",
-        "text": "Wen stops counting your sacks aloud. ‘Stand a shift if you'd rather. Flat wage. Nobody watches.’",
-        "activitySeconds": 31
+        "kind": "discovery",
+        "text": "Qi Sense is now known.",
+        "activitySeconds": 19
       },
       {
         "id": 15,
         "kind": "discovery",
-        "text": "Stand a shift on the mill floor is now known.",
-        "activitySeconds": 31
+        "text": "Circulation is now known.",
+        "activitySeconds": 19
       },
       {
         "id": 16,
-        "kind": "purchase",
-        "text": "Cracked jade slip is now part of your life.",
-        "activitySeconds": 31
+        "kind": "story",
+        "text": "Three leaves of twelve. The breath can be practised from what survives; the turn described on the last leaf cannot yet be made.",
+        "activitySeconds": 19
       },
       {
         "id": 17,
         "kind": "discovery",
-        "text": "Qi is now known.",
-        "activitySeconds": 31
+        "text": "Practise the slip's breath method is now known.",
+        "activitySeconds": 19
       },
       {
         "id": 18,
         "kind": "discovery",
-        "text": "Attunement is now known.",
-        "activitySeconds": 31
+        "text": "Copy and compare the slip is now known.",
+        "activitySeconds": 19
       },
       {
         "id": 19,
         "kind": "discovery",
-        "text": "Lore is now known.",
-        "activitySeconds": 31
+        "text": "Practice mat is now known.",
+        "activitySeconds": 19
       },
       {
         "id": 20,
-        "kind": "discovery",
-        "text": "Qi Sense is now known.",
-        "activitySeconds": 31
+        "kind": "completion",
+        "text": "Lore reaches level 1.",
+        "activitySeconds": 29
       },
       {
         "id": 21,
-        "kind": "discovery",
-        "text": "Circulation is now known.",
-        "activitySeconds": 31
+        "kind": "completion",
+        "text": "Copy and compare the slip: objective complete.",
+        "activitySeconds": 29
       },
       {
         "id": 22,
-        "kind": "discovery",
-        "text": "Composure is now known.",
-        "activitySeconds": 31
+        "kind": "story",
+        "text": "The carver's hand sorts itself out under your brush. Proper tools would let you go where the characters point.",
+        "activitySeconds": 29
       },
       {
         "id": 23,
-        "kind": "story",
-        "text": "Three leaves of twelve. The breath can be practised from what survives; the turn described on the last leaf cannot yet be made.",
-        "activitySeconds": 31
+        "kind": "discovery",
+        "text": "Cord, stakes and a hook is now known.",
+        "activitySeconds": 29
       },
       {
         "id": 24,
-        "kind": "discovery",
-        "text": "Practise the slip's breath method is now known.",
-        "activitySeconds": 31
+        "kind": "completion",
+        "text": "Rest: objective complete.",
+        "activitySeconds": 42
       },
       {
         "id": 25,
-        "kind": "discovery",
-        "text": "Copy and compare the slip is now known.",
-        "activitySeconds": 31
+        "kind": "completion",
+        "text": "Lore reaches level 2.",
+        "activitySeconds": 61
       },
       {
         "id": 26,
-        "kind": "discovery",
-        "text": "Practice mat is now known.",
-        "activitySeconds": 31
+        "kind": "completion",
+        "text": "Copy and compare the slip: objective complete.",
+        "activitySeconds": 61
       },
       {
         "id": 27,
-        "kind": "completion",
-        "text": "Lore reaches level 1.",
-        "activitySeconds": 41
+        "kind": "discovery",
+        "text": "Granny Shu reads the hard characters is now known.",
+        "activitySeconds": 61
       },
       {
         "id": 28,
-        "kind": "completion",
-        "text": "Copy and compare the slip: objective complete.",
-        "activitySeconds": 41
+        "kind": "cap",
+        "text": "Qi has reached 2/2. A higher cap is possible through Qi Sense.",
+        "activitySeconds": 63
       },
       {
         "id": 29,
-        "kind": "story",
-        "text": "The carver's hand sorts itself out under your brush. Proper tools would let you go where the characters point.",
-        "activitySeconds": 41
+        "kind": "completion",
+        "text": "Qi Sense reaches level 1.",
+        "activitySeconds": 69
       },
       {
         "id": 30,
-        "kind": "discovery",
-        "text": "Cord, stakes and a hook is now known.",
-        "activitySeconds": 41
+        "kind": "completion",
+        "text": "Practise the slip's breath method: objective complete.",
+        "activitySeconds": 69
       },
       {
         "id": 31,
-        "kind": "completion",
-        "text": "Rest: objective complete.",
-        "activitySeconds": 48
+        "kind": "discovery",
+        "text": "Attunement is now known.",
+        "activitySeconds": 69
       },
       {
         "id": 32,
-        "kind": "completion",
-        "text": "Lore reaches level 2.",
-        "activitySeconds": 67
+        "kind": "story",
+        "text": "Something that is not air moves under the breath, and it pulls two ways: toward the broken channel beyond the barns, and upstream to a hollow of ferns.",
+        "activitySeconds": 69
       },
       {
         "id": 33,
-        "kind": "completion",
-        "text": "Copy and compare the slip: objective complete.",
-        "activitySeconds": 67
+        "kind": "discovery",
+        "text": "Composure is now known.",
+        "activitySeconds": 69
       },
       {
         "id": 34,
         "kind": "discovery",
-        "text": "Granny Shu reads the hard characters is now known.",
-        "activitySeconds": 67
+        "text": "Gather herbs by the stream is now known.",
+        "activitySeconds": 69
       },
       {
         "id": 35,
-        "kind": "cap",
-        "text": "Qi has reached 2/2. A higher cap is possible through Qi Sense.",
+        "kind": "discovery",
+        "text": "Steady the breath is now known.",
         "activitySeconds": 69
       },
       {
         "id": 36,
-        "kind": "completion",
-        "text": "Qi Sense reaches level 1.",
-        "activitySeconds": 75
+        "kind": "discovery",
+        "text": "Walk the broken channel is now known.",
+        "activitySeconds": 69
       },
       {
         "id": 37,
-        "kind": "completion",
-        "text": "Practise the slip's breath method: objective complete.",
-        "activitySeconds": 75
+        "kind": "cap",
+        "text": "Qi has reached 3/3. A higher cap is possible through Qi Sense.",
+        "activitySeconds": 69
       },
       {
         "id": 38,
-        "kind": "story",
-        "text": "Something that is not air moves under the breath, and it pulls two ways: toward the broken channel beyond the barns, and upstream to a hollow of ferns.",
-        "activitySeconds": 75
+        "kind": "method",
+        "text": "Steady the breath is attuned.",
+        "activitySeconds": 69
       },
       {
         "id": 39,
-        "kind": "discovery",
-        "text": "Gather herbs by the stream is now known.",
-        "activitySeconds": 75
+        "kind": "story",
+        "text": "Shu watches you sit through a whole morning's sorting without once fidgeting. ‘So it took,’ she says, and leaves a cup of something bitter by your bundles.",
+        "activitySeconds": 69
       },
       {
         "id": 40,
-        "kind": "discovery",
-        "text": "Steady the breath is now known.",
-        "activitySeconds": 75
+        "kind": "completion",
+        "text": "Qi Sense reaches level 2.",
+        "activitySeconds": 84
       },
       {
         "id": 41,
-        "kind": "discovery",
-        "text": "Walk the broken channel is now known.",
-        "activitySeconds": 75
+        "kind": "completion",
+        "text": "Practise the slip's breath method: objective complete.",
+        "activitySeconds": 84
       },
       {
         "id": 42,
-        "kind": "cap",
-        "text": "Qi has reached 3/3. A higher cap is possible through Qi Sense.",
-        "activitySeconds": 75
+        "kind": "story",
+        "text": "The faint pull from upstream has a shape now. Fernhollow can be sat in.",
+        "activitySeconds": 84
       },
       {
         "id": 43,
-        "kind": "method",
-        "text": "Steady the breath is attuned.",
-        "activitySeconds": 75
+        "kind": "discovery",
+        "text": "Sit quietly in Fernhollow is now known.",
+        "activitySeconds": 84
       },
       {
         "id": 44,
-        "kind": "completion",
-        "text": "Qi Sense reaches level 2.",
-        "activitySeconds": 90
+        "kind": "cap",
+        "text": "Qi has reached 4/4. A higher cap is possible through Qi Sense.",
+        "activitySeconds": 84
       },
       {
         "id": 45,
         "kind": "completion",
-        "text": "Practise the slip's breath method: objective complete.",
-        "activitySeconds": 90
+        "text": "Qi Sense reaches level 3.",
+        "activitySeconds": 106
       },
       {
         "id": 46,
-        "kind": "story",
-        "text": "The faint pull from upstream has a shape now. Fernhollow can be sat in.",
-        "activitySeconds": 90
+        "kind": "completion",
+        "text": "Practise the slip's breath method: objective complete.",
+        "activitySeconds": 106
       },
       {
         "id": 47,
-        "kind": "discovery",
-        "text": "Sit quietly in Fernhollow is now known.",
-        "activitySeconds": 90
+        "kind": "cap",
+        "text": "Qi has reached 5/5. A higher cap is possible through Qi Sense.",
+        "activitySeconds": 106
       },
       {
         "id": 48,
         "kind": "cap",
-        "text": "Qi has reached 4/4. A higher cap is possible through Qi Sense.",
-        "activitySeconds": 90
+        "text": "Herbs has reached 12/12. A higher cap is possible through Herb Lore.",
+        "activitySeconds": 119
       },
       {
         "id": 49,
         "kind": "completion",
-        "text": "Qi Sense reaches level 3.",
-        "activitySeconds": 112
+        "text": "Walk the broken channel: objective complete.",
+        "activitySeconds": 185
       },
       {
         "id": 50,
-        "kind": "completion",
-        "text": "Practise the slip's breath method: objective complete.",
-        "activitySeconds": 112
+        "kind": "discovery",
+        "text": "Channel stone is now known.",
+        "activitySeconds": 185
       },
       {
         "id": 51,
-        "kind": "cap",
-        "text": "Qi has reached 5/5. A higher cap is possible through Qi Sense.",
-        "activitySeconds": 112
+        "kind": "discovery",
+        "text": "Stone Sense is now known.",
+        "activitySeconds": 185
       },
       {
         "id": 52,
-        "kind": "completion",
-        "text": "Walk the broken channel: objective complete.",
-        "activitySeconds": 191
+        "kind": "story",
+        "text": "A flow pattern outlives the broken channel. The water took another course years ago; the qi still turns where it used to bend.",
+        "activitySeconds": 185
       },
       {
         "id": 53,
         "kind": "discovery",
-        "text": "Channel stone is now known.",
-        "activitySeconds": 191
+        "text": "Clear the fall and reset the stones is now known.",
+        "activitySeconds": 185
       },
       {
         "id": 54,
-        "kind": "discovery",
-        "text": "Stone Sense is now known.",
-        "activitySeconds": 191
+        "kind": "purchase",
+        "text": "Practice mat is now part of your life.",
+        "activitySeconds": 185
       },
       {
         "id": 55,
         "kind": "story",
-        "text": "A flow pattern outlives the broken channel. The water took another course years ago; the qi still turns where it used to bend.",
-        "activitySeconds": 191
+        "text": "With the mat under you and one method held, there turns out to be room in your head for a second. It only wants something to hold.",
+        "activitySeconds": 185
       },
       {
         "id": 56,
         "kind": "discovery",
-        "text": "Clear the fall and reset the stones is now known.",
-        "activitySeconds": 191
+        "text": "A larger coin pouch is now known.",
+        "activitySeconds": 185
       },
       {
         "id": 57,
-        "kind": "discovery",
-        "text": "A larger coin pouch is now known.",
-        "activitySeconds": 205
+        "kind": "completion",
+        "text": "Practise the slip's breath method: objective complete.",
+        "activitySeconds": 187
       },
       {
         "id": 58,
         "kind": "completion",
-        "text": "Stand a shift on the mill floor: objective complete.",
-        "activitySeconds": 214
+        "text": "Rest: objective complete.",
+        "activitySeconds": 188
       },
       {
         "id": 59,
-        "kind": "cap",
-        "text": "Coin has reached 20/20. A higher cap is possible through a larger coin pouch.",
-        "activitySeconds": 214
+        "kind": "purchase",
+        "text": "A larger coin pouch is now part of your life.",
+        "activitySeconds": 188
       },
       {
         "id": 60,
-        "kind": "purchase",
-        "text": "A larger coin pouch is now part of your life.",
-        "activitySeconds": 214
+        "kind": "discovery",
+        "text": "Strongbox is now known.",
+        "activitySeconds": 188
       },
       {
         "id": 61,
-        "kind": "discovery",
-        "text": "Strongbox is now known.",
-        "activitySeconds": 214
+        "kind": "completion",
+        "text": "Practise the slip's breath method: objective complete.",
+        "activitySeconds": 190
       },
       {
         "id": 62,
         "kind": "completion",
-        "text": "Labour reaches level 1.",
-        "activitySeconds": 222
+        "text": "Rest: objective complete.",
+        "activitySeconds": 191
       },
       {
         "id": 63,
-        "kind": "cap",
-        "text": "Vigor has reached 11/11. A higher cap is possible through Labour.",
-        "activitySeconds": 227
+        "kind": "completion",
+        "text": "Labour reaches level 1.",
+        "activitySeconds": 191
       },
       {
         "id": 64,
-        "kind": "completion",
-        "text": "Stand a shift on the mill floor: objective complete.",
-        "activitySeconds": 263
+        "kind": "purchase",
+        "text": "Cord, stakes and a hook is now part of your life.",
+        "activitySeconds": 191
       },
       {
         "id": 65,
-        "kind": "cap",
-        "text": "Coin has reached 50/50. A higher cap is possible through Strongbox.",
-        "activitySeconds": 263
+        "kind": "discovery",
+        "text": "Timber is now known.",
+        "activitySeconds": 191
       },
       {
         "id": 66,
-        "kind": "purchase",
-        "text": "Practice mat is now part of your life.",
-        "activitySeconds": 263
+        "kind": "discovery",
+        "text": "Cut timber beyond the mill is now known.",
+        "activitySeconds": 191
       },
       {
         "id": 67,
         "kind": "story",
-        "text": "The mat gives you somewhere to sit and, oddly, room in your head to hold a second method ready.",
-        "activitySeconds": 263
+        "text": "Headman Lu hears you bought cord and a hook before you have coiled them. ‘The fall at the channel. Ten coin and the stones are yours.’",
+        "activitySeconds": 191
       },
       {
         "id": 68,
-        "kind": "purchase",
-        "text": "Cord, stakes and a hook is now part of your life.",
-        "activitySeconds": 263
+        "kind": "cap",
+        "text": "Vigor has reached 11/11. A higher cap is possible through Labour.",
+        "activitySeconds": 235
       },
       {
         "id": 69,
-        "kind": "discovery",
-        "text": "Timber is now known.",
-        "activitySeconds": 263
+        "kind": "completion",
+        "text": "Stone Sense reaches level 1.",
+        "activitySeconds": 311
       },
       {
         "id": 70,
-        "kind": "discovery",
-        "text": "Cut timber beyond the mill is now known.",
-        "activitySeconds": 263
+        "kind": "completion",
+        "text": "Clear the fall and reset the stones: objective complete.",
+        "activitySeconds": 311
       },
       {
         "id": 71,
         "kind": "story",
-        "text": "Headman Lu hears you bought cord and a hook before you have coiled them. ‘The fall at the channel. Ten coin and the stones are yours.’",
-        "activitySeconds": 263
+        "text": "Reset, the stones hum where the flow bends around them. Their spacing supplies exactly the turn the chipped leaf leaves blank.",
+        "activitySeconds": 311
       },
       {
         "id": 72,
-        "kind": "completion",
-        "text": "Stone Sense reaches level 1.",
-        "activitySeconds": 383
+        "kind": "discovery",
+        "text": "Channel stones set in the floor is now known.",
+        "activitySeconds": 311
       },
       {
         "id": 73,
-        "kind": "completion",
-        "text": "Clear the fall and reset the stones: objective complete.",
-        "activitySeconds": 383
+        "kind": "purchase",
+        "text": "Channel stones set in the floor is now part of your life.",
+        "activitySeconds": 311
       },
       {
         "id": 74,
-        "kind": "story",
-        "text": "Reset, the stones hum where the flow bends around them. Their spacing supplies exactly the turn the chipped leaf leaves blank.",
-        "activitySeconds": 383
+        "kind": "discovery",
+        "text": "Life is now known.",
+        "activitySeconds": 311
       },
       {
         "id": 75,
         "kind": "discovery",
-        "text": "Channel stones set in the floor is now known.",
-        "activitySeconds": 383
+        "text": "Strike is now known.",
+        "activitySeconds": 311
       },
       {
         "id": 76,
-        "kind": "cap",
-        "text": "Timber has reached 8/8. A higher cap is possible through Labour.",
-        "activitySeconds": 383
+        "kind": "discovery",
+        "text": "Guard is now known.",
+        "activitySeconds": 311
       },
       {
         "id": 77,
-        "kind": "purchase",
-        "text": "Channel stones set in the floor is now part of your life.",
-        "activitySeconds": 383
+        "kind": "discovery",
+        "text": "Speed is now known.",
+        "activitySeconds": 311
       },
       {
         "id": 78,
         "kind": "discovery",
-        "text": "Life is now known.",
-        "activitySeconds": 383
+        "text": "Hit is now known.",
+        "activitySeconds": 311
       },
       {
         "id": 79,
         "kind": "discovery",
-        "text": "Strike is now known.",
-        "activitySeconds": 383
+        "text": "Dodge is now known.",
+        "activitySeconds": 311
       },
       {
         "id": 80,
         "kind": "discovery",
-        "text": "Guard is now known.",
-        "activitySeconds": 383
+        "text": "Circulate at the channel stones is now known.",
+        "activitySeconds": 311
       },
       {
         "id": 81,
         "kind": "discovery",
-        "text": "Speed is now known.",
-        "activitySeconds": 383
+        "text": "Carry the current is now known.",
+        "activitySeconds": 311
       },
       {
         "id": 82,
         "kind": "discovery",
-        "text": "Hit is now known.",
-        "activitySeconds": 383
+        "text": "Settle the foundation is now known.",
+        "activitySeconds": 311
       },
       {
         "id": 83,
         "kind": "discovery",
-        "text": "Dodge is now known.",
-        "activitySeconds": 383
+        "text": "Spar with the ferry hand is now known.",
+        "activitySeconds": 311
       },
       {
         "id": 84,
-        "kind": "discovery",
-        "text": "Circulate at the channel stones is now known.",
-        "activitySeconds": 383
+        "kind": "story",
+        "text": "Four stones set in the loft floor at the spacing the water taught them. The turn runs through the room now, and through you when you sit in it.",
+        "activitySeconds": 311
       },
       {
         "id": 85,
-        "kind": "discovery",
-        "text": "Carry the current is now known.",
-        "activitySeconds": 383
+        "kind": "method",
+        "text": "Carry the current is attuned.",
+        "activitySeconds": 311
       },
       {
         "id": 86,
-        "kind": "discovery",
-        "text": "Settle the foundation is now known.",
-        "activitySeconds": 383
+        "kind": "completion",
+        "text": "Circulation reaches level 1.",
+        "activitySeconds": 318
       },
       {
         "id": 87,
-        "kind": "discovery",
-        "text": "Spar with the ferry hand is now known.",
-        "activitySeconds": 383
+        "kind": "completion",
+        "text": "Circulate at the channel stones: objective complete.",
+        "activitySeconds": 318
       },
       {
         "id": 88,
-        "kind": "story",
-        "text": "Four stones set in the loft floor at the spacing the water taught them. The turn runs through the room now, and through you when you sit in it.",
-        "activitySeconds": 383
+        "kind": "completion",
+        "text": "Rest: objective complete.",
+        "activitySeconds": 333
       },
       {
         "id": 89,
-        "kind": "method",
-        "text": "Carry the current is attuned.",
-        "activitySeconds": 383
+        "kind": "cap",
+        "text": "Vigor has reached 14/14. A higher cap is possible through Circulation or Labour.",
+        "activitySeconds": 333
       },
       {
         "id": 90,
         "kind": "completion",
-        "text": "Circulation reaches level 1.",
-        "activitySeconds": 390
+        "text": "Rest: objective complete.",
+        "activitySeconds": 356
       },
       {
         "id": 91,
-        "kind": "completion",
-        "text": "Circulate at the channel stones: objective complete.",
-        "activitySeconds": 390
+        "kind": "cap",
+        "text": "Life has reached 8/8. A higher cap is possible through Circulation or Settle the foundation or Spar with the ferry hand.",
+        "activitySeconds": 356
       },
       {
         "id": 92,
         "kind": "completion",
-        "text": "Rest: objective complete.",
-        "activitySeconds": 405
+        "text": "Circulation reaches level 2.",
+        "activitySeconds": 369
       },
       {
         "id": 93,
-        "kind": "cap",
-        "text": "Vigor has reached 14/14. A higher cap is possible through Circulation or Labour.",
-        "activitySeconds": 405
+        "kind": "completion",
+        "text": "Circulate at the channel stones: objective complete.",
+        "activitySeconds": 369
       },
       {
         "id": 94,
-        "kind": "completion",
-        "text": "Circulation reaches level 2.",
-        "activitySeconds": 418
+        "kind": "story",
+        "text": "The turn holds on its own for a breath. The method is whole enough to settle.",
+        "activitySeconds": 369
       },
       {
         "id": 95,
         "kind": "completion",
-        "text": "Circulate at the channel stones: objective complete.",
-        "activitySeconds": 418
+        "text": "Rest: objective complete.",
+        "activitySeconds": 376
       },
       {
         "id": 96,
-        "kind": "story",
-        "text": "The turn holds on its own for a breath. The method is whole enough to settle.",
-        "activitySeconds": 418
+        "kind": "cap",
+        "text": "Vigor has reached 17/17. A higher cap is possible through Circulation or Labour.",
+        "activitySeconds": 376
       },
       {
         "id": 97,
         "kind": "completion",
         "text": "Rest: objective complete.",
-        "activitySeconds": 437
+        "activitySeconds": 402
       },
       {
         "id": 98,
         "kind": "cap",
-        "text": "Vigor has reached 17/17. A higher cap is possible through Circulation or Labour.",
-        "activitySeconds": 437
+        "text": "Life has reached 10/10. A higher cap is possible through Circulation or Settle the foundation or Spar with the ferry hand.",
+        "activitySeconds": 402
       },
       {
         "id": 99,
         "kind": "completion",
         "text": "Stone Sense reaches level 2.",
-        "activitySeconds": 450
+        "activitySeconds": 415
       },
       {
         "id": 100,
         "kind": "completion",
         "text": "Circulation reaches level 3.",
-        "activitySeconds": 456
+        "activitySeconds": 421
       },
       {
         "id": 101,
         "kind": "completion",
         "text": "Circulate at the channel stones: objective complete.",
-        "activitySeconds": 456
+        "activitySeconds": 421
       },
       {
         "id": 102,
         "kind": "completion",
         "text": "Rest: objective complete.",
-        "activitySeconds": 478
+        "activitySeconds": 426
       },
       {
         "id": 103,
         "kind": "cap",
         "text": "Vigor has reached 20/20. A higher cap is possible through Circulation or Labour.",
-        "activitySeconds": 478
+        "activitySeconds": 426
       },
       {
         "id": 104,
         "kind": "completion",
-        "text": "Labour reaches level 2.",
-        "activitySeconds": 478
+        "text": "Rest: objective complete.",
+        "activitySeconds": 450
       },
       {
         "id": 105,
         "kind": "cap",
-        "text": "Timber has reached 10/10. A higher cap is possible through Labour.",
-        "activitySeconds": 478
+        "text": "Life has reached 12/12. A higher cap is possible through Circulation or Settle the foundation or Spar with the ferry hand.",
+        "activitySeconds": 450
       },
       {
         "id": 106,
         "kind": "completion",
         "text": "Circulation reaches level 4.",
-        "activitySeconds": 503
+        "activitySeconds": 475
       },
       {
         "id": 107,
         "kind": "completion",
         "text": "Circulate at the channel stones: objective complete.",
-        "activitySeconds": 503
+        "activitySeconds": 475
       },
       {
         "id": 108,
         "kind": "completion",
         "text": "Rest: objective complete.",
-        "activitySeconds": 530
+        "activitySeconds": 480
       },
       {
         "id": 109,
         "kind": "cap",
-        "text": "Vigor has reached 24/24. A higher cap is possible through Circulation or Labour.",
-        "activitySeconds": 530
+        "text": "Vigor has reached 23/23. A higher cap is possible through Circulation or Labour.",
+        "activitySeconds": 480
       },
       {
         "id": 110,
         "kind": "completion",
-        "text": "Circulation reaches level 5.",
-        "activitySeconds": 561
+        "text": "Rest: objective complete.",
+        "activitySeconds": 501
       },
       {
         "id": 111,
-        "kind": "completion",
-        "text": "Circulate at the channel stones: objective complete.",
-        "activitySeconds": 561
+        "kind": "cap",
+        "text": "Life has reached 14/14. A higher cap is possible through Circulation or Settle the foundation or Spar with the ferry hand.",
+        "activitySeconds": 501
       },
       {
         "id": 112,
-        "kind": "cap",
-        "text": "Circulation has reached 5/5. A higher cap is possible through Settle the foundation.",
-        "activitySeconds": 561
+        "kind": "completion",
+        "text": "Circulation reaches level 5.",
+        "activitySeconds": 532
       },
       {
         "id": 113,
         "kind": "completion",
-        "text": "Rest: objective complete.",
-        "activitySeconds": 589
+        "text": "Circulate at the channel stones: objective complete.",
+        "activitySeconds": 532
       },
       {
         "id": 114,
         "kind": "cap",
-        "text": "Vigor has reached 27/27. A higher cap is possible through Settle the foundation or Labour.",
-        "activitySeconds": 589
+        "text": "Circulation has reached 5/5. A higher cap is possible through Settle the foundation.",
+        "activitySeconds": 532
       },
       {
         "id": 115,
         "kind": "completion",
-        "text": "Stand a shift on the mill floor: objective complete.",
-        "activitySeconds": 608
+        "text": "Rest: objective complete.",
+        "activitySeconds": 537
       },
       {
         "id": 116,
-        "kind": "completion",
-        "text": "Rest: objective complete.",
-        "activitySeconds": 636
+        "kind": "cap",
+        "text": "Vigor has reached 26/26. A higher cap is possible through Settle the foundation or Labour.",
+        "activitySeconds": 537
       },
       {
         "id": 117,
         "kind": "completion",
-        "text": "Settle the foundation: objective complete.",
-        "activitySeconds": 780
+        "text": "Rest: objective complete.",
+        "activitySeconds": 556
       },
       {
         "id": 118,
-        "kind": "discovery",
-        "text": "Strain is now known.",
-        "activitySeconds": 780
+        "kind": "cap",
+        "text": "Life has reached 16/16. A higher cap is possible through Settle the foundation or Spar with the ferry hand.",
+        "activitySeconds": 556
       },
       {
         "id": 119,
-        "kind": "discovery",
-        "text": "Haul freight to the ferry is now known.",
-        "activitySeconds": 780
+        "kind": "story",
+        "text": "You take the turn up and it stays, low in the body, like a breath you no longer have to hold. Anything you set out to do next feels shorter already.",
+        "activitySeconds": 556
       },
       {
         "id": 120,
-        "kind": "story",
-        "text": "The pooled breath turns, and returns, and turns again without being asked. Foundation. The method has room to grow in it now, and so does the road: the ferry crossing, and the outskirts of Old Ridge beyond it.",
-        "activitySeconds": 780
+        "kind": "completion",
+        "text": "Practise the slip's breath method: objective complete.",
+        "activitySeconds": 559
       },
       {
         "id": 121,
-        "kind": "story",
-        "text": "A traveller at the ferry asks after whoever cleared the fall. Headman Lu points at you without looking up.",
-        "activitySeconds": 780
+        "kind": "purchase",
+        "text": "Lean-to is now part of your life.",
+        "activitySeconds": 559
       },
       {
         "id": 122,
         "kind": "discovery",
+        "text": "A proper cot is now known.",
+        "activitySeconds": 559
+      },
+      {
+        "id": 123,
+        "kind": "story",
+        "text": "You shut the lean-to's door behind you for the first time and stand there a while. In Lowbridge, a door you can shut counts as independence.",
+        "activitySeconds": 559
+      },
+      {
+        "id": 124,
+        "kind": "completion",
+        "text": "Practise the slip's breath method: objective complete.",
+        "activitySeconds": 561
+      },
+      {
+        "id": 125,
+        "kind": "completion",
+        "text": "Rest: objective complete.",
+        "activitySeconds": 585
+      },
+      {
+        "id": 126,
+        "kind": "completion",
+        "text": "The carried current spent itself on Settle the foundation.",
+        "activitySeconds": 681
+      },
+      {
+        "id": 127,
+        "kind": "completion",
+        "text": "Settle the foundation: objective complete.",
+        "activitySeconds": 681
+      },
+      {
+        "id": 128,
+        "kind": "discovery",
+        "text": "Strain is now known.",
+        "activitySeconds": 681
+      },
+      {
+        "id": 129,
+        "kind": "discovery",
+        "text": "Haul freight to the ferry is now known.",
+        "activitySeconds": 681
+      },
+      {
+        "id": 130,
+        "kind": "story",
+        "text": "The pooled breath turns, and returns, and turns again without being asked. Foundation. The method has room to grow in it now, and so does the road: the ferry crossing, and the outskirts of Old Ridge beyond it.",
+        "activitySeconds": 681
+      },
+      {
+        "id": 131,
+        "kind": "story",
+        "text": "A traveller at the ferry asks after whoever cleared the fall. Headman Lu points at you without looking up.",
+        "activitySeconds": 681
+      },
+      {
+        "id": 132,
+        "kind": "discovery",
         "text": "Walk the ridge outskirts is now known.",
-        "activitySeconds": 780
+        "activitySeconds": 681
+      },
+      {
+        "id": 133,
+        "kind": "discovery",
+        "text": "A cottage beyond the mill is now known.",
+        "activitySeconds": 681
+      },
+      {
+        "id": 134,
+        "kind": "completion",
+        "text": "Rest: objective complete.",
+        "activitySeconds": 720
+      },
+      {
+        "id": 135,
+        "kind": "cap",
+        "text": "Life has reached 20/20. A higher cap is possible through Circulation or Spar with the ferry hand.",
+        "activitySeconds": 720
       }
     ],
     "wallRemainder": 0,
