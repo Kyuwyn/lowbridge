@@ -681,7 +681,8 @@ try {
   await closeSettings(page);
   assert((await page.locator('[data-ui=stage]').innerText()) === 'The ridge', 'the stage label does not reach the ridge');
   await page.locator('[data-tab=character]').click();
-  const leads = records.filter(record => record.kind === 'lead').length;
+  const atWaystation = new GameEngine(records, ridge.state);
+  const leads = records.filter(record => record.kind === 'lead' && atWaystation.visible(record.id)).length;
   assert(await page.locator('[data-ui=leads] li:visible').count() === leads, `the ${leads} waystation leads are not listed`);
   await page.screenshot({ path: join(output, 'ridge-waystation-desktop.png'), fullPage: true });
   reports.push({ name: 'ridge', directionPanel: 'pass', closesNothing: 'pass', strainMeter: 'pass', derivedTitle: 'pass', stageLabel: 'pass', waystationLeads: 'pass' });
@@ -693,8 +694,10 @@ try {
   const basinEngine = new GameEngine(records, deep.state);
   // The fixture holds the Second Direction, a hobby, a stance and a draught in effect, but has not yet walked the terrace.
   for (const id of ['terrace_bypass', 'reedmarket_work', 'trade_pale_root', 'haul_the_stores']) Object.assign(basinEngine.stat(id), { value: 0, reps: 0, paid: false, exp: 0 });
-  basinEngine.stat('reedmarket').value = 0; basinEngine.state.visibleIds = basinEngine.state.visibleIds.filter(id => !['reedmarket', 'reedmarket_work', 'trade_pale_root'].includes(id));
-  basinEngine.state.eventIds = basinEngine.state.eventIds.filter(id => id !== 'reedmarket_arrival');
+  const arrivalIds = ['reedmarket', 'reedmarket_work', 'trade_pale_root', 'ferryman_leaf', 'cistern_leaf', 'far_leaf'];
+  for (const id of ['reedmarket', 'ferryman_leaf', 'cistern_leaf', 'far_leaf']) basinEngine.stat(id).value = 0;
+  basinEngine.state.visibleIds = basinEngine.state.visibleIds.filter(id => !arrivalIds.includes(id));
+  basinEngine.state.eventIds = basinEngine.state.eventIds.filter(id => id !== 'reedmarket_arrival' && id !== 'basin_leaves_named');
   basinEngine.stop();
   for (const id of ['vigor', 'strain', 'focus', 'life', 'qi']) basinEngine.stat(id).value = basinEngine.stat(id).max;
   basinEngine.stat('herbs').value = basinEngine.stat('herbs').max; basinEngine.stat('settling_draught').value = 1;

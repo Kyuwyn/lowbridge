@@ -12,7 +12,7 @@ Chapter one's sheet (design plan C.1) stands. This chapter adds or raises:
 
 | Quantity | Entry | Cap | Raised by | Gates |
 |---|---|---|---|---|
-| Focus (`focus`, shared) | the waystation (8/8, +0.02/s) | 8 | *Walk where it slid* +2 while held; *Listen for water* +3 while held; the Second Direction +2; Rest refills it (+0.1/s, full in about eighty seconds) | basin outings drain it beside Strain; the settling draught discounts both by a quarter |
+| Focus (`focus`, shared) | the waystation (8/8, +0.02/s) | 8 | *Walk where it slid* +2 while held; *Listen for water* +3 while held; *Ward the threshold* +2 while held; the Second Direction +2; Rest refills it (+0.1/s, full in about eighty seconds) | basin outings drain it beside Strain; the settling draught discounts both by a quarter |
 | Hobby (`hobby_slots`, shared) | the Second Direction | 0 → 1 | the Second Direction +1 | a `hobby: true` record may run at half pace beside the slot |
 | Attunement | — | 3 → 4 → 5 | the First Direction +1; the Second Direction +1 | the Second Direction's core wants three methods held |
 | Pale root (`pale_root`, shared) | Refining opens | 10 | Refining +2 per level; *Stock Han's still-room* +4 | draughts, the clear pill, the specimen trade |
@@ -45,7 +45,7 @@ Array order in the JSON is reveal order. Groups: existing `Sites`, `Purchases`, 
 
 ### Seam and file moves (ADR 0024, ADR 0030 §6)
 
-A basin gate may name only basin ids, shared ids or `t_` keys. The basin needs `waystation`, the four leads (`route_records`, `unusual_chime`, `damaged_spur`, `slip_leaves`), `first_direction`, `workbench`, `reading_desk`, `cottage` and `coffer`. **These records move unchanged from `ridge.json` to `shared.json`**; `ridge.json` keeps everything else. (The alternative, a shared `basin_open` flag set by an event on `waystation` with every basin gate reading it, is not taken; do not do both.)
+A basin gate may name only basin ids, shared ids or `t_` keys. The basin needs `waystation`, the four leads (`route_records`, `unusual_chime`, `damaged_spur`, `slip_leaves`), `first_direction`, `workbench`, `reading_desk`, `cottage` and `coffer`. **These records move unchanged from `ridge.json` to `shared.json`**; `ridge.json` keeps everything else. (The alternative, a shared `basin_open` flag set by an event on `waystation` with every basin gate reading it, is not taken; do not do both.) After the design audit of 27 October the four leads carry a `need` that is their resolution (`route_records`: `g.bypass_known > 0`; `unusual_chime`: `g.chime_explained > 0`; `damaged_spur`: `g.spur_reopened > 0`; `slip_leaves`: `g.t_leaf >= 4`) with a `needtext` saying what is still open; the Character tab shows "Followed." once it holds. Three more leads for the basin's leaves (`ferryman_leaf`, `cistern_leaf`, `far_leaf`, `require: g.reedmarket > 0`) live in `shared.json` and are set to 1 by the `reedmarket` flag's arrival event, so the next chapter can gate on them. `reading_desk.require` reads `g.cottage > 0 || g.ridge_room > 0`, so the ridge room's study place can be filled.
 
 `src/content.ts` registers `basin` third (`[...shared, ...opening, ...ridge, ...basin]`), adds the new keys to `routeKeys` with their player-facing names (`t_school_pill` "Pill school"; `t_deep_body` "Body, deepened", `t_deep_sword` "Sword, deepened", `t_deep_earth` "Earth, deepened", `t_deep_formation` "Formation, deepened", `t_deep_pill` "Pill, deepened"; `t_leaf` "A leaf of the slip"; `t_commission` "A commission done"), and adds scenes `second_direction` (`when: "g.second_direction > 0"`, place "The basin road", bound "The Second Direction to Reedmarket") and `reedmarket` (`when: "g.reedmarket > 0"`, place "Reedmarket", bound "Reedmarket"), with beats for the leads (`g.waystation > 0 && g.second_direction < 1`, next names `route_records` and `unusual_chime`), the Second Direction panel satisfied, and arrival ("The three leaves the ledger could not place are somewhere in the basin").
 
@@ -102,8 +102,8 @@ The cap mods are expressions so the Direction raises every sphere the player car
 |---|---|---|---|---|---|---|---|
 | `landslide_rise` "Climb the rise above the slide" | site/Sites | `g.route_records > 0` | — | — | 150 | `{ strain: 0.03, focus: 0.03 }` | `composure.exp 40, ground_reading.exp 30`; flag `bypass_known: 1`; `max 1` |
 | `terrace_bypass` "Trace the terrace to Reedmarket" | site/Sites | `g.bypass_known > 0` | `g.second_direction > 0` "The Second Direction first; the terrace is a day's carry." | `{ herbs: 4 }` | 240 | `{ strain: 0.04, focus: 0.04 }` | `reedmarket: 1`, `coin: 20`; `max 1`; `boost: { flag: "current_carried", multiplier: 1.5 }` |
-| `reedmarket` "Reedmarket" | flag/Milestones | `g.reedmarket > 0` | — | — | — | — | `initial.max 1`; desc names the three leaves still missing and the basin as the next stage |
-| `reedmarket_work` "Carry for the market porters" | task/Work | `g.reedmarket > 0` | — | `{ vigor: 3 }` | — | — | `coin 10, coin_earned 10, labour.exp 4`; `lock: [waystation_work]` with warn |
+| `reedmarket` "Reedmarket" | flag/Milestones | `g.reedmarket > 0` | — | — | — | — | `initial.max 1`; `mod { "coin.max": 100 }` (the purse arrives full otherwise); an event on arrival sets the three basin leads; desc names the three leaves still missing and the basin as the next stage |
+| `reedmarket_work` "Carry for the market porters" | task/Work | `g.reedmarket > 0` | — | `{ vigor: 3 }` | — | — | `coin 14, coin_earned 14, labour.exp 4` (fourteen, not ten: `waystation_work` yields 12 after thirty loads, and the lock must never be a pay cut); `lock: [waystation_work]` with warn |
 
 Flags in `basin.json` (kind `flag`, group `Milestones`, `initial.max 1`, `require: g.<id> > 0`): `bypass_known`, `chime_timed`, `chime_explained`, `spur_reopened`, `reedmarket`, `second_title`. Only `chime_explained` and `spur_reopened` carry `mod`.
 
@@ -112,7 +112,7 @@ Flags in `basin.json` (kind `flag`, group `Milestones`, `initial.max 1`, `requir
 | id | kind/group | require | need / needtext | cost | length | strain | result |
 |---|---|---|---|---|---|---|---|
 | `chime_watch` "Sit out the dusk chime" | site/Sites | `g.unusual_chime > 0` | `g.qi_sense >= 4` | — | 120 | `{ focus: 0.04 }` | `qi_sense.exp 60, composure.exp 30`; flag `chime_timed: 1`; `max 1` |
-| `relay_test` "Test the old relay stone" | site/Sites | `g.chime_timed > 0` | `g.composure >= 3 && (g.inked_tokens >= 2 \|\| g.veined_ore >= 2)` "Composure 3, and two tokens or two pieces of ore to mark the relay." | `{ inked_tokens: "2 * (g.inked_tokens >= 2)", veined_ore: "2 * (g.inked_tokens < 2)" }` | 150 | `{ strain: 0.02, focus: 0.05 }` | flag `chime_explained: 1`; `max 1` |
+| `relay_test` "Test the old relay stone" | site/Sites | `g.chime_timed > 0` | `g.composure >= 3 && (g.inked_tokens >= 2 \|\| g.veined_ore >= 2)` "Composure 3, and two inked tokens or two pieces of veined ore to mark the relay; the porter's notes on layouts or on ground open those stores, and their drills and sites fill them." | `{ inked_tokens: "2 * (g.inked_tokens >= 2)", veined_ore: "2 * (g.inked_tokens < 2)" }` | 150 | `{ strain: 0.02, focus: 0.05 }` | flag `chime_explained: 1`; `max 1` |
 | `chime_explained` | flag/Milestones | `g.chime_explained > 0` | | | | | `mod: { "qi.max": 4, "composure.max": 1 }` |
 
 **Spur milestone and the pill material.**
@@ -123,7 +123,7 @@ Flags in `basin.json` (kind `flag`, group `Milestones`, `initial.max 1`, `requir
 | `spur_reopened` | flag/Milestones | `g.spur_reopened > 0` | | | | | `mod: { "strain.max": 2 }` |
 | `pale_root_bank` "Dig the pale-root bank" | site/Sites | `g.spur_reopened > 0 && g.refining.open > 0` | — | — | 90 | `{ strain: 0.03 }` | `pale_root 3`; `at { "1": { "refining.max": 1 } }` |
 | `dig_pale_root` "Dig pale root by hand" | task/Work | `g.pale_root_bank > 0` | — | `{ vigor: 3 }` | — | — | `pale_root 1` |
-| `trade_pale_root` "Trade pale root" | task/Trade | `g.reedmarket > 0` | — | `{ pale_root: 3 }` | — | — | `coin 12` |
+| `trade_pale_root` "Trade pale root" | task/Trade | `g.reedmarket > 0 && g.refining.open > 0` | — | `{ pale_root: 3 }` | — | — | `coin 12` |
 
 The `chime_leaf` and `spur_leaf` flags are not set by `relay_test` or `spur_clearing`; the leaf teachings below are claimed by click so they are owned and tagged.
 
@@ -134,7 +134,7 @@ The `chime_leaf` and `spur_leaf` flags are not set by `relay_test` or `spur_clea
 | `shu_three_leaves` "Shu's three leaves" (also the pill teaching) | `g.slip_leaves > 0` | `g.lore >= 5` "Lore 5: the three leaves are in the old hand." | `{ herbs: 12, coin: 30 }` | `"refining.open": 1, "breath_gathering.rate": 0.25, "lore.max": 1` |
 | `chime_leaf` "The relay keeper's leaf" | `g.chime_explained > 0` | — | `{}` (free; claimed by click) | `"qi_sense.mod.qi.max": 1` |
 | `spur_leaf` "The shelter's leaf" | `g.spur_reopened > 0` | — | `{}` | `"composure.mod.strain.max": 1` |
-| `keeper_leaf` "Keeper Han's leaf" | `g.waystation > 0` | `g.t_leaf >= 3` "Three leaves in hand; Han trades his for the set." | `{ coin: 40 }` | `"circulation.mod.life.max": 1` |
+| `keeper_leaf` "Keeper Han's leaf" | `g.waystation > 0` | `g.t_leaf >= 3` "Shu's three leaves and two more in hand; Han trades his for the set." | `{ coin: 40 }` | `"circulation.mod.life.max": 1` |
 
 **Sphere teachings** (teaching, Purchases, `max 1`). Each raises its family cap +2 (ridge 5 → First Direction 8 → 10) and reveals the sphere's pair, site, recipe and commission.
 
@@ -159,7 +159,7 @@ The `chime_leaf` and `spur_leaf` flags are not set by `relay_test` or `spur_clea
 | earth | `root_to_the_vein` "Root to the vein" | `g.veined_ore < g.veined_ore.max` | `veined_ore 3` | `guard.max 2, strain.discount 0.25` |
 | earth | `listen_for_water` "Listen for water" | `g.focus < g.focus.max` | `focus 4` | `focus.max 3, qi_sense.rate 0.05` |
 | formation | `anchor_the_array` "Anchor the array" | `g.inked_tokens < g.inked_tokens.max` | `inked_tokens 3` | `home_space.max 1, craft_warding_strip.rate 0.25, craft_specimen_case.rate 0.25` |
-| formation | `ward_the_threshold` "Ward the threshold" | `g.focus < g.focus.max` | `focus 3` | `dodge.max 10, rest.rate 0.25` |
+| formation | `ward_the_threshold` "Ward the threshold" | `g.focus < g.focus.max` | `focus 3` | `focus.max 2, dodge.max 10, rest.rate 0.25` |
 | pill | `draw_the_essence` "Draw the essence" | `g.pale_root < g.pale_root.max` | `pale_root 2` | `craft_settling_draught.rate 0.5, craft_marrow_draught.rate 0.5, craft_clear_pill.rate 0.5` |
 | pill | `temper_the_fire` "Temper the fire" | `g.herbs < g.herbs.max` | `herbs 4` | `strain.max 2, life.max 2` |
 
@@ -170,7 +170,7 @@ The `chime_leaf` and `spur_leaf` flags are not set by `relay_test` or `spur_clea
 | `scree_climb` "Climb the scree under load" (body) | `g.conditioning_sheets > 0` | 240 | `{ strain: 0.05, focus: 0.02 }` | `marrow_herbs 3, circulation.exp 40` |
 | `rope_gallery` "Cut the fouled gallery lines" (sword) | `g.tam_lessons > 0` | 240 | `{ strain: 0.03, focus: 0.04 }` | `whetstone_grit 3, blade_intent.exp 40` |
 | `undercut_bank` "Read the undercut bank" (earth) | `g.current_accounts > 0` | 240 | `{ strain: 0.03, focus: 0.04 }` | `veined_ore 3, ground_reading.exp 40` |
-| `relay_stones` "Walk the relay stones" (formation) | `g.overlay_plan > 0` | 240 | `{ strain: 0.02, focus: 0.05 }` | `inked_tokens 3, array_craft.exp 40` |
+| `relay_stones` "Walk the relay stones" (formation) | `g.overlay_plan > 0` | 240 | `{ strain: 0.02, focus: 0.04 }` | `inked_tokens 3, array_craft.exp 40` |
 | (pill) `pale_root_bank` above | | | | |
 
 **Commissions** (site, group `Commissions`, `max 1`, length 120, `tags: ["t_commission"]`, result `coin 40, coin_earned 40` plus the sphere line; `require: g.waystation > 0 && <sphere family> >= 6`):
@@ -193,8 +193,8 @@ Han's specimen-case commission from ADR 0016 is the kit recipe below, not a sixt
 | `craft_marrow_draught` "Reduce a marrow draught" | recipe | `g.refining >= 2` | `g.workbench > 0 && g.clay_vessel > 0 && g.marrow_herbs >= 2 && g.pale_root >= 1` | `{ marrow_herbs: 2, pale_root: 1 }` | 60 | `marrow_draught 1`, `fill: marrow_draught` | — |
 | `craft_clear_pill` "Roll a clear pill" | recipe | `g.refining >= 3` | `g.workbench > 0 && g.clay_vessel > 0 && g.pale_root >= 3 && g.coin >= 5` | `{ pale_root: 3, coin: 5 }` | 90 | `clear_pill 1`, `fill: clear_pill` | — |
 | `craft_specimen_case` "Fit Han's specimen case" | recipe | `g.waystation > 0 && g.lore >= 5` | `g.workbench > 0 && g.timber >= 3 && g.inked_tokens >= 1 && g.coin >= 10` | `{ timber: 3, inked_tokens: 1, coin: 10 }` | 90 | `specimen_case 1`; `max 1` | — |
-| `deliver_specimen_case` "Deliver the case to Han" | purchase | `g.specimen_case > 0` | — | `{ specimen_case: 1 }` | — | `coin 40, coin_earned 40`; `mod { "craft_clear_pill.length": -30 }` (the reusable recipe improvement) | — |
-| `take_settling_draught` "Drink a settling draught" | preparation | `g.refining.open > 0` | `g.settling_draught >= 1` | `{ settling_draught: 1 }` | — | — | `lasts 300`, `held { "strain.discount": 0.25, "focus.discount": 0.25 }` |
+| `deliver_specimen_case` "Deliver the case to Han" | purchase | `g.specimen_case > 0` | — | `{ specimen_case: 1 }` | — | `coin 40, coin_earned 40`; `mod { "lore.max": 1 }` (every deliverer feels it; the earlier `craft_clear_pill.length -30` paid nothing to a deliverer without Refining) | — |
+| `take_settling_draught` "Drink a settling draught" | preparation | `g.refining.open > 0` | `g.settling_draught >= 1` | `{ settling_draught: 1 }` | — | — | `lasts 600` (ten minutes: the draught also ticks through the Rest that follows an outing), `held { "strain.discount": 0.25, "focus.discount": 0.25 }` |
 | `take_marrow_draught` "Drink a marrow draught" | preparation | `g.refining >= 2` | `g.marrow_draught >= 1` | `{ marrow_draught: 1 }` | — | — | `lasts 300`, `held { "body_drills.rate": 0.5, "scree_climb.rate": 0.25 }` |
 | `take_clear_pill` "Take a clear pill" | preparation | `g.refining >= 3` | `g.clear_pill >= 1` | `{ clear_pill: 1 }` | — | `qi 6, focus 4` | — |
 
@@ -206,9 +206,9 @@ Han's specimen-case commission from ADR 0016 is the kit recipe below, not a sixt
 | `open_stance` "Open stance" | `dodge.max 10, guard.max -1` |
 | `pressing_stance` "Pressing stance" | `strike.max 2, dodge.max -5` |
 
-**Fight** (optional, nothing gated behind it): `spur_pair` "Two men at the spur" (Fights, `require: g.damaged_spur > 0`, `cost { vigor: 4, herbs: 3 }`, length 60, `strain { strain: 0.06 }`, `encounter: { foe: { name: "the two at the spur", life: 18, strike: 10, guard: 6, speed: 1.2, hit: 80, dodge: 20, technique: { name: "the rush", every: 3, strike: 16 } }, success: { coin: 30, whetstone_grit: 4 }, failureText }` in the bandit's pattern). Sized against the real states: at the body line's waystation (Strike 9, Guard 8, Life 24) it reads a likely loss at about 41%, and the Rooted stance makes it a likely win at about 77%; at the sword line's waystation (Guard 2) it is lost.
+**Fight** (optional, nothing gated behind it): `spur_pair` "Two men at the spur" (Fights, `require: g.damaged_spur > 0`, `cost { vigor: 4, herbs: 3 }`, length 60, `strain { strain: 0.06 }`, `encounter: { foe: { name: "the two at the spur", life: 18, strike: 10, guard: 6, speed: 1.2, hit: 80, dodge: 20, technique: { name: "the rush", every: 3, strike: 16 } }, success: { coin: 30, whetstone_grit: 4 }, failureText }` in the bandit's pattern; the `failureText` names the records that raise Guard (*Temper the marrow*, *Sink the breath under the load*, *Root to the vein*, *Let the blade wait*, the Rooted stance), not "the body methods", since *Carry without rest* raises none). Sized against the real states: at the body line's waystation (Strike 9, Guard 8, Life 24) it reads a likely loss at about 41%, and the Rooted stance makes it a likely win at about 77%; at the sword line's waystation (Guard 2) it is lost.
 
-**Home**: `ridge_room` "A room at the waystation" (home, Home, `require: g.waystation > 0`, `buy { coin: 90, timber: 4 }`, `mod { "home_space.max": 2, "ground_reading.rate": 0.1, "lore.rate": -0.1 }`, `slots: ["study"]`, no `lock`, `max 1`, desc "A room at the waystation kept beside the cottage"). Design plan B.5's Ridge Room, without closing the village home.
+**Home**: `ridge_room` "A room at the waystation" (home, Home, `require: g.waystation > 0`, `buy { coin: 90, timber: 4 }`, `mod { "home_space.max": 2, "herbs.max": 10, "ground_reading.rate": 0.1, "lore.rate": -0.1 }`, `slots: ["study"]`, no `lock`, `max 1`, desc "A room at the waystation kept beside the cottage"). Design plan B.5's Ridge Room, without closing the village home; the reading desk can fill its study place.
 
 **The Second Direction** (breakthrough, group Practice as `first_direction`, `require: g.waystation > 0 && g.first_direction > 0`, length 300 (tuned from 240 when the blade-body route came in under the floor), `max 1`):
 
@@ -252,9 +252,9 @@ Beats, not a schedule; the measured run belongs to the simulation report.
 | 4 | The spur: a staff or shod stakes from the bench, then three minutes clearing the slide. Strain +2, the shelter's leaf, stone; the pale-root bank once Refining is open; two men waiting, optional. |
 | 5 | The sphere teachings at Lore 5 and a family at 5: the sheets, Tam's second lesson, the accounts, the overlay; Shu's three leaves open Refining and the clay vessel. Each reveals a deep pair, a site, a commission. |
 | 6 | The second commitment inside a sphere: one half of its deep pair into an attunement place, the other closes with a warning. The sphere site raises the cap; the commission at family 6 pays coin and a material cap. |
-| 7 | The bench: draughts that last five minutes, the clear pill, Han's specimen case delivered for coin and a faster pill. A fourth place after the First Direction holds a third method. |
+| 7 | The bench: draughts that last ten minutes of activity, the clear pill, Han's specimen case delivered for coin and a level more of Lore. A fourth place after the First Direction holds a third method. |
 | 8 | "Take the Second Direction" shows the core (two spheres deepened, three methods held) and 3 of 6; the bill wants a full reservoir. Four minutes. The title is derived from what is held and named in the banner; a fifth place and the hobby slot open; the bank keeps three days. |
-| 9 | A hobby in the second place at half pace; the terrace to Reedmarket (four minutes, herbs); arrival. The market porters' work closes the waystation's; pale root trades; the three remaining leaves are named. |
+| 9 | A hobby in the second place at half pace; the terrace to Reedmarket (four minutes, herbs); arrival. The purse carries a hundred more; the market porters' work pays fourteen and closes the waystation's; pale root trades for refiners; a porter names the three remaining leaves, which become leads. |
 
 ## C2.6 Interface
 
@@ -280,7 +280,7 @@ ADR 0031's consequences, in the shell's terms (design plan C.6 stands):
 | Foundation, ridge | unchanged (480–780 s; 720–1440 s) | the existing routes |
 | places | 5 | the most places any route reaches must be held at once by some route (rule 74) |
 
-Ten deep routes continue from the ridge routes' end state, at least one per title. Every route deepens two spheres, since the core asks for two: the pure titles come from the non-hybrid pairings (body with formation, sword with earth), resolved to the sphere trained higher; the pill routes pair a ridge sphere with the pill. Pure body (body + formation, *Temper the marrow* and *Ward the threshold*, the Rooted stance, the spur fight won once it is likely), pure sword (sword + earth, Pressing), pure earth (earth + sword, Open), pure formation (formation + body, the specimen case), pill (body + pill, *Draw the essence*, the refining drills as the hobby once the place exists, every draught), pill-fire (earth + pill, *Temper the fire*), mountain-vessel (body + earth), blade-body (sword + body, the spur fight lost first at the sword line's stats), earth-array (earth + formation), intent-warden (formation + sword). The second sphere also holds the other half of its ridge pair, so both halves of every ridge pair are witnessed. Every title, both halves of every pair, every commission, every stance, `spur_pair`, `ridge_room`, the draughts in effect and the specimen case must be witnessed. Grammar: `hobby` only with `length: "continuous"` and no `autoStart`; `stance` only on a technique with `held` and without `attune`, `cost`, `length` or `result`; `lasts` only on a preparation, a positive integer, and `held` on a preparation only with `lasts`; a technique whose `lock` names a technique must be locked back by it and carry a `warn` (the opening's channel and hollow readings share no key, so the pair rule asks for the lock alone); `foe.technique.every` an integer ≥ 2, `strike` an integer ≥ 0. The runner cuts timber to a floor of six on these routes, stops gathering herbs above the bill, and keeps wages going while a Vigor-paid method still needs uses.
+Ten deep routes continue from the ridge routes' end state, at least one per title. Every route deepens two spheres, since the core asks for two: the pure titles come from the non-hybrid pairings (body with formation, sword with earth), resolved to the sphere trained higher; the pill routes pair a ridge sphere with the pill. Pure body (body + formation, *Temper the marrow* and *Ward the threshold*, the Rooted stance, the spur fight won once it is likely), pure sword (sword + earth, Pressing), pure earth (earth + sword, Open), pure formation (formation + body, the specimen case), pill (body + pill, *Draw the essence*, the refining drills as the hobby once the place exists, every draught), pill-fire (earth + pill, *Temper the fire*), mountain-vessel (body + earth), blade-body (sword + body, the spur fight lost first at the sword line's stats), earth-array (earth + formation), intent-warden (formation + sword). The second sphere also holds the other half of its ridge pair, so both halves of every ridge pair are witnessed. Every title, both halves of every pair, every commission, every stance, `spur_pair`, `ridge_room`, the draughts in effect and the specimen case must be witnessed. Grammar: `hobby` only with `length: "continuous"` and no `autoStart`; `stance` only on a technique with `held` and without `attune`, `cost`, `length` or `result`; `lasts` only on a preparation, a positive integer, and `held` on a preparation only with `lasts`; a technique whose `lock` names a technique must be locked back by it and carry a `warn` (the opening's channel and hollow readings share no key, so the pair rule asks for the lock alone); `foe.technique.every` an integer ≥ 2, `strike` an integer ≥ 0. The runner cuts timber to a floor of six on these routes, stops gathering herbs above the bill, keeps wages going until a Vigor-paid half has met its own use target (twelve for the first sphere's half, three for the second's), makes poultices as the herb sink while a herb-paid half still needs uses (the herb trickle fills the store otherwise), and waits for a walk parked on a gauge rather than restarting it or running something else over it.
 
 Tuning order if a band fails: too fast, lengthen the sphere sites to 240 s and the Second Direction to 300 s before touching bills; too slow, cut the commissions to 90 s and the teachings' Lore need to 4 before touching drill rates.
 

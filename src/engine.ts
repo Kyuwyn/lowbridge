@@ -1333,15 +1333,18 @@ export class GameEngine {
     }
     if (stance) return `Taking the ${inSentence(stance.name)}: ${percent(stance.chance)}`;
     if (this.byId.has(ATTUNE_SLOTS) && this.state.attuned.length < Math.floor(this.stat(ATTUNE_SLOTS).max + EPSILON)) {
-      let best: { name: string; chance: number } | undefined;
+      let best: { name: string; chance: number; closes: string[] } | undefined;
       for (const method of this.records) {
         if (!method.attune || this.isAttuned(method.id) || !this.visible(method.id)) continue;
         const adds = this.heldAdds(method.id);
         if (!Object.keys(adds).length) continue;
         const you = this.fighter(adds), chance = this.replay(record, you, life).chance;
-        if (better(chance, you) && (!best || chance > best.chance)) best = { name: method.name ?? method.id, chance };
+        if (better(chance, you) && (!best || chance > best.chance)) {
+          best = { name: method.name ?? method.id, chance, closes: (method.lock ?? []).filter(target => !this.locked(target)).map(target => this.byId.get(target)?.name ?? target) };
+        }
       }
-      if (best) return `Holding ${best.name} as well: ${percent(best.chance)}`;
+      // A pair half closes its sibling the moment it is held; the hint says so before the player commits.
+      if (best) return `Holding ${best.name} as well${best.closes.length ? ` (closes ${list(best.closes)})` : ""}: ${percent(best.chance)}`;
     }
     const strikeName = this.record(STRIKE).name ?? STRIKE, sources = this.capSources(STRIKE).map(source => source.name ?? source.id);
     const raisers = sources.length ? `raised by ${sources.join(" or ")}` : "nothing you know of raises it further";

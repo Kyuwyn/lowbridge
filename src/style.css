@@ -427,7 +427,7 @@ h1, h2, h3, h4, p, blockquote, dl, dd { margin: 0; }
 .completion-copy { padding: .75rem .1rem .25rem; }
 .completion-copy p { color: #c2d1ad; }
 .completion-copy .completion-note { color: #a5b695; margin-top: .5rem; }
-.route-keys .lead-list p + p { color: var(--dim); }
+.lead-list p + p { color: var(--dim); }
 .lead-list { list-style: none; padding: 0 .1rem; margin: 0; }
 .lead-list li { padding: .65rem 0; border-top: 1px solid #3d4d35; }
 .lead-list h4 { color: #ccd9b8; font-weight: 500; font-size: .82rem; margin-bottom: .25rem; }

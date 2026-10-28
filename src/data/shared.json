@@ -288,20 +288,36 @@
   },
   {
     "id": "route_records", "name": "Surviving route records toward the Cloudwell basin", "kind": "lead", "group": "Leads",
-    "desc": "The keeper's ledgers name a basin beyond the ridge.", "require": "g.waystation > 0", "initial": { "value": 0, "max": 1 }
+    "desc": "The keeper's ledgers name a basin beyond the ridge.", "require": "g.waystation > 0", "initial": { "value": 0, "max": 1 },
+    "need": "g.bypass_known > 0", "needtext": "The rise above the slide has not been climbed."
   },
   {
     "id": "unusual_chime", "name": "An unusual chime", "kind": "lead", "group": "Leads",
-    "desc": "At dusk something rings once from higher up the ridge.", "require": "g.waystation > 0", "initial": { "value": 0, "max": 1 }
+    "desc": "At dusk something rings once from higher up the ridge.", "require": "g.waystation > 0", "initial": { "value": 0, "max": 1 },
+    "need": "g.chime_explained > 0", "needtext": "The chime has not been explained: sit it out, then test the relay stone."
   },
   {
     "id": "damaged_spur", "name": "The damaged spur", "kind": "lead", "group": "Leads",
-    "desc": "A spur of the old path ends at a slide.", "require": "g.waystation > 0", "initial": { "value": 0, "max": 1 }
+    "desc": "A spur of the old path ends at a slide.", "require": "g.waystation > 0", "initial": { "value": 0, "max": 1 },
+    "need": "g.spur_reopened > 0", "needtext": "The slide on the spur has not been cleared; it wants a staff or shod stakes from the bench."
   },
   {
     "id": "slip_leaves", "name": "The slip's other nine leaves", "kind": "lead", "group": "Leads",
-    "desc": "The keeper's oldest ledger lists a jade slip of twelve leaves, carried up the porters' path to be sold in the Cloudwell basin long before Shu was born. Three of its leaves stayed below.",
-    "require": "g.waystation > 0", "initial": { "value": 0, "max": 1 }
+    "desc": "The keeper's oldest ledger lists a jade slip of twelve leaves, carried up the porters' path to be sold in the Cloudwell basin long before Shu was born. Six never went: three are the slip you hold, three stayed in Shu's family. The other six went up the path, and the ledger places only some of them.",
+    "require": "g.waystation > 0", "initial": { "value": 0, "max": 1 },
+    "need": "g.t_leaf >= 4", "needtext": "Six of the nine are on the road: Shu's three, the relay keeper's, the shelter's and Han's."
+  },
+  {
+    "id": "ferryman_leaf", "name": "The ferryman's leaf", "kind": "lead", "group": "Leads",
+    "desc": "One of the three leaves the ledger could not place, down at the Cloudwell crossing.", "require": "g.reedmarket > 0", "initial": { "value": 0, "max": 1 }
+  },
+  {
+    "id": "cistern_leaf", "name": "The cistern's leaf", "kind": "lead", "group": "Leads",
+    "desc": "One of the three leaves the ledger could not place, under Reedmarket itself.", "require": "g.reedmarket > 0", "initial": { "value": 0, "max": 1 }
+  },
+  {
+    "id": "far_leaf", "name": "The far leaf", "kind": "lead", "group": "Leads",
+    "desc": "The leaf the ledger only calls the far leaf; the porter only points at it.", "require": "g.reedmarket > 0", "initial": { "value": 0, "max": 1 }
   },
   {
     "id": "coffer", "name": "Iron-bound coffer", "kind": "purchase", "group": "Purchases",
@@ -320,7 +336,7 @@
   {
     "id": "reading_desk", "name": "Reading desk", "kind": "arrangement", "group": "Home", "slot": "study",
     "desc": "Fills the place you study. Copying the slip goes half again as fast, and Lore can reach one level further.",
-    "require": "g.cottage > 0",
+    "require": "g.cottage > 0 || g.ridge_room > 0",
     "buy": { "coin": 25, "timber": 3 }, "mod": { "fragment_notes.rate": 0.5, "lore.max": 1 }, "max": 1
   },
   {

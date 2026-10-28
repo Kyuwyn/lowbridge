@@ -97,7 +97,7 @@
       "seen": true
     },
     "coin_earned": {
-      "value": 4427.500000000005,
+      "value": 4431.500000000005,
       "seen": true
     },
     "lore": {
@@ -636,8 +636,8 @@
       "seen": true
     },
     "take_settling_draught": {
-      "value": 4,
-      "reps": 4,
+      "value": 3,
+      "reps": 3,
       "started": true,
       "seen": true
     },
@@ -720,6 +720,8 @@
     "keeper_board",
     "body_arrival",
     "chime_placed",
+    "carried_past_rest",
+    "essence_first_drawn",
     "spur_cleared",
     "title_pill_refiner",
     "bypass_seen"
@@ -770,30 +772,6 @@
     "focus:10"
   ],
   "log": [
-    {
-      "id": 197,
-      "kind": "completion",
-      "text": "Herb Lore reaches level 1.",
-      "activitySeconds": 1464
-    },
-    {
-      "id": 198,
-      "kind": "discovery",
-      "text": "Herb rack is now known.",
-      "activitySeconds": 1464
-    },
-    {
-      "id": 199,
-      "kind": "purchase",
-      "text": "Herb rack is now part of your life.",
-      "activitySeconds": 1464
-    },
-    {
-      "id": 200,
-      "kind": "completion",
-      "text": "Take a First Direction: objective complete.",
-      "activitySeconds": 1625
-    },
     {
       "id": 201,
       "kind": "story",
@@ -1294,405 +1272,405 @@
     },
     {
       "id": 284,
-      "kind": "completion",
-      "text": "Practise the slip's breath method: objective complete.",
-      "activitySeconds": 2669
+      "kind": "story",
+      "text": "You reach the point where you would have stopped and find there is no stop in you. The breath keeps the pace the legs have set, and the Vigor comes back on the move.",
+      "activitySeconds": 2651
     },
     {
       "id": 285,
       "kind": "completion",
       "text": "Practise the slip's breath method: objective complete.",
-      "activitySeconds": 2685
+      "activitySeconds": 2669
     },
     {
       "id": 286,
-      "kind": "purchase",
-      "text": "Reading desk is now part of your life.",
+      "kind": "completion",
+      "text": "Practise the slip's breath method: objective complete.",
       "activitySeconds": 2685
     },
     {
       "id": 287,
       "kind": "purchase",
-      "text": "Clay refining vessel is now part of your life.",
+      "text": "Reading desk is now part of your life.",
       "activitySeconds": 2685
     },
     {
       "id": 288,
+      "kind": "purchase",
+      "text": "Clay refining vessel is now part of your life.",
+      "activitySeconds": 2685
+    },
+    {
+      "id": 289,
       "kind": "completion",
       "text": "Labour reaches level 7.",
       "activitySeconds": 2685
     },
     {
-      "id": 289,
+      "id": 290,
       "kind": "cap",
       "text": "Labour has reached 7/7. Nothing you know of raises this further.",
       "activitySeconds": 2685
     },
     {
-      "id": 290,
+      "id": 291,
       "kind": "purchase",
       "text": "Workbench is now part of your life.",
       "activitySeconds": 2685
     },
     {
-      "id": 291,
+      "id": 292,
       "kind": "purchase",
       "text": "A room at the waystation is now part of your life.",
       "activitySeconds": 2685
     },
     {
-      "id": 292,
+      "id": 293,
       "kind": "completion",
       "text": "Practise the slip's breath method: objective complete.",
       "activitySeconds": 2701
     },
     {
-      "id": 293,
+      "id": 294,
       "kind": "completion",
       "text": "Refining reaches level 1.",
       "activitySeconds": 2717
     },
     {
-      "id": 294,
+      "id": 295,
       "kind": "completion",
       "text": "Steep, reduce, taste: objective complete.",
-      "activitySeconds": 2717
-    },
-    {
-      "id": 295,
-      "kind": "discovery",
-      "text": "Draw the essence is now known.",
       "activitySeconds": 2717
     },
     {
       "id": 296,
       "kind": "discovery",
-      "text": "Temper the fire is now known.",
+      "text": "Draw the essence is now known.",
       "activitySeconds": 2717
     },
     {
       "id": 297,
-      "kind": "method",
-      "text": "Carry the current is released.",
+      "kind": "discovery",
+      "text": "Temper the fire is now known.",
       "activitySeconds": 2717
     },
     {
       "id": 298,
       "kind": "method",
-      "text": "Draw the essence is attuned.",
+      "text": "Carry the current is released.",
       "activitySeconds": 2717
     },
     {
       "id": 299,
+      "kind": "method",
+      "text": "Draw the essence is attuned.",
+      "activitySeconds": 2717
+    },
+    {
+      "id": 300,
+      "kind": "story",
+      "text": "The root gives up what it was keeping, pale and bitter in the vessel. Shu's hand in the margin says this is the whole of refining: knowing what to ask of a thing.",
+      "activitySeconds": 2717
+    },
+    {
+      "id": 301,
       "kind": "completion",
       "text": "Cut a walking staff: objective complete.",
       "activitySeconds": 2777
     },
     {
-      "id": 300,
+      "id": 302,
       "kind": "cap",
       "text": "Walking staff has reached 1/1. Nothing you know of raises this further.",
       "activitySeconds": 2777
     },
     {
-      "id": 301,
+      "id": 303,
       "kind": "cap",
       "text": "Vigor has reached 42/42. A higher cap is possible through Circulation.",
       "activitySeconds": 2812
     },
     {
-      "id": 302,
+      "id": 304,
       "kind": "completion",
       "text": "Clear the slide on the spur: objective complete.",
       "activitySeconds": 2957
     },
     {
-      "id": 303,
+      "id": 305,
       "kind": "story",
       "text": "The last of the slide goes over the edge and the spur runs on to a survey shelter nobody has opened in years. There is a leaf of the slip on its shelf, and below the shelter a bank of pale root.",
       "activitySeconds": 2957
     },
     {
-      "id": 304,
+      "id": 306,
       "kind": "discovery",
       "text": "Dig the pale-root bank is now known.",
       "activitySeconds": 2957
     },
     {
-      "id": 305,
+      "id": 307,
       "kind": "discovery",
       "text": "The shelter's leaf is now known.",
       "activitySeconds": 2957
     },
     {
-      "id": 306,
+      "id": 308,
       "kind": "purchase",
       "text": "The shelter's leaf is now part of your life.",
       "activitySeconds": 2957
     },
     {
-      "id": 307,
+      "id": 309,
       "kind": "completion",
       "text": "Refining reaches level 2.",
       "activitySeconds": 2989
     },
     {
-      "id": 308,
+      "id": 310,
       "kind": "completion",
       "text": "Steep, reduce, taste: objective complete.",
       "activitySeconds": 2989
     },
     {
-      "id": 309,
+      "id": 311,
       "kind": "discovery",
       "text": "Reduce a marrow draught is now known.",
       "activitySeconds": 2989
     },
     {
-      "id": 310,
+      "id": 312,
       "kind": "discovery",
       "text": "Drink a marrow draught is now known.",
       "activitySeconds": 2989
     },
     {
-      "id": 311,
+      "id": 313,
       "kind": "completion",
       "text": "Refining reaches level 3.",
       "activitySeconds": 3037
     },
     {
-      "id": 312,
+      "id": 314,
       "kind": "completion",
       "text": "Steep, reduce, taste: objective complete.",
-      "activitySeconds": 3037
-    },
-    {
-      "id": 313,
-      "kind": "discovery",
-      "text": "Stock Han's still-room is now known.",
-      "activitySeconds": 3037
-    },
-    {
-      "id": 314,
-      "kind": "discovery",
-      "text": "Roll a clear pill is now known.",
       "activitySeconds": 3037
     },
     {
       "id": 315,
       "kind": "discovery",
-      "text": "Take a clear pill is now known.",
+      "text": "Stock Han's still-room is now known.",
       "activitySeconds": 3037
     },
     {
       "id": 316,
+      "kind": "discovery",
+      "text": "Roll a clear pill is now known.",
+      "activitySeconds": 3037
+    },
+    {
+      "id": 317,
+      "kind": "discovery",
+      "text": "Take a clear pill is now known.",
+      "activitySeconds": 3037
+    },
+    {
+      "id": 318,
       "kind": "completion",
       "text": "Refining reaches level 4.",
       "activitySeconds": 3101
     },
     {
-      "id": 317,
+      "id": 319,
       "kind": "completion",
       "text": "Steep, reduce, taste: objective complete.",
       "activitySeconds": 3101
     },
     {
-      "id": 318,
+      "id": 320,
       "kind": "completion",
       "text": "Refining reaches level 5.",
       "activitySeconds": 3181
     },
     {
-      "id": 319,
+      "id": 321,
       "kind": "completion",
       "text": "Steep, reduce, taste: objective complete.",
       "activitySeconds": 3181
     },
     {
-      "id": 320,
+      "id": 322,
       "kind": "cap",
       "text": "Refining has reached 5/5. A higher cap is possible through Dig the pale-root bank or Take the Second Direction.",
       "activitySeconds": 3181
     },
     {
-      "id": 321,
+      "id": 323,
       "kind": "completion",
       "text": "Dig the pale-root bank: objective complete.",
       "activitySeconds": 3271
     },
     {
-      "id": 322,
+      "id": 324,
       "kind": "discovery",
       "text": "Dig pale root by hand is now known.",
       "activitySeconds": 3271
     },
     {
-      "id": 323,
+      "id": 325,
       "kind": "cap",
       "text": "Herbs has reached 44/44. A higher cap is possible through Herb Lore or Herb plot by the door.",
       "activitySeconds": 3309
     },
     {
-      "id": 324,
+      "id": 326,
       "kind": "completion",
       "text": "Dig the pale-root bank: objective complete.",
       "activitySeconds": 3361
     },
     {
-      "id": 325,
+      "id": 327,
       "kind": "completion",
       "text": "Steep a settling draught: objective complete.",
       "activitySeconds": 3391
     },
     {
-      "id": 326,
+      "id": 328,
       "kind": "completion",
       "text": "Steep a settling draught: objective complete.",
       "activitySeconds": 3421
     },
     {
-      "id": 327,
+      "id": 329,
       "kind": "completion",
       "text": "Steep a settling draught: objective complete.",
       "activitySeconds": 3451
     },
     {
-      "id": 328,
+      "id": 330,
       "kind": "completion",
       "text": "Stock Han's still-room: objective complete.",
       "activitySeconds": 3571
     },
     {
-      "id": 329,
+      "id": 331,
       "kind": "completion",
       "text": "Steep a settling draught: objective complete.",
       "activitySeconds": 3601
     },
     {
-      "id": 330,
+      "id": 332,
       "kind": "completion",
       "text": "Steep a settling draught: objective complete.",
       "activitySeconds": 3631
     },
     {
-      "id": 331,
+      "id": 333,
       "kind": "completion",
       "text": "Practise the slip's breath method: objective complete.",
       "activitySeconds": 3637
     },
     {
-      "id": 332,
-      "kind": "completion",
-      "text": "Drink a settling draught wears off.",
-      "activitySeconds": 3691
-    },
-    {
-      "id": 333,
+      "id": 334,
       "kind": "cap",
       "text": "Strain has reached 16/16. A higher cap is possible through Composure or Take the Second Direction.",
       "activitySeconds": 3785
     },
     {
-      "id": 334,
+      "id": 335,
       "kind": "completion",
       "text": "Take the Second Direction: objective complete.",
       "activitySeconds": 3937
     },
     {
-      "id": 335,
+      "id": 336,
       "kind": "discovery",
       "text": "Hobby is now known.",
       "activitySeconds": 3937
     },
     {
-      "id": 336,
+      "id": 337,
       "kind": "story",
       "text": "Heat, root and breath in the one vessel. Pill Refiner. Shu's eye for a bundle is an eye for a root: every level of Herb Lore holds a pale root more.",
       "activitySeconds": 3937
     },
     {
-      "id": 337,
+      "id": 338,
       "kind": "discovery",
       "text": "Pill Refiner is now known.",
       "activitySeconds": 3937
     },
     {
-      "id": 338,
+      "id": 339,
       "kind": "method",
       "text": "Steep, reduce, taste is taken up as a hobby.",
       "activitySeconds": 3937
     },
     {
-      "id": 339,
+      "id": 340,
       "kind": "completion",
       "text": "Reduce a marrow draught: objective complete.",
       "activitySeconds": 3967
     },
     {
-      "id": 340,
+      "id": 341,
       "kind": "completion",
       "text": "Drink a settling draught wears off.",
       "activitySeconds": 3991
     },
     {
-      "id": 341,
+      "id": 342,
       "kind": "cap",
       "text": "Strain has reached 18/18. A higher cap is possible through Composure.",
       "activitySeconds": 4021
     },
     {
-      "id": 342,
+      "id": 343,
       "kind": "completion",
       "text": "Roll a clear pill: objective complete.",
       "activitySeconds": 4027
     },
     {
-      "id": 343,
+      "id": 344,
       "kind": "cap",
       "text": "Focus has reached 10/10. Further ways to raise this cap have not been discovered.",
       "activitySeconds": 4027
     },
     {
-      "id": 344,
+      "id": 345,
       "kind": "completion",
       "text": "Rest: objective complete.",
       "activitySeconds": 4027
     },
     {
-      "id": 345,
+      "id": 346,
       "kind": "completion",
       "text": "Refining reaches level 6.",
       "activitySeconds": 4129
     },
     {
-      "id": 346,
+      "id": 347,
       "kind": "completion",
       "text": "Climb the rise above the slide: objective complete.",
       "activitySeconds": 4177
     },
     {
-      "id": 347,
+      "id": 348,
       "kind": "story",
       "text": "From the top of the rise the slide is a grey fan below you, and beyond it a terrace runs level along the ridge's flank as far as the eye follows. The ledger called it a day's carry to the market.",
       "activitySeconds": 4177
     },
     {
-      "id": 348,
+      "id": 349,
       "kind": "discovery",
       "text": "Trace the terrace to Reedmarket is now known.",
       "activitySeconds": 4177
     },
     {
-      "id": 349,
+      "id": 350,
       "kind": "completion",
       "text": "Drink a marrow draught wears off.",
       "activitySeconds": 4267
-    },
-    {
-      "id": 350,
-      "kind": "completion",
-      "text": "Drink a settling draught wears off.",
-      "activitySeconds": 4291
     },
     {
       "id": 351,
@@ -1708,24 +1686,48 @@
     },
     {
       "id": 353,
-      "kind": "story",
-      "text": "The terrace drops into reed beds and the reed beds into a street of stalls at the basin's edge. Reedmarket. A porter takes your bundles without asking where you came from, and pays.",
+      "kind": "discovery",
+      "text": "The ferryman's leaf is now known.",
       "activitySeconds": 4417
     },
     {
       "id": 354,
       "kind": "discovery",
-      "text": "Carry for the market porters is now known.",
+      "text": "The cistern's leaf is now known.",
       "activitySeconds": 4417
     },
     {
       "id": 355,
       "kind": "discovery",
-      "text": "Trade pale root is now known.",
+      "text": "The far leaf is now known.",
       "activitySeconds": 4417
     },
     {
       "id": 356,
+      "kind": "story",
+      "text": "The terrace drops into reed beds and the reed beds into a street of stalls at the basin's edge. Reedmarket. A porter takes your bundles without asking where you came from, and pays.",
+      "activitySeconds": 4417
+    },
+    {
+      "id": 357,
+      "kind": "story",
+      "text": "A porter who knows the ledger's hand reads the three leaves it could not place: the ferryman's, down at the Cloudwell crossing; the cistern's, under the market itself; and the far leaf, which he only points at.",
+      "activitySeconds": 4417
+    },
+    {
+      "id": 358,
+      "kind": "discovery",
+      "text": "Carry for the market porters is now known.",
+      "activitySeconds": 4417
+    },
+    {
+      "id": 359,
+      "kind": "discovery",
+      "text": "Trade pale root is now known.",
+      "activitySeconds": 4417
+    },
+    {
+      "id": 360,
       "kind": "method",
       "text": "You take the Rooted stance.",
       "activitySeconds": 4417
@@ -1736,7 +1738,7 @@
   "effects": [
     {
       "id": "take_settling_draught",
-      "remaining": 300
+      "remaining": 600
     }
   ],
   "stance": "rooted_stance"

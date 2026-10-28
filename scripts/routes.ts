@@ -547,6 +547,12 @@ export function runDeepRoute(name: DeepRoute, records: GameRecord[] = sourceReco
   const beatable = (engine: GameEngine) => engine.has("spur_pair") && engine.visible("spur_pair") && engine.fight("spur_pair").likely;
   const pillSetup = second.ridge ? [] : ["clay_vessel", "spur_clearing", "craft_walking_staff", "refining_drills", "pale_root_bank", "dig_pale_root", "craft_settling_draught", "take_settling_draught"];
   const materials = [from.material, ...secondLine ? [secondLine.material] : []];
+  const repTarget = (half: string) => half === firstHalf ? 12 : 3;
+  const needOf = (half: string) => records.find(record => record.id === half)?.need ?? "";
+  const vigorPaid = [firstHalf, secondHalf].filter(half => /g\.vigor </.test(needOf(half)));
+  // The herb trickle fills the store while away; a method paid back in herbs needs a sink until it has been used enough, and the poultice is the one every route can make.
+  const herbPaid = [firstHalf, secondHalf].filter(half => /g\.herbs </.test(needOf(half)));
+  const herbSinkEnough = herbPaid.map(half => `g.${half}.reps >= ${repTarget(half)}`).join(" && ");
   // The bench and the room come first: the runner cuts timber only toward the next unbuilt piece it lists, and the kit wants the bench.
   const prefer = [
     "second_direction",
@@ -554,7 +560,7 @@ export function runDeepRoute(name: DeepRoute, records: GameRecord[] = sourceReco
     "coffer", "cottage", "workbench", "ridge_room", "reading_desk",
     first.teaching, firstHalf, first.site, first.commission, ...first.kit,
     ...secondLine ? [secondLine.teaching, secondLine.arrangement, secondLine.drills, secondRidgeHalf!] : [],
-    second.teaching, ...pillSetup, secondHalf, second.site,
+    second.teaching, ...pillSetup, secondHalf, second.site, ...herbPaid.length ? ["craft_herb_poultice", "take_herb_poultice"] : [],
     ...deep.draughts ? ["craft_settling_draught", "take_settling_draught", "stock_the_still_room"] : [],
     "chime_watch", "relay_test", "spur_clearing", "craft_walking_staff", "chime_leaf", "spur_leaf", "keeper_leaf", "shu_three_leaves",
     "herb_rack", "fragment_notes", from.drills, ...secondLine ? [secondLine.chore] : [], from.chore,
@@ -565,8 +571,6 @@ export function runDeepRoute(name: DeepRoute, records: GameRecord[] = sourceReco
     ...deep.draughts ? ["craft_marrow_draught", "take_marrow_draught", "craft_clear_pill", "take_clear_pill"] : [],
     "landslide_rise", "terrace_bypass", "reedmarket_work", "trade_pale_root",
   ];
-  const repTarget = (half: string) => half === firstHalf ? 10 : 3;
-  const vigorPaid = [firstHalf, secondHalf].filter(half => /g\.vigor </.test(records.find(record => record.id === half)?.need ?? ""));
   return runRoute(name, {
     records, start: waystation, goal: "second_direction", maxSeconds: 21600, maxActions: 4000, focused: false, attentive: true, timber: 6,
     preferences: { prefer, avoid: [], others: 999 },
@@ -588,6 +592,7 @@ export function runDeepRoute(name: DeepRoute, records: GameRecord[] = sourceReco
       // Herbs are gathered toward the bill, not into a full store, so a method paid back in herbs can still be used.
       gather_herbs: "g.herbs >= 34", sort_herbs: "g.herbs >= 34",
       craft_settling_draught: "g.settling_draught >= 2",
+      ...herbPaid.length ? { craft_herb_poultice: herbSinkEnough, take_herb_poultice: herbSinkEnough } : {},
       spur_pair: engine => engine.stat("spur_pair").reps >= 1 || !beatable(engine),
     },
     afterFoundation: after,

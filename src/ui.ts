@@ -69,6 +69,8 @@ function setText(node: HTMLElement, text: string): void {
 function listText(items: string[]): string {
   return items.length < 2 ? items.join("") : `${items.slice(0, -1).join(", ")} and ${items.at(-1)}`;
 }
+/** A modifier line whose evaluated number came out 0 ("Max Blade Intent: 0", "+0% Rest speed", "+0 Qi/s"). */
+const ZERO_LINE = /(?:: |^[+−])0(?:%|\/s)?(?= |$)/;
 function placeName(slot: string): string {
   return `${slot.charAt(0).toUpperCase()}${slot.slice(1)} place`;
 }
@@ -282,7 +284,12 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
    */
   function askFirst(id: string, act: () => Promise<void>): void {
     const warning = engine.warnText(id);
-    if (warning) confirmAction(warning, act, { tone: "commit", detail: carriesText(engine.record(id)) }); else void act();
+    if (!warning) { void act(); return; }
+    const record = engine.record(id);
+    // A pair half closes a sibling that holds its own table; the confirm lays both out so the fork is chosen, not stumbled into.
+    const closing = (record.lock ?? []).map(other => engine.record(other)).filter(other => other.kind === "technique" && other.held && !engine.locked(other.id))
+      .map(other => `Closes ${other.name ?? other.id}, which would hold: ${carriesText(other)}`);
+    confirmAction(warning, act, { tone: "commit", detail: [carriesText(record), ...closing].filter(Boolean).join(" ") });
   }
   /** What a commitment brings with it, read off its own detail blocks: the stats it holds and the route keys it carries, or else what it gives. */
   function carriesText(record: GameRecord): string {
@@ -882,8 +889,9 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
   });
   cells.push(...familyExplanations.flatMap(view => view.cells));
   const leadItems = engine.records.filter(record => record.kind === "lead").map(record => {
-    const item = element("li"), description = element("p"); item.append(element("h4", "", record.name ?? record.id), description); ui("leads").append(item);
-    return { record, item, description };
+    const item = element("li"), description = element("p", "", record.desc ?? ""), status = element("p");
+    item.append(element("h4", "", record.name ?? record.id), description, status); ui("leads").append(item);
+    return { record, item, status };
   });
   /** One line of a breakthrough's checklist; its text can change as the thing it counts fills. */
   function checklistItem(text: string): ChecklistItem {
@@ -1138,7 +1146,8 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
       title = `${completion.breakthrough?.title ?? label(completion.id)}${standings.length ? `: ${standings.join(" · ")}` : ""}`;
       text = second ? "The title is read from what you hold. A fifth method can be held, a hobby runs beside the slot, and the terrace above the slide is open."
         : `${completion.breakthrough?.title ?? label(completion.id)}. The direction holds, and the way up to the ridge waystation is open to a held method of its school.`;
-      heading = "What the direction changed"; changes = [...blockLines(engine.tooltip(completion.id), "mod"), ...standings.map(name => `The title of ${name}`)];
+      // Expression mods pay 0 for the spheres the player did not carry; a banner line saying so is noise.
+      heading = "What the direction changed"; changes = [...blockLines(engine.tooltip(completion.id), "mod").filter(line => !ZERO_LINE.test(line)), ...standings.map(name => `The title of ${name}`)];
       review = "Review your path";
     }
     ui("completion").dataset.completion = completion.id;
@@ -1355,7 +1364,9 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
     ui("slip").hidden = current("jade_slip") === 0; ui("character-methods").hidden = visibleFamilies === 0;
     // A reading is settled once its rival has closed, which happens the moment it is first attuned.
     const reading = Object.keys(rebuiltLeaf).find(id => engine.has(id) && !engine.locked(id) && (engine.record(id).lock ?? []).some(other => engine.locked(other)));
-    setText(ui("slip-summary"), reading ? "The Cracked Jade Slip · leaves 1, 2 and 8, the eighth rebuilt" : "The Cracked Jade Slip · leaves 1, 2, 8");
+    const leafHunt = engine.has("slip_leaves") && engine.visible("slip_leaves");
+    const recovered = leafHunt ? ` · ${3 + engine.tagCount("t_leaf") + 2 * Number(engine.has("shu_three_leaves") && current("shu_three_leaves") > 0 && !engine.locked("shu_three_leaves"))} of 12 recovered` : "";
+    setText(ui("slip-summary"), `${reading ? "The Cracked Jade Slip · leaves 1, 2 and 8, the eighth rebuilt" : "The Cracked Jade Slip · leaves 1, 2, 8"}${recovered}`);
     ui("slip-rebuilt").hidden = !reading;
     if (reading) setText(ui("slip-rebuilt"), `Leaf 8, as you have rebuilt it through ${label(reading)}: ${rebuiltLeaf[reading]}`);
     let keysHeld = 0;
@@ -1368,8 +1379,10 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
     const reached = latestBreakthrough();
     setText(ui("character-stage-detail"), !foundationReached ? "Mortal, no breakthrough yet" : reached && reached.id !== "settling" ? `Foundation · ${reached.breakthrough?.title ?? reached.name}` : "Foundation");
     setText(ui("character-time"), duration(state.activitySeconds));
-    for (const { record, item, description } of leadItems) {
-      item.hidden = !engine.visible(record.id); setText(description, `${record.desc ?? ""}${record.need && !engine.condition(record.need) ? ` ${record.needtext ?? ""}` : ""}`);
+    // A lead's `need` is its resolution (the route runner counts it reached then); until it holds, the lead says what is still owed.
+    for (const { record, item, status } of leadItems) {
+      item.hidden = !engine.visible(record.id);
+      setText(status, !record.need ? "" : engine.condition(record.need) ? "Followed." : record.needtext ?? ""); status.hidden = !status.textContent;
     }
     const allEntries = ui<HTMLSelectElement>("journal-filter").value === "all";
     const entries = state.log.filter(entry => allEntries || entry.kind !== "completion").reverse(), keep = new Set(entries.map(entry => entry.id));
