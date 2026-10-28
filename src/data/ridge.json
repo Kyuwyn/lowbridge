@@ -156,7 +156,7 @@
     "desc": "Loaded climbs on the frame, then the breath that brings the body back. Circulation grows at three experience per second, with a little Labour; it draws lightly on Strain. After two minutes of it, the survey marker gives a root more each haul.",
     "require": "g.body_teaching > 0", "need": "g.load_frame > 0 && g.circulation < g.circulation.max",
     "needtext": "A load frame on the floor, and room left in Circulation.",
-    "length": "continuous", "train": "circulation", "effect": { "circulation.exp": 3, "labour.exp": 0.6 }, "strain": { "strain": 0.01 },
+    "length": "continuous", "hobby": true, "train": "circulation", "effect": { "circulation.exp": 3, "labour.exp": 0.6 }, "strain": { "strain": 0.01 },
     "at": { "120": { "survey_marker.yield": 1 } },
     "events": [{ "id": "frame_becomes_shape", "when": "g.body_drills.ticks >= 120",
       "text": "The frame stops feeling like a load and starts feeling like a shape you hold. Hauling the marker, you have breath left over to dig a root more around it." }]
@@ -166,21 +166,21 @@
     "desc": "Meet the post, hold, release. Blade Intent grows at three experience per second.",
     "require": "g.sword_teaching > 0", "need": "g.practice_post > 0 && g.blade_intent < g.blade_intent.max",
     "needtext": "A practice post on the floor, and room left in Blade Intent.",
-    "length": "continuous", "train": "blade_intent", "effect": { "blade_intent.exp": 3 }
+    "length": "continuous", "hobby": true, "train": "blade_intent", "effect": { "blade_intent.exp": 3 }
   },
   {
     "id": "ground_drills", "name": "Compare stones and currents", "kind": "task", "group": "Practice",
     "desc": "Stake, pour, watch where it runs. Ground Reading grows at three experience per second, with a little Stone Sense.",
     "require": "g.earth_teaching > 0", "need": "g.survey_stakes > 0 && g.ground_reading < g.ground_reading.max",
     "needtext": "Survey stakes on the floor, and room left in Ground Reading.",
-    "length": "continuous", "train": "ground_reading", "effect": { "ground_reading.exp": 3, "stonework.exp": 0.6 }
+    "length": "continuous", "hobby": true, "train": "ground_reading", "effect": { "ground_reading.exp": 3, "stonework.exp": 0.6 }
   },
   {
     "id": "array_drills", "name": "Steady the observation area", "kind": "task", "group": "Practice",
     "desc": "Set the tokens, sit within them, correct what drifts. Array Craft grows at three experience per second, with a little Composure.",
     "require": "g.formation_teaching > 0", "need": "g.drawing_board > 0 && g.array_craft < g.array_craft.max",
     "needtext": "A drawing board on the floor, and room left in Array Craft.",
-    "length": "continuous", "train": "array_craft", "effect": { "array_craft.exp": 3, "composure.exp": 0.6 }
+    "length": "continuous", "hobby": true, "train": "array_craft", "effect": { "array_craft.exp": 3, "composure.exp": 0.6 }
   },
   {
     "id": "survey_marker", "name": "Recover the survey marker", "kind": "site", "group": "Sites",

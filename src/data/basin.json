@@ -170,7 +170,7 @@
     "at": { "5": { "temper_the_marrow.discount": 0.15 } },
     "held": { "life.max": 4, "guard.max": 2 },
     "lock": ["carry_without_rest"],
-    "warn": "Holding this closes *Carry without rest* for good."
+    "warn": "Holding Temper the marrow closes Carry without rest for good. The deep body tempers what it holds or carries past what it holds, not both."
   },
   {
     "id": "carry_without_rest", "name": "Carry without rest", "kind": "technique", "group": "Techniques",
@@ -183,7 +183,7 @@
     "at": { "5": { "carry_without_rest.discount": 0.15 } },
     "held": { "vigor.rate": 0.05, "speed.max": 0.3 },
     "lock": ["temper_the_marrow"],
-    "warn": "Holding this closes *Temper the marrow* for good."
+    "warn": "Holding Carry without rest closes Temper the marrow for good. The deep body tempers what it holds or carries past what it holds, not both."
   },
   {
     "id": "sever_the_knot", "name": "Sever the knot", "kind": "technique", "group": "Techniques",
@@ -196,7 +196,7 @@
     "at": { "5": { "sever_the_knot.discount": 0.15 } },
     "held": { "strike.max": 3 },
     "lock": ["send_the_intent"],
-    "warn": "Holding this closes *Send the intent ahead* for good."
+    "warn": "Holding Sever the knot closes Send the intent ahead for good. The deep sword cuts what is in front of it or sends the intent past it, not both."
   },
   {
     "id": "send_the_intent", "name": "Send the intent ahead", "kind": "technique", "group": "Techniques",
@@ -209,7 +209,7 @@
     "at": { "5": { "send_the_intent.discount": 0.15 } },
     "held": { "hit.max": 10, "dodge.max": 5 },
     "lock": ["sever_the_knot"],
-    "warn": "Holding this closes *Sever the knot* for good."
+    "warn": "Holding Send the intent ahead closes Sever the knot for good. The deep sword cuts what is in front of it or sends the intent past it, not both."
   },
   {
     "id": "root_to_the_vein", "name": "Root to the vein", "kind": "technique", "group": "Techniques",
@@ -222,7 +222,7 @@
     "at": { "5": { "root_to_the_vein.discount": 0.15 } },
     "held": { "guard.max": 2, "strain.discount": 0.25 },
     "lock": ["listen_for_water"],
-    "warn": "Holding this closes *Listen for water* for good."
+    "warn": "Holding Root to the vein closes Listen for water for good. The deep earth roots to what holds or listens for what moves, not both."
   },
   {
     "id": "listen_for_water", "name": "Listen for water", "kind": "technique", "group": "Techniques",
@@ -235,7 +235,7 @@
     "at": { "5": { "listen_for_water.discount": 0.15 } },
     "held": { "focus.max": 3, "qi_sense.rate": 0.05 },
     "lock": ["root_to_the_vein"],
-    "warn": "Holding this closes *Root to the vein* for good."
+    "warn": "Holding Listen for water closes Root to the vein for good. The deep earth roots to what holds or listens for what moves, not both."
   },
   {
     "id": "anchor_the_array", "name": "Anchor the array", "kind": "technique", "group": "Techniques",
@@ -248,7 +248,7 @@
     "at": { "5": { "anchor_the_array.discount": 0.15 } },
     "held": { "home_space.max": 1, "craft_warding_strip.rate": 0.25, "craft_specimen_case.rate": 0.25 },
     "lock": ["ward_the_threshold"],
-    "warn": "Holding this closes *Ward the threshold* for good."
+    "warn": "Holding Anchor the array closes Ward the threshold for good. The deep formation anchors a layout or wards its edge, not both."
   },
   {
     "id": "ward_the_threshold", "name": "Ward the threshold", "kind": "technique", "group": "Techniques",
@@ -261,7 +261,7 @@
     "at": { "5": { "ward_the_threshold.discount": 0.15 } },
     "held": { "dodge.max": 10, "rest.rate": 0.25 },
     "lock": ["anchor_the_array"],
-    "warn": "Holding this closes *Anchor the array* for good."
+    "warn": "Holding Ward the threshold closes Anchor the array for good. The deep formation anchors a layout or wards its edge, not both."
   },
   {
     "id": "draw_the_essence", "name": "Draw the essence", "kind": "technique", "group": "Techniques",
@@ -274,7 +274,7 @@
     "at": { "5": { "draw_the_essence.discount": 0.15 } },
     "held": { "craft_settling_draught.rate": 0.5, "craft_marrow_draught.rate": 0.5, "craft_clear_pill.rate": 0.5 },
     "lock": ["temper_the_fire"],
-    "warn": "Holding this closes *Temper the fire* for good."
+    "warn": "Holding Draw the essence closes Temper the fire for good. The pill school draws what the root holds or tempers the fire under it, not both."
   },
   {
     "id": "temper_the_fire", "name": "Temper the fire", "kind": "technique", "group": "Techniques",
@@ -287,7 +287,7 @@
     "at": { "5": { "temper_the_fire.discount": 0.15 } },
     "held": { "strain.max": 2, "life.max": 2 },
     "lock": ["draw_the_essence"],
-    "warn": "Holding this closes *Draw the essence* for good."
+    "warn": "Holding Temper the fire closes Draw the essence for good. The pill school draws what the root holds or tempers the fire under it, not both."
   },
   {
     "id": "scree_climb", "name": "Climb the scree under load", "kind": "site", "group": "Sites",
@@ -450,7 +450,7 @@
     "buy": { "herbs": 30, "coin": 150 }, "length": 300, "max": 1,
     "breakthrough": { "title": "The Second Direction", "core": "g.t_deep_body + g.t_deep_sword + g.t_deep_earth + g.t_deep_formation + g.t_deep_pill >= 2 && g.attune_slots >= 3", "coreLabel": "Two spheres deepened, three methods held", "required": 3,
       "pointers": [
-        { "label": "A reliable method: ten uses across the deep methods", "when": "g.temper_the_marrow.reps + g.carry_without_rest.reps + g.sever_the_knot.reps + g.send_the_intent.reps + g.root_to_the_vein.reps + g.listen_for_water.reps + g.anchor_the_array.reps + g.ward_the_threshold.reps + g.draw_the_essence.reps + g.temper_the_fire.reps >= 10" },
+        { "label": "A reliable method: fifteen uses across the deep methods", "when": "g.temper_the_marrow.reps + g.carry_without_rest.reps + g.sever_the_knot.reps + g.send_the_intent.reps + g.root_to_the_vein.reps + g.listen_for_water.reps + g.anchor_the_array.reps + g.ward_the_threshold.reps + g.draw_the_essence.reps + g.temper_the_fire.reps >= 15" },
         { "label": "The returning chime explained", "when": "g.chime_explained > 0" },
         { "label": "A working study: a reading desk and Lore 6", "when": "g.reading_desk > 0 && g.lore >= 6" },
         { "label": "The survey spur reopened", "when": "g.spur_reopened > 0" },

@@ -118,7 +118,7 @@ export const openingContext: { title: string; place: string; scenes: Scene[]; be
       text: "Each deeper teaching offers two methods that read the sphere differently; holding one closes the other. A sphere site raises its cap, and Han pays for a commission once the sphere stands at six. Two spheres deepened and three methods held are what the Second Direction asks.",
       next: "Hold a deep method in each of two spheres, do a commission, and gather three of the Second Direction's six signs.", focus: ["temper_the_marrow", "sever_the_knot", "root_to_the_vein", "anchor_the_array", "draw_the_essence", "second_direction"] },
     { id: "second_ready", when: "g.t_deep_body + g.t_deep_sword + g.t_deep_earth + g.t_deep_formation + g.t_deep_pill >= 2 && g.attune_slots >= 3 && g.second_direction < 1", title: "The Second Direction within reach",
-      text: "Two spheres deepened, three methods held. The Direction wants forty herbs and a hundred and fifty coin at the start, the reservoir full, and three of its six signs. Its title is read from what you hold.",
+      text: "Two spheres deepened, three methods held. The Direction wants thirty herbs and a hundred and fifty coin at the start, the reservoir full, and three of its six signs. Its title is read from what you hold.",
       next: "Take the Second Direction. It closes nothing; a fifth place and the hobby place open with it.", focus: ["second_direction"] },
     { id: "second_direction", when: "g.second_direction > 0 && g.reedmarket < 1", title: "The basin road",
       text: "The title is yours, a fifth method can be held, and a hobby runs at half pace beside whatever holds the slot. The terrace above the slide is a day's carry to Reedmarket.",

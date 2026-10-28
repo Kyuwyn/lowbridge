@@ -324,7 +324,8 @@ export function runRoute(name: string, options: RouteOptions = {}): RouteResult 
       if (!engine.availability(id).ok) { reason = `Prelude ${id}: ${engine.availability(id).reason}`; break; }
       selected = engine.record(id);
       preludeIndex++;
-    } else if (founded && after && engine.availability(after).ok) selected = engine.record(after);
+    } else if (founded && after && engine.state.waiting.some(entry => entry.id === after)) selected = undefined; // parked: wait for it to resume
+    else if (founded && after && engine.availability(after).ok) selected = engine.record(after);
     else selected = candidates(false)[0];
     if (!selected && engine.state.waiting.length) {
       // Nothing else is worth doing: wait, as a player would, for the parked pursuit to resume.
@@ -564,6 +565,7 @@ export function runDeepRoute(name: DeepRoute, records: GameRecord[] = sourceReco
     ...deep.draughts ? ["craft_marrow_draught", "take_marrow_draught", "craft_clear_pill", "take_clear_pill"] : [],
     "landslide_rise", "terrace_bypass", "reedmarket_work", "trade_pale_root",
   ];
+  const repTarget = (half: string) => half === firstHalf ? 10 : 3;
   const vigorPaid = [firstHalf, secondHalf].filter(half => /g\.vigor </.test(records.find(record => record.id === half)?.need ?? ""));
   return runRoute(name, {
     records, start: waystation, goal: "second_direction", maxSeconds: 21600, maxActions: 4000, focused: false, attentive: true, timber: 6,
@@ -575,13 +577,13 @@ export function runDeepRoute(name: DeepRoute, records: GameRecord[] = sourceReco
     enough: {
       [from.drills]: `g.${first.family} >= 6`,
       ...secondLine ? { [secondLine.drills]: `g.${second.family} >= 5`, [secondLine.chore]: `g.${secondLine.material} >= 6`, [secondRidgeHalf!]: `g.${secondRidgeHalf}.reps >= 1` } : { refining_drills: "g.refining >= 5", dig_pale_root: "g.pale_root >= 6" },
-      [firstHalf]: `g.${firstHalf}.reps >= 10`, [secondHalf]: `g.${secondHalf}.reps >= 3`,
+      [firstHalf]: `g.${firstHalf}.reps >= 12`, [secondHalf]: `g.${secondHalf}.reps >= 3`,
       [first.site]: `g.${first.site}.reps >= 2`, [second.site]: `g.${second.site}.reps >= 2`,
       [from.chore]: `g.${from.material} >= 6`,
       // A store is traded only when it is nearly full, so a method that pays into it can still be used; wages stop short of the purse so trades stay worth making.
       ...Object.fromEntries(materials.map(material => [`trade_${material}`, `g.${material} < g.${material}.max - 2`])),
       // A method paid back in Vigor is used between chores, so wages go on until it has been used enough.
-      waystation_work: `g.coin >= g.coin.max - 30${vigorPaid.length ? ` && ${vigorPaid.map(half => `g.${half}.reps >= 10`).join(" && ")}` : ""}`,
+      waystation_work: `g.coin >= g.coin.max - 30${vigorPaid.length ? ` && ${vigorPaid.map(half => `g.${half}.reps >= ${repTarget(half)}`).join(" && ")}` : ""}`,
       fragment_notes: "g.lore >= 6", ferry_hauling: "g.coin >= g.coin.max - 30", herb_rack: "g.cottage < 1 && g.ridge_room < 1",
       // Herbs are gathered toward the bill, not into a full store, so a method paid back in herbs can still be used.
       gather_herbs: "g.herbs >= 34", sort_herbs: "g.herbs >= 34",
