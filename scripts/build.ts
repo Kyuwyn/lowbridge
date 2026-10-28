@@ -15,8 +15,8 @@ export async function build() {
   });
   if (!result.success) throw new AggregateError(result.logs, 'Lowbridge build failed');
   const html = (await Bun.file(join(root, 'index.html')).text())
-    .replace('/src/main.ts', '/main.js')
-    .replace('/src/style.css', '/style.css');
+    .replace('/src/main.ts', './main.js')
+    .replace('/src/style.css', './style.css');
   await Bun.write(join(output, 'index.html'), html);
   await copyFile(join(root, 'src/style.css'), join(output, 'style.css'));
   return result;
