@@ -325,16 +325,15 @@ h1, h2, h3, h4, p, blockquote, dl, dd { margin: 0; }
 .notice-banner p { color: #dae9bb; font-size: .78rem; line-height: 1.55; }
 .notice-banner .notice-story { color: #e7efcf; font-size: .82rem; }
 .notice-banner .notice-story + .notice-new { color: #b7c9a5; font-size: .74rem; margin-top: .25rem; }
-/* The home's typed places, laid on the same columns as the arrangement rows below: place, holder, take down. */
+/* The home's typed places, laid on the same columns as the arrangement rows below: place, then what holds it. */
 .places { margin: .7rem 0 .8rem; }
 .places h3 { font-size: .77rem; font-weight: 500; color: #d4dfc5; padding: .35rem .2rem; border-bottom: 1px solid var(--line-soft); margin-bottom: .4rem; }
 .place-list { list-style: none; display: grid; gap: 4px; margin: 0; padding: 0; }
-.place-row { display: grid; grid-template-columns: 5.5rem minmax(0, 1fr) auto; align-items: center; column-gap: 1rem; min-height: 38px; padding: .2rem .7rem; border: 1px solid var(--line-soft); border-radius: 3px; font-size: .82rem; }
+.place-row { display: grid; grid-template-columns: 5.5rem minmax(0, 1fr); align-items: center; column-gap: 1rem; min-height: 38px; padding: .2rem .7rem; border: 1px solid var(--line-soft); border-radius: 3px; font-size: .82rem; }
 .place-name { color: var(--muted); font-size: .72rem; text-transform: capitalize; }
 .place-holder { color: #dbe5cf; font-weight: 600; }
 .place-row.is-empty { border-style: dashed; }
 .place-row.is-empty .place-holder { color: var(--dim); font-weight: 400; font-style: italic; }
-.place-row .text-button { min-height: 32px; padding: 0 .2rem; font-size: .74rem; }
 .status-body { padding: .2rem .7rem .6rem; }
 .status-list > div { display: flex; justify-content: space-between; align-items: baseline; gap: .8rem; padding: .36rem 0; font-size: .75rem; line-height: 1.45; }
 .status-list dt { color: #a0af9d; flex-shrink: 0; }
@@ -433,6 +432,23 @@ h1, h2, h3, h4, p, blockquote, dl, dd { margin: 0; }
 .lead-list h4 { color: #ccd9b8; font-weight: 500; font-size: .82rem; margin-bottom: .25rem; }
 .lead-list p { color: #adbd9d; }
 .game-footer { display: flex; justify-content: space-between; flex-wrap: wrap; gap: .5rem; color: #9cb096; font-size: .65rem; line-height: 1.5; padding: .7rem .2rem 0; }
+/* The quick bar (Arcanum's, rule 32): ten keys pinned to the bottom of the window on every view. */
+.hotbar { position: sticky; bottom: 0; z-index: 4; display: flex; align-items: center; gap: .6rem; margin-top: .6rem; padding: .4rem .5rem calc(.4rem + env(safe-area-inset-bottom)); border: 1px solid var(--line); border-radius: 3px; background: var(--panel-deep); box-shadow: 0 -6px 18px #0007; }
+.hotbar-slots { list-style: none; display: grid; grid-template-columns: repeat(10, minmax(0, 1fr)); gap: 4px; flex: 1; margin: 0; padding: 0; }
+.hotbar.is-empty .hotbar-slots { flex: 0 1 30rem; }
+.hotbar-slot { position: relative; min-width: 0; }
+.hotbar-use { display: flex; align-items: center; gap: .35rem; width: 100%; min-height: 36px; padding: .25rem .4rem; text-align: left; background: #1f2a26; border-color: #3f5048; }
+.hotbar-key { flex-shrink: 0; min-width: 1.1rem; padding: 0 .2rem; border: 1px solid var(--line); border-radius: 2px; color: var(--muted); font: 600 .66rem/1.5 var(--mono); text-align: center; }
+.hotbar-name { min-width: 0; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; font-size: .72rem; font-weight: 600; color: #dbe5cf; }
+.hotbar-slot.is-empty .hotbar-use { border-style: dashed; background: transparent; cursor: default; }
+.hotbar-slot.is-ready .hotbar-use { border-color: var(--jade-deep); }
+.hotbar-slot.is-running .hotbar-use { border-color: var(--jade); background: #243b31; }
+.hotbar-slot.is-locked .hotbar-name, .hotbar-slot.is-done .hotbar-name { color: var(--dim); }
+.hotbar-slot.is-locked .hotbar-use { border-style: dashed; }
+.hotbar-clear { position: absolute; top: -6px; right: -4px; display: none; width: 18px; height: 18px; min-height: 0; padding: 0; border-radius: 50%; font-size: .7rem; line-height: 1; color: var(--muted); background: var(--panel-deep); }
+.hotbar-slot:hover .hotbar-clear:not([hidden]), .hotbar-clear:focus-visible { display: block; }
+.hotbar-hint { flex: 1; min-width: 12rem; color: var(--dim); font-size: .7rem; line-height: 1.45; }
+@media (hover: none) { .hotbar.is-empty { display: none; } .hotbar-clear:not([hidden]) { display: block; } }
 .startup-message { max-width: 650px; margin: 12vh auto; padding: 2rem; border: 1px solid var(--line); background: var(--panel); }
 .startup-message h1 { color: #dce6d0; font-size: 1.4rem; margin-bottom: 1rem; }
 .startup-message p { color: var(--muted); line-height: 1.7; margin-bottom: 1rem; }
@@ -521,7 +537,9 @@ h1, h2, h3, h4, p, blockquote, dl, dd { margin: 0; }
   .task-rows .task-sub { grid-column: 2 / 4; grid-row: 2; white-space: normal; }
   .task-rows .task-button:not(.has-lead) .task-sub { grid-column: 1 / 4; }
   .task-rows .task-attune { min-width: 0; padding: 0 .55rem; }
-  .place-row { grid-template-columns: 4.5rem minmax(0, 1fr) auto; column-gap: .6rem; padding: .2rem .6rem; }
+  .place-row { grid-template-columns: 4.5rem minmax(0, 1fr); column-gap: .6rem; padding: .2rem .6rem; }
+  .hotbar { flex-wrap: wrap; }
+  .hotbar-slots { grid-template-columns: repeat(5, minmax(0, 1fr)); flex-basis: 100%; }
   .view-gauge { justify-items: start; }
   .gauge-pips { justify-content: start; }
   /* A label column this narrow costs more than it aligns; the heading sits above its lines instead. */

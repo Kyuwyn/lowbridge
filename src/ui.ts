@@ -1,6 +1,6 @@
 import { GAUGE, GameEngine, WAITING_MAX } from "./engine";
 import type { ActiveTask, BillRow, Changes, GameRecord, GameState, LogEntry, Objective, Stat, TooltipBlock, TooltipBlockKind } from "./types";
-import { openingContext, routeKeys } from "./content";
+import { homeCategories, openingContext, routeKeys } from "./content";
 
 export interface UICallbacks {
   beforeChange?(): void;
@@ -41,7 +41,8 @@ const groups: { id: string; title: string; tab: Tab; matches(record: GameRecord)
   { id: "trade", title: "Village trade", tab: "tasks", matches: record => record.group === "Trade" },
   { id: "techniques", title: "Techniques", tab: "techniques", matches: record => record.kind === "technique" },
   { id: "shelter", title: "Shelter", tab: "home", matches: record => record.group === "Home" && record.kind === "home" },
-  { id: "arrangements", title: "Arrangements", tab: "home", matches: record => record.group === "Home" && record.kind === "arrangement" },
+  // Arrangements are filed by what they are for, in content's category order; a place's rivals share a list, so a swap is side by side.
+  ...homeCategories.map(category => ({ id: `home-${category.toLowerCase()}`, title: category, tab: "home" as const, matches: (record: GameRecord) => record.kind === "arrangement" && record.category === category })),
   { id: "workbench", title: "Workbench", tab: "craft", matches: record => record.kind === "recipe" },
   { id: "preparations", title: "Preparations", tab: "craft", matches: record => record.kind === "preparation" },
 ];
@@ -55,6 +56,16 @@ const rebuiltLeaf: Record<string, string> = {
 /** How far ahead the unattended-runway probe may look: a day is longer than any bank. */
 const runwayHorizon = 86400;
 const groupsKey = "lowbridge.ui.groups";
+/** The quick bar: ten keys, 1 to 9 then 0, each holding a record id or nothing. A preference of this browser, like the closed groups. */
+const hotbarKey = "lowbridge.ui.hotbar";
+const hotbarKeys = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0"];
+function readHotbar(): (string | null)[] {
+  try {
+    const stored: unknown = JSON.parse(localStorage.getItem(hotbarKey) ?? "[]");
+    const ids = Array.isArray(stored) ? stored : [];
+    return hotbarKeys.map((_, index) => typeof ids[index] === "string" ? ids[index] as string : null);
+  } catch { return hotbarKeys.map(() => null); }
+}
 
 function element<K extends keyof HTMLElementTagNameMap>(tag: K, className = "", text = ""): HTMLElementTagNameMap[K] {
   const node = document.createElement(tag);
@@ -232,6 +243,7 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
         </aside>
       </div>
       <footer class="game-footer"><span data-ui="bound"></span><span data-ui="activity-time"></span></footer>
+      <nav class="hotbar" data-ui="hotbar" aria-label="Quick bar"><ol class="hotbar-slots" data-ui="hotbar-slots"></ol><p class="hotbar-hint" data-ui="hotbar-hint">Point at an action or technique and press Shift and a number to put it here. Press the number to use it.</p></nav>
       <p class="sr-only" role="status" aria-live="polite" aria-atomic="true" data-ui="announcement"></p>
       <p class="sr-only" aria-live="polite" aria-atomic="true" data-ui="journal-announcement"></p>
     </div>`;
@@ -427,7 +439,7 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
     return { heading, gauge, value, pips };
   }
   const techniqueHead = viewHead(techniquesPanel, "Techniques", "What the method can do on command. Only an attuned technique is ready to use; attunement holds it in mind, and there is room for only so many.", "Attuned", "attune-count");
-  const homeHead = viewHead(homePanel, "", "Installed arrangements move with you; those you take down are not refunded.", "Floor spans", "home-floor");
+  const homeHead = viewHead(homePanel, "", "Installed arrangements move with you. A place holds one piece: choosing another swaps it in with one click, and the piece it replaces is kept to swap back for nothing. Floor pieces you take down are not refunded.", "Floor spans", "home-floor");
   const craftIntro = element("div", "view-intro");
   craftIntro.append(element("h2", "", "Craft"), element("p", "", "What the workbench turns materials into. A recipe holds the activity slot while it runs and stops when what it makes is kept; a preparation is taken on the instant. What you have made is listed under Preparations on the left."));
   craftPanel.append(craftIntro);
@@ -436,19 +448,14 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
   places.append(element("h3", "", "Places"), placeList); homePanel.append(places);
   let placeKey = "";
   const statusList = ui("status-list");
-  /** The home's places, twice: as rows with Take down on Home, and one line each in the Character panel. */
+  /** The home's places, twice: as rows on Home, and one line each in the Character panel. */
   function renderPlaces(): void {
     const slots = engine.homeSlots(), key = slots.join(",");
     if (key !== placeKey) {
       placeKey = key;
       placeList.replaceChildren(...slots.map(slot => {
         const row = element("li", "place-row"); row.dataset.slot = slot;
-        const take = element("button", "text-button", "Take down"); take.type = "button"; take.dataset.action = "remove";
-        take.addEventListener("click", () => {
-          const holder = engine.slotHolder(slot);
-          if (holder) takeDown(holder);
-        });
-        row.append(element("span", "place-name", slot), element("span", "place-holder"), take);
+        row.append(element("span", "place-name", slot), element("span", "place-holder"));
         return row;
       }));
       for (const row of statusList.querySelectorAll(".status-place")) row.remove();
@@ -463,7 +470,6 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
       const holder = engine.slotHolder((row as HTMLElement).dataset.slot!);
       setText(row.querySelector<HTMLElement>(".place-holder")!, holder?.name ?? "empty");
       row.classList.toggle("is-empty", !holder);
-      row.querySelector<HTMLButtonElement>("button")!.hidden = !holder;
     }
     for (const row of statusList.querySelectorAll<HTMLElement>(".status-place")) {
       const holder = engine.slotHolder(row.dataset.slot!);
@@ -630,6 +636,73 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
     return { definition, ...group, cells: members.map(record => createCell(record, group.grid, definition.tab)) };
   });
   const cells = groupViews.flatMap(view => view.cells);
+  /**
+   * The quick bar, as Arcanum's: Shift and a number puts the action or technique under the pointer (or holding
+   * keyboard focus) on that key, and the number alone, or a click on the key, uses it exactly as its own button would.
+   */
+  const hotbar = readHotbar();
+  const cellById = new Map(cells.map(view => [view.record.id, view]));
+  let pointedId: string | null = null;
+  const cellRecordId = (node: EventTarget | null): string | undefined =>
+    node instanceof Element ? node.closest(".task-cell")?.querySelector<HTMLElement>(".task-button")?.dataset.recordId : undefined;
+  root.addEventListener("pointerover", event => { pointedId = cellRecordId(event.target) ?? null; });
+  root.addEventListener("pointerleave", () => { pointedId = null; });
+  function saveHotbar(): void {
+    try { localStorage.setItem(hotbarKey, JSON.stringify(hotbar)); } catch { /* A preference only. */ }
+  }
+  function useHotbar(index: number): void {
+    const id = hotbar[index];
+    if (id) cellById.get(id)?.button.click();
+  }
+  const hotbarSlots = hotbarKeys.map((key, index) => {
+    const item = element("li", "hotbar-slot"), use = element("button", "hotbar-use"), name = element("span", "hotbar-name");
+    use.type = "button"; use.dataset.hotbarKey = key; use.setAttribute("aria-keyshortcuts", key);
+    use.append(element("span", "hotbar-key", key), name);
+    const clear = element("button", "hotbar-clear", "×");
+    clear.type = "button"; clear.setAttribute("aria-label", `Clear key ${key}`);
+    use.addEventListener("click", () => useHotbar(index));
+    clear.addEventListener("click", () => { hotbar[index] = null; saveHotbar(); render(); });
+    item.append(use, clear); ui("hotbar-slots").append(item);
+    return { item, use, name, clear };
+  });
+  document.addEventListener("keydown", event => {
+    if (disposed || event.ctrlKey || event.metaKey || event.altKey || event.repeat) return;
+    const digit = /^(?:Digit|Numpad)(\d)$/.exec(event.code)?.[1];
+    if (digit === undefined || ui<HTMLDialogElement>("confirmation").open) return;
+    if (event.target instanceof Element && event.target.closest("input, select, textarea, [contenteditable]")) return;
+    const index = hotbarKeys.indexOf(digit);
+    event.preventDefault();
+    if (!event.shiftKey) { useHotbar(index); return; }
+    const id = pointedId ?? cellRecordId(document.activeElement);
+    if (!id || !cellById.has(id)) { announce("Point at an action or technique, then press Shift and a number to put it on the quick bar."); return; }
+    // One key per action: binding it again moves it.
+    for (const [other, held] of hotbar.entries()) if (held === id) hotbar[other] = null;
+    hotbar[index] = id; saveHotbar(); render();
+    announce(`${label(id)} is on key ${digit}.`);
+  });
+  function renderHotbar(): void {
+    let filled = 0;
+    hotbarSlots.forEach((slot, index) => {
+      const id = hotbar[index], view = id ? cellById.get(id) : undefined;
+      slot.item.classList.toggle("is-empty", !view); slot.clear.hidden = !view; slot.use.disabled = !view;
+      if (!view) {
+        setText(slot.name, ""); slot.use.title = ""; slot.use.setAttribute("aria-label", `Key ${hotbarKeys[index]}: empty`);
+        for (const state of ["is-running", "is-ready", "is-done", "is-locked"]) slot.item.classList.remove(state);
+        return;
+      }
+      filled++;
+      const record = view.record, stat = engine.stat(record.id), running = engine.state.active?.id === record.id;
+      const available = engine.availability(record.id), done = !running && (stat.value >= stat.max || stat.reps >= stat.max);
+      setText(slot.name, label(record.id));
+      slot.item.classList.toggle("is-running", running); slot.item.classList.toggle("is-done", done);
+      slot.item.classList.toggle("is-ready", !running && !done && available.ok); slot.item.classList.toggle("is-locked", !running && !done && !available.ok);
+      const state = running ? "running" : done ? "done" : available.ok ? "ready" : available.reason;
+      slot.use.title = `${label(record.id)} · ${state}`;
+      slot.use.setAttribute("aria-label", `Key ${hotbarKeys[index]}: ${label(record.id)}, ${state}`);
+    });
+    ui("hotbar").classList.toggle("is-empty", filled === 0);
+    ui("hotbar-hint").hidden = filled > 0;
+  }
   // Owned purchases and completed one-off visits leave the working grid for a closed Done group at the end of their tab.
   const doneGroups = new Map<Tab, GroupView>();
   for (const tab of ["tasks", "home", "craft"] as const) doneGroups.set(tab, makeGroup(`done-${tab}`, "Done", tab, false));
@@ -797,7 +870,7 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
       if (mode !== "instant") button.setAttribute("aria-pressed", String(running));
       setText(sub, locked ? availability.reason : cardSummary(record, detail, mode));
       // While the ledger filter is on, its mark is what the player is scanning for; it gives way only to the slot's own state.
-      setText(badge, running ? "Running" : owned ? ownedText : mark || (place ? `Waiting #${place}` : resume ? `Resume · ${clock(realSeconds(record, stat.length - stat.exp))} left` : waste || (isNext ? "Next" : isNew ? "New" : "")));
+      setText(badge, running ? "Running" : owned ? ownedText : engine.kept(record.id) ? "Kept · swap in" : mark || (place ? `Waiting #${place}` : resume ? `Resume · ${clock(realSeconds(record, stat.length - stat.exp))} left` : waste || (isNext ? "Next" : isNew ? "New" : "")));
       badge.hidden = !badge.textContent;
       const progress = running ? activityProgress(record) : resume ? { value: stat.exp, max: stat.length } : { value: 0, max: 1 };
       fill.style.width = `${progress.max > 0 ? Math.min(100, progress.value / progress.max * 100) : 0}%`;
@@ -808,7 +881,7 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
       cell.classList.toggle("tip-flip", cell.offsetLeft + 300 > home.clientWidth);
       return { marked: isNext || isNew, match: Boolean(mark) };
     }
-    return { record, cell, tab, update };
+    return { record, cell, tab, button, update };
   }
 
   const ledgerRows = engine.records.filter(record => record.kind === "resource" && (record.group === "Resources" || record.group === "Preparations")).map(record => {
@@ -1227,7 +1300,7 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
     // The waiting list matters once there is a second sustained pursuit to hand the slot to.
     const sustained = new Set(cells.filter(cell => modeOf(cell.record) !== "instant" && !cell.record.autoStart && engine.visible(cell.record.id)).map(cell => cell.record.id));
     queueing = sustained.size >= 2 || state.waiting.length > 0;
-    renderPlaces();
+    renderPlaces(); renderHotbar();
     renderWaiting();
     const beat = currentBeat();
     setText(nowTitle, beat.title); setText(nowText, beat.text); setText(nowNext, beat.next); nextIds = new Set(beat.focus);

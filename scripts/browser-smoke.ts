@@ -2,7 +2,7 @@ import { chromium, type Page } from 'playwright';
 import { mkdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import { startServer } from './serve';
-import { runDeepRoute, runRidgeRoute, runRoute, ROUTES, type OpeningRoute } from './routes';
+import { runCoverageBranches, runDeepRoute, runRidgeRoute, runRoute, ROUTES, type OpeningRoute } from './routes';
 import { records, recordById } from '../src/content';
 import { GameEngine } from '../src/engine';
 import { decodeSave, makeSave, DATABASE_NAME, SAVE_VERSION, type SaveFile } from '../src/persistence';
@@ -506,14 +506,6 @@ try {
   assert(eta !== undefined && (eta < 1 ? shownEta.includes('Finishing') : Math.abs(countdown - eta) <= 1),
     `the activity panel reads "${shownEta}" against the engine's ${eta}s`);
   await page.screenshot({ path: join(output, 'instant-and-running-desktop.png'), fullPage: true });
-  // Taking a piece down asks first, says the cost is not returned, and cancelling leaves it in its place.
-  await page.locator('[data-tab=home]').click();
-  await page.locator('.place-list li[data-slot=practice] button[data-action=remove]').click();
-  await page.locator('[data-ui=confirmation]').waitFor({ state: 'visible' });
-  assert((await page.locator('[data-ui=confirmation-text]').innerText()) === bench.removeWarning('practice_mat'), 'the take-down confirmation does not give the engine\'s warning');
-  assert((await page.locator('[data-ui=confirm]').innerText()) === 'Take down', 'the take-down confirmation does not name what it does');
-  await page.locator('[data-ui=cancel]').click();
-  assert((await stored(page)).state.stats.practice_mat!.value === 1, 'cancelling a take-down still took the mat down');
   const rest = await revealAction(page, 'rest');
   await rest.click();
   assert((await stored(page)).state.active?.id === 'rest', 'clicking the self-starting Rest stopped it');
@@ -648,7 +640,7 @@ try {
   const filled = await settled(page, state => state.active === null);
   assert(filled.state.active === null && filled.state.stats.vigor.value === filled.state.stats.vigor.max, 'Rest did not stop at the cap');
   assert((await page.locator('[data-ui=last-stop]').innerText()).includes('objective complete'), 'the activity panel does not say why Rest left the slot');
-  reports.push({ name: 'spellbook-and-warnings', attuneToggle: 'pass', unattunedUnusable: 'pass', warnConfirm: 'pass', warnCancel: 'pass', lockedLeavesGrid: 'pass', fillStopsAtCap: 'pass', takeDownConfirm: 'pass', newGameConfirm: 'pass' });
+  reports.push({ name: 'spellbook-and-warnings', attuneToggle: 'pass', unattunedUnusable: 'pass', warnConfirm: 'pass', warnCancel: 'pass', lockedLeavesGrid: 'pass', fillStopsAtCap: 'pass', newGameConfirm: 'pass' });
 
   // The ridge: the breakthrough panel generalises to the one First Direction, Strain shows, and the derived title and stage follow.
   const ridge = runRidgeRoute('direction-body');
@@ -737,6 +729,60 @@ try {
   await page.screenshot({ path: join(output, 'basin-reedmarket-mobile.png'), fullPage: true });
   await page.setViewportSize({ width: 1440, height: 1000 });
   reports.push({ name: 'basin', stageLabel: 'pass', secondTitle: 'pass', focusMeter: 'pass', hobbyLine: 'pass', inEffect: 'pass', commissionsGroup: 'pass', reedmarket: 'pass', arrivedTitle: arrived.title() });
+
+  // Home files arrangements by what they are for. A place swaps in one click and keeps what it replaces, which swaps back for
+  // nothing; a floor piece still asks before it comes down. The quick bar binds a technique by Shift and a number and uses it by the number.
+  const furnished = runCoverageBranches().find(branch => branch.name === 'furnished-hollow');
+  assert(furnished, 'the furnished-hollow branch is gone, so the Home fixture has nothing installed');
+  const homeBench = new GameEngine(records, furnished.state);
+  assert(homeBench.slotHolder('rest')?.id === 'cot' && homeBench.stat('herb_rack').value === 1, 'the Home fixture no longer holds a cot and a herb rack');
+  await importSave(page, makeSave(homeBench.state, records, 1));
+  await closeSettings(page);
+  await page.locator('[data-tab=home]').click();
+  const lists = await page.locator('#view-home details.task-group:not([hidden]) > summary h3').allInnerTexts();
+  assert(['Shelter', 'Rest', 'Practice', 'Herbs', 'Storage'].every((title, index, titles) => index === 0 || lists.indexOf(titles[index - 1]!) < lists.indexOf(title)),
+    `Home does not list Shelter, Rest, Practice, Herbs and Storage in order: ${lists.join(', ')}`);
+  for (const [list, id] of [['rest', 'straw_pallet'], ['rest', 'cot'], ['practice', 'practice_mat'], ['herbs', 'herb_rack'], ['storage', 'strongbox']] as const) {
+    assert(await page.locator(`[data-group="home-${list}"] button[data-record-id=${id}]`).isVisible(), `${id} is not filed under ${list}`);
+  }
+  const coinBefore = (await stored(page)).state.stats.coin!.value;
+  await page.locator('button[data-record-id=straw_pallet]').click();
+  assert(await page.locator('[data-ui=confirmation]').isHidden(), 'a swap that strands nothing asks first');
+  const swapped = await settled(page, state => state.stats.straw_pallet!.value === 1);
+  assert(swapped.state.stats.straw_pallet!.value === 1 && swapped.state.stats.cot!.value === 0, 'choosing the pallet did not swap the cot out of the rest place');
+  assert(Math.abs(swapped.state.stats.coin!.value - (coinBefore - Number(recordById.get('straw_pallet')!.buy!.coin))) < 1e-9, 'the first swap did not pay for the pallet');
+  const cotButton = page.locator('button[data-record-id=cot]');
+  assert((await cotButton.locator('.task-badge').innerText()) === 'Kept · swap in', 'the swapped-out cot does not say it is kept');
+  await cotButton.click();
+  const back = await settled(page, state => state.stats.cot!.value === 1);
+  assert(back.state.stats.cot!.value === 1 && back.state.stats.straw_pallet!.value === 0 && back.state.stats.coin!.value === swapped.state.stats.coin!.value, 'swapping the kept cot back in did not swap, or cost something');
+  assert((await page.locator('.place-row[data-slot=rest] .place-holder').innerText()) === recordById.get('cot')!.name, 'the rest place does not name the cot');
+  const rack = page.locator('.task-cell', { has: page.locator('button[data-record-id=herb_rack]') });
+  await rack.locator('.task-info').click();
+  await rack.locator('button[data-action=remove]').click();
+  await page.locator('[data-ui=confirmation]').waitFor({ state: 'visible' });
+  assert((await page.locator('[data-ui=confirmation-text]').innerText()) === homeBench.removeWarning('herb_rack'), 'the take-down confirmation does not give the engine\'s warning');
+  assert((await page.locator('[data-ui=confirm]').innerText()) === 'Take down', 'the take-down confirmation does not name what it does');
+  await page.locator('[data-ui=cancel]').click();
+  assert((await stored(page)).state.stats.herb_rack!.value === 1, 'cancelling a take-down still took the rack down');
+  await page.screenshot({ path: join(output, 'home-categories-desktop.png'), fullPage: true });
+  const breathCell = page.locator('#view-techniques .task-cell', { has: page.locator('button[data-record-id=steady_breath]') });
+  await page.locator('[data-tab=techniques]').click();
+  await breathCell.hover();
+  await page.keyboard.press('Shift+Digit1');
+  assert((await page.locator('[data-hotbar-key="1"] .hotbar-name').innerText()) === recordById.get('steady_breath')!.name, 'Shift+1 over a technique did not put it on the quick bar');
+  assert(await page.evaluate(() => JSON.parse(localStorage.getItem('lowbridge.ui.hotbar') ?? '[]')[0]) === 'steady_breath', 'the quick bar is not kept for the next visit');
+  await page.locator('[data-tab=tasks]').click();
+  const breaths = (await stored(page)).state.stats.steady_breath!.reps;
+  await page.mouse.move(0, 0);
+  await page.keyboard.press('Digit1');
+  const used = await settled(page, state => state.stats.steady_breath!.reps === breaths + 1);
+  assert(used.state.stats.steady_breath!.reps === breaths + 1, 'pressing 1 on the Tasks view did not use the technique on the quick bar');
+  await page.screenshot({ path: join(output, 'quick-bar-desktop.png') });
+  await page.locator('[data-hotbar-key="1"]').hover();
+  await page.locator('.hotbar-slot:first-child .hotbar-clear').click();
+  assert(await page.locator('[data-ui=hotbar-hint]').isVisible(), 'clearing the only key does not bring the quick bar hint back');
+  reports.push({ name: 'home-and-quick-bar', categories: 'pass', oneClickSwap: 'pass', keptSwapsBackFree: 'pass', takeDownConfirm: 'pass', quickBind: 'pass', quickUse: 'pass', quickClear: 'pass' });
 
   reports.push({ name: 'action-workspace', instantChores: 'pass', autoRest: 'pass', lockedKeyboardDetails: 'pass', hoverDetails: 'pass', purchasePreservesActivity: 'pass',
     objectiveEta: 'pass', persistentActivityAcrossTabs: 'pass', outdatedImportRefused: 'pass', capWasteBadge: 'pass', doneGroupFocus: 'pass', tabWidths: [1440, 768, 390] });

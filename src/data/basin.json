@@ -156,7 +156,7 @@
     "buy": { "herbs": 6 }, "max": 1, "mod": { "array_craft.max": 2 }
   },
   {
-    "id": "clay_vessel", "name": "Clay refining vessel", "kind": "arrangement", "group": "Home",
+    "id": "clay_vessel", "name": "Clay refining vessel", "kind": "arrangement", "group": "Home", "category": "Craft",
     "desc": "One span of floor for a lidded clay vessel on a timber stand, bought with twenty coin, two timber and four bundles for the first steeping. Refining drills run a quarter faster over it, and the bench's draughts want it.",
     "require": "g.refining.open > 0",
     "buy": { "coin": 20, "timber": 2, "herbs": 4 }, "space": 1, "mod": { "refining_drills.rate": 0.25 }, "max": 1

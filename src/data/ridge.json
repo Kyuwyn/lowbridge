@@ -128,25 +128,25 @@
     "lock": ["fix_the_layout"], "warn": "Holding Open a layout closes Fix a layout for good. The formation school fixes a layout or opens one, not both."
   },
   {
-    "id": "load_frame", "name": "Porter's load frame", "kind": "arrangement", "group": "Home",
+    "id": "load_frame", "name": "Porter's load frame", "kind": "arrangement", "group": "Home", "category": "Practice",
     "desc": "One span of floor. Carrying drills run a quarter faster against a loaded frame.",
     "require": "g.body_teaching > 0",
     "buy": { "coin": 15, "timber": 3 }, "space": 1, "mod": { "body_drills.rate": 0.25 }, "max": 1
   },
   {
-    "id": "practice_post", "name": "Practice post", "kind": "arrangement", "group": "Home",
+    "id": "practice_post", "name": "Practice post", "kind": "arrangement", "group": "Home", "category": "Practice",
     "desc": "One span of floor. Blade-contact drills run a quarter faster against a post that answers.",
     "require": "g.sword_teaching > 0",
     "buy": { "coin": 15, "timber": 4 }, "space": 1, "mod": { "blade_drills.rate": 0.25 }, "max": 1
   },
   {
-    "id": "survey_stakes", "name": "Survey stakes and cord", "kind": "arrangement", "group": "Home",
+    "id": "survey_stakes", "name": "Survey stakes and cord", "kind": "arrangement", "group": "Home", "category": "Practice",
     "desc": "One span of floor laid out as a model slope with three lengths of timber for stakes. Ground drills run a quarter faster.",
     "require": "g.earth_teaching > 0",
     "buy": { "coin": 12, "timber": 3 }, "space": 1, "mod": { "ground_drills.rate": 0.25 }, "max": 1
   },
   {
-    "id": "drawing_board", "name": "Drawing board", "kind": "arrangement", "group": "Home",
+    "id": "drawing_board", "name": "Drawing board", "kind": "arrangement", "group": "Home", "category": "Practice",
     "desc": "One span of floor and four bundles boiled down to herb ink for marking layouts. Array drills run a quarter faster.",
     "require": "g.formation_teaching > 0",
     "buy": { "coin": 15, "herbs": 4 }, "space": 1, "mod": { "array_drills.rate": 0.25 }, "max": 1

@@ -19,3 +19,5 @@ Status: Accepted. Date: 27 October 2026. Basis: the design audits of 27 October 
 **Supersessions.** Amends [ADR 0007](0007-away-time-and-acceleration.md): its rows "Unused away time after a stop", "Delivery" and "Spending instruction" stop at an objective or another stop listed in point 4, never at a discovery, and an expedition does not pause when a discovery appears. Amends the [implementation plan](../IMPLEMENTATION-PLAN-2026-10-18.md)'s away-time sentence the same way. Keeps ADR 0023's lock on attunement and rule 38's *beat* (consequences stated before commitment).
 
 Still open: whether a later chapter wants a real decision pause, authored as a stop the player is told about rather than a discovery.
+
+**Amendment, 28 October 2026 ([ADR 0033](0033-home-lists-place-swaps-quick-bar.md)).** Point 3 now covers floor pieces only: a piece that fills a place is swapped, never taken down, and the piece it replaces is kept. A swap asks first, in the same words, only when the piece stepping aside holds an attunement place that a method needs.

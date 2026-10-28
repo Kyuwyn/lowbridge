@@ -1,4 +1,4 @@
-import { openingContext, routeKeys, records as sourceRecords } from "../src/content";
+import { homeCategories, openingContext, routeKeys, records as sourceRecords } from "../src/content";
 import opening from "../src/data/opening.json";
 import ridge from "../src/data/ridge.json";
 import shared from "../src/data/shared.json";
@@ -35,7 +35,7 @@ const kinds = new Set<string>(["resource", "family", "task", "site", "arrangemen
 /** The whole record vocabulary; anything else in the JSON is a typo or a field the engine dropped. */
 const recordFields = new Set(["id", "kind", "name", "desc", "flavor", "group", "tags", "require", "need", "needtext", "initial", "max",
   "buy", "cost", "length", "run", "effect", "result", "mod", "perLevel", "onStart", "at", "every", "fill", "lock", "enable", "warn",
-  "attune", "space", "train", "strain", "events", "breakthrough", "autoStart", "boost", "slots", "slot", "title", "encounter", "held",
+  "attune", "space", "train", "strain", "events", "breakthrough", "autoStart", "boost", "slots", "slot", "category", "title", "encounter", "held",
   "hobby", "lasts", "rooms"]);
 const roomFields = new Set(["name", "length", "strain", "need", "needtext", "result", "encounter"]);
 /** What a dungeon's rooms carry instead of the record: a dungeon's own run is nothing but its rooms. */
@@ -236,6 +236,10 @@ export function validateGrammar(records: GameRecord[]): string[] {
     }
     if (record.slot && record.space) errors.push(`${record.id}: an arrangement takes a home place or floor spans, not both`);
     if (record.slot && !records.some(home => home.kind === "home" && home.slots?.includes(record.slot!))) errors.push(`${record.id}: no home offers a ${record.slot} place`);
+    if ((record.kind === "arrangement") !== (record.category !== undefined)) errors.push(`${record.id}: every arrangement, and only an arrangement, names a Home category`);
+    if (record.category !== undefined && !(homeCategories as readonly string[]).includes(record.category)) errors.push(`${record.id}: category ${record.category} is not one of ${homeCategories.join(", ")}`);
+    // A piece swapped out of its place is kept and swaps back in for nothing, so placing it must pay nothing that swapping could farm.
+    if (record.slot && (record.length !== undefined || record.result || record.at || record.every)) errors.push(`${record.id}: a place arrangement is instant and pays only while it holds its place (mod)`);
     if (record.boost && records.find(flag => flag.id === record.boost!.flag)?.kind !== "flag") errors.push(`${record.id}: boost flag ${record.boost.flag} is not a flag record`);
     if (record.boost && typeof record.length !== "number") errors.push(`${record.id}: only timed records can be boosted`);
     if (record.title && record.kind !== "class") errors.push(`${record.id}: only class records carry a title`);

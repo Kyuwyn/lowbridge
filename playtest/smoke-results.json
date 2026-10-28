@@ -3,7 +3,7 @@
   "reports": [
     {
       "name": "channel-only",
-      "browserWallSeconds": 21.755195843,
+      "browserWallSeconds": 21.125215865,
       "activitySeconds": 720,
       "actionCount": 76,
       "levels": {
@@ -285,7 +285,7 @@
     },
     {
       "name": "hollow-only",
-      "browserWallSeconds": 44.579877376000006,
+      "browserWallSeconds": 40.714919333,
       "activitySeconds": 1103,
       "actionCount": 221,
       "levels": {
@@ -571,7 +571,6 @@
       "warnCancel": "pass",
       "lockedLeavesGrid": "pass",
       "fillStopsAtCap": "pass",
-      "takeDownConfirm": "pass",
       "newGameConfirm": "pass"
     },
     {
@@ -593,6 +592,16 @@
       "commissionsGroup": "pass",
       "reedmarket": "pass",
       "arrivedTitle": "Pill Refiner"
+    },
+    {
+      "name": "home-and-quick-bar",
+      "categories": "pass",
+      "oneClickSwap": "pass",
+      "keptSwapsBackFree": "pass",
+      "takeDownConfirm": "pass",
+      "quickBind": "pass",
+      "quickUse": "pass",
+      "quickClear": "pass"
     },
     {
       "name": "action-workspace",

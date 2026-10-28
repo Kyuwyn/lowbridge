@@ -38,6 +38,9 @@ export const routeKeys: Record<string, RouteKey> = {
   t_commission: { name: "A commission done", desc: "A piece of work done for Keeper Han and paid for." },
 };
 
+/** The Home tab's lists, in the order shown; every arrangement names one as its `category`. */
+export const homeCategories = ["Rest", "Practice", "Study", "Herbs", "Storage", "Craft"] as const;
+
 export const openingContext: { title: string; place: string; scenes: Scene[]; beats: StoryBeat[]; breakthroughs: string[] } = {
   /** The breakthroughs in the order the journey takes them; the shell celebrates the latest one held. */
   breakthroughs: ["settling", "first_direction", "second_direction"],

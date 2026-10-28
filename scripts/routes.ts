@@ -119,6 +119,8 @@ function productive(engine: GameEngine, record: GameRecord, focused: boolean, qi
     if (record.id === "breath_gathering" && held(engine, "qi_sense") >= qiSense && held(engine, "qi") >= held(engine, "qi", "max")) return false;
   }
   if (record.id === "sit_fernhollow") return engine.stat(record.id).reps < 3 || (!focused && held(engine, "qi_sense") < held(engine, "qi_sense", "max"));
+  // A piece swapped out of its place was the lesser one; swapping it back gains nothing.
+  if (engine.kept(record.id)) return false;
   if (record.max === 1 || record.kind === "breakthrough" || record.kind === "teaching" || record.length === "continuous") return true;
   // A preparation that lasts is worth taking whenever it is not in effect.
   if (record.kind === "preparation" && record.lasts) return !engine.state.effects.some(effect => effect.id === record.id);
@@ -384,7 +386,7 @@ export function runRoute(name: string, options: RouteOptions = {}): RouteResult 
 export function runCoverageBranches(records: GameRecord[] = sourceRecords): RouteResult[] {
   const homeBase = ["coin_pouch", "shu_apprentice", "jade_slip", "fragment_notes", "breath_gathering", "field_kit", "cut_timber", "lean_to", "strongbox"];
   return [
-    // The cot needs the rest place free, so this branch never lays the straw pallet.
+    // This branch goes straight to the cot rather than laying the straw pallet first.
     runRoute("furnished-hollow", {
       records, maxSeconds: 36000, maxActions: 4000, focused: false,
       preferences: { prefer: [...homeBase, "practice_mat", "herb_rack", "garden_plot", "cot", "shu_reading", "channel_observe", "clear_channel", "fernhollow_observe", "sit_fernhollow", "steady_attention", "steady_breath", "settle_breath", "settling"], avoid: ["channel_arrangement", "channel_exercise", "straw_pallet", "sparring_bout"] },

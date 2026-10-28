@@ -99,6 +99,8 @@ export interface GameRecord {
   slots?: string[];
   /** The home place this arrangement occupies instead of floor spans. */
   slot?: string;
+  /** The Home list an arrangement is filed under; one of `homeCategories`, in their order. */
+  category?: string;
   /** Shown as the character's standing while this class is held. */
   title?: string;
   /** Standing modifiers paid while this technique holds an attunement place or this preparation is in effect. */

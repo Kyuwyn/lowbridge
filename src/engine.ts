@@ -496,12 +496,9 @@ export class GameEngine {
       if (record.space && this.stat(HOME_SPACE).max - this.stat(HOME_SPACE).value < record.space) {
         return fail(this.floorSpaceReason(record.space));
       }
-      if (record.slot) {
-        if (!this.homeSlots().includes(record.slot)) return fail(`This home has no ${record.slot} place.`);
-        const holder = this.slotHolder(record.slot);
-        if (holder && holder.id !== id) return fail(`The ${record.slot} place holds ${holder.name ?? holder.id}; take it down on Home first.`);
-      }
-      const payment = this.payment(record);
+      if (record.slot && !this.homeSlots().includes(record.slot)) return fail(`This home has no ${record.slot} place.`);
+      // A kept piece is already bought; swapping it back into its place costs nothing.
+      const payment = this.kept(id) ? {} : this.payment(record);
       // A bill larger than the store can hold needs a bigger store first, which the need text alone does not say.
       for (const [resource, amount] of Object.entries(payment)) {
         const held = this.stat(resource);
@@ -654,6 +651,12 @@ export class GameEngine {
 
   slotHolder(slot: string): GameRecord | undefined {
     return this.records.find(record => record.slot === slot && this.stat(record.id).value > 0);
+  }
+
+  /** A place arrangement bought before and swapped out since: it stays yours and swaps back in for nothing. */
+  kept(id: string): boolean {
+    const stat = this.stat(id);
+    return Boolean(this.record(id).slot) && stat.started && stat.value < 1;
   }
 
   /**
@@ -869,20 +872,28 @@ export class GameEngine {
     const stat = this.stat(id);
     // The slot takes precedence: a practice started here leaves the hobby place.
     if (this.state.hobby === id) this.state.hobby = null;
-    if (typeof record.length !== "number") this.pay(record);
-    else if (!stat.paid) this.payEntry(record);
+    // A kept piece was paid for when it first took its place.
+    const kept = this.kept(id);
+    if (!kept && typeof record.length !== "number") this.pay(record);
+    else if (!kept && !stat.paid) this.payEntry(record);
     if (!stat.started) {
       stat.started = true;
       this.effects(record.onStart);
     }
     if (record.length === undefined) {
+      // One piece per place: the one there steps aside and is kept, to swap back in for nothing.
+      const displaced = record.slot ? this.slotHolder(record.slot) : undefined;
+      if (displaced) Object.assign(this.stat(displaced.id), { value: 0, reps: 0 });
       this.complete(record);
       if (record.kind === "preparation" && record.lasts) {
         // Taking one again resets its clock; nothing stacks.
         this.state.effects = this.state.effects.filter(effect => effect.id !== id);
         this.state.effects.push({ id, remaining: record.lasts });
       }
-      if (oneShotKinds.has(record.kind)) this.log("purchase", `${record.name ?? id} is now part of your life.`);
+      if (displaced || kept) {
+        const aside = displaced ? `; ${displaced.name ?? displaced.id} is kept and swaps back in for nothing` : "";
+        this.log("home", `${record.name ?? id} ${kept ? "is back in" : "takes"} the ${record.slot} place${aside}.`);
+      } else if (oneShotKinds.has(record.kind)) this.log("purchase", `${record.name ?? id} is now part of your life.`);
       this.reconcile();
       this.checkActive();
       this.fillIdle();
@@ -918,9 +929,9 @@ export class GameEngine {
     return { ok: true, reason: "Removed from the waiting list." };
   }
 
-  /** Arrangements without an `.open` modifier can be taken down; the bill is not returned. */
+  /** Floor pieces without an `.open` modifier can be taken down; the bill is not returned. A place piece is swapped, never taken down. */
   removable(record: GameRecord): boolean {
-    return record.kind === "arrangement" && !Object.keys(record.mod ?? {}).some(path => path.endsWith(".open"));
+    return record.kind === "arrangement" && !record.slot && !Object.keys(record.mod ?? {}).some(path => path.endsWith(".open"));
   }
 
   remove(id: string): Availability {
@@ -935,14 +946,25 @@ export class GameEngine {
 
   /** The take-down confirmation: the bill stays spent, and a lost attunement place releases a method. */
   removeWarning(id: string): string {
-    const name = this.record(id).name ?? id, subject = /^(A|An|The) /.test(name) ? inSentence(name) : `the ${name}`;
-    const trial = this.snapshot();
-    Object.assign(trial.stats[id]!, { value: 0, reps: 0, exp: 0, paid: false });
-    const after = new GameEngine(this.records, trial).state.attuned;
-    const released = this.state.attuned.filter(method => !after.includes(method)).map(method => this.record(method).name ?? method);
+    const subject = this.subject(id), { released, room } = this.releasedBy({ [id]: 0 });
     if (!released.length) return `Take down ${subject}? Its cost is not returned.`;
-    const room = after.length === 0 ? "no method" : after.length === 1 ? "one method" : `${after.length} methods`;
     return `Taking down ${subject} leaves room for ${room}; ${list(released)} would be released. Its cost is not returned.`;
+  }
+
+  private subject(id: string): string {
+    const name = this.record(id).name ?? id;
+    return /^(A|An|The) /.test(name) ? inSentence(name) : `the ${name}`;
+  }
+
+  /** Methods that would lose their attunement place if these arrangements were installed (1) or not (0), and the room left. */
+  private releasedBy(installed: Record<string, number>): { released: string[]; room: string } {
+    const trial = this.snapshot();
+    for (const [id, value] of Object.entries(installed)) Object.assign(trial.stats[id]!, { value, reps: value, exp: 0, paid: false });
+    const after = new GameEngine(this.records, trial).state.attuned;
+    return {
+      released: this.state.attuned.filter(method => !after.includes(method)).map(method => this.record(method).name ?? method),
+      room: after.length === 0 ? "no method" : after.length === 1 ? "one method" : `${after.length} methods`,
+    };
   }
 
   /** One row per resource the record's bill spends: what is held against what starting it takes. */
@@ -1815,14 +1837,26 @@ export class GameEngine {
   /**
    * Confirmation text for an irreversible action, or undefined when none is needed. Any record it would still
    * close asks, seen or not; the authored warning, when there is one, says it in the content's own words.
+   * A swap into a place asks only when the piece stepping aside held an attunement place that a method needs.
    */
   warnText(id: string): string | undefined {
     const record = this.record(id);
+    const swap = this.swapWarning(record);
+    if (swap) return swap;
     const doors = (record.lock ?? []).filter(target => this.byId.has(target)), open = doors.filter(target => !this.locked(target));
     // The warning is about the transition, not the record: once every door it names has shut there is
     // nothing left to confirm, so a repeatable chore stops asking after the haul that closed the mill.
     if (doors.length && !open.length) return undefined;
     return record.warn ?? (open.length ? `This closes ${list(open.map(target => this.record(target).name ?? target))} for good.` : undefined);
+  }
+
+  private swapWarning(record: GameRecord): string | undefined {
+    const holder = record.slot ? this.slotHolder(record.slot) : undefined;
+    // Only a piece that raises the attunement places can strand a method; the trial engine is not built for the rest.
+    if (!holder || holder.id === record.id || !Object.keys(holder.mod ?? {}).some(path => path.startsWith(`${ATTUNE_SLOTS}.`))) return undefined;
+    const { released, room } = this.releasedBy({ [holder.id]: 0, [record.id]: 1 });
+    if (!released.length) return undefined;
+    return `Swapping ${this.subject(record.id)} in for ${this.subject(holder.id)} leaves room for ${room}; ${list(released)} would be released. ${holder.name ?? holder.id} is kept and swaps back in for nothing.`;
   }
 
   /**
@@ -1845,7 +1879,10 @@ export class GameEngine {
       : record.kind === "resource" ? `${shown(stat.value)}${unbounded ? "" : `/${shown(stat.max)}`}`
       : unbounded ? (stat.reps ? `${stat.reps} completed` : undefined) : `${shown(stat.value)}/${shown(stat.max)}`]);
     // Route keys are not a type; the UI names them in words beside the blocks.
+    const holder = record.slot ? this.slotHolder(record.slot) : undefined, swappedOut = this.kept(id);
     block("type", [kindLabel(record), record.slot ? `Place: ${record.slot}` : undefined,
+      swappedOut ? "Kept: swaps back in for nothing" : undefined,
+      holder && holder.id !== id ? `Swaps out ${holder.name ?? holder.id}, which is kept` : undefined,
       record.attune ? (this.isAttuned(id) ? "Attuned" : "Needs an attunement slot") : undefined,
       record.hobby ? (this.state.hobby === id ? "Running as the hobby" : "Can run as the hobby") : undefined]);
     block("rate", [
@@ -1903,7 +1940,7 @@ export class GameEngine {
     // A store or a knowledge is not an action, so its "cannot be started" reason is not a need.
     const availability = passiveKinds.has(record.kind) ? { ok: true, reason: "" } : this.availability(id);
     block("need", [record.needtext, !availability.ok && availability.reason !== record.needtext ? availability.reason : undefined], "Need");
-    block("cost", this.lines(record.buy, "", paid).concat(this.lines(record.cost, "", paid)), "Cost");
+    if (!swappedOut) block("cost", this.lines(record.buy, "", paid).concat(this.lines(record.cost, "", paid)), "Cost");
     block("cost", this.lines(record.run, "/s", paid).concat(this.lines(record.strain, "/s", paid)), "Progress cost");
     block("effect", this.lines(record.effect, "/s", (_, base) => ({ amount: base * (stat.rate - 1), labels: this.contributions(`${id}.rate`, id).labels }))
       .map(line => this.fullMark(record, line)), "Effect");

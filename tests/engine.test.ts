@@ -649,16 +649,39 @@ describe("waiting list, idle income and home places", () => {
     expect(game.state.log.filter(entry => entry.kind === "pause")).toHaveLength(1);
   });
 
-  test("a home place holds one arrangement; the other waits until it is taken down", () => {
+  test("a place holds one piece: another swaps it out in one click, and the one replaced swaps back for nothing", () => {
     const game = village();
     game.stat("coin").value = 10;
-    expect(game.availability("pallet").ok).toBe(true);
     expect(game.start("pallet").ok).toBe(true);
-    expect(game.availability("cot").reason).toBe("The rest place holds Straw pallet; take it down on Home first.");
-    expect(game.remove("pallet").ok).toBe(true);
     expect(game.start("cot").ok).toBe(true);
     expect(game.slotHolder("rest")?.id).toBe("cot");
     expect(game.stat("rest").rate).toBe(2);
+    expect(game.stat("coin").value).toBe(4);
+    expect(game.kept("pallet")).toBe(true);
+    expect(game.removable(game.record("pallet"))).toBe(false);
+    // A kept piece is already bought: an empty purse does not stop it swapping back, and the swap costs nothing.
+    game.stat("coin").value = 0;
+    expect(game.start("pallet").ok).toBe(true);
+    expect(game.slotHolder("rest")?.id).toBe("pallet");
+    expect(game.stat("rest").rate).toBe(1.5);
+    expect(game.kept("cot")).toBe(true);
+    expect(game.start("cot").ok).toBe(true);
+    expect(game.stat("coin").value).toBe(0);
+    expect(game.stat("rest").rate).toBe(2);
+  });
+
+  test("a swap that would strand an attuned method asks first and releases it once made", () => {
+    const game = new GameEngine([...villageRecords,
+      { id: "mat", kind: "arrangement", name: "Practice mat", slot: "rest", category: "Rest", buy: { coin: 1 }, mod: { "attune_slots.max": 1 } }]);
+    game.stat("coin").value = 10;
+    expect(game.start("mat").ok).toBe(true);
+    expect(game.attune("ember_form").ok).toBe(true);
+    expect(game.attune("ash_form").ok).toBe(true);
+    expect(game.warnText("pallet")).toBe("Swapping the Straw pallet in for the Practice mat leaves room for one method; Ash form would be released. Practice mat is kept and swaps back in for nothing.");
+    expect(game.start("pallet").ok).toBe(true);
+    expect(game.state.attuned).toEqual(["ember_form"]);
+    // Swapping back in a piece that strands nothing asks nothing.
+    expect(game.warnText("mat")).toBeUndefined();
   });
 
   test("floor space is counted from what is installed, and a bill over capacity names what raises it", () => {

@@ -52,9 +52,9 @@
 
   { "id": "hayloft", "kind": "home", "name": "Hayloft", "group": "Home", "desc": "Straw, a slatted window, and the smell of grain.", "initial": { "value": 1 }, "slots": ["rest"] },
   { "id": "lean_to", "kind": "home", "name": "Lean-to", "group": "Home", "desc": "Your own four walls, nearly.", "buy": { "coin": 8 }, "mod": { "home_space.max": 2 }, "slots": ["rest", "study"], "lock": ["hayloft"] },
-  { "id": "pallet", "kind": "arrangement", "name": "Straw pallet", "group": "Home", "desc": "Better than the bare boards.", "slot": "rest", "buy": { "coin": 2 }, "mod": { "rest.rate": 0.5 } },
-  { "id": "cot", "kind": "arrangement", "name": "Rope cot", "group": "Home", "desc": "Off the floor at last.", "slot": "rest", "buy": { "coin": 4 }, "mod": { "rest.rate": 1 } },
-  { "id": "herb_rack", "kind": "arrangement", "name": "Herb rack", "group": "Home", "desc": "Somewhere to hang what you cut.", "space": 1, "buy": { "coin": 3 }, "mod": { "herbs.max": 6 } },
+  { "id": "pallet", "kind": "arrangement", "name": "Straw pallet", "group": "Home", "category": "Rest", "desc": "Better than the bare boards.", "slot": "rest", "buy": { "coin": 2 }, "mod": { "rest.rate": 0.5 } },
+  { "id": "cot", "kind": "arrangement", "name": "Rope cot", "group": "Home", "category": "Rest", "desc": "Off the floor at last.", "slot": "rest", "buy": { "coin": 4 }, "mod": { "rest.rate": 1 } },
+  { "id": "herb_rack", "kind": "arrangement", "name": "Herb rack", "group": "Home", "category": "Herbs", "desc": "Somewhere to hang what you cut.", "space": 1, "buy": { "coin": 3 }, "mod": { "herbs.max": 6 } },
 
   {
     "id": "ember_form", "kind": "technique", "name": "Ember form", "group": "Techniques",

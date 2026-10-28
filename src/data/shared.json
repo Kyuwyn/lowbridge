@@ -335,13 +335,13 @@
       "text": "Wen helps carry your things across and stays longer than he needs to, one hand flat on the wall. ‘Warm for the season,’ he says, and does not ask why." }]
   },
   {
-    "id": "reading_desk", "name": "Reading desk", "kind": "arrangement", "group": "Home", "slot": "study",
+    "id": "reading_desk", "name": "Reading desk", "kind": "arrangement", "group": "Home", "category": "Study", "slot": "study",
     "desc": "Fills the place you study. Copying the slip goes half again as fast, and Lore can reach one level further.",
     "require": "g.cottage > 0 || g.ridge_room > 0",
     "buy": { "coin": 25, "timber": 3 }, "mod": { "fragment_notes.rate": 0.5, "lore.max": 1 }, "max": 1
   },
   {
-    "id": "workbench", "name": "Workbench", "kind": "arrangement", "group": "Home",
+    "id": "workbench", "name": "Workbench", "kind": "arrangement", "group": "Home", "category": "Craft",
     "desc": "One span of floor under the window: a bench, a vice and a mortar, with room to stack two more timber. What it makes is worked on the Craft tab; each recipe holds the activity slot while it runs.",
     "require": "g.foundation > 0", "need": "g.coin >= 20 && g.timber >= 4 && g.home_space.max - g.home_space >= 1",
     "needtext": "Twenty coin, four timber and one free span of floor.",
