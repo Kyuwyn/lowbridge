@@ -182,10 +182,11 @@ export interface RouteOptions {
 
 /** Real one-second engine ticks; there is no duplicated reward or leveling model here. */
 export function runRoute(name: string, options: RouteOptions = {}): RouteResult {
-  const records = options.records ?? sourceRecords;
   const chosen: RoutePreferences | undefined = options.preferences ?? ROUTES[name as OpeningRoute];
   if (!chosen) throw new Error(`No preferences for route ${name}`);
-  const engine = new GameEngine(records, options.start);
+  const engine = new GameEngine(options.records ?? sourceRecords, options.start);
+  // Content as the engine reads it: a dungeon's length is derived, so the runner sees it as the timed run it is.
+  const records = engine.records;
   // A fixed-seed generator keeps every route's fights, and so its timings, the same from run to run.
   let seed = 0x2f6b1d;
   engine.random = () => {
@@ -322,10 +323,13 @@ export function runRoute(name: string, options: RouteOptions = {}): RouteResult 
     } else if (founded && after && engine.state.waiting.some(entry => entry.id === after)) selected = undefined; // parked: wait for it to resume
     else if (founded && after && engine.availability(after).ok) selected = engine.record(after);
     else selected = candidates(false)[0];
-    if (!selected && engine.state.waiting.length) {
-      // Nothing else is worth doing: wait, as a player would, for the parked pursuit to resume.
+    // A dungeon's next room may be shut (a door, Life for its fight, a gauge short of the room) with the dungeon parked or released; the player waits for it.
+    const door = founded && after !== undefined && engine.record(after).rooms !== undefined;
+    if (!selected && (engine.state.waiting.length || door)) {
+      // Nothing else is worth doing: wait, as a player would, for the parked pursuit to resume or the room to open.
       const waitedFrom = engine.state.activitySeconds;
-      for (let idle = 0; idle < 86400 && !(engine.state.active && !engine.record(engine.state.active.id).autoStart) && engine.state.waiting.length; idle++) engine.advance(1);
+      const blocked = () => engine.state.waiting.length > 0 || (door && !engine.availability(after!).ok);
+      for (let idle = 0; idle < 86400 && !(engine.state.active && !engine.record(engine.state.active.id).autoStart) && blocked(); idle++) engine.advance(1);
       observe();
       const resumed = engine.state.active;
       if (resumed && !engine.record(resumed.id).autoStart) {
@@ -335,6 +339,7 @@ export function runRoute(name: string, options: RouteOptions = {}): RouteResult 
         action.elapsed = engine.state.activitySeconds - action.at;
         continue;
       }
+      if (door && engine.availability(after!).ok && engine.state.activitySeconds < maxSeconds) continue;
     }
     if (!selected) break;
     const objective = objectiveFor(engine, selected, focused, options.qiSense);
@@ -560,10 +565,11 @@ export function runDeepRoute(name: DeepRoute, records: GameRecord[] = sourceReco
     "herb_rack", "fragment_notes", from.drills, ...secondLine ? [secondLine.chore] : [], from.chore,
     ...materials.map(material => `trade_${material}`), "breath_gathering", "waystation_work", "cut_timber", "ferry_hauling",
   ];
+  // The dungeons come after Reedmarket so the arrival window keeps measuring the road alone, and before the pale-root trade, which not every route can stock.
   const after = [
     ...deep.specimen ? ["craft_specimen_case", "deliver_specimen_case"] : [],
     ...deep.draughts ? ["craft_marrow_draught", "take_marrow_draught", "craft_clear_pill", "take_clear_pill"] : [],
-    "landslide_rise", "terrace_bypass", "reedmarket_work", "trade_pale_root",
+    "landslide_rise", "terrace_bypass", "reedmarket_work", "survey_tunnel", "reedmarket_cistern", "cistern_slip_leaf", "trade_pale_root",
   ];
   return runRoute(name, {
     records, start: waystation, goal: "second_direction", maxSeconds: 21600, maxActions: 4000, focused: false, attentive: true, timber: 6,

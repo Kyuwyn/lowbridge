@@ -3,7 +3,7 @@
   "reports": [
     {
       "name": "channel-only",
-      "browserWallSeconds": 23.47111757,
+      "browserWallSeconds": 21.755195843,
       "activitySeconds": 720,
       "actionCount": 76,
       "levels": {
@@ -285,7 +285,7 @@
     },
     {
       "name": "hollow-only",
-      "browserWallSeconds": 51.132456275,
+      "browserWallSeconds": 44.579877376000006,
       "activitySeconds": 1103,
       "actionCount": 221,
       "levels": {

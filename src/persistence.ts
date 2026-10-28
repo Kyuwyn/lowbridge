@@ -1,5 +1,5 @@
 import type { ActiveTask, FightState, GameRecord, GameState, LogEntry, Objective, Stat, WorldState } from './types';
-import { DODGE_MAX, FIGHT_LINES, GAUGE, GameEngine, WAITING_MAX } from './engine';
+import { DODGE_MAX, FIGHT_LINES, GAUGE, GameEngine, WAITING_MAX, withRoomLengths } from './engine';
 
 export const SAVE_FORMAT = 'lowbridge-save';
 export const SAVE_VERSION = 7;
@@ -114,18 +114,20 @@ export function makeSave(state: GameState, records: GameRecord[], savedAt = Date
 function readFight(input: unknown, definitions: Map<string, GameRecord>): FightState | undefined {
   const fight = object(input, 'The fight');
   if (fight.you === undefined && fight.exchange !== undefined) return undefined;
-  const encounter = definitions.get(fight.id as string)?.encounter;
-  if (!encounter) fail('the fight names no fight.');
   const whole = (value: unknown, label: string, maximum?: number) => {
     const amount = number(value, label, maximum);
     if (!Number.isInteger(amount)) fail(`${label} must be a whole number.`);
     return amount;
   };
+  const record = definitions.get(fight.id as string);
+  const room = fight.room === undefined ? undefined : whole(fight.room, "The fight's room", (record?.rooms?.length ?? 0) - 1);
+  const encounter = record?.rooms ? record.rooms[room ?? -1]?.encounter : record?.encounter;
+  if (!encounter) fail('the fight names no fight.');
   const you = object(fight.you, 'Your fight stats');
   if (!Array.isArray(fight.lines) || fight.lines.length > FIGHT_LINES || fight.lines.some(line => typeof line !== 'string' || line.length > 1000)) fail('the fight log is invalid.');
   if (fight.result !== undefined && !FIGHT_RESULTS.includes(fight.result as string)) fail('the fight result is invalid.');
   const state: FightState = {
-    id: fight.id as string,
+    id: fight.id as string, ...room === undefined ? {} : { room },
     you: { strike: whole(you.strike, 'Fight strike'), guard: whole(you.guard, 'Fight guard'), speed: number(you.speed, 'Fight speed'),
       hit: number(you.hit, 'Fight hit', 100), dodge: number(you.dodge, 'Fight dodge', DODGE_MAX) },
     life: whole(fight.life, 'Fight life'), foeLife: whole(fight.foeLife, 'Foe life', encounter.foe.life),
@@ -164,6 +166,7 @@ function readTask(input: unknown, known: Set<string>, definitions: Map<string, G
  * around it, and every derived number is rebuilt from today's content anyway.
  */
 export function decodeSave(input: unknown, records: GameRecord[]): DecodedSave {
+  records = withRoomLengths(records);
   const raw = typeof input === 'string' ? JSON.parse(input) as unknown : input;
   const save = object(raw, 'Save');
   if (save.format !== SAVE_FORMAT) fail('this is not a Lowbridge save.');

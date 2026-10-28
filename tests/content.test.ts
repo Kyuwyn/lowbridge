@@ -1,10 +1,10 @@
 import { describe, expect, test } from "bun:test";
 import { records } from "../src/content";
 import { GameEngine } from "../src/engine";
-import { FOUNDATION_CEILING, FOUNDATION_FLOOR, REMOVED_FIELDS, RIDGE_CEILING, RIDGE_FLOOR, TIMED_CEILING, validateCompounding, validateContent, validateContext, validateGrammar, validateMandatoryCores } from "../scripts/validate";
+import { DUNGEON_CEILING, FOUNDATION_CEILING, FOUNDATION_FLOOR, REMOVED_FIELDS, RIDGE_CEILING, RIDGE_FLOOR, TIMED_CEILING, validateCompounding, validateContent, validateContext, validateGrammar, validateMandatoryCores } from "../scripts/validate";
 import { RIDGE_ROUTES, runDirectRoute, runRidgeCoverage, runRidgeRoute, runRoute, type RidgeRoute } from "../scripts/routes";
 import type { GameRecord } from "../src/types";
-import { encounter, villageRecords } from "./fixtures/worlds";
+import { dungeon, encounter, villageRecords } from "./fixtures/worlds";
 
 /** Full validation plays every opening, coverage and ridge route through the real engine. */
 const VALIDATION_MS = 60_000;
@@ -81,6 +81,23 @@ describe("the record vocabulary", () => {
     expect(complains(spoiled("bandit", record => { record.encounter!.foe.technique = { name: "the rush", every: 1, strike: 6 }; }, encounter()), "a foe technique needs a name")).toBe(true);
   });
 
+  test("a dungeon is a Dungeons site of two or more rooms, each a whole room long, with doors that say what they want and no run of its own", () => {
+    expect(validateGrammar(dungeon())).toEqual([]);
+    const delve = (change: (record: GameRecord) => void) => spoiled("delve", change, dungeon());
+    expect(complains(delve(record => { record.group = "Sites"; }), "rooms belong to a site in the Dungeons group")).toBe(true);
+    expect(complains(spoiled("vigor", record => { record.group = "Dungeons"; }, dungeon()), "a Dungeons site has rooms")).toBe(true);
+    expect(complains(delve(record => { record.strain = { strain: 1 }; }), "a dungeon's strain lives on its rooms")).toBe(true);
+    expect(complains(delve(record => { record.rooms = [record.rooms![0]!]; }), "a list of at least two rooms")).toBe(true);
+    expect(complains(delve(record => { record.rooms![0]!.length = 0; }), `delve room 0: a room runs a whole 1-${TIMED_CEILING} seconds`)).toBe(true);
+    expect(complains(delve(record => { record.rooms![3]!.length = DUNGEON_CEILING; }), `over the ${DUNGEON_CEILING} s dungeon ceiling`)).toBe(true);
+    expect(complains(delve(record => { delete record.rooms![1]!.needtext; }), "delve room 1: a door needs its needtext")).toBe(true);
+    expect(complains(delve(record => { (record.rooms![0] as unknown as Record<string, unknown>).cost = { vigor: 1 }; }), 'delve room 0: unknown field "cost"')).toBe(true);
+    expect(complains(delve(record => { record.rooms![0]!.result = { purse: 1 }; }), "unknown record path purse")).toBe(true);
+    expect(complains(delve(record => { record.rooms![1]!.need = "g.purse > 0"; }), "unknown record path g.purse")).toBe(true);
+    expect(complains(delve(record => { record.rooms![2]!.encounter!.foe.speed = 0; }), "delve room 2: a foe needs speed above 0")).toBe(true);
+    expect(complains(spoiled("cleared", record => { record.mod = { "delve.length": 5 }; }, dungeon()), "delve.length is derived from its rooms")).toBe(true);
+  });
+
   test("a hobby is a continuous practice and lasts belongs to a preparation", () => {
     expect(complains(validateGrammar(changed("mill_work", record => { record.hobby = true; })), "only a continuous practice can be a hobby")).toBe(true);
     expect(complains(validateGrammar(changed("rest", record => { record.hobby = true; })), "the idle filler cannot also be a hobby")).toBe(true);
@@ -129,6 +146,12 @@ describe("Part E validation over real opening content", () => {
     for (const route of ridgeDirect) {
       expect(route.goalSeconds! - route.startSeconds).toBeGreaterThanOrEqual(RIDGE_FLOOR);
       expect(route.goalSeconds! - route.startSeconds).toBeLessThanOrEqual(RIDGE_CEILING);
+    }
+    // Both dungeons are walked to their last room on every deep route, the cistern's leaf found and the adit's pointer met.
+    for (const route of report.deepRoutes) {
+      expect([route.name, route.state.stats.survey_tunnel?.reps, route.state.stats.reedmarket_cistern?.reps]).toEqual([route.name, 1, 1]);
+      expect(route.state.stats.cistern_slip_leaf?.value).toBe(1);
+      expect(route.state.stats.tunnel_walked?.value).toBe(1);
     }
   }, VALIDATION_MS);
 

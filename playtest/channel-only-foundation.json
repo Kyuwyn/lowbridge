@@ -2354,6 +2354,20 @@
         "yield": 0,
         "discount": 0
       },
+      "cistern_slip_leaf": {
+        "value": 0,
+        "exp": 0,
+        "reps": 0,
+        "ticks": 0,
+        "started": false,
+        "paid": false,
+        "max": 1,
+        "rate": 1,
+        "open": true,
+        "length": 1,
+        "yield": 0,
+        "discount": 0
+      },
       "conditioning_sheets": {
         "value": 0,
         "exp": 0,
@@ -2830,6 +2844,34 @@
         "yield": 0,
         "discount": 0
       },
+      "survey_tunnel": {
+        "value": 0,
+        "exp": 0,
+        "reps": 0,
+        "ticks": 0,
+        "started": false,
+        "paid": false,
+        "max": 1000000000000,
+        "rate": 1,
+        "open": true,
+        "length": 300,
+        "yield": 0,
+        "discount": 0
+      },
+      "reedmarket_cistern": {
+        "value": 0,
+        "exp": 0,
+        "reps": 0,
+        "ticks": 0,
+        "started": false,
+        "paid": false,
+        "max": 1000000000000,
+        "rate": 1,
+        "open": true,
+        "length": 315,
+        "yield": 0,
+        "discount": 0
+      },
       "ridge_room": {
         "value": 0,
         "exp": 0,
@@ -2859,6 +2901,34 @@
         "discount": 0
       },
       "second_title": {
+        "value": 0,
+        "exp": 0,
+        "reps": 0,
+        "ticks": 0,
+        "started": false,
+        "paid": false,
+        "max": 1,
+        "rate": 1,
+        "open": true,
+        "length": 1,
+        "yield": 0,
+        "discount": 0
+      },
+      "tunnel_walked": {
+        "value": 0,
+        "exp": 0,
+        "reps": 0,
+        "ticks": 0,
+        "started": false,
+        "paid": false,
+        "max": 1,
+        "rate": 1,
+        "open": true,
+        "length": 1,
+        "yield": 0,
+        "discount": 0
+      },
+      "cistern_found": {
         "value": 0,
         "exp": 0,
         "reps": 0,

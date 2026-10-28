@@ -5,7 +5,7 @@ import shared from "../src/data/shared.json";
 import basin from "../src/data/basin.json";
 import { ATTUNE_SLOTS, DODGE_MAX, FIGHT_STATS, GAUGE, GameEngine, HOBBY_SLOTS, HOME_SPACE, LIFE } from "../src/engine";
 import { evaluateCondition, expressionReferences } from "../src/expression";
-import { DERIVED_FIELDS, type Changes, type GameRecord } from "../src/types";
+import { DERIVED_FIELDS, type Changes, type Encounter, type GameRecord, type Room } from "../src/types";
 import { compactRoute, DEEP_ROUTES, DIRECT_ROUTES, RIDGE_ROUTES, ROUTES, runCoverageBranches, runDeepRoute, runDirectRidgeRoute, runDirectRoute, runRidgeCoverage, runRidgeRoute, runRoute, SPHERES, type DeepRoute, type DirectRoute, type OpeningRoute, type RidgeRoute, type RouteResult } from "./routes";
 
 export interface ValidationReport {
@@ -36,7 +36,10 @@ const kinds = new Set<string>(["resource", "family", "task", "site", "arrangemen
 const recordFields = new Set(["id", "kind", "name", "desc", "flavor", "group", "tags", "require", "need", "needtext", "initial", "max",
   "buy", "cost", "length", "run", "effect", "result", "mod", "perLevel", "onStart", "at", "every", "fill", "lock", "enable", "warn",
   "attune", "space", "train", "strain", "events", "breakthrough", "autoStart", "boost", "slots", "slot", "title", "encounter", "held",
-  "hobby", "lasts"]);
+  "hobby", "lasts", "rooms"]);
+const roomFields = new Set(["name", "length", "strain", "need", "needtext", "result", "encounter"]);
+/** What a dungeon's rooms carry instead of the record: a dungeon's own run is nothing but its rooms. */
+const roomOnlyFields = ["length", "strain", "run", "encounter", "effect", "train", "fill", "hobby", "autoStart", "lasts", "attune"] as const;
 /**
  * About ten active minutes to Foundation, measured on the quickest sensible play (owner decision, 27 October 2026).
  * The band sits round the honest direct figures with room for a minute or two of tuning either way.
@@ -50,6 +53,8 @@ export const CIRCULATION_WINDOW = 600;
 /** No outing, sitting or breakthrough may hold the slot longer than this; the basin road's longer carries have their own ceiling. */
 export const TIMED_CEILING = 180;
 export const BASIN_TIMED_CEILING = 300;
+/** A dungeon's rooms together, the ten-minute rule of ADR 0028. */
+export const DUNGEON_CEILING = 600;
 /** Activity seconds from Foundation to the waystation, on every ridge route, from either reading. */
 export const RIDGE_FLOOR = 720;
 export const RIDGE_CEILING = 1440;
@@ -73,9 +78,15 @@ const bankPaths = new Set(["bank", "bank.value", "bank.seconds", "bank.max", "ba
 const countedStores = new Set([HOME_SPACE, ATTUNE_SLOTS, HOBBY_SLOTS]);
 
 function expressions(record: GameRecord): string[] {
-  const result = [record.require, record.need, record.breakthrough?.core, ...record.breakthrough?.pointers.map(pointer => pointer.when) ?? [], ...record.events?.map(event => event.when) ?? []];
+  const result = [record.require, record.need, record.breakthrough?.core, ...record.breakthrough?.pointers.map(pointer => pointer.when) ?? [],
+    ...record.events?.map(event => event.when) ?? [], ...rooms(record).map(room => room.need)];
   for (const map of [...modifierMaps(record), ...effectMaps(record)]) for (const value of Object.values(map ?? {})) if (typeof value === "string") result.push(value);
   return result.filter((value): value is string => typeof value === "string");
+}
+
+/** A dungeon's rooms as an array whatever the JSON holds; the grammar check names a malformed list. */
+function rooms(record: GameRecord): Partial<Room>[] {
+  return Array.isArray(record.rooms) ? record.rooms as Partial<Room>[] : [];
 }
 
 /** The tables recompute reads; only these may carry standing modifiers and `X.mod.Y` patches. */
@@ -85,7 +96,22 @@ function modifierMaps(record: GameRecord): (Changes | undefined)[] {
 
 function effectMaps(record: GameRecord): (Changes | undefined)[] {
   return [record.buy, record.cost, record.run, record.effect, record.result, record.onStart, record.strain, record.encounter?.success,
-    ...record.events?.map(event => event.changes) ?? []];
+    ...record.events?.map(event => event.changes) ?? [], ...rooms(record).flatMap(room => [room.strain, room.result, room.encounter?.success])];
+}
+
+function validateEncounter(owner: string, encounter: Partial<Encounter>, errors: string[]): void {
+  const foe = encounter.foe;
+  if (!foe || typeof foe.name !== "string" || !foe.name || ![foe.life, foe.strike, foe.guard].every(n => Number.isInteger(n) && n >= 0) || foe.life < 1) {
+    errors.push(`${owner}: an encounter needs a named foe with whole, non-negative life, strike and guard, and life at least 1`);
+  }
+  if (foe && !(foe.speed > 0 && foe.speed <= GAUGE && foe.hit >= 0 && foe.hit <= 100 && foe.dodge >= 0 && foe.dodge <= DODGE_MAX)) {
+    errors.push(`${owner}: a foe needs speed above 0 and at most ${GAUGE}, hit within 0-100 and dodge within 0-${DODGE_MAX}`);
+  }
+  if (!encounter.failureText) errors.push(`${owner}: an encounter needs failure text`);
+  const technique = foe?.technique;
+  if (technique !== undefined && !(typeof technique.name === "string" && technique.name && Number.isInteger(technique.every) && technique.every >= 2 && Number.isInteger(technique.strike) && technique.strike >= 0)) {
+    errors.push(`${owner}: a foe technique needs a name, a whole "every" of at least 2 and a whole, non-negative strike`);
+  }
 }
 
 /** Grammar and dependency checks use the very same parser as live actions. */
@@ -130,6 +156,7 @@ export function validateGrammar(records: GameRecord[]): string[] {
       const [target, targetField = "value"] = inner.split(".");
       if (!bankPaths.has(inner) && !ids.has(target!)) errors.push(`${record.id}: ${path} patches toward unknown record ${target}`);
       else if (!bankPaths.has(inner) && !derivedFields.has(targetField)) errors.push(`${record.id}: ${path} must patch a derived field, not ${targetField}`);
+      else if (targetField === "length" && byId.get(target!)?.rooms) errors.push(`${record.id}: ${target}.length is derived from its rooms`);
       return;
     }
     if (bankPaths.has(path.replace(/^g\./, ""))) {
@@ -148,6 +175,7 @@ export function validateGrammar(records: GameRecord[]): string[] {
       errors.push(`${record.id}: unsupported field in ${path}`);
     }
     if (countedStores.has(id) && field === "value") errors.push(`${record.id}: ${id} counts itself; raise ${id}.max instead`);
+    if (field === "length" && byId.get(id)?.rooms) errors.push(`${record.id}: ${id}.length is derived from its rooms`);
   };
 
   /** Ids a breakthrough grants by its result or its events' changes: titles, acquired rather than started. */
@@ -212,20 +240,25 @@ export function validateGrammar(records: GameRecord[]): string[] {
     if (record.boost && typeof record.length !== "number") errors.push(`${record.id}: only timed records can be boosted`);
     if (record.title && record.kind !== "class") errors.push(`${record.id}: only class records carry a title`);
     if (record.encounter && typeof record.length !== "number") errors.push(`${record.id}: only timed records can hold an encounter`);
-    if (record.encounter) {
-      const foe = record.encounter.foe;
-      if (!foe || typeof foe.name !== "string" || !foe.name || ![foe.life, foe.strike, foe.guard].every(n => Number.isInteger(n) && n >= 0) || foe.life < 1) {
-        errors.push(`${record.id}: an encounter needs a named foe with whole, non-negative life, strike and guard, and life at least 1`);
+    if (record.encounter) validateEncounter(record.id, record.encounter, errors);
+    if (record.rooms !== undefined || record.group === "Dungeons") {
+      if (record.kind !== "site" || record.group !== "Dungeons" || record.rooms === undefined) errors.push(`${record.id}: rooms belong to a site in the Dungeons group, and a Dungeons site has rooms`);
+      for (const field of roomOnlyFields) if (record[field] !== undefined) errors.push(`${record.id}: a dungeon's ${field} lives on its rooms`);
+      if (record.boost) errors.push(`${record.id}: a dungeon takes no boost`);
+      if (!Array.isArray(record.rooms) || record.rooms.length < 2) errors.push(`${record.id}: a dungeon is a list of at least two rooms`);
+      for (const [index, room] of rooms(record).entries()) {
+        const owner = `${record.id} room ${index}`;
+        for (const field of Object.keys(room)) if (!roomFields.has(field)) errors.push(`${owner}: unknown field "${field}"`);
+        if (typeof room.name !== "string" || !room.name) errors.push(`${owner}: a room needs a name`);
+        if (!Number.isInteger(room.length) || room.length! < 1 || room.length! > TIMED_CEILING) errors.push(`${owner}: a room runs a whole 1-${TIMED_CEILING} seconds`);
+        if (room.need !== undefined && !room.needtext) errors.push(`${owner}: a door needs its needtext`);
+        if (room.encounter) validateEncounter(owner, room.encounter, errors);
       }
-      if (foe && !(foe.speed > 0 && foe.speed <= GAUGE && foe.hit >= 0 && foe.hit <= 100 && foe.dodge >= 0 && foe.dodge <= DODGE_MAX)) {
-        errors.push(`${record.id}: a foe needs speed above 0 and at most ${GAUGE}, hit within 0-100 and dodge within 0-${DODGE_MAX}`);
-      }
-      if (!record.encounter.failureText) errors.push(`${record.id}: an encounter needs failure text`);
-      const technique = foe?.technique;
-      if (technique !== undefined && !(typeof technique.name === "string" && technique.name && Number.isInteger(technique.every) && technique.every >= 2 && Number.isInteger(technique.strike) && technique.strike >= 0)) {
-        errors.push(`${record.id}: a foe technique needs a name, a whole "every" of at least 2 and a whole, non-negative strike`);
-      }
-      if ([LIFE, ...FIGHT_STATS].some(id => byId.get(id)?.kind !== "resource")) errors.push(`a fight needs the resource records ${[LIFE, ...FIGHT_STATS].join(", ")}`);
+      const total = rooms(record).reduce((sum, room) => sum + (Number(room.length) || 0), 0);
+      if (total > DUNGEON_CEILING) errors.push(`${record.id}: the rooms run ${total}s together, over the ${DUNGEON_CEILING} s dungeon ceiling`);
+    }
+    if ([LIFE, ...FIGHT_STATS].some(id => byId.get(id)?.kind !== "resource") && (record.encounter || rooms(record).some(room => room.encounter))) {
+      errors.push(`a fight needs the resource records ${[LIFE, ...FIGHT_STATS].join(", ")}`);
     }
     if (record.held !== undefined && !(record.kind === "technique" && record.attune) && !(record.kind === "preparation" && record.lasts)) {
       errors.push(`${record.id}: held modifiers belong only to an attuned technique or a preparation that lasts`);
@@ -348,7 +381,7 @@ export function validateModuleSeams(): string[] {
   const modules = [{ name: "opening", records: opening as GameRecord[] }, { name: "ridge", records: ridge as GameRecord[] }, { name: "basin", records: basin as GameRecord[] }];
   const home = new Map(modules.flatMap(module => module.records.map(record => [record.id, module.name] as const)));
   return modules.flatMap(module => module.records.flatMap(record => {
-    const gates = [record.require, record.need, record.breakthrough?.core, ...record.breakthrough?.pointers.map(pointer => pointer.when) ?? [], ...record.events?.map(event => event.when) ?? []];
+    const gates = [record.require, record.need, record.breakthrough?.core, ...record.breakthrough?.pointers.map(pointer => pointer.when) ?? [], ...record.events?.map(event => event.when) ?? [], ...rooms(record).map(room => room.need)];
     return gates.filter((gate): gate is string => typeof gate === "string").flatMap(gate => expressionReferences(gate)
       .map(path => path.replace(/^g\./, "").split(".")[0]!)
       .filter(id => (home.get(id) ?? module.name) !== module.name)
@@ -434,6 +467,10 @@ export function validateContent(records: GameRecord[] = sourceRecords): Validati
   const reached = new Set(played.flatMap(route => route.reached));
   const missing = records.filter(record => !reached.has(record.id)).map(record => record.id);
   if (missing.length) errors.push(`No cold-start reachability witness for: ${missing.join(", ")}`);
+  // A dungeon is witnessed by walking it to its last room: every door must open and every fight be winnable on some honest route.
+  for (const record of records) {
+    if (record.rooms && !played.some(route => (route.state.stats[record.id]?.reps ?? 0) >= 1)) errors.push(`No route clears ${record.id}`);
+  }
   // Replayable witnesses must actually satisfy each lead's need; mere early visibility is insufficient.
   for (const route of coverageBranches) if (!route.success) errors.push(`${route.name}: coverage branch failed (${route.reason})`);
   return { ok: errors.length === 0, errors, routes, coverageBranches, ridgeRoutes, deepRoutes, recordCount: records.length, reachedCount: reached.size, missing };

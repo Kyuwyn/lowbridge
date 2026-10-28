@@ -4,7 +4,7 @@ import { evaluateExpression, expressionReferences, parseExpression } from "../sr
 import { decodeSave, makeSave } from "../src/persistence";
 import { validateGrammar } from "../scripts/validate";
 import { DERIVED_FIELDS, TOOLTIP_BLOCKS, type GameRecord, type Objective, type Stat } from "../src/types";
-import { encounter, hauling, reservoir, villageRecords } from "./fixtures/worlds";
+import { dungeon, encounter, hauling, reservoir, villageRecords } from "./fixtures/worlds";
 
 function run(game: GameEngine, id: string, seconds: number, objective?: Objective) {
   expect(game.start(id, objective).ok).toBe(true);
@@ -1092,5 +1092,142 @@ describe("foe techniques and lasting preparations", () => {
     expect(game.state.effects).toEqual([]);
     expect(game.stat("coin").max).toBe(10);
     expect(game.state.log.some(entry => entry.kind === "completion" && entry.text === "Draught wears off.")).toBe(true);
+  });
+});
+
+describe("dungeons: rooms in one run", () => {
+  /** Every swing lands; Might 2 makes the pit a certain win. */
+  const delver = (records = dungeon()): GameEngine => {
+    const game = new GameEngine(records);
+    game.random = () => 0;
+    game.stat("might").value = 2;
+    game.recompute();
+    return game;
+  };
+
+  test("the dungeon fixture is written in the vocabulary the validator enforces, and its length is derived", () => {
+    expect(validateGrammar(dungeon())).toEqual([]);
+    expect(validateGrammar(dungeon().map(record => record.id === "delve" ? { ...record, length: 14 } : record))).toContain("delve: a dungeon's length lives on its rooms");
+    const game = delver();
+    expect(game.record("delve").length).toBe(14);
+    expect(game.stat("delve").length).toBe(14);
+  });
+
+  test("rooms run in order, each paying as it is cleared, and the run completes once at the last", () => {
+    const game = delver();
+    expect(game.start("delve").ok).toBe(true);
+    expect(game.stat("vigor").value).toBe(8);
+    game.advance(4);
+    expect(game.stat("coin").value).toBe(2);
+    expect(game.stat("strain").value).toBeCloseTo(4);
+    expect(game.state.log.some(entry => entry.text === "Delve: The hall is behind you (1 of 4).")).toBe(true);
+    expect(game.roomAt("delve")?.index).toBe(1);
+    game.advance(2);
+    expect(game.roomAt("delve")).toMatchObject({ index: 2, start: 6, end: 11 });
+    game.advance(2);
+    // You strike for 3 and he for 1: he falls on your second swing, and the room ends with him.
+    expect(game.state.fight).toMatchObject({ id: "delve", room: 2, result: "won", seconds: 2 });
+    expect(game.stat("coin").value).toBe(5);
+    expect(game.roomAt("delve")?.index).toBe(3);
+    expect(game.state.log.some(entry => entry.text.startsWith("Delve: The pit: the bandit falls after 0:02"))).toBe(true);
+    game.advance(3);
+    expect(game.state.active).toBeNull();
+    expect(game.stat("delve")).toMatchObject({ reps: 1, exp: 0, paid: false });
+    expect(game.stat("cleared").value).toBe(1);
+    expect(game.stat("coin").value).toBe(10);
+  });
+
+  test("a shut door parks the run where it stands; it resumes through the door without a second bill", () => {
+    const game = delver(dungeon().map(record => record.id === "coin" ? { ...record, initial: { value: 0, max: 1 } } : record));
+    expect(game.start("delve").ok).toBe(true);
+    game.advance(4);
+    expect(game.state.active).toBeNull();
+    expect(game.state.waiting.map(entry => entry.id)).toEqual(["delve"]);
+    expect(game.state.lastStop).toBe("Delve is waiting: The hall is behind you; Two coin.");
+    expect(game.stat("delve")).toMatchObject({ exp: 4, paid: true });
+    expect(game.availability("delve").reason).toBe("Two coin.");
+    game.advance(5);
+    expect(game.state.active).toBeNull();
+    game.stat("coin").max = 5; game.stat("coin").value = 2;
+    game.advance(1);
+    expect(game.state.active).toMatchObject({ id: "delve", progress: 5 });
+    expect(game.stat("vigor").value).toBe(8);
+    expect(game.state.waiting).toEqual([]);
+  });
+
+  test("a lost fight resets only its room and ends the outing; the rooms behind stay walked", () => {
+    const game = delver();
+    game.stat("might").value = 1;
+    game.recompute();
+    expect(game.start("delve").ok).toBe(true);
+    game.advance(6);
+    game.stat("life").value = 2;
+    game.advance(1);
+    expect(game.state.fight).toMatchObject({ room: 2, result: "life" });
+    expect(game.state.active).toBeNull();
+    expect(game.state.waiting).toEqual([]);
+    expect(game.state.lastStop).toMatch(/^Delve: The pit \(lost after 0:01: your life runs out; .*\): you back off\.$/);
+    expect(game.stat("delve")).toMatchObject({ reps: 0, exp: 6, paid: true });
+    expect(game.stat("coin").value).toBe(2);
+    expect(game.availability("delve").reason).toMatch(/^life: you are in no state to fight/);
+    game.stat("life").value = 6; game.stat("might").value = 2; game.recompute();
+    expect(game.start("delve").ok).toBe(true);
+    expect(game.state.active).toMatchObject({ id: "delve", progress: 6 });
+    expect(game.stat("vigor").value).toBe(8);
+    game.advance(5);
+    expect(game.stat("delve").reps).toBe(1);
+  });
+
+  test("a repeat clear pays the run's result again but not its first-clear step", () => {
+    const game = delver();
+    run(game, "delve", 11, { kind: "repetitions", id: "delve", target: 2 });
+    expect(game.stat("delve").reps).toBe(1);
+    expect(game.state.active).toMatchObject({ id: "delve", progress: 0 });
+    expect(game.stat("vigor").value).toBe(6);
+    game.stat("cleared").value = 0;
+    game.advance(11);
+    expect(game.stat("delve").reps).toBe(2);
+    expect(game.stat("cleared").value).toBe(0);
+    expect(game.stat("coin").value).toBe(20);
+  });
+
+  test("a fight is projected per room, and the tooltip lists the rooms with where you stand", () => {
+    const game = delver();
+    expect(() => game.fight("delve")).toThrow("delve holds no fight in room 0.");
+    expect(game.fight("delve", 2)).toMatchObject({ limit: 5, verdict: "certain", winSeconds: 2 });
+    const blocks = game.tooltip("delve");
+    const order = blocks.map(block => TOOLTIP_BLOCKS.indexOf(block.kind));
+    expect(order).toEqual([...order].sort((a, b) => a - b));
+    expect(blocks.find(block => block.kind === "type")?.lines).toEqual(["Dungeon"]);
+    expect(blocks.find(block => block.kind === "time")?.lines).toEqual(["4 rooms · 00:00:14 in all"]);
+    expect(blocks.find(block => block.kind === "rooms")?.lines).toEqual([
+      "1. The hall · 00:00:04 · strain: 0.5/s · gives coin: 2 ← you are here",
+      "2. The gate · 00:00:02 · needs Two coin.",
+      "3. The pit · 00:00:05 · fight: Certain win",
+      "4. The vault · 00:00:03 · gives coin: 4",
+    ]);
+    expect(blocks.some(block => block.kind === "fight")).toBe(false);
+    game.start("delve");
+    game.advance(6);
+    expect(game.tooltip("delve").find(block => block.kind === "rooms")?.lines[2]).toEndWith("← you are here");
+    expect(game.tooltip("delve").find(block => block.kind === "fight")?.lines[0]).toBe("Certain win");
+  });
+
+  test("a room's fight in progress survives a save with its room; a room the dungeon does not have is refused", () => {
+    const records = dungeon(), game = new GameEngine(records);
+    game.random = () => 0;
+    game.start("delve");
+    game.advance(7);
+    expect(game.state.fight).toMatchObject({ id: "delve", room: 2, seconds: 1 });
+    expect(game.state.fight?.result).toBeUndefined();
+    const save = JSON.parse(JSON.stringify(makeSave(game.snapshot(), records)));
+    const loaded = new GameEngine(records, decodeSave(save, records).state);
+    expect(loaded.state.fight).toEqual(game.state.fight);
+    expect(loaded.state.active).toMatchObject({ id: "delve", progress: 7 });
+    loaded.advance(2);
+    expect(loaded.state.fight?.result).toBe("life");
+    expect(loaded.stat("delve").exp).toBe(6);
+    expect(() => decodeSave({ ...save, fight: { ...save.fight, room: 7 } }, records)).toThrow(/The fight's room/);
+    expect(() => decodeSave({ ...save, fight: { ...save.fight, room: 0 } }, records)).toThrow(/names no fight/);
   });
 });

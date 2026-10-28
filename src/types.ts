@@ -107,6 +107,8 @@ export interface GameRecord {
   encounter?: Encounter;
   /** A continuous practice that may run in the hobby place at half pace beside the activity slot. */
   hobby?: boolean;
+  /** A dungeon: rooms run in order in one timed run; the record's `length` is their sum and is derived, never authored. */
+  rooms?: Room[];
   /** A preparation whose `held` table is paid for this many activity seconds after it is taken. */
   lasts?: number;
 }
@@ -125,6 +127,21 @@ export interface Encounter {
   foe: Foe;
   success: Changes;
   failureText: string;
+}
+
+/** One room of a dungeon: a timed test (drains, an optional door) or a fight. Cleared in array order inside one run. */
+export interface Room {
+  name: string;
+  /** Seconds; a fight room's time limit. */
+  length: number;
+  /** Per-second drain while inside, as a record's `strain`. */
+  strain?: Changes;
+  /** The door: checked when the room is entered, every visit. */
+  need?: Expression;
+  needtext?: string;
+  /** Paid when the room is cleared (a fight room pays this and its `encounter.success`). */
+  result?: Changes;
+  encounter?: Encounter;
 }
 
 /**
@@ -217,6 +234,8 @@ export interface WorldState {
 /** A fight under way or just finished. Your stats are taken as it begins; your Life is the live store. */
 export interface FightState {
   id: string;
+  /** The room this fight belongs to, when the record has `rooms`. */
+  room?: number;
   you: Fighter;
   /** Whole Life you entered with. */
   life: number;
@@ -247,7 +266,7 @@ export interface Availability {
 }
 
 /** The tooltip schema: every record kind renders these blocks, in this order, empty ones omitted. */
-export const TOOLTIP_BLOCKS = ["title", "type", "rate", "desc", "time", "fight", "need", "cost", "effect", "mod", "result", "lock", "flavor"] as const;
+export const TOOLTIP_BLOCKS = ["title", "type", "rate", "desc", "time", "rooms", "fight", "need", "cost", "effect", "mod", "result", "lock", "flavor"] as const;
 export type TooltipBlockKind = (typeof TOOLTIP_BLOCKS)[number];
 
 export interface TooltipBlock {

@@ -41,3 +41,19 @@ export const encounter = (): GameRecord[] => [
   { id: "bandit", name: "Bandit", kind: "site", length: 10, max: 1, cost: { vigor: 4 }, result: { coin: 3 },
     encounter: { foe: { name: "the bandit", life: 4, strike: 3, guard: 1, speed: 5, hit: 100, dodge: 0 }, success: { cleared: 1 }, failureText: "you back off." } },
 ];
+
+/**
+ * A four-room dungeon over the encounter's stores: a drained hall that pays, a coin door, the bandit's pit, and a vault.
+ * Might at level 2 (strike 4, guard 2) fells the bandit on the second swing; at level 1 with Life 2 he fells you on the first.
+ */
+export const dungeon = (): GameRecord[] => [
+  ...encounter().filter(record => record.id !== "bandit"),
+  { id: "strain", kind: "resource", initial: { value: 6, max: 6 } },
+  { id: "delve", name: "Delve", kind: "site", group: "Dungeons", cost: { vigor: 2 }, result: { coin: 1 }, at: { "1": { cleared: 1 } },
+    rooms: [
+      { name: "The hall", length: 4, strain: { strain: 0.5 }, result: { coin: 2 } },
+      { name: "The gate", length: 2, need: "g.coin >= 2", needtext: "Two coin." },
+      { name: "The pit", length: 5, encounter: { foe: { name: "the bandit", life: 4, strike: 3, guard: 1, speed: 5, hit: 100, dodge: 0 }, success: { coin: 3 }, failureText: "you back off." } },
+      { name: "The vault", length: 3, result: { coin: 4 } },
+    ] },
+];

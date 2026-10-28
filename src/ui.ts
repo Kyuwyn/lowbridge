@@ -35,6 +35,7 @@ const groups: { id: string; title: string; tab: Tab; matches(record: GameRecord)
   { id: "sites", title: "Places beyond the village", tab: "tasks", matches: record => record.group === "Sites" },
   { id: "commissions", title: "Commissions", tab: "tasks", matches: record => record.group === "Commissions" },
   { id: "fights", title: "Fights", tab: "tasks", matches: record => record.group === "Fights" },
+  { id: "dungeons", title: "Dungeons", tab: "tasks", matches: record => record.group === "Dungeons" },
   { id: "purchases", title: "Purchases", tab: "tasks", matches: record => record.group === "Purchases" && record.kind !== "class" },
   { id: "classes", title: "Standing", tab: "tasks", matches: record => record.kind === "class" },
   { id: "trade", title: "Village trade", tab: "tasks", matches: record => record.group === "Trade" },
@@ -504,7 +505,13 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
    * verdict, the one thing on its face that decides whether to start it.
    */
   function cardSummary(record: GameRecord, blocks: TooltipBlock[], mode: Mode): string {
-    if (mode === "timed") return [record.encounter ? engine.fight(record.id).verdictText : "", ...blockLines(blocks, "time", "cost")].filter(Boolean).join(" · ");
+    if (mode === "timed") {
+      // Where you stand matters once the run is paid for; before that the time line already counts the rooms.
+      const underway = record.rooms && (engine.state.active?.id === record.id || engine.stat(record.id).paid);
+      const position = underway ? engine.roomAt(record.id) : undefined;
+      const where = position ? `Room ${position.index + 1} of ${record.rooms!.length}: ${position.room.name}` : "";
+      return [where, engine.encounterOf(record.id) ? engine.fight(record.id).verdictText : "", ...blockLines(blocks, "time", "cost")].filter(Boolean).join(" · ");
+    }
     const cost = blockLines(blocks, "cost").join(" · ");
     const payoff = mode === "continuous" ? blockLines(blocks, "effect") : [...blockLines(blocks, "result"), ...blockLines(blocks, "mod")];
     const headline = payoff.length > 1 ? `${payoff[0]} +${payoff.length - 1} more` : payoff[0] ?? "";
@@ -547,14 +554,16 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
   /** The Fight tab shows the fight under way, or the last one until the player starts something else; it opens itself when a fight begins. */
   function renderFight(): void {
     const fight = engine.state.fight, record = fight ? engine.records.find(candidate => candidate.id === fight.id) : undefined;
+    const encounter = fight && record ? engine.encounterOf(record.id, fight.room) : undefined;
     const fighting = engine.fighting();
     if (fighting && !wasFighting) { selectedTab = "fight"; markTabSeen("fight"); }
     wasFighting = fighting;
-    tabViews.get("fight")!.button.hidden = !fight || !record?.encounter;
-    if (!fight || !record?.encounter) { if (selectedTab === "fight") selectedTab = "tasks"; return; }
-    const { foe } = record.encounter, Foe = `${foe.name.charAt(0).toUpperCase()}${foe.name.slice(1)}`, lifeName = label("life");
-    const limit = engine.stat(record.id).length, life = engine.stat("life");
-    setText(fightTitle, label(record.id));
+    tabViews.get("fight")!.button.hidden = !fight || !encounter;
+    if (!fight || !record || !encounter) { if (selectedTab === "fight") selectedTab = "tasks"; return; }
+    const { foe } = encounter, Foe = `${foe.name.charAt(0).toUpperCase()}${foe.name.slice(1)}`, lifeName = label("life");
+    const room = fight.room === undefined ? undefined : record.rooms![fight.room]!;
+    const limit = room ? room.length : engine.stat(record.id).length, life = engine.stat("life");
+    setText(fightTitle, room ? `${label(record.id)} · ${room.name}` : label(record.id));
     setText(fightStatus, !fight.result ? `Fighting ${foe.name} · ${duration(fight.seconds)} of ${duration(limit)}`
       : fight.result === "won" ? `${Foe} falls after ${duration(fight.seconds)}.`
         : fight.result === "life" ? `Lost after ${duration(fight.seconds)}: your ${lifeName} ran out.` : `Lost: ${foe.name} outlasted the ${duration(limit)}.`);
@@ -575,11 +584,11 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
       const ordinal = ({ 2: "second", 3: "third", 4: "fourth", 5: "fifth" } as Record<number, string>)[foe.technique.every] ?? `${foe.technique.every}th`;
       setText(fightFoe.stats, `${fightFoe.stats.textContent} · every ${ordinal} swing: ${foe.technique.name}, Strike ${foe.technique.strike}`);
     }
-    const projection = fight.result ? undefined : engine.fight(record.id);
+    const projection = fight.result ? undefined : engine.fight(record.id, fight.room);
     setText(fightYou.odds, projection ? `Your swings land ${Math.round(projection.yourChance * 100)}% for ${projection.yourDamage}.` : `Landed ${fight.landed} of ${fight.swings} swings.`);
     setText(fightFoe.odds, projection ? `Theirs land ${Math.round(projection.foeChance * 100)}% for ${projection.foeDamage}.` : `Landed ${fight.foeLanded} of ${fight.foeSwings} swings.`);
     setText(fightSummary, projection ? `${projection.verdictText} · you have landed ${fight.landed} of ${fight.swings}, ${foe.name} ${fight.foeLanded} of ${fight.foeSwings}.`
-      : fight.result === "won" ? "The fight is yours." : record.encounter.failureText.charAt(0).toUpperCase() + record.encounter.failureText.slice(1));
+      : fight.result === "won" ? "The fight is yours." : encounter.failureText.charAt(0).toUpperCase() + encounter.failureText.slice(1));
     const grew = fightLog.children.length !== fight.lines.length;
     while (fightLog.children.length > fight.lines.length) fightLog.lastElementChild!.remove();
     fight.lines.forEach((line, index) => setText((fightLog.children[index] as HTMLElement | undefined) ?? fightLog.appendChild(element("li")), line));

@@ -313,7 +313,8 @@
   },
   {
     "id": "cistern_leaf", "name": "The cistern's leaf", "kind": "lead", "group": "Leads",
-    "desc": "One of the three leaves the ledger could not place, under Reedmarket itself.", "require": "g.reedmarket > 0", "initial": { "value": 0, "max": 1 }
+    "desc": "One of the three leaves the ledger could not place, under Reedmarket itself.", "require": "g.reedmarket > 0", "initial": { "value": 0, "max": 1 },
+    "need": "g.cistern_found > 0", "needtext": "The cistern under Reedmarket has not been walked to its dry gallery."
   },
   {
     "id": "far_leaf", "name": "The far leaf", "kind": "lead", "group": "Leads",

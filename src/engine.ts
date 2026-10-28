@@ -1,5 +1,5 @@
 import { evaluateCondition, evaluateExpression, parseExpression, type ExpressionNode } from "./expression";
-import { DERIVED_FIELDS, type AdvanceResult, type Availability, type BillRow, type Changes, type DerivedField, type FightProjection, type FightVerdict, type Fighter, type Foe, type GameRecord, type GameState, type LogEntry, type Objective, type Stat, type TooltipBlock, type WorldState } from "./types";
+import { DERIVED_FIELDS, type AdvanceResult, type Availability, type BillRow, type Changes, type DerivedField, type Encounter, type FightProjection, type FightVerdict, type Fighter, type Foe, type GameRecord, type GameState, type LogEntry, type Objective, type Room, type Stat, type TooltipBlock, type WorldState } from "./types";
 
 const UNBOUNDED = 1_000_000_000_000;
 const EPSILON = 1e-9;
@@ -90,6 +90,19 @@ const tableEntries = (table: Table): number => table.derived.length + table.patc
 const isDynamic = (table: Table): boolean =>
   table.derived.some(entry => typeof entry.amount === "string") || table.patches.some(entry => typeof entry.amount === "string");
 
+/** A dungeon's room and the progress seconds it spans. */
+export interface RoomPosition { index: number; room: Room; start: number; end: number }
+
+/** A dungeon's run is its rooms end to end; undefined for a record without rooms. */
+export function roomsLength(record: GameRecord): number | undefined {
+  return record.rooms?.reduce((sum, room) => sum + room.length, 0);
+}
+
+/** Content as the engine reads it: a dungeon's `length` is derived from its rooms, never authored. */
+export function withRoomLengths(records: readonly GameRecord[]): GameRecord[] {
+  return records.map(record => record.rooms ? { ...record, length: roomsLength(record) } : record);
+}
+
 /** One authoritative simulation shared by the browser, offline settlement and tests. */
 export class GameEngine {
   readonly records: readonly GameRecord[];
@@ -109,6 +122,7 @@ export class GameEngine {
   random: () => number = Math.random;
 
   constructor(records: readonly GameRecord[], state?: GameState) {
+    records = withRoomLengths(records);
     this.records = records;
     this.byId = new Map(records.map(record => [record.id, record]));
     if (this.byId.size !== records.length) throw new Error("Content contains duplicate record ids.");
@@ -160,11 +174,12 @@ export class GameEngine {
   }
 
   private static baseline(record: GameRecord): Pick<Stat, DerivedField> {
+    const length = roomsLength(record) ?? record.length;
     return {
       max: record.max ?? (oneShotKinds.has(record.kind) || record.kind === "flag" ? 1 : UNBOUNDED),
       rate: record.kind === "resource" ? 0 : 1,
       open: true,
-      length: typeof record.length === "number" ? record.length : 0,
+      length: typeof length === "number" ? length : 0,
       yield: 0,
       discount: 0,
       ...pickDerived(record.initial),
@@ -502,27 +517,85 @@ export class GameEngine {
     }
     const short = record.length === undefined ? undefined : this.unsustained(record);
     if (short) return fail(`${this.record(short).name ?? short} cannot sustain this activity.`);
-    if (record.encounter && this.stat(LIFE).value + EPSILON < 1) {
-      const life = this.stat(LIFE), regen = this.state.active ? this.netRate(LIFE) : life.open ? life.rate : 0;
-      const wait = regen > EPSILON ? Math.ceil((1 - life.value) / regen - EPSILON) : undefined;
-      const ready = wait === undefined ? "" : wait < 120 ? `; ready in ~${wait} s` : `; ready in ~${Math.round(wait / 60)} min`;
-      return fail(`${this.record(LIFE).name ?? LIFE}: you are in no state to fight${ready}.`);
-    }
-    // An encounter cannot stop halfway, so it starts only with enough in reserve to finish.
-    if (record.encounter) {
-      for (const [resource, needed] of Object.entries(this.reserveNeeded(record))) {
-        if (this.stat(resource).value + EPSILON < needed) return fail(`${this.record(resource).name ?? resource}: ${needed} needed to see it through.`);
-      }
-    }
+    // A fight cannot stop halfway, and a dungeon's room is entered only with the gauges to see it through.
+    const problem = record.rooms ? this.roomProblem(record) : record.encounter ? this.lifeProblem() ?? this.reserveProblem(this.reserveNeeded(record)) : undefined;
+    if (problem) return fail(problem);
     return { ok: true, reason: "Ready." };
   }
 
-  /** Whole units each drained reservoir must hold for the rest of this run, after its own regeneration. */
+  /** Why a fight cannot be entered now: no Life to fight with, and when it comes back. */
+  private lifeProblem(): string | undefined {
+    const life = this.stat(LIFE);
+    if (life.value + EPSILON >= 1) return undefined;
+    const regen = this.state.active ? this.netRate(LIFE) : life.open ? life.rate : 0;
+    const wait = regen > EPSILON ? Math.ceil((1 - life.value) / regen - EPSILON) : undefined;
+    const ready = wait === undefined ? "" : wait < 120 ? `; ready in ~${wait} s` : `; ready in ~${Math.round(wait / 60)} min`;
+    return `${this.record(LIFE).name ?? LIFE}: you are in no state to fight${ready}.`;
+  }
+
+  private reserveProblem(needed: Record<string, number>): string | undefined {
+    for (const [resource, units] of Object.entries(needed)) {
+      if (this.stat(resource).value + EPSILON < units) return `${this.record(resource).name ?? resource}: ${units} needed to see it through.`;
+    }
+    return undefined;
+  }
+
+  /** The door of the room a dungeon stands at; nothing once its rooms are all behind. */
+  private roomProblem(record: GameRecord): string | undefined {
+    const progress = this.progressOf(record.id), position = this.positionAt(record, progress);
+    return position ? this.doorProblem(record, position, progress) : undefined;
+  }
+
+  /** Why a room cannot be entered from `progress`: its door, Life for a fight, or a reserve short of seeing the room through. */
+  private doorProblem(record: GameRecord, position: RoomPosition, progress: number): string | undefined {
+    const { room } = position;
+    if (!this.condition(room.need)) return room.needtext ?? "The requirements are not met.";
+    const life = room.encounter ? this.lifeProblem() : undefined;
+    return life ?? this.reserveProblem(this.reserve(record, this.drainOf(record, [room.strain]), position.end - progress));
+  }
+
+  /** Where a timed record stands: the running progress, else the progress its last outing kept. */
+  private progressOf(id: string): number {
+    const active = this.state.active;
+    return active?.id === id ? active.progress : this.stat(id).exp;
+  }
+
+  /** The room a dungeon stands in at this progress; undefined without rooms or once the progress reaches the last room's end. */
+  private positionAt(record: GameRecord, progress: number): RoomPosition | undefined {
+    let start = 0;
+    for (const [index, room] of (record.rooms ?? []).entries()) {
+      const end = start + room.length;
+      if (progress + EPSILON < end) return { index, room, start, end };
+      start = end;
+    }
+    return undefined;
+  }
+
+  /** The room a dungeon stands in now, or at `progress`. */
+  roomAt(id: string, progress?: number): RoomPosition | undefined {
+    return this.positionAt(this.record(id), progress ?? this.progressOf(id));
+  }
+
+  /** The fight a record holds: its own, or the one in the room it stands in (or the room asked for). */
+  encounterOf(id: string, room?: number): Encounter | undefined {
+    const record = this.record(id);
+    if (!record.rooms) return record.encounter;
+    return record.rooms[room ?? this.roomAt(id)?.index ?? -1]?.encounter;
+  }
+
+  /** Whole units each drained reservoir must hold for the rest of this run (of this room, in a dungeon), after its own regeneration. */
   reserveNeeded(record: GameRecord): Record<string, number> {
-    const stat = this.stat(record.id), needed: Record<string, number> = {};
-    if (typeof record.length !== "number") return needed;
-    const seconds = Math.max(0, stat.length - stat.exp) / Math.max(this.speed(record), EPSILON);
-    for (const [id, amount] of Object.entries(this.drain(record))) {
+    if (typeof record.length !== "number") return {};
+    const progress = this.progressOf(record.id);
+    if (!record.rooms) return this.reserve(record, this.drain(record), this.stat(record.id).length - progress);
+    const position = this.positionAt(record, progress);
+    return position ? this.reserve(record, this.drainOf(record, [position.room.strain]), position.end - progress) : {};
+  }
+
+  private reserve(record: GameRecord, drain: Record<string, number>, left: number): Record<string, number> {
+    const needed: Record<string, number> = {};
+    const seconds = Math.max(0, left) / Math.max(this.speed(record), EPSILON);
+    for (const [id, amount] of Object.entries(drain)) {
       const reservoir = this.stat(id), regen = reservoir.open ? reservoir.rate : 0;
       const units = Math.ceil((amount - regen) * seconds - EPSILON);
       if (units > 0) needed[id] = Math.min(reservoir.max, units);
@@ -539,10 +612,14 @@ export class GameEngine {
     });
   }
 
-  /** Per-second spending of a running activity, after discounts. */
+  /** Per-second spending of a running activity, after discounts; a dungeon's is the room it stands in. */
   drain(record: GameRecord): Record<string, number> {
+    return this.drainOf(record, record.rooms ? [this.roomAt(record.id)?.room.strain] : [record.run, record.strain]);
+  }
+
+  private drainOf(record: GameRecord, maps: (Changes | undefined)[]): Record<string, number> {
     const drain: Record<string, number> = {};
-    for (const changes of [record.run, record.strain]) {
+    for (const changes of maps) {
       for (const [id, amount] of Object.entries(changes ?? {})) drain[id] = (drain[id] ?? 0) + this.discounted(record, id, this.value(amount));
     }
     return drain;
@@ -555,11 +632,13 @@ export class GameEngine {
 
   /**
    * A waiting pursuit that drains a regenerating reservoir resumes only once the reservoir covers the rest of
-   * its run (whole units), or is full for continuous practice, so it does not stop again a second later.
+   * its run (whole units; the rest of the room, in a dungeon), or is full for continuous practice, so it does
+   * not stop again a second later.
    */
   private recovered(record: GameRecord): boolean {
     const stat = this.stat(record.id);
-    const seconds = record.length === "continuous" ? Infinity : Math.max(0, stat.length - stat.exp) / Math.max(this.speed(record), EPSILON);
+    const end = record.rooms ? this.positionAt(record, stat.exp)?.end ?? stat.exp : stat.length;
+    const seconds = record.length === "continuous" ? Infinity : Math.max(0, end - stat.exp) / Math.max(this.speed(record), EPSILON);
     return Object.entries(this.drain(record)).every(([id, amount]) => {
       const reservoir = this.stat(id), regen = reservoir.open ? reservoir.rate : 0;
       if (regen <= 0 || amount - regen <= EPSILON) return true;
@@ -1171,8 +1250,10 @@ export class GameEngine {
       const current = this.stat(resource.id);
       if (resource.kind === "resource" && current.open && current.rate) this.change(resource.id, current.rate);
     }
+    // A dungeon drains what the room it stands in draws.
+    const position = record.rooms ? this.positionAt(record, active.progress) : undefined;
     this.effects(record.run, -1);
-    this.effects(record.strain, -1);
+    this.effects(position ? position.room.strain : record.strain, -1);
     this.effects(record.effect, stat.rate);
     if (record.length === "continuous") {
       active.progress++;
@@ -1184,10 +1265,25 @@ export class GameEngine {
       }
       if (this.reached(active.objective)) this.finishObjective();
     } else {
-      if (record.encounter) this.enterFight(record);
+      const encounter = position ? position.room.encounter : record.encounter;
+      if (encounter) this.enterFight(record, position?.index);
       active.progress += this.speed(record);
-      // A decided fight ends its run then and there, however much of the run's length is left.
-      if (record.encounter && this.playSwings(record)) active.progress = Math.max(active.progress, stat.length);
+      // A decided fight ends its run (or its room) then and there, however much of the length is left.
+      if (encounter && this.playSwings(record)) active.progress = Math.max(active.progress, position?.end ?? stat.length);
+      if (position && active.progress + EPSILON >= position.end) {
+        // A second belongs to one room: the overshoot into the next is dropped.
+        active.progress = position.end;
+        const lost = this.clearRoom(record, position);
+        if (lost) {
+          // A lost room resets only itself and ends the outing; the rooms behind stay walked.
+          active.progress = position.start;
+          this.state.lastStop = this.lastReason = lost;
+          this.release();
+        } else if (position.index + 1 < record.rooms!.length) {
+          const next = this.positionAt(record, active.progress)!, problem = this.doorProblem(record, next, next.start);
+          if (problem) this.pause(`${position.room.name} is behind you; ${problem}`);
+        }
+      }
       while (this.state.active === active && active.progress + EPSILON >= stat.length) {
         active.progress = Math.max(0, active.progress - stat.length);
         const lost = this.complete(record);
@@ -1224,27 +1320,40 @@ export class GameEngine {
    * The fight as it would go if started now, without touching state. Each side's swings land at Hit × (1 − the
    * other's Dodge) for Strike over the other's Guard, and come every GAUGE / Speed seconds. The race times are
    * averages; the win chance plays out every swing the real fight would roll. While this record's fight runs,
-   * your side is the one you entered with.
+   * your side is the one you entered with. A dungeon's fight is the one in the room you stand in, or in `room`.
    */
-  fight(id: string, lifeHeld?: number): FightProjection {
+  fight(id: string, room?: number): FightProjection {
     if (![LIFE, ...FIGHT_STATS].every(stat => this.byId.has(stat))) throw new Error(`A fight needs the resource records ${[LIFE, ...FIGHT_STATS].join(", ")}.`);
-    const record = this.record(id), encounter = record.encounter;
-    if (!encounter) throw new Error(`${id} holds no fight.`);
-    const { foe } = encounter, live = this.state.fight?.id === id && !this.state.fight.result ? this.state.fight : undefined;
+    const record = this.record(id);
+    if (record.rooms) room ??= this.roomAt(id)?.index;
+    const encounter = this.encounterOf(id, room);
+    if (!encounter) throw new Error(record.rooms ? `${id} holds no fight in room ${room}.` : `${id} holds no fight.`);
+    const { foe } = encounter, fight = this.state.fight, live = fight?.id === id && fight.room === room && !fight.result ? fight : undefined;
     const you: Fighter = live ? { ...live.you } : this.fighter();
-    const lifeValue = lifeHeld ?? live?.life ?? this.stat(LIFE).value, life = Math.floor(lifeValue + EPSILON);
+    const lifeValue = live?.life ?? this.stat(LIFE).value, life = Math.floor(lifeValue + EPSILON);
     const held: FightProjection["held"] = [];
     for (const source of [...this.state.attuned, ...this.state.effects.map(effect => effect.id)]) {
       const adds = this.heldAdds(source);
       if (Object.keys(adds).length) held.push({ id: source, adds });
     }
-    const odds = exchange(you, foe);
-    const outcome = this.replay(record, you, lifeValue), winChance = outcome.chance, verdict = fightVerdict(winChance, odds.yourDamage);
+    const odds = exchange(you, foe), seconds = this.fightSeconds(record, room);
+    const outcome = this.replay(encounter, seconds, you, lifeValue), winChance = outcome.chance, verdict = fightVerdict(winChance, odds.yourDamage);
     const projection: FightProjection = { foe, you, life, lifeMax: this.stat(LIFE).max, held, ...odds, winSeconds: outcome.winSeconds, loseSeconds: outcome.loseSeconds,
-      limit: this.stat(id).length, winChance, verdict, verdictText: this.verdictText(winChance, verdict, you, foe), likely: winChance + EPSILON >= 0.5 };
-    const flip = live ? undefined : this.flip(record, projection, lifeValue);
+      limit: room === undefined ? this.stat(id).length : record.rooms![room]!.length, winChance, verdict, verdictText: this.verdictText(winChance, verdict, you, foe), likely: winChance + EPSILON >= 0.5 };
+    const flip = live ? undefined : this.flip(encounter, seconds, projection, lifeValue);
     if (flip) projection.flip = flip;
     return projection;
+  }
+
+  /** The fight's last second: the run ends on the second its progress reaches its length, a room on the second it reaches the room's end. */
+  private fightSeconds(record: GameRecord, room?: number): number {
+    const speed = this.speed(record), stat = this.stat(record.id);
+    let left = stat.length - stat.exp;
+    if (room !== undefined) {
+      const progress = this.progressOf(record.id), position = this.positionAt(record, progress);
+      left = position?.index === room ? position.end - progress : record.rooms![room]!.length;
+    }
+    return speed > EPSILON ? Math.min(FIGHT_SECONDS_MAX, Math.max(1, Math.ceil(left / speed - EPSILON))) : FIGHT_SECONDS_MAX;
   }
 
   /** The fight stats you would enter a fight with now, plus what a method not yet held would add. */
@@ -1264,13 +1373,10 @@ export class GameEngine {
     return adds;
   }
 
-  /** The exact outcome of this fight if it began now with these stats and this much Life. */
-  private replay(record: GameRecord, you: Fighter, life: number): Outcome {
-    const run = this.stat(record.id), lifeStat = this.stat(LIFE), speed = this.speed(record);
-    // The run ends on the second its progress reaches its length, so that is the fight's last second.
-    const seconds = speed > EPSILON ? Math.max(1, Math.ceil((run.length - run.exp) / speed - EPSILON)) : FIGHT_SECONDS_MAX;
-    return replay({ you, foe: record.encounter!.foe, life, lifeMax: lifeStat.max, regen: lifeStat.open ? lifeStat.rate : 0,
-      seconds: Math.min(seconds, FIGHT_SECONDS_MAX) });
+  /** The exact outcome of this fight if it began now with these stats and this much Life, with `seconds` to decide it. */
+  private replay(encounter: Encounter, seconds: number, you: Fighter, life: number): Outcome {
+    const lifeStat = this.stat(LIFE);
+    return replay({ you, foe: encounter.foe, life, lifeMax: lifeStat.max, regen: lifeStat.open ? lifeStat.rate : 0, seconds });
   }
 
   private verdictText(chance: number, verdict: FightVerdict, you: Fighter, foe: Fighter): string {
@@ -1284,13 +1390,13 @@ export class GameEngine {
    * The cheapest change that would move the verdict up a band, cheapest first: resting to full Life,
    * holding a method in a free attunement place, then a higher Strike and what raises it.
    */
-  private flip(record: GameRecord, projection: FightProjection, life: number): string | undefined {
+  private flip(encounter: Encounter, seconds: number, projection: FightProjection, life: number): string | undefined {
     if (projection.verdict === "certain") return undefined;
     const { foe } = projection, rank = FIGHT_VERDICTS.indexOf(projection.verdict);
     const better = (chance: number, you: Fighter) => FIGHT_VERDICTS.indexOf(fightVerdict(chance, Math.max(0, you.strike - foe.guard))) > rank;
     const lifeMax = this.stat(LIFE).max;
     if (life + EPSILON < lifeMax) {
-      const rested = this.replay(record, projection.you, lifeMax).chance;
+      const rested = this.replay(encounter, seconds, projection.you, lifeMax).chance;
       if (better(rested, projection.you)) return `Rested to full ${this.record(LIFE).name ?? LIFE}: ${percent(rested)}`;
     }
     if (this.byId.has(ATTUNE_SLOTS) && this.state.attuned.length < Math.floor(this.stat(ATTUNE_SLOTS).max + EPSILON)) {
@@ -1299,7 +1405,7 @@ export class GameEngine {
         if (!method.attune || this.isAttuned(method.id) || !this.visible(method.id)) continue;
         const adds = this.heldAdds(method.id);
         if (!Object.keys(adds).length) continue;
-        const you = this.fighter(adds), chance = this.replay(record, you, life).chance;
+        const you = this.fighter(adds), chance = this.replay(encounter, seconds, you, life).chance;
         if (better(chance, you) && (!best || chance > best.chance)) {
           best = { name: method.name ?? method.id, chance, closes: (method.lock ?? []).filter(target => !this.locked(target)).map(target => this.byId.get(target)?.name ?? target) };
         }
@@ -1311,7 +1417,7 @@ export class GameEngine {
     const raisers = sources.length ? `raised by ${sources.join(" or ")}` : "nothing you know of raises it further";
     if (projection.verdict === "hopeless") return `${strikeName} ${foe.guard + 1} passes ${this.record(GUARD).name ?? GUARD} ${foe.guard}: ${raisers}`;
     if (!sources.length) return undefined;
-    const stronger = { ...projection.you, strike: projection.you.strike + 1 }, chance = this.replay(record, stronger, life).chance;
+    const stronger = { ...projection.you, strike: projection.you.strike + 1 }, chance = this.replay(encounter, seconds, stronger, life).chance;
     return better(chance, stronger) ? `${strikeName} ${stronger.strike}: ${percent(chance)}; ${raisers}` : undefined;
   }
 
@@ -1321,11 +1427,18 @@ export class GameEngine {
     return Boolean(fight && !fight.result && this.state.active?.id === fight.id);
   }
 
-  /** A fight is entered on the first second of its run, with the stats and whole Life held then. */
-  private enterFight(record: GameRecord): void {
-    if (this.state.fight?.id === record.id && !this.state.fight.result) return;
-    this.state.fight = { id: record.id, you: this.fighter(), life: Math.floor(this.stat(LIFE).value + EPSILON), foeLife: record.encounter!.foe.life,
-      yourGauge: 0, foeGauge: 0, seconds: 0, swings: 0, landed: 0, foeSwings: 0, foeLanded: 0, lines: [] };
+  /** A fight is entered on the first second of its run (of its room, in a dungeon), with the stats and whole Life held then. */
+  private enterFight(record: GameRecord, room?: number): void {
+    const fight = this.state.fight;
+    if (fight?.id === record.id && fight.room === room && !fight.result) return;
+    this.state.fight = { id: record.id, ...room === undefined ? {} : { room }, you: this.fighter(), life: Math.floor(this.stat(LIFE).value + EPSILON),
+      foeLife: this.encounterOf(record.id, room)!.foe.life, yourGauge: 0, foeGauge: 0, seconds: 0, swings: 0, landed: 0, foeSwings: 0, foeLanded: 0, lines: [] };
+  }
+
+  /** A fight's journal name: the record, and the room when it is a dungeon's. */
+  private fightName(record: GameRecord, room?: number): string {
+    const name = record.name ?? record.id;
+    return room === undefined ? name : `${name}: ${record.rooms![room]!.name}`;
   }
 
   /**
@@ -1333,7 +1446,7 @@ export class GameEngine {
    * when level. Your blows fall on the live Life store. Returns true once a side has fallen.
    */
   private playSwings(record: GameRecord): boolean {
-    const fight = this.state.fight!, { foe } = record.encounter!, projection = exchange(fight.you, foe), name = record.name ?? record.id;
+    const fight = this.state.fight!, { foe } = this.encounterOf(record.id, fight.room)!, projection = exchange(fight.you, foe), name = this.fightName(record, fight.room);
     const Foe = `${foe.name.charAt(0).toUpperCase()}${foe.name.slice(1)}`, lifeName = this.record(LIFE).name ?? LIFE;
     fight.seconds++;
     fight.yourGauge += fight.you.speed;
@@ -1399,19 +1512,8 @@ export class GameEngine {
       }
     }
     if (record.encounter) {
-      if (this.state.fight?.id !== record.id) this.enterFight(record);
-      // A run that reaches its length undecided is outlasted.
-      const fight = this.state.fight!, foe = record.encounter.foe.name, lifeName = this.record(LIFE).name ?? LIFE;
-      fight.result ??= "outlasted";
-      const tally = `you landed ${fight.landed} of ${fight.swings} swings, ${foe} ${fight.foeLanded} of ${fight.foeSwings}`;
-      if (fight.result !== "won") {
-        const reason = fight.result === "life" ? `your ${lifeName} runs out` : `${foe} outlasts you`;
-        const text = `${name} (lost after ${fightClock(fight.seconds)}: ${reason}; ${tally}): ${record.encounter.failureText}`;
-        this.log("pause", text);
-        return text;
-      }
-      this.log("story", `${name}: ${foe} falls after ${fightClock(fight.seconds)}; ${tally}. ${lifeName} ${fight.life} → ${Math.floor(this.stat(LIFE).value + EPSILON)}.`);
-      this.effects(record.encounter.success);
+      const lost = this.settleFight(record, record.encounter);
+      if (lost) return lost;
     }
     stat.reps++;
     stat.value = Math.min(stat.max, stat.value + 1);
@@ -1427,6 +1529,36 @@ export class GameEngine {
       // A timed run's locks fell when its bill was paid.
       if (typeof record.length !== "number") this.applyLocks(record);
     }
+    this.recompute();
+    return undefined;
+  }
+
+  /** A fight's run (or room) is over: undecided is outlasted. Returns the journal text of a loss, when nothing else of the run applies. */
+  private settleFight(record: GameRecord, encounter: Encounter, room?: number): string | undefined {
+    if (this.state.fight?.id !== record.id || this.state.fight.room !== room) this.enterFight(record, room);
+    const fight = this.state.fight!, foe = encounter.foe.name, lifeName = this.record(LIFE).name ?? LIFE, name = this.fightName(record, room);
+    fight.result ??= "outlasted";
+    const tally = `you landed ${fight.landed} of ${fight.swings} swings, ${foe} ${fight.foeLanded} of ${fight.foeSwings}`;
+    if (fight.result !== "won") {
+      const reason = fight.result === "life" ? `your ${lifeName} runs out` : `${foe} outlasts you`;
+      const text = `${name} (lost after ${fightClock(fight.seconds)}: ${reason}; ${tally}): ${encounter.failureText}`;
+      this.log("pause", text);
+      return text;
+    }
+    this.log("story", `${name}: ${foe} falls after ${fightClock(fight.seconds)}; ${tally}. ${lifeName} ${fight.life} → ${Math.floor(this.stat(LIFE).value + EPSILON)}.`);
+    this.effects(encounter.success);
+    return undefined;
+  }
+
+  /** A dungeon's room is reached: its fight settled, its loot paid flat (the run's `result` carries the yield). Returns a lost fight's journal text. */
+  private clearRoom(record: GameRecord, position: RoomPosition): string | undefined {
+    const { room } = position;
+    if (room.encounter) {
+      const lost = this.settleFight(record, room.encounter, position.index);
+      if (lost) return lost;
+    }
+    this.effects(room.result);
+    this.log("completion", `${record.name ?? record.id}: ${room.name} is behind you (${position.index + 1} of ${record.rooms!.length}).`);
     this.recompute();
     return undefined;
   }
@@ -1726,10 +1858,26 @@ export class GameEngine {
     const fullTime = stat.length / Math.max(this.speed(record), EPSILON);
     const inEffect = this.state.effects.find(effect => effect.id === id);
     block("time", [
-      !timed ? undefined : record.encounter ? `Time limit: ${clock(fullTime)}` : `Completion time: ${clock(fullTime)}`,
+      !timed ? undefined : record.rooms ? `${record.rooms.length} rooms · ${clock(fullTime)} in all` : record.encounter ? `Time limit: ${clock(fullTime)}` : `Completion time: ${clock(fullTime)}`,
       record.lasts ? `Lasts ${record.lasts % 60 === 0 ? `${record.lasts / 60} min` : `${record.lasts} s`}${inEffect ? ` (${clock(inEffect.remaining)} left)` : ""}` : undefined,
     ]);
-    if (record.encounter) {
+    // Costs read as paid after discounts, payouts as they pay now, each naming what made it grow.
+    const paid = (path: string, base: number): Growth => {
+      const resource = fieldPath(path).split(".")[0]!, discounts = [`${id}.discount`, `${resource}.discount`].map(target => this.contributions(target, id));
+      return { amount: this.discounted(record, resource, base) - base, labels: discounts.flatMap(found => found.labels) };
+    };
+    if (record.rooms) {
+      const here = this.roomAt(id)?.index;
+      block("rooms", record.rooms.map((room, index) => [
+        `${index + 1}. ${room.name} · ${clock(room.length / Math.max(this.speed(record), EPSILON))}`,
+        room.encounter ? `fight: ${this.fight(id, index).verdictText}` : undefined,
+        room.strain ? this.lines(room.strain, "/s", paid).join(", ") : undefined,
+        room.need ? `needs ${room.needtext ?? room.need}` : undefined,
+        room.result ? `gives ${this.lines(room.result).join(", ")}` : undefined,
+      ].filter(Boolean).join(" · ") + (index === here ? " ← you are here" : "")), "Rooms");
+    }
+    const encounter = this.encounterOf(id);
+    if (encounter) {
       const live = this.fighting() && this.state.active?.id === id;
       const projection = this.fight(id), { foe, you } = projection, lifeName = this.record(LIFE).name ?? LIFE;
       const [foeStats, yourStats] = [foe, you].map(fighter =>
@@ -1755,11 +1903,6 @@ export class GameEngine {
     // A store or a knowledge is not an action, so its "cannot be started" reason is not a need.
     const availability = passiveKinds.has(record.kind) ? { ok: true, reason: "" } : this.availability(id);
     block("need", [record.needtext, !availability.ok && availability.reason !== record.needtext ? availability.reason : undefined], "Need");
-    // Costs read as paid after discounts, payouts as they pay now, each naming what made it grow.
-    const paid = (path: string, base: number): Growth => {
-      const resource = fieldPath(path).split(".")[0]!, discounts = [`${id}.discount`, `${resource}.discount`].map(target => this.contributions(target, id));
-      return { amount: this.discounted(record, resource, base) - base, labels: discounts.flatMap(found => found.labels) };
-    };
     block("cost", this.lines(record.buy, "", paid).concat(this.lines(record.cost, "", paid)), "Cost");
     block("cost", this.lines(record.run, "/s", paid).concat(this.lines(record.strain, "/s", paid)), "Progress cost");
     block("effect", this.lines(record.effect, "/s", (_, base) => ({ amount: base * (stat.rate - 1), labels: this.contributions(`${id}.rate`, id).labels }))
@@ -1775,7 +1918,7 @@ export class GameEngine {
     block("result", this.lines(record.result, "", (path, base) => !path.includes(".") && base > 0 && this.byId.get(path)?.kind === "resource"
       ? { amount: stat.yield, labels: this.contributions(`${id}.yield`, id).labels } : undefined)
       .concat(this.lines(record.onStart, " on first start"))
-      .concat(record.encounter ? this.lines(record.encounter.success, " if won") : []), "Gives");
+      .concat(encounter ? this.lines(encounter.success, " if won") : []), "Gives");
     // Once nothing it closes is still open, the closing has happened and the note goes with the warning.
     const warning = this.warnText(id);
     block("lock", [
@@ -1883,6 +2026,7 @@ function pickDerived(initial: Partial<Stat> | undefined): Partial<Pick<Stat, Der
 }
 
 function kindLabel(record: GameRecord): string {
+  if (record.rooms) return "Dungeon";
   if (record.encounter) return "Fight";
   if (record.length === "continuous") return "Practice";
   if (typeof record.length === "number") return record.kind === "site" ? "Outing" : record.kind === "recipe" ? "Recipe" : "Timed task";

@@ -126,6 +126,12 @@
     "mod": { "circulation.mod.life.max": 1 }
   },
   {
+    "id": "cistern_slip_leaf", "name": "The leaf from the cistern", "kind": "teaching", "group": "Purchases", "tags": ["t_leaf"],
+    "desc": "The leaf from the lamp niche in the dry gallery, yours once found. It is on stillness: every level of Composure holds a point more Focus.",
+    "require": "g.cistern_found > 0", "max": 1,
+    "mod": { "composure.mod.focus.max": 1 }
+  },
+  {
     "id": "conditioning_sheets", "name": "The conditioning sheets", "kind": "teaching", "group": "Purchases",
     "desc": "Loose sheets from the ledger room on hardening the body for the basin road, for anyone with Circulation at five and Lore to read them. Circulation can grow two levels further, and the deep body pair, the scree, and Han's hauling commission open. Six bundles.",
     "require": "g.waystation > 0 && g.circulation >= 5", "need": "g.lore >= 5", "needtext": "Lore 5, to read the sheets.",
@@ -442,6 +448,54 @@
       "text": "The second man goes down over the first and neither gets up in a hurry. What they carried is yours, and the spur is quiet." }]
   },
   {
+    "id": "survey_tunnel", "name": "Walk the surveyors' adit", "kind": "site", "group": "Dungeons",
+    "desc": "Beyond the survey shelter the surveyors drove an adit into the ridge and never finished it. Four rooms in a row: the timbered drift, the sump, the cross-cut something has denned in, and the face. Each draws on Strain, the sump on Focus too, and a door you cannot pass yet keeps the rooms behind you. Stone and veined ore from the rooms each time, and every third walk turns up pale root where the adit cuts the bank; the first walk to the face leaves you able to carry two more Strain and counts toward the Second Direction. The cross-cut's fight cannot be left halfway, and losing it costs only that room.",
+    "flavor": "The surveyors' marks stop at the face mid-word.",
+    "require": "g.spur_reopened > 0",
+    "cost": { "vigor": 3 },
+    "result": { "ground_reading.exp": 20, "circulation.exp": 20 },
+    "every": { "3": { "pale_root": 2 } },
+    "rooms": [
+      { "name": "The timbered drift", "length": 90, "strain": { "strain": 0.05 },
+        "need": "g.walking_staff > 0 || g.weighted_stakes > 0", "needtext": "A staff or shod stakes, to sound the timbers.",
+        "result": { "stone": 2 } },
+      { "name": "The sump", "length": 60, "strain": { "strain": 0.04, "focus": 0.04 }, "result": { "veined_ore": 2 } },
+      { "name": "The cross-cut", "length": 60, "strain": { "strain": 0.03 },
+        "encounter": { "foe": { "name": "the boar in the cross-cut", "life": 12, "strike": 8, "guard": 4, "speed": 1, "hit": 75, "dodge": 10,
+            "technique": { "name": "the charge", "every": 4, "strike": 12 } },
+          "success": { "marrow_herbs": 2 },
+          "failureText": "you back out of the cross-cut the way you came, and the rooms behind you stay walked. Its charge of twelve lands on whatever Guard you bring; Guard, not Strike, is what turns a charge." } },
+      { "name": "The face", "length": 90, "strain": { "strain": 0.05 }, "result": { "veined_ore": 2, "stone": 2, "ground_reading.exp": 30 } }
+    ],
+    "events": [{ "id": "adit_face", "when": "g.survey_tunnel.reps >= 1",
+      "text": "The face is bare rock and a last line of survey marks that stop mid-word. Carrying the frame this far and back has taught the body to carry two more of Strain.",
+      "changes": { "tunnel_walked": 1 } }]
+  },
+  {
+    "id": "reedmarket_cistern", "name": "Go down into the cistern", "kind": "site", "group": "Dungeons",
+    "desc": "Under Reedmarket is the cistern the market was built over, four chambers deep: the stair, the counting chamber where the water keeps time, the sluice its keeper still minds, and the dry gallery beyond. It draws mostly on Focus, the stair and the gallery on Strain too, and a door you cannot pass yet keeps the chambers behind you. Stone, inked tokens, pale root and grit from the chambers each time, and every third descent the porters pay fifteen coin for what you bring up; the first time you reach the gallery you find the cistern's leaf, and the stillness down there leaves Focus two deeper. The keeper's fight cannot be left halfway, and losing it costs only that chamber.",
+    "flavor": "The market counts coin above; the water counts below.",
+    "require": "g.reedmarket > 0",
+    "cost": { "vigor": 3 },
+    "result": { "composure.exp": 20, "array_craft.exp": 20 },
+    "every": { "3": { "coin": 15 } },
+    "rooms": [
+      { "name": "The stair under the market", "length": 60, "strain": { "focus": 0.04, "strain": 0.02 }, "result": { "stone": 2 } },
+      { "name": "The counting chamber", "length": 90, "strain": { "focus": 0.05 },
+        "need": "g.composure >= 2", "needtext": "Composure 2, to hold still while the water counts.",
+        "result": { "inked_tokens": 2 } },
+      { "name": "The sluice", "length": 75, "strain": { "focus": 0.03 },
+        "encounter": { "foe": { "name": "the sluice keeper", "life": 16, "strike": 9, "guard": 5, "speed": 1, "hit": 80, "dodge": 15,
+            "technique": { "name": "the gate-bar", "every": 3, "strike": 13 } },
+          "success": { "coin": 20 },
+          "failureText": "you climb back to the stair, and the chambers behind you stay walked. His gate-bar of thirteen lands on whatever Guard you bring to it." } },
+      { "name": "The dry gallery", "length": 90, "strain": { "focus": 0.04, "strain": 0.03 }, "result": { "pale_root": 2, "whetstone_grit": 2 } }
+    ],
+    "events": [{ "id": "cistern_gallery", "when": "g.reedmarket_cistern.reps >= 1",
+      "text": "The dry gallery ends at a niche cut for a lamp, and in the niche, wrapped against the damp, is a leaf of the slip: the cistern's leaf the ledger could not place. The stillness down here has left Focus two deeper.",
+      "changes": { "cistern_found": 1 } }]
+  },
+  {
     "id": "ridge_room", "name": "A room at the waystation", "kind": "home", "group": "Home",
     "desc": "A room at the waystation kept beside the cottage, let by Han for ninety coin and four timber for the shelving. Two spans more of floor, a place to study, and a dry loft that keeps ten bundles more; Ground Reading grows a tenth faster so near the slide, and Lore a tenth slower so far from the village. The cottage stays yours.",
     "require": "g.waystation > 0",
@@ -460,7 +514,8 @@
         { "label": "A working study: a reading desk and Lore 6", "when": "g.reading_desk > 0 && g.lore >= 6" },
         { "label": "The survey spur reopened", "when": "g.spur_reopened > 0" },
         { "label": "A commission done", "when": "g.t_commission >= 1" },
-        { "label": "Six leaves recovered: Shu's three and three more", "when": "g.t_leaf >= 4" }
+        { "label": "Six leaves recovered: Shu's three and three more", "when": "g.t_leaf >= 4" },
+        { "label": "The surveyors' adit walked to its end", "when": "g.tunnel_walked > 0" }
       ] },
     "mod": { "bank.max": 172800, "attune_slots.max": 1, "hobby_slots.max": 1, "lore.max": 2, "strain.max": 2, "focus.max": 2,
       "circulation.max": "3 * (g.t_deep_body > 0)", "blade_intent.max": "3 * (g.t_deep_sword > 0)", "ground_reading.max": "3 * (g.t_deep_earth > 0)",
@@ -499,6 +554,18 @@
     "id": "second_title", "name": "A second title taken", "kind": "flag", "group": "Milestones",
     "desc": "The Second Direction has read a title from what you hold.",
     "require": "g.second_title > 0", "initial": { "value": 0, "max": 1 }
+  },
+  {
+    "id": "tunnel_walked", "name": "The surveyors' adit walked to its end", "kind": "flag", "group": "Milestones",
+    "desc": "The adit has been walked to the face. The carry taught you to hold two more Strain.",
+    "require": "g.tunnel_walked > 0", "initial": { "value": 0, "max": 1 },
+    "mod": { "strain.max": 2 }
+  },
+  {
+    "id": "cistern_found", "name": "The cistern walked to the dry gallery", "kind": "flag", "group": "Milestones",
+    "desc": "The cistern under Reedmarket has been walked to its dry gallery, and the leaf in its lamp niche found. The stillness left Focus two deeper.",
+    "require": "g.cistern_found > 0", "initial": { "value": 0, "max": 1 },
+    "mod": { "focus.max": 2 }
   },
   {
     "id": "mountain_vessel", "name": "Mountain Vessel", "kind": "class", "group": "Purchases", "title": "Mountain Vessel",

@@ -34,7 +34,7 @@ export const routeKeys: Record<string, RouteKey> = {
   t_deep_earth: { name: "Earth, deepened", desc: "A deep method of the earth school held: rooted to the vein or listening for water." },
   t_deep_formation: { name: "Formation, deepened", desc: "A deep method of the formation school held: the array anchored or the threshold warded." },
   t_deep_pill: { name: "Pill, deepened", desc: "A deep method of the pill school held: the essence drawn or the fire tempered." },
-  t_leaf: { name: "A leaf of the slip", desc: "One of the slip's missing leaves recovered: Shu's three, the relay keeper's, the shelter's or Han's." },
+  t_leaf: { name: "A leaf of the slip", desc: "One of the slip's missing leaves recovered: Shu's three, the relay keeper's, the shelter's, Han's or the cistern's." },
   t_commission: { name: "A commission done", desc: "A piece of work done for Keeper Han and paid for." },
 };
 
