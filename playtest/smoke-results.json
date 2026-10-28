@@ -3,7 +3,7 @@
   "reports": [
     {
       "name": "channel-only",
-      "browserWallSeconds": 21.125215865,
+      "browserWallSeconds": 23.569027743000003,
       "activitySeconds": 720,
       "actionCount": 76,
       "levels": {
@@ -42,6 +42,22 @@
         },
         {
           "id": "labour",
+          "at": 0
+        },
+        {
+          "id": "reading",
+          "at": 0
+        },
+        {
+          "id": "porters_notes",
+          "at": 0
+        },
+        {
+          "id": "qi_watching",
+          "at": 0
+        },
+        {
+          "id": "draught_making",
           "at": 0
         },
         {
@@ -285,7 +301,7 @@
     },
     {
       "name": "hollow-only",
-      "browserWallSeconds": 40.714919333,
+      "browserWallSeconds": 45.045932938,
       "activitySeconds": 1103,
       "actionCount": 221,
       "levels": {
@@ -324,6 +340,22 @@
         },
         {
           "id": "labour",
+          "at": 0
+        },
+        {
+          "id": "reading",
+          "at": 0
+        },
+        {
+          "id": "porters_notes",
+          "at": 0
+        },
+        {
+          "id": "qi_watching",
+          "at": 0
+        },
+        {
+          "id": "draught_making",
           "at": 0
         },
         {

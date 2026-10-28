@@ -112,7 +112,7 @@ function objectiveFor(engine: GameEngine, record: GameRecord, focused: boolean, 
 
 /** A focused player practises no further than the village needs; coverage branches explore past it. */
 function productive(engine: GameEngine, record: GameRecord, focused: boolean, qiSense = 3): boolean {
-  if (record.kind === "resource" || record.kind === "family" || record.kind === "flag" || record.kind === "lead") return false;
+  if (record.kind === "resource" || record.kind === "family" || record.kind === "flag" || record.kind === "lead" || record.kind === "work") return false;
   if (focused) {
     // Lore 2 opens everything the village sells: the field kit at 1 and Shu's reading at 2.
     if (record.id === "fragment_notes" && held(engine, "lore") >= 2) return false;
@@ -247,7 +247,7 @@ export function runRoute(name: string, options: RouteOptions = {}): RouteResult 
       const stat = engine.stat(record.id);
       if (record.kind === "family" ? stat.open : record.kind === "lead"
         ? engine.condition(record.need)
-        : record.kind === "resource" || record.kind === "flag" || stat.reps > 0 || stat.value > 0 || stat.ticks > 0) reached.add(record.id);
+        : record.kind === "work" || record.kind === "resource" || record.kind === "flag" || stat.reps > 0 || stat.value > 0 || stat.ticks > 0) reached.add(record.id);
     }
     heldAtOnce = Math.max(heldAtOnce, engine.state.attuned.length);
     if (foundationSeconds === null && held(engine, "foundation") > 0) foundationSeconds = engine.state.activitySeconds;

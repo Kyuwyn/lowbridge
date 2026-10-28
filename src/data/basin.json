@@ -381,14 +381,14 @@
     "result": { "coin": 40, "coin_earned": 40 }, "mod": { "pale_root.max": 4 }
   },
   {
-    "id": "craft_settling_draught", "name": "Steep a settling draught", "kind": "recipe", "group": "Craft",
+    "id": "craft_settling_draught", "name": "Steep a settling draught", "kind": "recipe", "group": "Craft", "work": ["draught_making"],
     "desc": "A minute steeping two pale root with two bundles of herbs in the clay vessel. Stops when three are kept.",
     "require": "g.refining.open > 0", "need": "g.workbench > 0 && g.clay_vessel > 0 && g.pale_root >= 2 && g.herbs >= 2",
     "needtext": "A workbench, a clay vessel, two pale root and two bundles of herbs.",
     "cost": { "pale_root": 2, "herbs": 2 }, "length": 60, "fill": "settling_draught", "result": { "settling_draught": 1 }
   },
   {
-    "id": "craft_marrow_draught", "name": "Reduce a marrow draught", "kind": "recipe", "group": "Craft",
+    "id": "craft_marrow_draught", "name": "Reduce a marrow draught", "kind": "recipe", "group": "Craft", "work": ["draught_making"],
     "desc": "A minute reducing two marrow herbs over a pale root in the clay vessel. Refining 2. Stops when three are kept.",
     "require": "g.refining >= 2", "need": "g.workbench > 0 && g.clay_vessel > 0 && g.marrow_herbs >= 2 && g.pale_root >= 1",
     "needtext": "A workbench, a clay vessel, two marrow herbs and a pale root.",

@@ -2,7 +2,7 @@
 export type Expression = string;
 export type Changes = Record<string, number | Expression>;
 /** `recipe`: a timed run at the workbench that fills a store. `preparation`: an instant action spending a dose from a store. */
-export type RecordKind = "resource" | "family" | "task" | "site" | "arrangement" | "home" | "class" | "breakthrough" | "teaching" | "recipe" | "preparation" | "technique" | "purchase" | "flag" | "lead";
+export type RecordKind = "resource" | "family" | "task" | "site" | "arrangement" | "home" | "class" | "breakthrough" | "teaching" | "recipe" | "preparation" | "technique" | "purchase" | "flag" | "lead" | "work";
 
 /**
  * Six of these fields are derived: `recompute` rebuilds `max`, `rate`, `open`, `length`, `yield`
@@ -29,6 +29,8 @@ export interface Stat {
 /** The fields `recompute` owns; nothing else may write them. */
 export const DERIVED_FIELDS = ["max", "rate", "open", "length", "yield", "discount"] as const;
 export type DerivedField = (typeof DERIVED_FIELDS)[number];
+/** The fields a work kind passes on to its members (ADR 0034). */
+export const WORK_FIELDS: readonly DerivedField[] = ["rate", "yield", "discount"];
 
 export interface NarrativeEvent {
   id: string;
@@ -55,6 +57,8 @@ export interface GameRecord {
   group?: string;
   /** Counted by `g.t_<tag>` in expressions: how many owned records carry the tag. */
   tags?: string[];
+  /** Work kinds this action counts as; a kind's rate, yield and discount are paid to every member (ADR 0034). */
+  work?: string[];
   require?: Expression;
   need?: Expression;
   needtext?: string;

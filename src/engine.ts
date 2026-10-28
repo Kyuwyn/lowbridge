@@ -1,5 +1,5 @@
 import { evaluateCondition, evaluateExpression, parseExpression, type ExpressionNode } from "./expression";
-import { DERIVED_FIELDS, type AdvanceResult, type Availability, type BillRow, type Changes, type DerivedField, type Encounter, type FightProjection, type FightVerdict, type Fighter, type Foe, type GameRecord, type GameState, type LogEntry, type Objective, type Room, type Stat, type TooltipBlock, type WorldState } from "./types";
+import { DERIVED_FIELDS, WORK_FIELDS, type AdvanceResult, type Availability, type BillRow, type Changes, type DerivedField, type Encounter, type FightProjection, type FightVerdict, type Fighter, type Foe, type GameRecord, type GameState, type LogEntry, type Objective, type Room, type Stat, type TooltipBlock, type WorldState } from "./types";
 
 const UNBOUNDED = 1_000_000_000_000;
 const EPSILON = 1e-9;
@@ -39,8 +39,12 @@ const derivedFields = new Set<string>(DERIVED_FIELDS);
 /** Stores the engine fills in; content only raises their caps, and none is ever a reward. */
 const countedStores = new Set([HOME_SPACE, ATTUNE_SLOTS, HOBBY_SLOTS]);
 const shown = (amount: number): number => Math.round(amount * 100) / 100;
-const passiveKinds = new Set(["resource", "family", "flag", "lead"]);
+const passiveKinds = new Set(["resource", "family", "flag", "lead", "work"]);
 const oneShotKinds = new Set(["purchase", "arrangement", "home", "class", "breakthrough", "teaching"]);
+const finishingKinds = new Set(["purchase", "site", "class", "teaching", "recipe", "breakthrough"]);
+/** The lines a knowledge's per-level payout is grouped into, in card order. */
+const PAYOUT_GROUPS = ["Max", "Return", "Combat", "Speed", "Yield", "Cost", "Experience"] as const;
+type PayoutGroup = (typeof PAYOUT_GROUPS)[number];
 const clone = <T>(value: T): T => structuredClone(value);
 /** A record name inside a sentence: "through a larger coin pouch", not "through A larger coin pouch". */
 const inSentence = (name: string): string => name.replace(/^(A|An|The) /, article => article.toLowerCase());
@@ -114,6 +118,8 @@ export class GameEngine {
   /** Discovery is a set, so it is kept in content order and a delta save round-trips it exactly. */
   private readonly order: Map<string, number>;
   private readonly tagged: Map<string, GameRecord[]>;
+  /** Work kind id → the actions that count as it. */
+  private readonly members: Map<string, GameRecord[]>;
   /** Modifier amounts written as expressions can read what the pass itself settles, so it must iterate. */
   private readonly dynamicMods: boolean;
   private pendingCaps = new Set<string>();
@@ -145,6 +151,14 @@ export class GameEngine {
         const members = this.tagged.get(tag) ?? [];
         members.push(record);
         this.tagged.set(tag, members);
+      }
+    }
+    this.members = new Map();
+    for (const record of records) {
+      for (const kind of record.work ?? []) {
+        const group = this.members.get(kind) ?? [];
+        group.push(record);
+        this.members.set(kind, group);
       }
     }
     if (state) {
@@ -289,6 +303,15 @@ export class GameEngine {
         if (derivedFields.has(field)) add(target!, field as DerivedField, amount * scale);
       }
     }
+    // A work kind's rate, yield and discount are paid to every action that counts as it.
+    for (const [kind, group] of this.members) {
+      const shared = totals.get(kind);
+      if (!shared) continue;
+      for (const field of WORK_FIELDS) {
+        const amount = shared[field];
+        if (amount) for (const member of group) add(member.id, field, amount);
+      }
+    }
 
     let derived = false;
     for (const { record } of this.compiled) {
@@ -377,10 +400,14 @@ export class GameEngine {
    */
   private contributions(path: string, viewer: string, patchOf?: string): Growth {
     const bySource = new Map<string, { amount: number; label: string; threshold: number }>();
+    // An action's rate, yield and discount also come through the work kinds it counts as.
+    const [own, field] = path.split(".");
+    const kinds = patchOf === undefined && (WORK_FIELDS as readonly string[]).includes(field!) ? this.byId.get(own!)?.work ?? [] : [];
+    const paths = new Set([path, ...kinds.map(kind => `${kind}.${field}`)]);
     this.eachContribution((table, scale, source, threshold) => {
       let amount = 0;
       if (patchOf === undefined) {
-        for (const entry of table.derived) if (`${entry.id}.${entry.field}` === path) amount += this.value(entry.amount) * scale;
+        for (const entry of table.derived) if (paths.has(`${entry.id}.${entry.field}`)) amount += this.value(entry.amount) * scale;
       } else {
         for (const entry of table.patches) if (entry.target === patchOf && fieldPath(entry.path) === path) amount += this.value(entry.amount) * scale;
       }
@@ -448,6 +475,24 @@ export class GameEngine {
   /** A locked record is gone from the world, not merely undiscovered. */
   locked(id: string): boolean { return this.state.lockedIds.includes(id); }
   visible(id: string): boolean { return this.state.visibleIds.includes(id) && !this.locked(id); }
+
+  /** Done for good: closed, or a one-time purchase, outing, standing, teaching, recipe or breakthrough at its limit. */
+  finished(id: string): boolean {
+    const record = this.record(id), stat = this.stat(id);
+    return this.locked(id) || (finishingKinds.has(record.kind) && (stat.value >= stat.max || stat.reps >= stat.max));
+  }
+
+  /** Whether a modifier's target still matters; a work kind is live while any member is seen and unfinished. */
+  private reach(id: string): "live" | "finished" | "unseen" {
+    const record = this.byId.get(id);
+    if (!record) return "live";
+    if (record.kind === "work") {
+      const group = this.members.get(id) ?? [];
+      if (group.every(member => this.finished(member.id))) return "finished";
+      return group.some(member => this.visible(member.id) && !this.finished(member.id)) ? "live" : "unseen";
+    }
+    return this.finished(id) ? "finished" : this.visible(id) ? "live" : "unseen";
+  }
 
   /** Resources whose caps end a run; an empty list means the activity has no such stopping point. */
   fillTargets(record: GameRecord): string[] {
@@ -1880,16 +1925,19 @@ export class GameEngine {
       : unbounded ? (stat.reps ? `${stat.reps} completed` : undefined) : `${shown(stat.value)}/${shown(stat.max)}`]);
     // Route keys are not a type; the UI names them in words beside the blocks.
     const holder = record.slot ? this.slotHolder(record.slot) : undefined, swappedOut = this.kept(id);
-    block("type", [kindLabel(record), record.slot ? `Place: ${record.slot}` : undefined,
+    block("type", [kindLabel(record), record.work?.length ? `Counts as ${list(record.work.map(kind => this.record(kind).name ?? kind))}` : undefined,
+      record.slot ? `Place: ${record.slot}` : undefined,
       swappedOut ? "Kept: swaps back in for nothing" : undefined,
       holder && holder.id !== id ? `Swaps out ${holder.name ?? holder.id}, which is kept` : undefined,
       record.attune ? (this.isAttuned(id) ? "Attuned" : "Needs an attunement slot") : undefined,
       record.hobby ? (this.state.hobby === id ? "Running as the hobby" : "Can run as the hobby") : undefined]);
+    // Sources by name only: a patch into a knowledge's payout is not in `contributions`, so an amount could understate.
+    const from = (path: string): string => { const labels = this.contributions(path, id).labels; return labels.length ? ` (from ${list(labels)})` : ""; };
     block("rate", [
       record.kind === "family" && stat.open ? `Experience: ${shown(stat.exp)}/${EXP_PER_LEVEL * (stat.value + 1)}` : undefined,
-      timed && stat.rate !== 1 ? `Completion rate: ${Math.round(stat.rate * 100)}%` : undefined,
+      timed && stat.rate !== 1 ? `Completion rate: ${Math.round(stat.rate * 100)}%${from(`${id}.rate`)}` : undefined,
       record.kind === "resource" && stat.open && stat.rate ? `${shown(stat.rate)}/s` : undefined,
-      stat.discount ? `−${amountText(stat.discount * 100)}% cost` : undefined,
+      stat.discount ? `−${amountText(stat.discount * 100)}% cost${from(`${id}.discount`)}` : undefined,
     ]);
     block("desc", [record.desc, record.breakthrough?.coreLabel]);
     const fullTime = stat.length / Math.max(this.speed(record), EPSILON);
@@ -1948,9 +1996,10 @@ export class GameEngine {
     const patched = (path: string): Growth => this.contributions(fieldPath(path), id, id);
     const payout = { ...(record.kind === "family" ? record.perLevel : record.mod) };
     for (const path of this.patchedPaths(id)) if (!Object.keys(payout).some(own => fieldPath(own) === fieldPath(path))) payout[path] = 0;
-    block("mod", (record.kind === "family" ? this.lines(record.mod).concat(this.lines(payout, " per level", patched)) : this.lines(payout, "", patched))
-      .concat(this.lines(record.held, record.kind === "preparation" ? " while in effect" : " while attuned"))
-      .concat(Object.entries(record.at ?? {}).flatMap(([threshold, changes]) => this.lines(changes, ` ${thresholdText(record, Number(threshold))}`))), "Modifies");
+    const held = this.lines(record.held, record.kind === "preparation" ? " while in effect" : " while attuned");
+    block("mod", record.kind === "family"
+      ? this.lines(record.mod).concat(this.familyModLines(record, payout, patched), held)
+      : this.lines(payout, "", patched).concat(held, Object.entries(record.at ?? {}).flatMap(([threshold, changes]) => this.lines(changes, ` ${thresholdText(record, Number(threshold))}`))), "Modifies");
     // A completion adds the record's yield to every resource it pays, as `complete` does.
     block("result", this.lines(record.result, "", (path, base) => !path.includes(".") && base > 0 && this.byId.get(path)?.kind === "resource"
       ? { amount: stat.yield, labels: this.contributions(`${id}.yield`, id).labels } : undefined)
@@ -1979,6 +2028,58 @@ export class GameEngine {
     const paths = new Set<string>();
     this.eachContribution(table => { for (const entry of table.patches) if (entry.target === target) paths.add(entry.path); });
     return [...paths];
+  }
+
+  /** Which line a per-level payout joins; undefined keeps it a line of its own. */
+  private payoutGroup(path: string): PayoutGroup | undefined {
+    const parts = path.split("."), target = this.byId.get(parts[0]!);
+    if (parts.length !== 2 || !target) return undefined;
+    switch (parts[1]) {
+      case "max": return target.group === "Combat" ? "Combat" : "Max";
+      case "rate": return target.kind === "resource" ? "Return" : target.kind === "family" ? "Experience" : "Speed";
+      case "yield": return "Yield";
+      case "discount": return "Cost";
+      default: return undefined;
+    }
+  }
+
+  /** A knowledge's payout, one line per kind of effect; finished targets pay nothing and are left out, unseen ones are counted. */
+  private familyModLines(record: GameRecord, payout: Changes, patched: (path: string, base: number) => Growth): string[] {
+    let unseen = 0;
+    const live = (path: string): boolean => {
+      if (!this.worthShowing(path)) return false;
+      const reach = this.reach(path.split(".")[0]!);
+      if (reach === "unseen") unseen++;
+      return reach === "live";
+    };
+    const groups = new Map<PayoutGroup, { name: string; amount: string; note: string }[]>();
+    const loose: Changes = {};
+    for (const [path, amount] of Object.entries(payout)) {
+      if (!live(path)) continue;
+      const base = typeof amount === "number" ? amount : this.safeValue(amount);
+      const group = base === undefined ? undefined : this.payoutGroup(path);
+      if (base === undefined || group === undefined) { loose[path] = amount; continue; }
+      const growth = patched(path, base), grown = Math.abs(growth.amount) > EPSILON ? growth : undefined;
+      const target = this.record(path.split(".")[0]!), items = groups.get(group) ?? [];
+      items.push({
+        name: target.name ?? target.id,
+        amount: `${this.quantity(path, base + (grown?.amount ?? 0), true)}${group === "Return" ? "/s" : ""}`,
+        note: grown?.labels.length ? ` (${this.quantity(path, grown.amount, true)} from ${list(grown.labels)})` : "",
+      });
+      groups.set(group, items);
+    }
+    const lines = PAYOUT_GROUPS.filter(group => groups.has(group)).map(group => {
+      const items = groups.get(group)!, shared = items[0]!.amount;
+      return items.length > 1 && items.every(item => item.amount === shared && !item.note)
+        ? `${group} ${shared} per level: ${items.map(item => item.name).join(", ")}`
+        : `${group} per level: ${items.map(item => `${item.name} ${item.amount}${item.note}`).join(", ")}`;
+    });
+    lines.push(...this.lines(loose, " per level", patched));
+    for (const [threshold, changes] of Object.entries(record.at ?? {})) {
+      lines.push(...this.lines(Object.fromEntries(Object.entries(changes).filter(([path]) => live(path))), ` ${thresholdText(record, Number(threshold))}`));
+    }
+    if (unseen) lines.push(unseen === 1 ? "And one more effect on something not yet found" : `And ${unseen} more effects on things not yet found`);
+    return lines;
   }
 
   /**
@@ -2069,7 +2170,7 @@ function kindLabel(record: GameRecord): string {
   if (typeof record.length === "number") return record.kind === "site" ? "Outing" : record.kind === "recipe" ? "Recipe" : "Timed task";
   return { resource: "Store", family: "Knowledge", flag: "State", lead: "Lead", purchase: "Purchase", arrangement: "Arrangement",
     home: "Home", class: "Standing", breakthrough: "Breakthrough", teaching: "Teaching", recipe: "Recipe", preparation: "Preparation",
-    technique: "Technique", task: "Chore", site: "Place" }[record.kind] ?? record.kind;
+    technique: "Technique", task: "Chore", site: "Place", work: "Kind of work" }[record.kind] ?? record.kind;
 }
 
 /** Trickles are real: a per-level 0.002 must not round away to "0" on the card that sells it. */

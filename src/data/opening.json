@@ -183,7 +183,7 @@
         "text": "A woman waiting for the ferry asks whether anyone still sits in Fernhollow at dusk. Granny Shu, buying salt beside her, says nobody in particular and looks at you." }]
   },
   {
-    "id": "channel_observe", "name": "Walk the broken channel", "kind": "site", "group": "Sites",
+    "id": "channel_observe", "name": "Walk the broken channel", "kind": "site", "group": "Sites", "work": ["qi_watching"],
     "desc": "Awkward ground and clear water. Two stones to bring home, a flow pattern, and a first feel for Stone Sense.",
     "require": "g.qi_sense >= 1", "length": 90, "max": 1,
     "result": { "stone": 2, "stonework.exp": 40 },
@@ -202,7 +202,7 @@
       "text": "Reset, the stones hum where the flow bends around them. Their spacing supplies exactly the turn the chipped leaf leaves blank." }]
   },
   {
-    "id": "fernhollow_observe", "name": "Sit quietly in Fernhollow", "kind": "site", "group": "Sites",
+    "id": "fernhollow_observe", "name": "Sit quietly in Fernhollow", "kind": "site", "group": "Sites", "work": ["qi_watching"],
     "desc": "Sheltered ground up the stream. The current is faint, the sitting is easy, and the hollow teaches Composure for the sitting alone.",
     "flavor": "Ferns to the shoulder, and no wind that reaches the floor of it.",
     "require": "g.qi_sense >= 2", "length": 90, "max": 1, "result": { "composure.exp": 30 },
@@ -211,7 +211,7 @@
       "text": "A faint current, easy to lose and easy to mistake for wanting one. It comes back whenever the hollow falls still." }]
   },
   {
-    "id": "sit_fernhollow", "name": "Sit the hollow at dusk", "kind": "site", "group": "Sites",
+    "id": "sit_fernhollow", "name": "Sit the hollow at dusk", "kind": "site", "group": "Sites", "work": ["qi_watching"],
     "desc": "Dusk sitting, worth far more Qi Sense than the breath alone, with Composure for the stillness. The third dusk opens Circulation.",
     "require": "g.fernhollow_observe > 0",
     "need": "g.qi_sense < g.qi_sense.max || g.sit_fernhollow.reps < 3",

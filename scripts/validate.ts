@@ -5,7 +5,7 @@ import shared from "../src/data/shared.json";
 import basin from "../src/data/basin.json";
 import { ATTUNE_SLOTS, DODGE_MAX, FIGHT_STATS, GAUGE, GameEngine, HOBBY_SLOTS, HOME_SPACE, LIFE } from "../src/engine";
 import { evaluateCondition, expressionReferences } from "../src/expression";
-import { DERIVED_FIELDS, type Changes, type Encounter, type GameRecord, type Room } from "../src/types";
+import { DERIVED_FIELDS, WORK_FIELDS, type Changes, type Encounter, type GameRecord, type Room } from "../src/types";
 import { compactRoute, DEEP_ROUTES, DIRECT_ROUTES, RIDGE_ROUTES, ROUTES, runCoverageBranches, runDeepRoute, runDirectRidgeRoute, runDirectRoute, runRidgeCoverage, runRidgeRoute, runRoute, SPHERES, type DeepRoute, type DirectRoute, type OpeningRoute, type RidgeRoute, type RouteResult } from "./routes";
 
 export interface ValidationReport {
@@ -30,14 +30,16 @@ export interface DeepRouteResult extends RouteResult {
 
 const statFields = new Set(["value", "max", "exp", "rate", "reps", "open", "length", "yield", "discount", "ticks", "started", "paid"]);
 const derivedFields = new Set<string>(DERIVED_FIELDS);
-const passiveKinds = new Set(["resource", "family", "flag", "lead"]);
-const kinds = new Set<string>(["resource", "family", "task", "site", "arrangement", "home", "class", "breakthrough", "teaching", "recipe", "preparation", "technique", "purchase", "flag", "lead"]);
+const passiveKinds = new Set(["resource", "family", "flag", "lead", "work"]);
+const kinds = new Set<string>(["resource", "family", "task", "site", "arrangement", "home", "class", "breakthrough", "teaching", "recipe", "preparation", "technique", "purchase", "flag", "lead", "work"]);
 /** The whole record vocabulary; anything else in the JSON is a typo or a field the engine dropped. */
 const recordFields = new Set(["id", "kind", "name", "desc", "flavor", "group", "tags", "require", "need", "needtext", "initial", "max",
   "buy", "cost", "length", "run", "effect", "result", "mod", "perLevel", "onStart", "at", "every", "fill", "lock", "enable", "warn",
   "attune", "space", "train", "strain", "events", "breakthrough", "autoStart", "boost", "slots", "slot", "category", "title", "encounter", "held",
-  "hobby", "lasts", "rooms"]);
+  "hobby", "lasts", "rooms", "work"]);
 const roomFields = new Set(["name", "length", "strain", "need", "needtext", "result", "encounter"]);
+/** A work kind is a name actions count as and modifiers target; it holds nothing of its own (ADR 0034). */
+const workFields = new Set(["id", "kind", "name", "desc"]);
 /** What a dungeon's rooms carry instead of the record: a dungeon's own run is nothing but its rooms. */
 const roomOnlyFields = ["length", "strain", "run", "encounter", "effect", "train", "fill", "hobby", "autoStart", "lasts", "attune"] as const;
 /**
@@ -151,11 +153,13 @@ export function validateGrammar(records: GameRecord[]): string[] {
       if (field !== "mod") { errors.push(`${record.id}: unsupported field in ${path}`); return; }
       if (!modifier) { errors.push(`${record.id}: ${path} patches another record's payout, which only mod, perLevel, at and every may do`); return; }
       if (!ids.has(id!)) { errors.push(`${record.id}: unknown record path ${path}`); return; }
+      if (byId.get(id!)?.kind === "work") { errors.push(`${record.id}: ${id} is a work kind and pays nothing of its own, so ${path} patches nothing`); return; }
       const inner = parts.slice(2).join(".");
       if (inner.split(".").length > 2) { errors.push(`${record.id}: ${path} patches a patch, which is not supported`); return; }
       const [target, targetField = "value"] = inner.split(".");
       if (!bankPaths.has(inner) && !ids.has(target!)) errors.push(`${record.id}: ${path} patches toward unknown record ${target}`);
       else if (!bankPaths.has(inner) && !derivedFields.has(targetField)) errors.push(`${record.id}: ${path} must patch a derived field, not ${targetField}`);
+      else if (byId.get(target!)?.kind === "work" && !(WORK_FIELDS as readonly string[]).includes(targetField)) errors.push(`${record.id}: ${path} must patch a work kind's rate, yield or discount`);
       else if (targetField === "length" && byId.get(target!)?.rooms) errors.push(`${record.id}: ${target}.length is derived from its rooms`);
       return;
     }
@@ -167,6 +171,7 @@ export function validateGrammar(records: GameRecord[]): string[] {
     }
     if (!id || !ids.has(id)) { errors.push(`${record.id}: unknown record path ${path}`); return; }
     if (!statFields.has(field)) { errors.push(`${record.id}: unsupported field in ${path}`); return; }
+    if (byId.get(id)?.kind === "work" && !(modifier && (WORK_FIELDS as readonly string[]).includes(field))) { errors.push(`${record.id}: ${path} must be a modifier on a work kind's rate, yield or discount`); return; }
     if (field === "paid") { errors.push(`${record.id}: ${path} is the engine's bookkeeping, not content's`); return; }
     if (derivedFields.has(field) && !modifier) {
       errors.push(`${record.id}: ${path} is a standing modifier; recompute rebuilds it, so put it in mod, perLevel, at or every`);
@@ -185,6 +190,18 @@ export function validateGrammar(records: GameRecord[]): string[] {
     if (!/^[a-z][a-z0-9_]*$/.test(record.id)) errors.push(`Invalid record id ${record.id}`);
     if (tags.has(record.id)) errors.push(`${record.id}: a tag of this name already exists, so g.${record.id} would be ambiguous`);
     if (!kinds.has(record.kind)) errors.push(`${record.id}: unknown kind ${record.kind}`);
+    if (record.kind === "work") {
+      for (const field of Object.keys(record)) if (!workFields.has(field)) errors.push(`${record.id}: a work kind carries only id, kind, name and desc, not "${field}"`);
+      if (typeof record.name !== "string" || !record.name || typeof record.desc !== "string" || !record.desc) errors.push(`${record.id}: a work kind needs a name and a desc`);
+    }
+    if (record.work !== undefined) {
+      if (!Array.isArray(record.work) || !record.work.length) errors.push(`${record.id}: work must be a list of work kind ids`);
+      else for (const kind of record.work) {
+        if (!ids.has(kind)) errors.push(`${record.id}: work names missing record ${kind}`);
+        else if (byId.get(kind)!.kind !== "work") errors.push(`${record.id}: work names ${kind}, which is not a work kind`);
+      }
+      if (passiveKinds.has(record.kind)) errors.push(`${record.id}: only an action counts as a kind of work`);
+    }
     for (const field of Object.keys(record)) {
       if (recordFields.has(field)) continue;
       errors.push(REMOVED_FIELDS.includes(field) ? `${record.id}: "${field}" is no longer part of the vocabulary` : `${record.id}: unknown field "${field}"`);
@@ -309,6 +326,14 @@ export function validateGrammar(records: GameRecord[]): string[] {
       } catch { /* The parser error above contains the useful detail. */ }
     }
   }
+  // A work kind with no members or no modifier naming it is a promise nothing keeps.
+  const named = new Set(records.flatMap(record => modifierMaps(record).flatMap(changes => Object.keys(changes ?? {})))
+    .map(path => { const parts = path.split("."); return parts[1] === "mod" ? parts[2] : parts[0]; }));
+  for (const record of records) {
+    if (record.kind !== "work") continue;
+    if (!records.some(member => Array.isArray(member.work) && member.work.includes(record.id))) errors.push(`work kind ${record.id} has no members; give an action work: ["${record.id}"]`);
+    if (!named.has(record.id)) errors.push(`work kind ${record.id} is carried, but no modifier names it`);
+  }
   return [...new Set(errors)];
 }
 
@@ -377,6 +402,32 @@ export function validateCompounding(records: GameRecord[]): string[] {
     ? [] : [`${chapter.name} patches no earlier chapter's payout; ADR 0021 asks every later chapter for at least one X.mod.Y patch`]);
 }
 
+/** ADR 0034: a work kind shared across chapters is reached only by things that stop growing: mod, held and at. */
+export function validateWorkKinds(records: GameRecord[]): string[] {
+  const chapterOf = new Map(CHAPTERS.flatMap((chapter, index) => [...chapter.ids].map(id => [id, index] as const)));
+  const byId = new Map(records.map(record => [record.id, record]));
+  const spans = new Map<string, string>();
+  for (const record of records) {
+    if (record.kind !== "work") continue;
+    const chapters = [...new Set(records.filter(member => member.work?.includes(record.id)).map(member => chapterOf.get(member.id))
+      .filter((index): index is number => index !== undefined))].sort((a, b) => a - b);
+    if (chapters.length > 1) spans.set(record.id, chapters.map(index => CHAPTERS[index]!.name).join(" and "));
+  }
+  const errors: string[] = [];
+  for (const record of records) {
+    const tables: [Changes | undefined, boolean][] = [[record.mod, false], [record.perLevel, true], [record.held, false],
+      ...Object.values(record.at ?? {}).map(changes => [changes, false] as [Changes | undefined, boolean]),
+      ...Object.values(record.every ?? {}).map(changes => [changes, true] as [Changes | undefined, boolean])];
+    for (const [changes, growing] of tables) for (const path of Object.keys(changes ?? {})) {
+      const parts = path.split("."), patch = parts[1] === "mod", kind = patch ? parts[2]! : parts[0]!;
+      // A patch into a knowledge's payout is paid per level, so it grows like perLevel.
+      const grows = growing || (patch && byId.get(parts[0]!)?.kind === "family");
+      if (grows && spans.has(kind)) errors.push(`${record.id}: ${path} grows with levels or repetitions into ${kind}, which spans ${spans.get(kind)}; a work kind shared across chapters takes only mod, held or at (ADR 0034)`);
+    }
+  }
+  return errors;
+}
+
 /**
  * ADR 0024: across a chapter boundary the route key is the seam, so no gate in one chapter's file names a record
  * from another's. The shared file is the common vocabulary both read; its own reveals may name what reveals them.
@@ -396,7 +447,7 @@ export function validateModuleSeams(): string[] {
 export function validateContent(records: GameRecord[] = sourceRecords): ValidationReport {
   const errors = validateGrammar(records);
   if (errors.length) return { ok: false, errors, routes: [], coverageBranches: [], ridgeRoutes: [], deepRoutes: [], recordCount: records.length, reachedCount: 0, missing: records.map(record => record.id) };
-  errors.push(...validateMandatoryCores(records), ...validateContext(records), ...validateCompounding(records), ...validateModuleSeams());
+  errors.push(...validateMandatoryCores(records), ...validateContext(records), ...validateCompounding(records), ...validateWorkKinds(records), ...validateModuleSeams());
   const basinIds = CHAPTERS[2]!.ids;
   for (const record of records) {
     const ceiling = basinIds.has(record.id) ? BASIN_TIMED_CEILING : TIMED_CEILING;

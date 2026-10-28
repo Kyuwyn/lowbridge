@@ -146,6 +146,18 @@
       "value": 9,
       "seen": true
     },
+    "reading": {
+      "seen": true
+    },
+    "porters_notes": {
+      "seen": true
+    },
+    "qi_watching": {
+      "seen": true
+    },
+    "draught_making": {
+      "seen": true
+    },
     "foundation": {
       "value": 1,
       "seen": true

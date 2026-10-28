@@ -4,7 +4,7 @@ import { evaluateExpression, expressionReferences, parseExpression } from "../sr
 import { decodeSave, makeSave } from "../src/persistence";
 import { validateGrammar } from "../scripts/validate";
 import { DERIVED_FIELDS, TOOLTIP_BLOCKS, type GameRecord, type Objective, type Stat } from "../src/types";
-import { dungeon, encounter, hauling, reservoir, villageRecords } from "./fixtures/worlds";
+import { dungeon, encounter, fieldwork, hauling, reservoir, villageRecords } from "./fixtures/worlds";
 
 function run(game: GameEngine, id: string, seconds: number, objective?: Objective) {
   expect(game.start(id, objective).ok).toBe(true);
@@ -1252,5 +1252,31 @@ describe("dungeons: rooms in one run", () => {
     expect(loaded.stat("delve").exp).toBe(6);
     expect(() => decodeSave({ ...save, fight: { ...save.fight, room: 7 } }, records)).toThrow(/The fight's room/);
     expect(() => decodeSave({ ...save, fight: { ...save.fight, room: 0 } }, records)).toThrow(/names no fight/);
+  });
+});
+
+describe("work kinds", () => {
+  test("a kind's rate and discount reach every member, and the members name the knowledge that pays them", () => {
+    const game = new GameEngine(fieldwork());
+    read(game, 2);
+    expect(game.stat("gather").rate).toBeCloseTo(1.2);
+    expect(game.stat("walk").rate).toBeCloseTo(1.2);
+    expect(game.stat("reading").rate).toBe(1);
+    expect(game.stat("gather").discount).toBeCloseTo(0.2);
+    const tip = game.tooltip("gather");
+    expect(tip.find(block => block.kind === "rate")!.lines).toEqual(["Completion rate: 120% (from Lore 2)", "−20% cost (from Lore 2)"]);
+    expect(tip.find(block => block.kind === "type")!.lines).toContain("Counts as Fieldwork");
+  });
+
+  test("a knowledge card groups its payout by effect, drops finished targets and counts unseen ones", () => {
+    const game = new GameEngine(fieldwork());
+    const card = () => game.tooltip("lore").find(block => block.kind === "mod")!.lines;
+    expect(card()).toEqual(["Max per level: Coin +2", "Speed per level: Fieldwork +10%", "Cost −10% per level: Fieldwork, A larger pouch",
+      "−10% Herbs cost at level 2", "And one more effect on something not yet found"]);
+    read(game, 1);
+    game.stat("coin").value = 10;
+    expect(game.start("pouch").ok).toBe(true);
+    expect(card()).toEqual(["Max per level: Coin +2", "Speed per level: Fieldwork +10%", "Cost −10% per level: Fieldwork, Marginal notes",
+      "−10% Herbs cost at level 2"]);
   });
 });

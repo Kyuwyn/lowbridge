@@ -8,25 +8,25 @@
       "text": "Four bundles of notes survive in the collapsed porter's hut: one on carrying, one on the blade, one on reading ground, one on fixed layouts. Any of the four, carried to four with its drills begun, takes the First Direction; none of them closes another." }]
   },
   {
-    "id": "body_teaching", "name": "The porter's notes on carrying", "kind": "teaching", "group": "Purchases",
+    "id": "body_teaching", "name": "The porter's notes on carrying", "kind": "teaching", "group": "Purchases", "work": ["porters_notes"],
     "desc": "A body method for loads and slopes, and a technique to hold. Circulation can grow two levels further, and the carrying drills open; they want a porter's load frame on one span of your floor. The widow asks four bundles; a hollow reading of the slip already covers the first pages, so three if you settle the breath.",
     "require": "g.ridge_outskirts > 0", "need": "g.lore >= 3", "needtext": "Lore 3, to read the notes.",
     "buy": { "herbs": "4 - (g.t_hollow > 0)" }, "mod": { "circulation.max": 2 }
   },
   {
-    "id": "sword_teaching", "name": "The porter's notes on the blade", "kind": "teaching", "group": "Purchases",
+    "id": "sword_teaching", "name": "The porter's notes on the blade", "kind": "teaching", "group": "Purchases", "work": ["porters_notes"],
     "desc": "A guard's method for meeting what comes up the path, and a technique to hold. Blade Intent opens, and with it the blade-contact drills; they want a practice post on one span of your floor. The widow asks four bundles.",
     "require": "g.ridge_outskirts > 0", "need": "g.lore >= 3", "needtext": "Lore 3, to read the notes.",
     "buy": { "herbs": 4 }, "mod": { "blade_intent.open": 1 }
   },
   {
-    "id": "earth_teaching", "name": "The porter's notes on ground", "kind": "teaching", "group": "Purchases",
+    "id": "earth_teaching", "name": "The porter's notes on ground", "kind": "teaching", "group": "Purchases", "work": ["porters_notes"],
     "desc": "How a surveyor tells settled ground from sliding ground, and a technique to hold. Ground Reading opens, and with it the ground drills; they want survey stakes on one span of your floor. The widow asks four bundles; a channel reading of the slip has already taught the hand half of it, so three if you carry the current.",
     "require": "g.ridge_outskirts > 0", "need": "g.lore >= 3", "needtext": "Lore 3, to read the notes.",
     "buy": { "herbs": "4 - (g.t_channel > 0)" }, "mod": { "ground_reading.open": 1 }
   },
   {
-    "id": "formation_teaching", "name": "The porter's notes on layouts", "kind": "teaching", "group": "Purchases",
+    "id": "formation_teaching", "name": "The porter's notes on layouts", "kind": "teaching", "group": "Purchases", "work": ["porters_notes"],
     "desc": "Fixed layouts that steady a small area, and a technique to hold. Array Craft opens, and with it the array drills; they want a drawing board on one span of your floor. The widow asks four bundles.",
     "require": "g.ridge_outskirts > 0", "need": "g.lore >= 3", "needtext": "Lore 3, to read the notes.",
     "buy": { "herbs": 4 }, "mod": { "array_craft.open": 1 }
@@ -194,7 +194,7 @@
     "require": "g.survey_marker > 0", "cost": { "vigor": 3 }, "result": { "marrow_herbs": 1 }
   },
   {
-    "id": "inscription_face", "name": "Expose the inscription", "kind": "site", "group": "Sites",
+    "id": "inscription_face", "name": "Expose the inscription", "kind": "site", "group": "Sites", "work": ["reading"],
     "desc": "A minute and a half cutting moss from a carved face. Two measures of whetstone grit each time; the first cut lets Blade Intent reach one level further, and leaves the face open to scraping by hand.",
     "require": "g.sword_teaching > 0", "length": 90, "strain": { "strain": 0.03 },
     "result": { "whetstone_grit": 2 }, "at": { "1": { "blade_intent.max": 1 } }, "boost": { "flag": "current_carried", "multiplier": 1.5 }
@@ -216,7 +216,7 @@
     "require": "g.stable_point > 0", "cost": { "vigor": 3 }, "result": { "veined_ore": 1 }
   },
   {
-    "id": "fixed_layout", "name": "Test a fixed layout", "kind": "site", "group": "Sites",
+    "id": "fixed_layout", "name": "Test a fixed layout", "kind": "site", "group": "Sites", "work": ["reading"],
     "desc": "A minute and a half holding a layout against the ridge wind. Two inked tokens keep their marks each time; the first test lets Array Craft reach one level further, and shows how to ink tokens by hand.",
     "require": "g.formation_teaching > 0", "length": 90, "strain": { "strain": 0.03 },
     "result": { "inked_tokens": 2 }, "at": { "1": { "array_craft.max": 1 } }, "boost": { "flag": "current_carried", "multiplier": 1.5 }

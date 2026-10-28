@@ -175,7 +175,7 @@
     "flavor": "Three leaves of twelve, and the cracks take a little more each year.",
     "require": "g.jade_slip > 0",
     "initial": { "value": 0, "max": 5, "open": false },
-    "perLevel": { "fragment_notes.rate": 0.1, "inscription_face.rate": 0.05, "fixed_layout.rate": 0.05, "body_teaching.discount": 0.05, "sword_teaching.discount": 0.05, "earth_teaching.discount": 0.05, "formation_teaching.discount": 0.05 },
+    "perLevel": { "fragment_notes.rate": 0.1, "reading.rate": 0.05, "porters_notes.discount": 0.05 },
     "events": [{ "id": "lore_hand_found", "when": "g.lore >= 1",
       "text": "The carver's hand sorts itself out under your brush. Proper tools would let you go where the characters point." }]
   },
@@ -184,7 +184,7 @@
     "desc": "Feeling where qi gathers and where it runs. Each level widens the reservoir and sharpens a held method.",
     "require": "g.jade_slip > 0",
     "initial": { "value": 0, "max": 5, "open": false },
-    "perLevel": { "qi.max": 1, "qi.rate": 0.0005, "channel_observe.rate": 0.05, "fernhollow_observe.rate": 0.05, "sit_fernhollow.rate": 0.05, "steady_breath.yield": 1 },
+    "perLevel": { "qi.max": 1, "qi.rate": 0.0005, "qi_watching.rate": 0.05, "steady_breath.yield": 1 },
     "at": { "3": { "qi.discount": 0.1 } },
     "events": [{ "id": "qi_first_felt", "when": "g.qi_sense >= 1",
       "text": "Something that is not air moves under the breath, and it pulls two ways: toward the broken channel beyond the barns, and upstream to a hollow of ferns." },
@@ -265,8 +265,24 @@
     "desc": "Drawing what a root holds out of it with an ordinary vessel and a careful fire. Each level holds two more pale root and steeps the draughts a tenth faster. From level 2 the pale-root bank gives a root more each dig.",
     "require": "g.refining.open > 0",
     "initial": { "value": 0, "max": 5, "open": false },
-    "perLevel": { "pale_root.max": 2, "craft_settling_draught.rate": 0.1, "craft_marrow_draught.rate": 0.1 },
+    "perLevel": { "pale_root.max": 2, "draught_making.rate": 0.1 },
     "at": { "2": { "pale_root_bank.yield": 1 } }
+  },
+  {
+    "id": "reading", "kind": "work", "name": "Reading work",
+    "desc": "Making out what someone wrote or cut: inscriptions, diagrams, old hands."
+  },
+  {
+    "id": "porters_notes", "kind": "work", "name": "Porter's notes",
+    "desc": "The teachings the porter wrote down for the ridge."
+  },
+  {
+    "id": "qi_watching", "kind": "work", "name": "Qi watching",
+    "desc": "Going somewhere and sitting still long enough to feel how qi moves there."
+  },
+  {
+    "id": "draught_making", "kind": "work", "name": "Draught-making",
+    "desc": "Steeping and reducing herbs into draughts."
   },
   {
     "id": "foundation", "name": "Foundation", "kind": "flag", "group": "Milestones",

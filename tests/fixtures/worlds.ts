@@ -10,6 +10,13 @@ export const hauling = (extra: Partial<GameRecord> = {}): GameRecord[] => [
   { id: "haul", kind: "task", length: 30, result: { coin: 3 }, ...extra },
 ];
 
+/** The village with one work kind: Lore speeds and cheapens fieldwork, gathering herbs and walking the ridge, per level. */
+export const fieldwork = (): GameRecord[] => [
+  ...structuredClone(villageRecords).map(record => record.id === "gather" || record.id === "walk" ? { ...record, work: ["fieldwork"] }
+    : record.id === "lore" ? { ...record, perLevel: { ...record.perLevel, "fieldwork.rate": 0.1, "fieldwork.discount": 0.1, "margin_notes.discount": 0.1, "pouch.discount": 0.1 } } : record),
+  { id: "fieldwork", kind: "work", name: "Fieldwork", desc: "Out past the barn, on foot." },
+];
+
 /** A regenerating reservoir, a knowledge it pays for, and two interchangeable pursuits to queue. */
 export const reservoir = (): GameRecord[] => [
   { id: "qi", kind: "resource", initial: { value: 2, max: 4, rate: 0.5 } },

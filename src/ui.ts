@@ -46,7 +46,7 @@ const groups: { id: string; title: string; tab: Tab; matches(record: GameRecord)
   { id: "workbench", title: "Workbench", tab: "craft", matches: record => record.kind === "recipe" },
   { id: "preparations", title: "Preparations", tab: "craft", matches: record => record.kind === "preparation" },
 ];
-const notActions = new Set(["resource", "family", "flag", "breakthrough", "lead"]);
+const notActions = new Set(["resource", "family", "flag", "breakthrough", "lead", "work"]);
 const bodyIds = ["vigor", "qi", "life", "strain", "focus"];
 /** The slip's leaf eight as each reading completes it: the chipped sentence is finished by the method you settle on. */
 const rebuiltLeaf: Record<string, string> = {
@@ -706,10 +706,6 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
   // Owned purchases and completed one-off visits leave the working grid for a closed Done group at the end of their tab.
   const doneGroups = new Map<Tab, GroupView>();
   for (const tab of ["tasks", "home", "craft"] as const) doneGroups.set(tab, makeGroup(`done-${tab}`, "Done", tab, false));
-  function doneWith(record: GameRecord, stat: Stat): boolean {
-    return (record.kind === "purchase" || record.kind === "site" || record.kind === "class" || record.kind === "teaching" || record.kind === "recipe") && (stat.value >= stat.max || stat.reps >= stat.max);
-  }
-
   function createCell(record: GameRecord, grid: HTMLElement, tab: Tab) {
     const mode = modeOf(record), name = record.name ?? record.id, tipId = `tip-${tab}-${record.id}`;
     const cell = element("div", "task-cell");
@@ -842,7 +838,7 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
       const isNew = !seenIds.has(record.id) && !owned && !running && record.id !== "rest" && !isNext;
       const use = filterResource ? resourceUse(record, filterResource) : { gives: false, spends: false };
       const mark = running || owned ? "" : use.gives && use.spends ? "Gives · spends" : use.gives ? "Gives" : use.spends ? "Spends" : "";
-      const home = (doneWith(record, stat) ? doneGroups.get(tab)?.grid : undefined) ?? grid;
+      const home = (engine.finished(record.id) ? doneGroups.get(tab)?.grid : undefined) ?? grid;
       if (cell.parentElement !== home) home.append(cell);
       const detail = engine.tooltip(record.id);
       if (attune) {
@@ -1395,7 +1391,7 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
       const count = (filterResource ? matched : marked).get(id) ?? 0;
       setText(view.count, count ? String(count) : ""); view.count.classList.toggle("is-match", Boolean(filterResource));
       const hasNew = id !== selectedTab && !view.button.hidden && (unseenTabs.has(id)
-        || cells.some(cell => cell.tab === id && !cell.cell.hidden && !seenIds.has(cell.record.id) && !doneWith(cell.record, engine.stat(cell.record.id)))
+        || cells.some(cell => cell.tab === id && !cell.cell.hidden && !seenIds.has(cell.record.id) && !engine.finished(cell.record.id))
         || engine.records.some(record => engine.visible(record.id) && !seenIds.has(record.id) && (
           id === "character" ? record.kind === "lead"
             : id === "tasks" && Boolean(record.breakthrough) && engine.stat(record.id).value < engine.stat(record.id).max)));

@@ -1,10 +1,10 @@
 import { describe, expect, test } from "bun:test";
 import { records } from "../src/content";
 import { GameEngine } from "../src/engine";
-import { DUNGEON_CEILING, FOUNDATION_CEILING, FOUNDATION_FLOOR, REMOVED_FIELDS, RIDGE_CEILING, RIDGE_FLOOR, TIMED_CEILING, validateCompounding, validateContent, validateContext, validateGrammar, validateMandatoryCores } from "../scripts/validate";
+import { DUNGEON_CEILING, FOUNDATION_CEILING, FOUNDATION_FLOOR, REMOVED_FIELDS, RIDGE_CEILING, RIDGE_FLOOR, TIMED_CEILING, validateCompounding, validateContent, validateContext, validateGrammar, validateMandatoryCores, validateWorkKinds } from "../scripts/validate";
 import { RIDGE_ROUTES, runDirectRoute, runRidgeCoverage, runRidgeRoute, runRoute, type RidgeRoute } from "../scripts/routes";
 import type { GameRecord } from "../src/types";
-import { dungeon, encounter, villageRecords } from "./fixtures/worlds";
+import { dungeon, encounter, fieldwork, villageRecords } from "./fixtures/worlds";
 
 /** Full validation plays every opening, coverage and ridge route through the real engine. */
 const VALIDATION_MS = 60_000;
@@ -113,6 +113,20 @@ describe("the record vocabulary", () => {
     expect(complains(validateGrammar(changed("take_herb_poultice", record => { delete record.cost; })), "spends a dose, so it needs a cost")).toBe(true);
   });
 
+  test("a work kind is a bare name with members, reached only through a member's rate, yield or discount", () => {
+    expect(validateGrammar(fieldwork())).toEqual([]);
+    const kinded = (id: string, change: (record: GameRecord) => void) => spoiled(id, change, fieldwork());
+    expect(complains(kinded("gather", record => { record.work = ["pouch"]; }), "which is not a work kind")).toBe(true);
+    expect(complains(kinded("gather", record => { record.work = ["nowhere"]; }), "work names missing record nowhere")).toBe(true);
+    expect(complains(kinded("fieldwork", record => { record.require = "g.lore >= 1"; }), 'a work kind carries only id, kind, name and desc, not "require"')).toBe(true);
+    expect(complains(kinded("lore", record => { record.perLevel = { ...record.perLevel, "fieldwork.max": 1 }; }), "must be a modifier on a work kind's rate, yield or discount")).toBe(true);
+    expect(complains(kinded("margin_notes", record => { record.mod = { "lore.mod.fieldwork.length": 1 }; }), "must patch a work kind's rate, yield or discount")).toBe(true);
+    expect(complains(kinded("coin", record => { record.work = ["fieldwork"]; }), "only an action counts as a kind of work")).toBe(true);
+    expect(complains(kinded("lore", record => { record.perLevel = { "coin.max": 2 }; }), "work kind fieldwork is carried, but no modifier names it")).toBe(true);
+    const memberless = fieldwork().map(record => { if (record.id !== "gather" && record.id !== "walk") return record; const { work: _, ...rest } = record; return rest; });
+    expect(complains(validateGrammar(memberless), "work kind fieldwork has no members")).toBe(true);
+  });
+
   test("the sample village and the live content are both written in that vocabulary", () => {
     expect(validateGrammar(villageRecords)).toEqual([]);
     expect(validateGrammar(records)).toEqual([]);
@@ -172,6 +186,12 @@ describe("Part E validation over real opening content", () => {
       "The ridge patches no earlier chapter's payout; ADR 0021 asks every later chapter for at least one X.mod.Y patch",
       "The basin road patches no earlier chapter's payout; ADR 0021 asks every later chapter for at least one X.mod.Y patch",
     ]);
+  });
+
+  test("a work kind spanning chapters takes no per-level effect (ADR 0034)", () => {
+    expect(validateWorkKinds(records)).toEqual([]);
+    const spanning = changed("fragment_notes", record => { record.work = ["reading"]; });
+    expect(complains(validateWorkKinds(spanning), "lore: reading.rate grows with levels or repetitions into reading, which spans The village and The ridge")).toBe(true);
   });
 
   test("a route key that no requirement, bill or sign reads is an error", () => {

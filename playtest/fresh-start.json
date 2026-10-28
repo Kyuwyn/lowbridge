@@ -24,6 +24,18 @@
     "labour": {
       "seen": true
     },
+    "reading": {
+      "seen": true
+    },
+    "porters_notes": {
+      "seen": true
+    },
+    "qi_watching": {
+      "seen": true
+    },
+    "draught_making": {
+      "seen": true
+    },
     "mill_work": {
       "seen": true
     },
