@@ -687,12 +687,12 @@ try {
   await page.screenshot({ path: join(output, 'ridge-waystation-desktop.png'), fullPage: true });
   reports.push({ name: 'ridge', directionPanel: 'pass', closesNothing: 'pass', strainMeter: 'pass', derivedTitle: 'pass', stageLabel: 'pass', waystationLeads: 'pass' });
 
-  // The basin road: a life at the Second Direction shows Focus, the hobby place, the Commissions and Stances groups and the title; the terrace then reaches Reedmarket.
+  // The basin road: a life at the Second Direction shows Focus, the hobby place, the Commissions group and the title; the terrace then reaches Reedmarket.
   const deep = runDeepRoute('pill', records, ridge.state);
   assert(deep.success, `the pill route did not reach the Second Direction (${deep.reason})`);
   const arrived = new GameEngine(records, deep.state);
   const basinEngine = new GameEngine(records, deep.state);
-  // The fixture holds the Second Direction, a hobby, a stance and a draught in effect, but has not yet walked the terrace.
+  // The fixture holds the Second Direction, a hobby and a draught in effect, but has not yet walked the terrace.
   for (const id of ['terrace_bypass', 'reedmarket_work', 'trade_pale_root', 'haul_the_stores']) Object.assign(basinEngine.stat(id), { value: 0, reps: 0, paid: false, exp: 0 });
   const arrivalIds = ['reedmarket', 'reedmarket_work', 'trade_pale_root', 'ferryman_leaf', 'cistern_leaf', 'far_leaf'];
   for (const id of ['reedmarket', 'ferryman_leaf', 'cistern_leaf', 'far_leaf']) basinEngine.stat(id).value = 0;
@@ -701,7 +701,6 @@ try {
   basinEngine.stop();
   for (const id of ['vigor', 'strain', 'focus', 'life', 'qi']) basinEngine.stat(id).value = basinEngine.stat(id).max;
   basinEngine.stat('herbs').value = basinEngine.stat('herbs').max; basinEngine.stat('settling_draught').value = 1;
-  basinEngine.takeStance('rooted_stance');
   if (!basinEngine.state.hobby) for (const id of ['refining_drills', 'breath_gathering', 'fragment_notes', 'body_drills']) if (basinEngine.startHobby(id).ok) break;
   assert(basinEngine.state.hobby !== null, 'the fixture has no hobby running');
   assert(basinEngine.start('take_settling_draught').ok, 'the fixture could not drink a settling draught');
@@ -719,10 +718,8 @@ try {
   await page.locator('[data-tab=tasks]').click();
   assert(await page.locator('[data-group=commissions]').isVisible(), 'the Commissions group is missing');
   await page.locator('[data-tab=techniques]').click();
-  assert(await page.locator('[data-group=stances]').isVisible(), 'the Stances group is missing');
+  assert(await page.locator('[data-group=techniques]').isVisible(), 'the Techniques group is missing');
   await page.screenshot({ path: join(output, 'basin-techniques-desktop.png'), fullPage: true });
-  const rooted = page.locator('[data-group=stances] .task-button[data-record-id=rooted_stance]');
-  assert((await rooted.innerText()).includes('Taken') && (await page.locator('[data-ui=attune-count]').innerText()).includes('Stance: Rooted stance'), 'the taken stance is not shown as taken');
   await page.locator('[data-tab=tasks]').click();
   await revealAction(page, 'terrace_bypass');
   await page.locator('.task-button[data-record-id=terrace_bypass]').click();
@@ -739,7 +736,7 @@ try {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.screenshot({ path: join(output, 'basin-reedmarket-mobile.png'), fullPage: true });
   await page.setViewportSize({ width: 1440, height: 1000 });
-  reports.push({ name: 'basin', stageLabel: 'pass', secondTitle: 'pass', focusMeter: 'pass', hobbyLine: 'pass', inEffect: 'pass', commissionsGroup: 'pass', stancesGroup: 'pass', stanceTaken: 'pass', reedmarket: 'pass', arrivedTitle: arrived.title() });
+  reports.push({ name: 'basin', stageLabel: 'pass', secondTitle: 'pass', focusMeter: 'pass', hobbyLine: 'pass', inEffect: 'pass', commissionsGroup: 'pass', reedmarket: 'pass', arrivedTitle: arrived.title() });
 
   reports.push({ name: 'action-workspace', instantChores: 'pass', autoRest: 'pass', lockedKeyboardDetails: 'pass', hoverDetails: 'pass', purchasePreservesActivity: 'pass',
     objectiveEta: 'pass', persistentActivityAcrossTabs: 'pass', outdatedImportRefused: 'pass', capWasteBadge: 'pass', doneGroupFocus: 'pass', tabWidths: [1440, 768, 390] });

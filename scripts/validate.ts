@@ -36,7 +36,7 @@ const kinds = new Set<string>(["resource", "family", "task", "site", "arrangemen
 const recordFields = new Set(["id", "kind", "name", "desc", "flavor", "group", "tags", "require", "need", "needtext", "initial", "max",
   "buy", "cost", "length", "run", "effect", "result", "mod", "perLevel", "onStart", "at", "every", "fill", "lock", "enable", "warn",
   "attune", "space", "train", "strain", "events", "breakthrough", "autoStart", "boost", "slots", "slot", "title", "encounter", "held",
-  "hobby", "stance", "lasts"]);
+  "hobby", "lasts"]);
 /**
  * About ten active minutes to Foundation, measured on the quickest sensible play (owner decision, 27 October 2026).
  * The band sits round the honest direct figures with room for a minute or two of tuning either way.
@@ -227,19 +227,14 @@ export function validateGrammar(records: GameRecord[]): string[] {
       }
       if ([LIFE, ...FIGHT_STATS].some(id => byId.get(id)?.kind !== "resource")) errors.push(`a fight needs the resource records ${[LIFE, ...FIGHT_STATS].join(", ")}`);
     }
-    if (record.held !== undefined && !(record.kind === "technique" && (record.attune || record.stance)) && !(record.kind === "preparation" && record.lasts)) {
-      errors.push(`${record.id}: held modifiers belong only to an attuned technique, a stance, or a preparation that lasts`);
+    if (record.held !== undefined && !(record.kind === "technique" && record.attune) && !(record.kind === "preparation" && record.lasts)) {
+      errors.push(`${record.id}: held modifiers belong only to an attuned technique or a preparation that lasts`);
     }
     if (record.hobby !== undefined) {
       if (record.hobby !== true) errors.push(`${record.id}: hobby must be true when present`);
       if (record.length !== "continuous") errors.push(`${record.id}: only a continuous practice can be a hobby`);
       if (record.autoStart) errors.push(`${record.id}: the idle filler cannot also be a hobby`);
       if (record.hobby && !ids.has(HOBBY_SLOTS)) errors.push(`${record.id}: a hobby needs a "${HOBBY_SLOTS}" record to count the place`);
-    }
-    if (record.stance !== undefined) {
-      if (record.stance !== true || record.kind !== "technique") errors.push(`${record.id}: only a technique can be a stance`);
-      if (!record.held || !Object.keys(record.held).length) errors.push(`${record.id}: a stance is nothing but its held table`);
-      for (const field of ["attune", "cost", "length", "result"] as const) if (record[field] !== undefined) errors.push(`${record.id}: a stance carries no ${field}`);
     }
     if (record.lasts !== undefined) {
       if (record.kind !== "preparation") errors.push(`${record.id}: only a preparation lasts`);

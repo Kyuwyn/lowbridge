@@ -38,8 +38,7 @@ const groups: { id: string; title: string; tab: Tab; matches(record: GameRecord)
   { id: "purchases", title: "Purchases", tab: "tasks", matches: record => record.group === "Purchases" && record.kind !== "class" },
   { id: "classes", title: "Standing", tab: "tasks", matches: record => record.kind === "class" },
   { id: "trade", title: "Village trade", tab: "tasks", matches: record => record.group === "Trade" },
-  { id: "techniques", title: "Techniques", tab: "techniques", matches: record => record.kind === "technique" && !record.stance },
-  { id: "stances", title: "Stances", tab: "techniques", matches: record => record.kind === "technique" && record.stance === true },
+  { id: "techniques", title: "Techniques", tab: "techniques", matches: record => record.kind === "technique" },
   { id: "shelter", title: "Shelter", tab: "home", matches: record => record.group === "Home" && record.kind === "home" },
   { id: "arrangements", title: "Arrangements", tab: "home", matches: record => record.group === "Home" && record.kind === "arrangement" },
   { id: "workbench", title: "Workbench", tab: "craft", matches: record => record.kind === "recipe" },
@@ -646,7 +645,7 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
     info.type = "button"; info.setAttribute("aria-label", `Details for ${name}`); info.setAttribute("aria-controls", tipId); info.setAttribute("aria-expanded", "false");
     cell.append(button, info); grid.append(cell);
     let queue: HTMLButtonElement | undefined;
-    if (mode !== "instant" && !record.stance) {
+    if (mode !== "instant") {
       queue = element("button", "task-queue", "Queue");
       queue.type = "button"; queue.dataset.action = "queue"; queue.dataset.queueId = record.id;
       queue.setAttribute("aria-label", `Queue ${name}`);
@@ -716,13 +715,6 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
     });
     button.addEventListener("click", event => {
       see();
-      if (record.stance) {
-        void change(() => {
-          const result = engine.state.stance === record.id ? engine.dropStance() : engine.takeStance(record.id);
-          announce(result.ok ? (engine.state.stance === record.id ? `${name} is taken.` : `${name} is dropped.`) : result.reason);
-        });
-        return;
-      }
       if (queue && event.shiftKey) { queue.click(); return; }
       if (engine.state.active?.id === record.id) { if (!record.autoStart) void change(() => { const result = engine.stop(); if (!result.ok) announce(result.reason); }); return; }
       const available = engine.availability(record.id);
@@ -777,17 +769,6 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
         setText(attune, held ? "Unattune" : "Attune");
         attune.setAttribute("aria-pressed", String(held));
         attune.setAttribute("aria-label", `${held ? "Unattune" : "Attune"} ${name}`);
-      }
-      if (record.stance) {
-        // A stance is held, not spent: the card is a toggle, Take or Taken, and never a run.
-        const taken = engine.state.stance === record.id;
-        cell.classList.toggle("is-attuned", taken);
-        setText(sub, taken ? "Taken: its numbers stand until another stance replaces it." : "Take it before a fight; the one stance taken replaces any other.");
-        button.classList.toggle("is-running", false); button.classList.toggle("is-owned", false); button.classList.toggle("is-locked", locked); button.classList.toggle("is-runnable", !locked);
-        button.disabled = false; button.setAttribute("aria-pressed", String(taken));
-        setText(badge, taken ? "Taken" : locked ? "" : isNew ? "New" : ""); badge.hidden = !badge.textContent;
-        setText(modeLine, "Stance · held, not spent"); blocks.update(detail); countLine.hidden = true;
-        return { marked: isNew, match: false };
       }
       if (hobby) {
         const asHobby = engine.state.hobby === record.id;
@@ -1316,8 +1297,7 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
     const slots = engine.records.some(record => record.id === "attune_slots") ? engine.stat("attune_slots") : undefined;
     techniqueHead.gauge.hidden = !slots;
     if (slots) {
-      const stance = engine.state.stance ? engine.record(engine.state.stance) : undefined;
-      setText(techniqueHead.value, `${number(slots.value)} / ${number(slots.max)}${stance ? ` · Stance: ${stance.name ?? stance.id}` : ""}`);
+      setText(techniqueHead.value, `${number(slots.value)} / ${number(slots.max)}`);
       syncPips(techniqueHead.pips, slots.value, slots.max, "gauge-pip");
     }
     tabViews.get("techniques")!.button.hidden = !techniquesVisible;

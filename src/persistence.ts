@@ -47,7 +47,6 @@ export interface SaveFile {
   fight?: FightState;
   hobby: string | null;
   effects: { id: string; remaining: number }[];
-  stance: string | null;
 }
 
 export interface DecodedSave {
@@ -107,7 +106,7 @@ export function makeSave(state: GameState, records: GameRecord[], savedAt = Date
     log: structuredClone(state.log),
     ...state.lastStop === undefined ? {} : { lastStop: state.lastStop },
     ...state.fight ? { fight: structuredClone(state.fight) } : {},
-    hobby: state.hobby, effects: structuredClone(state.effects), stance: state.stance,
+    hobby: state.hobby, effects: structuredClone(state.effects),
   };
 }
 
@@ -217,17 +216,12 @@ export function decodeSave(input: unknown, records: GameRecord[]): DecodedSave {
     capHits: strings(save.capHits, 'Cap notices'),
     log: [],
     wallRemainder: number(save.wallRemainder, 'Partial tick', 1),
-    hobby: null, effects: [], stance: null,
+    hobby: null, effects: [],
   };
   if (save.hobby !== null) {
     const record = typeof save.hobby === 'string' ? definitions.get(save.hobby) : undefined;
     if (!record || record.hobby !== true || record.length !== 'continuous') fail('the hobby is invalid.');
     world.hobby = record.id;
-  }
-  if (save.stance !== null) {
-    const record = typeof save.stance === 'string' ? definitions.get(save.stance) : undefined;
-    if (!record || record.stance !== true) fail('the stance is invalid.');
-    world.stance = record.id;
   }
   if (!Array.isArray(save.effects) || save.effects.length > 100) fail('the preparations in effect are invalid.');
   for (const item of save.effects as unknown[]) {
@@ -304,7 +298,7 @@ export function decodeSave(input: unknown, records: GameRecord[]): DecodedSave {
       attuned: [...state.attuned], events: [...state.eventIds], capHits: [...state.capHits], log: structuredClone(state.log),
       ...world.lastStop === undefined ? {} : { lastStop: world.lastStop },
       ...state.fight ? { fight: structuredClone(state.fight) } : {},
-      hobby: state.hobby, effects: structuredClone(state.effects), stance: state.stance,
+      hobby: state.hobby, effects: structuredClone(state.effects),
     },
     state: engine.snapshot(),
   };

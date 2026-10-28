@@ -39,10 +39,10 @@
   },
   {
     "id": "chime_watch", "name": "Sit out the dusk chime", "kind": "site", "group": "Sites",
-    "desc": "Two minutes sitting still higher up the ridge until the chime rings once at dusk. It draws on Focus only. Qi Sense 4 to hear where it comes from; the sitting teaches Qi Sense and Composure, and fixes the hour the relay rings.",
+    "desc": "Two minutes sitting still higher up the ridge until the chime rings once at dusk. It draws on Focus only. Qi Sense 4 to hear where it comes from; the sitting teaches Qi Sense and a good deal of Composure, enough to hold still at the relay, and fixes the hour the relay rings.",
     "require": "g.unusual_chime > 0", "need": "g.qi_sense >= 4", "needtext": "Qi Sense 4, to hear where the chime comes from.",
     "length": 120, "max": 1, "strain": { "focus": 0.04 },
-    "result": { "qi_sense.exp": 60, "composure.exp": 30, "chime_timed": 1 },
+    "result": { "qi_sense.exp": 60, "composure.exp": 120, "chime_timed": 1 },
     "events": [{ "id": "chime_placed", "when": "g.chime_timed > 0",
       "text": "The chime rings once as the light goes, and this time you feel where: a standing stone up the ridge, struck by nothing you can see. It rings at the same breath of dusk every day." }]
   },
@@ -53,10 +53,10 @@
   },
   {
     "id": "relay_test", "name": "Test the old relay stone", "kind": "site", "group": "Sites",
-    "desc": "Two and a half minutes at the relay stone marking it before dusk with two inked tokens, or two pieces of veined ore if you have no tokens. Composure 3 to hold still when it rings. It draws hard on Focus and lightly on Strain. Explaining the chime leaves the reservoir four deeper and Composure a point higher, and uncovers the relay keeper's leaf.",
+    "desc": "Two and a half minutes at the relay stone marking it before dusk with two inked tokens, two pieces of veined ore, or two channel stones, whichever you carry, in that order. Composure 3 to hold still when it rings. It draws hard on Focus and lightly on Strain. Explaining the chime leaves the reservoir four deeper and Composure a point higher, and uncovers the relay keeper's leaf.",
     "require": "g.chime_timed > 0",
-    "need": "g.composure >= 3 && (g.inked_tokens >= 2 || g.veined_ore >= 2)", "needtext": "Composure 3, and two inked tokens or two pieces of veined ore to mark the relay; the porter's notes on layouts or on ground open those stores, and their drills and sites fill them.",
-    "cost": { "inked_tokens": "2 * (g.inked_tokens >= 2)", "veined_ore": "2 * (g.inked_tokens < 2)" },
+    "need": "g.composure >= 3 && (g.inked_tokens >= 2 || g.veined_ore >= 2 || g.stone >= 2)", "needtext": "Composure 3, and two inked tokens, two pieces of veined ore or two channel stones to mark the relay.",
+    "cost": { "inked_tokens": "2 * (g.inked_tokens >= 2)", "veined_ore": "2 * (g.inked_tokens < 2 && g.veined_ore >= 2)", "stone": "2 * (g.inked_tokens < 2 && g.veined_ore < 2)" },
     "length": 150, "max": 1, "strain": { "strain": 0.02, "focus": 0.05 },
     "result": { "chime_explained": 1 },
     "events": [{ "id": "relay_explained", "when": "g.chime_explained > 0",
@@ -314,29 +314,29 @@
   },
   {
     "id": "scree_climb", "name": "Climb the scree under load", "kind": "site", "group": "Sites",
-    "desc": "Four minutes up the scree with a full frame, drawing hard on Strain and a little on Focus. Three marrow herbs from the ledges each time, and Circulation learns from it; the first climb lets Circulation reach one level further. A carried current takes you up half again as fast.",
-    "require": "g.conditioning_sheets > 0", "length": 240, "strain": { "strain": 0.05, "focus": 0.02 },
+    "desc": "Three minutes up the scree with a full frame, drawing hard on Strain and a little on Focus. Three marrow herbs from the ledges each time, and Circulation learns from it; the first climb lets Circulation reach one level further. A carried current takes you up half again as fast.",
+    "require": "g.conditioning_sheets > 0", "length": 180, "strain": { "strain": 0.05, "focus": 0.02 },
     "result": { "marrow_herbs": 3, "circulation.exp": 40 }, "at": { "1": { "circulation.max": 1 } },
     "boost": { "flag": "current_carried", "multiplier": 1.5 }
   },
   {
     "id": "rope_gallery", "name": "Cut the fouled gallery lines", "kind": "site", "group": "Sites",
-    "desc": "Four minutes in the gallery under the bridge cutting old lines fouled on the rock, drawing on Focus and a little on Strain. Three measures of whetstone grit from the rock face each time, and Blade Intent learns from it; the first cutting lets Blade Intent reach one level further. A carried current cuts half again as fast.",
-    "require": "g.tam_lessons > 0", "length": 240, "strain": { "strain": 0.03, "focus": 0.04 },
+    "desc": "Three minutes in the gallery under the bridge cutting old lines fouled on the rock, drawing on Focus and a little on Strain. Three measures of whetstone grit from the rock face each time, and Blade Intent learns from it; the first cutting lets Blade Intent reach one level further. A carried current cuts half again as fast.",
+    "require": "g.tam_lessons > 0", "length": 180, "strain": { "strain": 0.03, "focus": 0.04 },
     "result": { "whetstone_grit": 3, "blade_intent.exp": 40 }, "at": { "1": { "blade_intent.max": 1 } },
     "boost": { "flag": "current_carried", "multiplier": 1.5 }
   },
   {
     "id": "undercut_bank", "name": "Read the undercut bank", "kind": "site", "group": "Sites",
-    "desc": "Four minutes reading the bank the current has undercut below the waystation, drawing on Focus and a little on Strain. Three pieces of veined ore where the current left them each time, and Ground Reading learns from it; the first reading lets Ground Reading reach one level further. A carried current reads half again as fast.",
-    "require": "g.current_accounts > 0", "length": 240, "strain": { "strain": 0.03, "focus": 0.04 },
+    "desc": "Three minutes reading the bank the current has undercut below the waystation, drawing on Focus and a little on Strain. Three pieces of veined ore where the current left them each time, and Ground Reading learns from it; the first reading lets Ground Reading reach one level further. A carried current reads half again as fast.",
+    "require": "g.current_accounts > 0", "length": 180, "strain": { "strain": 0.03, "focus": 0.04 },
     "result": { "veined_ore": 3, "ground_reading.exp": 40 }, "at": { "1": { "ground_reading.max": 1 } },
     "boost": { "flag": "current_carried", "multiplier": 1.5 }
   },
   {
     "id": "relay_stones", "name": "Walk the relay stones", "kind": "site", "group": "Sites",
-    "desc": "Four minutes walking the line of relay stones the overlay shows, marking each, drawing on Focus and a little on Strain. Three inked tokens keep their marks each time, and Array Craft learns from it; the first walk lets Array Craft reach one level further. A carried current walks it half again as fast.",
-    "require": "g.overlay_plan > 0", "length": 240, "strain": { "strain": 0.02, "focus": 0.04 },
+    "desc": "Three minutes walking the line of relay stones the overlay shows, marking each, drawing on Focus and a little on Strain. Three inked tokens keep their marks each time, and Array Craft learns from it; the first walk lets Array Craft reach one level further. A carried current walks it half again as fast.",
+    "require": "g.overlay_plan > 0", "length": 180, "strain": { "strain": 0.02, "focus": 0.04 },
     "result": { "inked_tokens": 3, "array_craft.exp": 40 }, "at": { "1": { "array_craft.max": 1 } },
     "boost": { "flag": "current_carried", "multiplier": 1.5 }
   },
@@ -429,33 +429,15 @@
     "cost": { "clear_pill": 1 }, "result": { "qi": 6, "focus": 4 }
   },
   {
-    "id": "rooted_stance", "name": "Rooted stance", "kind": "technique", "group": "Techniques", "stance": true,
-    "desc": "Weight sunk, feet set, nothing given. Taken, it adds two to Guard and takes a fifth off Speed. One stance is held at a time; taking another replaces it, and nothing is spent.",
-    "require": "g.waystation > 0",
-    "held": { "guard.max": 2, "speed.max": -0.2 }
-  },
-  {
-    "id": "open_stance", "name": "Open stance", "kind": "technique", "group": "Techniques", "stance": true,
-    "desc": "Weight light, room left to move. Taken, it adds ten to Dodge and takes one from Guard. One stance is held at a time; taking another replaces it, and nothing is spent.",
-    "require": "g.waystation > 0",
-    "held": { "dodge.max": 10, "guard.max": -1 }
-  },
-  {
-    "id": "pressing_stance", "name": "Pressing stance", "kind": "technique", "group": "Techniques", "stance": true,
-    "desc": "Weight forward, always closing. Taken, it adds two to Strike and takes five from Dodge. One stance is held at a time; taking another replaces it, and nothing is spent.",
-    "require": "g.waystation > 0",
-    "held": { "strike.max": 2, "dodge.max": -5 }
-  },
-  {
     "id": "spur_pair", "name": "Two men at the spur", "kind": "site", "group": "Fights",
-    "desc": "A minute at the slide on the spur with two men who have been waiting for whoever clears it. Together they are eighteen of life, a strike of ten and a guard of six, quick and hard to pin; every third swing they rush you together for sixteen, and only Guard turns a rush. If they still stand when the minute is out, they have outlasted you. Losing costs the Vigor and herbs you brought; winning takes thirty coin and four measures of grit off them. Once begun it cannot stop, so it waits for enough Strain to see the minute through. Nothing here is needed; the spur clears without meeting them. A stance taken first changes the odds.",
+    "desc": "A minute at the slide on the spur with two men who have been waiting for whoever clears it. Together they are eighteen of life, a strike of ten and a guard of six, quick and hard to pin; every third swing they rush you together for sixteen, and only Guard turns a rush. If they still stand when the minute is out, they have outlasted you. Losing costs the Vigor and herbs you brought; winning takes thirty coin and four measures of grit off them. Once begun it cannot stop, so it waits for enough Strain to see the minute through. Nothing here is needed; the spur clears without meeting them. A Guard method held first changes the odds.",
     "flavor": "They did not clear the slide themselves because they were waiting for someone who would.",
     "require": "g.damaged_spur > 0",
     "cost": { "vigor": 4, "herbs": 3 }, "length": 60, "max": 1, "strain": { "strain": 0.06 },
     "encounter": { "foe": { "name": "the two at the spur", "life": 18, "strike": 10, "guard": 6, "speed": 1.2, "hit": 80, "dodge": 20,
         "technique": { "name": "the rush", "every": 3, "strike": 16 } },
       "success": { "coin": 30, "whetstone_grit": 4 },
-      "failureText": "you back down the spur, and the herbs are gone. Their rush of sixteen lands on whatever Guard you bring to it, and nothing else; Temper the marrow, Sink the breath under the load, Root to the vein, Let the blade wait and the Rooted stance raise Guard, and the Pressing stance is what gets past theirs." },
+      "failureText": "you back down the spur, and the herbs are gone. Their rush of sixteen lands on whatever Guard you bring to it, and nothing else; Temper the marrow, Sink the breath under the load, Root to the vein and Let the blade wait are what raise your Guard." },
     "events": [{ "id": "spur_pair_driven_off", "when": "g.spur_pair > 0",
       "text": "The second man goes down over the first and neither gets up in a hurry. What they carried is yours, and the spur is quiet." }]
   },
@@ -471,7 +453,7 @@
     "require": "g.waystation > 0 && g.first_direction > 0",
     "need": "g.qi >= g.qi.max", "needtext": "A full reservoir.",
     "buy": { "herbs": 30, "coin": 150 }, "length": 300, "max": 1,
-    "breakthrough": { "title": "The Second Direction", "core": "g.t_deep_body + g.t_deep_sword + g.t_deep_earth + g.t_deep_formation + g.t_deep_pill >= 2 && g.attune_slots >= 3", "coreLabel": "Two spheres deepened, three methods held", "required": 3,
+    "breakthrough": { "title": "The Second Direction", "core": "g.t_deep_body + g.t_deep_sword + g.t_deep_earth + g.t_deep_formation + g.t_deep_pill >= 2 && g.attune_slots >= 3", "coreLabel": "Two spheres deepened, three methods held", "required": 4,
       "pointers": [
         { "label": "A reliable method: fifteen uses across the deep methods", "when": "g.temper_the_marrow.reps + g.carry_without_rest.reps + g.sever_the_knot.reps + g.send_the_intent.reps + g.root_to_the_vein.reps + g.listen_for_water.reps + g.anchor_the_array.reps + g.ward_the_threshold.reps + g.draw_the_essence.reps + g.temper_the_fire.reps >= 15" },
         { "label": "The returning chime explained", "when": "g.chime_explained > 0" },

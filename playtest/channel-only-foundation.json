@@ -2588,7 +2588,7 @@
         "max": 1000000000000,
         "rate": 1,
         "open": true,
-        "length": 240,
+        "length": 180,
         "yield": 0,
         "discount": 0
       },
@@ -2602,7 +2602,7 @@
         "max": 1000000000000,
         "rate": 1,
         "open": true,
-        "length": 240,
+        "length": 180,
         "yield": 0,
         "discount": 0
       },
@@ -2616,7 +2616,7 @@
         "max": 1000000000000,
         "rate": 1,
         "open": true,
-        "length": 240,
+        "length": 180,
         "yield": 0,
         "discount": 0
       },
@@ -2630,7 +2630,7 @@
         "max": 1000000000000,
         "rate": 1,
         "open": true,
-        "length": 240,
+        "length": 180,
         "yield": 0,
         "discount": 0
       },
@@ -2803,48 +2803,6 @@
         "discount": 0
       },
       "take_clear_pill": {
-        "value": 0,
-        "exp": 0,
-        "reps": 0,
-        "ticks": 0,
-        "started": false,
-        "paid": false,
-        "max": 1000000000000,
-        "rate": 1,
-        "open": true,
-        "length": 1,
-        "yield": 0,
-        "discount": 0
-      },
-      "rooted_stance": {
-        "value": 0,
-        "exp": 0,
-        "reps": 0,
-        "ticks": 0,
-        "started": false,
-        "paid": false,
-        "max": 1000000000000,
-        "rate": 1,
-        "open": true,
-        "length": 1,
-        "yield": 0,
-        "discount": 0
-      },
-      "open_stance": {
-        "value": 0,
-        "exp": 0,
-        "reps": 0,
-        "ticks": 0,
-        "started": false,
-        "paid": false,
-        "max": 1000000000000,
-        "rate": 1,
-        "open": true,
-        "length": 1,
-        "yield": 0,
-        "discount": 0
-      },
-      "pressing_stance": {
         "value": 0,
         "exp": 0,
         "reps": 0,
@@ -4014,7 +3972,6 @@
     "wallRemainder": 0,
     "hobby": null,
     "effects": [],
-    "stance": null,
     "lastStop": "Settle the foundation: objective complete.",
     "bank": {
       "seconds": 0,

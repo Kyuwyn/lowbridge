@@ -144,7 +144,7 @@ export class GameEngine {
     const world: WorldState = {
       stats, active: null, waiting: [], activitySeconds: 0,
       visibleIds: [], lockedIds: [], attuned: [], eventIds: [], capHits: [], log: [], wallRemainder: 0,
-      hobby: null, effects: [], stance: null,
+      hobby: null, effects: [],
     };
     this.state = { ...world, bank: { seconds: 0, cap: BANK_BASE_CAP, accelerating: false } };
     this.reconcile(false);
@@ -350,9 +350,9 @@ export class GameEngine {
     }
   }
 
-  /** Whether a record's `held` table is paid now: attuned, the stance taken, or a preparation in effect. */
+  /** Whether a record's `held` table is paid now: attuned, or a preparation in effect. */
   holding(id: string): boolean {
-    return this.state.attuned.includes(id) || this.state.stance === id || this.state.effects.some(effect => effect.id === id);
+    return this.state.attuned.includes(id) || this.state.effects.some(effect => effect.id === id);
   }
 
   /**
@@ -643,30 +643,6 @@ export class GameEngine {
     this.log("method", `${name} is released.`);
     this.reconcile();
     return { ok: true, reason: "Released." };
-  }
-
-  // ------------------------------------------------------------------ stances
-
-  /** The one stance taken replaces any other; its `held` table is paid while taken. */
-  takeStance(id: string): Availability {
-    const record = this.record(id);
-    if (!record.stance) return { ok: false, reason: "This is not a stance." };
-    if (this.locked(id)) return { ok: false, reason: "This chapter has closed." };
-    if (!this.visible(id)) return { ok: false, reason: "This has not been discovered." };
-    if (this.state.stance === id) return { ok: false, reason: "Already taken." };
-    this.state.stance = id;
-    this.log("method", `You take the ${inSentence(record.name ?? id)}.`);
-    this.reconcile();
-    return { ok: true, reason: "Taken." };
-  }
-
-  dropStance(): Availability {
-    const id = this.state.stance;
-    if (!id) return { ok: false, reason: "No stance is taken." };
-    this.state.stance = null;
-    this.log("method", `You drop the ${inSentence(this.record(id).name ?? id)}.`);
-    this.reconcile();
-    return { ok: true, reason: "Dropped." };
   }
 
   // -------------------------------------------------------------------- hobby
@@ -1258,7 +1234,7 @@ export class GameEngine {
     const you: Fighter = live ? { ...live.you } : this.fighter();
     const lifeValue = lifeHeld ?? live?.life ?? this.stat(LIFE).value, life = Math.floor(lifeValue + EPSILON);
     const held: FightProjection["held"] = [];
-    for (const source of [...this.state.attuned, ...this.state.stance ? [this.state.stance] : [], ...this.state.effects.map(effect => effect.id)]) {
+    for (const source of [...this.state.attuned, ...this.state.effects.map(effect => effect.id)]) {
       const adds = this.heldAdds(source);
       if (Object.keys(adds).length) held.push({ id: source, adds });
     }
@@ -1305,8 +1281,8 @@ export class GameEngine {
   }
 
   /**
-   * The cheapest change that would move the verdict up a band, cheapest first: resting to full Life, taking a
-   * stance, holding a method in a free attunement place, then a higher Strike and what raises it.
+   * The cheapest change that would move the verdict up a band, cheapest first: resting to full Life,
+   * holding a method in a free attunement place, then a higher Strike and what raises it.
    */
   private flip(record: GameRecord, projection: FightProjection, life: number): string | undefined {
     if (projection.verdict === "certain") return undefined;
@@ -1317,21 +1293,6 @@ export class GameEngine {
       const rested = this.replay(record, projection.you, lifeMax).chance;
       if (better(rested, projection.you)) return `Rested to full ${this.record(LIFE).name ?? LIFE}: ${percent(rested)}`;
     }
-    // A stance costs nothing to take; the one taken now gives its numbers back when another replaces it.
-    const current = this.state.stance ? this.heldAdds(this.state.stance) : {};
-    let stance: { name: string; chance: number } | undefined;
-    for (const candidate of this.records) {
-      if (!candidate.stance || this.state.stance === candidate.id || !this.visible(candidate.id)) continue;
-      const adds: Partial<Fighter> = {}, offered = this.heldAdds(candidate.id);
-      for (const key of FIGHT_STATS) {
-        const delta = (offered[key] ?? 0) - (current[key] ?? 0);
-        if (delta) adds[key] = delta;
-      }
-      if (!Object.keys(adds).length) continue;
-      const you = this.fighter(adds), chance = this.replay(record, you, life).chance;
-      if (better(chance, you) && (!stance || chance > stance.chance)) stance = { name: candidate.name ?? candidate.id, chance };
-    }
-    if (stance) return `Taking the ${inSentence(stance.name)}: ${percent(stance.chance)}`;
     if (this.byId.has(ATTUNE_SLOTS) && this.state.attuned.length < Math.floor(this.stat(ATTUNE_SLOTS).max + EPSILON)) {
       let best: { name: string; chance: number; closes: string[] } | undefined;
       for (const method of this.records) {
@@ -1498,10 +1459,6 @@ export class GameEngine {
       if (this.state.hobby === id) {
         this.state.hobby = null;
         this.log("pause", `${name} leaves the hobby place: this chapter has closed.`);
-      }
-      if (this.state.stance === id) {
-        this.state.stance = null;
-        this.log("method", `${name} is dropped: this chapter has closed.`);
       }
     }
     for (const id of record.enable ?? []) {
@@ -1757,7 +1714,7 @@ export class GameEngine {
       : unbounded ? (stat.reps ? `${stat.reps} completed` : undefined) : `${shown(stat.value)}/${shown(stat.max)}`]);
     // Route keys are not a type; the UI names them in words beside the blocks.
     block("type", [kindLabel(record), record.slot ? `Place: ${record.slot}` : undefined,
-      record.stance ? (this.state.stance === id ? "Stance, taken" : "Stance") : record.attune ? (this.isAttuned(id) ? "Attuned" : "Needs an attunement slot") : undefined,
+      record.attune ? (this.isAttuned(id) ? "Attuned" : "Needs an attunement slot") : undefined,
       record.hobby ? (this.state.hobby === id ? "Running as the hobby" : "Can run as the hobby") : undefined]);
     block("rate", [
       record.kind === "family" && stat.open ? `Experience: ${shown(stat.exp)}/${EXP_PER_LEVEL * (stat.value + 1)}` : undefined,
@@ -1812,7 +1769,7 @@ export class GameEngine {
     const payout = { ...(record.kind === "family" ? record.perLevel : record.mod) };
     for (const path of this.patchedPaths(id)) if (!Object.keys(payout).some(own => fieldPath(own) === fieldPath(path))) payout[path] = 0;
     block("mod", (record.kind === "family" ? this.lines(record.mod).concat(this.lines(payout, " per level", patched)) : this.lines(payout, "", patched))
-      .concat(this.lines(record.held, record.stance ? " while taken" : record.kind === "preparation" ? " while in effect" : " while attuned"))
+      .concat(this.lines(record.held, record.kind === "preparation" ? " while in effect" : " while attuned"))
       .concat(Object.entries(record.at ?? {}).flatMap(([threshold, changes]) => this.lines(changes, ` ${thresholdText(record, Number(threshold))}`))), "Modifies");
     // A completion adds the record's yield to every resource it pays, as `complete` does.
     block("result", this.lines(record.result, "", (path, base) => !path.includes(".") && base > 0 && this.byId.get(path)?.kind === "resource"

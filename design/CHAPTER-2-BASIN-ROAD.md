@@ -1,6 +1,6 @@
 # Chapter 2: The Basin Road
 
-27 October 2026. The second chapter after the ridge: from the waystation's four leads to the Second Direction, then first arrival at Reedmarket, the market settlement on the Cloudwell basin's edge. Decided by [ADR 0030](decisions/0030-sphere-techniques.md) (sphere techniques, opposed pairs, derived titles; the ridge retrofit) and [ADR 0031](decisions/0031-basin-road-systems.md) (hobby slot, Focus, stances and foe techniques, lasting preparations). This document is the content spec: every record the chapter adds or changes, in the form the JSON takes. Numbers are provisional by project convention; the validator bands in §C2.7 are the acceptance, and the implementer tunes inside them.
+27 October 2026. The second chapter after the ridge: from the waystation's four leads to the Second Direction, then first arrival at Reedmarket, the market settlement on the Cloudwell basin's edge. Decided by [ADR 0030](decisions/0030-sphere-techniques.md) (sphere techniques, opposed pairs, derived titles; the ridge retrofit) and [ADR 0031](decisions/0031-basin-road-systems.md) (hobby slot, Focus, foe techniques, lasting preparations; stances were built and withdrawn the same day after the design audit). This document is the content spec: every record the chapter adds or changes, in the form the JSON takes. Numbers are provisional by project convention; the validator bands in §C2.7 are the acceptance, and the implementer tunes inside them.
 
 Bound: 30 to 60 minutes of honest play from the waystation to the Second Direction, arrival at Reedmarket within 15 minutes after; no timed record in this chapter over 300 seconds. The measured figures will live in [`playtest/SIMULATION-REPORT.md`](../playtest/SIMULATION-REPORT.md) and nowhere here.
 
@@ -27,7 +27,7 @@ Chapter one's sheet (design plan C.1) stands. This chapter adds or raises:
 | Doses (`settling_draught`, `marrow_draught`, `clear_pill`, Preparations) | Refining opens | 3 each | the recipes `fill` them | the preparations |
 | Specimen case (`specimen_case`, Preparations) | the case recipe | 1 | — | delivery to Han |
 
-Combat stats: the class figures of ADR 0026 §1 are now held figures (ADR 0030 §3). The ridge halves carry Life +2 and Guard +2 (*Sink the load*), Speed +0.2, Dodge +5 and Strike +1 (*Rise under the load*), Strike +2 and Hit +10 (*Cut by intent*), Guard +1, Speed +0.1 and Dodge +5 (*Let the blade wait*); the deep halves and the stances are in §C2.3.
+Combat stats: the class figures of ADR 0026 §1 are now held figures (ADR 0030 §3). The ridge halves carry Life +2 and Guard +2 (*Sink the load*), Speed +0.2, Dodge +5 and Strike +1 (*Rise under the load*), Strike +2 and Hit +10 (*Cut by intent*), Guard +1, Speed +0.1 and Dodge +5 (*Let the blade wait*); the deep halves are in §C2.3.
 
 ## C2.2 Places and people
 
@@ -111,8 +111,8 @@ Flags in `basin.json` (kind `flag`, group `Milestones`, `initial.max 1`, `requir
 
 | id | kind/group | require | need / needtext | cost | length | strain | result |
 |---|---|---|---|---|---|---|---|
-| `chime_watch` "Sit out the dusk chime" | site/Sites | `g.unusual_chime > 0` | `g.qi_sense >= 4` | — | 120 | `{ focus: 0.04 }` | `qi_sense.exp 60, composure.exp 30`; flag `chime_timed: 1`; `max 1` |
-| `relay_test` "Test the old relay stone" | site/Sites | `g.chime_timed > 0` | `g.composure >= 3 && (g.inked_tokens >= 2 \|\| g.veined_ore >= 2)` "Composure 3, and two inked tokens or two pieces of veined ore to mark the relay; the porter's notes on layouts or on ground open those stores, and their drills and sites fill them." | `{ inked_tokens: "2 * (g.inked_tokens >= 2)", veined_ore: "2 * (g.inked_tokens < 2)" }` | 150 | `{ strain: 0.02, focus: 0.05 }` | flag `chime_explained: 1`; `max 1` |
+| `chime_watch` "Sit out the dusk chime" | site/Sites | `g.unusual_chime > 0` | `g.qi_sense >= 4` | — | 120 | `{ focus: 0.04 }` | `qi_sense.exp 60, composure.exp 120` (120, not 30: no basin record trains Composure, so the lead's first step carries its second); flag `chime_timed: 1`; `max 1` |
+| `relay_test` "Test the old relay stone" | site/Sites | `g.chime_timed > 0` | `g.composure >= 3 && (g.inked_tokens >= 2 \|\| g.veined_ore >= 2 \|\| g.stone >= 2)` "Composure 3, and two inked tokens, two pieces of veined ore or two channel stones to mark the relay." (channel stone is the mark every build can bring; tokens, then ore, are spent first) | `{ inked_tokens: "2 * (g.inked_tokens >= 2)", veined_ore: "2 * (g.inked_tokens < 2 && g.veined_ore >= 2)", stone: "2 * (g.inked_tokens < 2 && g.veined_ore < 2)" }` | 150 | `{ strain: 0.02, focus: 0.05 }` | flag `chime_explained: 1`; `max 1` |
 | `chime_explained` | flag/Milestones | `g.chime_explained > 0` | | | | | `mod: { "qi.max": 4, "composure.max": 1 }` |
 
 **Spur milestone and the pill material.**
@@ -167,10 +167,10 @@ The `chime_leaf` and `spur_leaf` flags are not set by `relay_test` or `spur_clea
 
 | id | require | length | strain | result |
 |---|---|---|---|---|
-| `scree_climb` "Climb the scree under load" (body) | `g.conditioning_sheets > 0` | 240 | `{ strain: 0.05, focus: 0.02 }` | `marrow_herbs 3, circulation.exp 40` |
-| `rope_gallery` "Cut the fouled gallery lines" (sword) | `g.tam_lessons > 0` | 240 | `{ strain: 0.03, focus: 0.04 }` | `whetstone_grit 3, blade_intent.exp 40` |
-| `undercut_bank` "Read the undercut bank" (earth) | `g.current_accounts > 0` | 240 | `{ strain: 0.03, focus: 0.04 }` | `veined_ore 3, ground_reading.exp 40` |
-| `relay_stones` "Walk the relay stones" (formation) | `g.overlay_plan > 0` | 240 | `{ strain: 0.02, focus: 0.04 }` | `inked_tokens 3, array_craft.exp 40` |
+| `scree_climb` "Climb the scree under load" (body) | `g.conditioning_sheets > 0` | 180 | `{ strain: 0.05, focus: 0.02 }` | `marrow_herbs 3, circulation.exp 40` |
+| `rope_gallery` "Cut the fouled gallery lines" (sword) | `g.tam_lessons > 0` | 180 | `{ strain: 0.03, focus: 0.04 }` | `whetstone_grit 3, blade_intent.exp 40` |
+| `undercut_bank` "Read the undercut bank" (earth) | `g.current_accounts > 0` | 180 | `{ strain: 0.03, focus: 0.04 }` | `veined_ore 3, ground_reading.exp 40` |
+| `relay_stones` "Walk the relay stones" (formation) | `g.overlay_plan > 0` | 180 | `{ strain: 0.02, focus: 0.04 }` | `inked_tokens 3, array_craft.exp 40` |
 | (pill) `pale_root_bank` above | | | | |
 
 **Commissions** (site, group `Commissions`, `max 1`, length 120, `tags: ["t_commission"]`, result `coin 40, coin_earned 40` plus the sphere line; `require: g.waystation > 0 && <sphere family> >= 6`):
@@ -198,15 +198,7 @@ Han's specimen-case commission from ADR 0016 is the kit recipe below, not a sixt
 | `take_marrow_draught` "Drink a marrow draught" | preparation | `g.refining >= 2` | `g.marrow_draught >= 1` | `{ marrow_draught: 1 }` | — | — | `lasts 300`, `held { "body_drills.rate": 0.5, "scree_climb.rate": 0.25 }` |
 | `take_clear_pill` "Take a clear pill" | preparation | `g.refining >= 3` | `g.clear_pill >= 1` | `{ clear_pill: 1 }` | — | `qi 6, focus 4` | — |
 
-**Stances** (technique, group Techniques, `stance: true`, `require: g.waystation > 0`, no cost):
-
-| id | held |
-|---|---|
-| `rooted_stance` "Rooted stance" | `guard.max 2, speed.max -0.2` |
-| `open_stance` "Open stance" | `dodge.max 10, guard.max -1` |
-| `pressing_stance` "Pressing stance" | `strike.max 2, dodge.max -5` |
-
-**Fight** (optional, nothing gated behind it): `spur_pair` "Two men at the spur" (Fights, `require: g.damaged_spur > 0`, `cost { vigor: 4, herbs: 3 }`, length 60, `strain { strain: 0.06 }`, `encounter: { foe: { name: "the two at the spur", life: 18, strike: 10, guard: 6, speed: 1.2, hit: 80, dodge: 20, technique: { name: "the rush", every: 3, strike: 16 } }, success: { coin: 30, whetstone_grit: 4 }, failureText }` in the bandit's pattern; the `failureText` names the records that raise Guard (*Temper the marrow*, *Sink the breath under the load*, *Root to the vein*, *Let the blade wait*, the Rooted stance), not "the body methods", since *Carry without rest* raises none). Sized against the real states: at the body line's waystation (Strike 9, Guard 8, Life 24) it reads a likely loss at about 41%, and the Rooted stance makes it a likely win at about 77%; at the sword line's waystation (Guard 2) it is lost.
+**Fight** (optional, nothing gated behind it): `spur_pair` "Two men at the spur" (Fights, `require: g.damaged_spur > 0`, `cost { vigor: 4, herbs: 3 }`, length 60, `strain { strain: 0.06 }`, `encounter: { foe: { name: "the two at the spur", life: 18, strike: 10, guard: 6, speed: 1.2, hit: 80, dodge: 20, technique: { name: "the rush", every: 3, strike: 16 } }, success: { coin: 30, whetstone_grit: 4 }, failureText }` in the bandit's pattern; the `failureText` names the records that raise Guard (*Temper the marrow*, *Sink the breath under the load*, *Root to the vein*, *Let the blade wait*), not "the body methods", since *Carry without rest* raises none). Sized against the real states: at the body line's waystation (Strike 9, Guard 8, Life 24) it reads a likely loss at about 41%, and *Temper the marrow* held (Guard 10) makes it a certain win at about 98%; at the sword line's waystation (Guard 5) it is a likely loss at about 48%.
 
 **Home**: `ridge_room` "A room at the waystation" (home, Home, `require: g.waystation > 0`, `buy { coin: 90, timber: 4 }`, `mod { "home_space.max": 2, "herbs.max": 10, "ground_reading.rate": 0.1, "lore.rate": -0.1 }`, `slots: ["study"]`, no `lock`, `max 1`, desc "A room at the waystation kept beside the cottage"). Design plan B.5's Ridge Room, without closing the village home; the reading desk can fill its study place.
 
@@ -246,14 +238,14 @@ Beats, not a schedule; the measured run belongs to the simulation report.
 
 | # | beat |
 |---|---|
-| 1 | The waystation. Four leads on the board; Focus appears beside Strain; three stances on the Techniques tab, free to take. Han's ledger room: his leaf wants three others first. |
+| 1 | The waystation. Four leads on the board; Focus appears beside Strain. Han's ledger room: his leaf wants Shu's three and two others first. |
 | 2 | The route records: climb the rise above the slide (Strain and Focus both draw); the terrace to Reedmarket is seen and wants the Second Direction. |
 | 3 | The chime: sit out the dusk (Qi Sense 4), then test the relay with tokens or ore (Composure 3). The chime is explained: qi +4, Composure +1, the relay keeper's leaf. |
 | 4 | The spur: a staff or shod stakes from the bench, then three minutes clearing the slide. Strain +2, the shelter's leaf, stone; the pale-root bank once Refining is open; two men waiting, optional. |
 | 5 | The sphere teachings at Lore 5 and a family at 5: the sheets, Tam's second lesson, the accounts, the overlay; Shu's three leaves open Refining and the clay vessel. Each reveals a deep pair, a site, a commission. |
 | 6 | The second commitment inside a sphere: one half of its deep pair into an attunement place, the other closes with a warning. The sphere site raises the cap; the commission at family 6 pays coin and a material cap. |
 | 7 | The bench: draughts that last ten minutes of activity, the clear pill, Han's specimen case delivered for coin and a level more of Lore. A fourth place after the First Direction holds a third method. |
-| 8 | "Take the Second Direction" shows the core (two spheres deepened, three methods held) and 3 of 6; the bill wants a full reservoir. Four minutes. The title is derived from what is held and named in the banner; a fifth place and the hobby slot open; the bank keeps three days. |
+| 8 | "Take the Second Direction" shows the core (two spheres deepened, three methods held) and 4 of 6; the bill wants a full reservoir. Five minutes. The title is derived from what is held and named in the banner; a fifth place and the hobby slot open; the bank keeps three days. |
 | 9 | A hobby in the second place at half pace; the terrace to Reedmarket (four minutes, herbs); arrival. The purse carries a hundred more; the market porters' work pays fourteen and closes the waystation's; pale root trades for refiners; a porter names the three remaining leaves, which become leads. |
 
 ## C2.6 Interface
@@ -261,10 +253,10 @@ Beats, not a schedule; the measured run belongs to the simulation report.
 ADR 0031's consequences, in the shell's terms (design plan C.6 stands):
 
 - Body panel: Focus after Strain (`bodyIds`).
-- Tasks tab: a Commissions group after Sites. Techniques tab: a Stances group with **Take** / **Taken** instead of Attune/Use, excluded from the techniques group; the header's "N of M places" gains "· Stance: X".
+- Tasks tab: a Commissions group after Sites. (The Stances group of the first cut is gone with ADR 0031 §3.)
 - Runner: under the current activity a `data-ui="hobby"` line "Hobby: <name> (half pace)" with **Stop**, hidden while `hobby_slots.max < 1`; continuous cards gain a **Hobby** button when the slot exists, calling `startHobby` after `settle()` like every action. The waiting-list runway probe ignores the hobby.
 - Craft tab: an in-effect block ("X · 4:12 left") under Preparations; cards with `lasts` say "lasts 5 min" in the tooltip's `time` block.
-- Fight pane: the foe line names the technique ("every third swing: the rush, Strike 12"); the flip hint's stance candidate renders as the engine words it.
+- Fight pane: the foe line names the technique ("every third swing: the rush, Strike 14"); the flip hint names the Guard method that would turn it and what holding it closes.
 - Character: the title from `engine.title()`; the Route keys section lists the new keys from `routeKeys`.
 - At ≤ 650 px the hobby line stacks under the activity line; nothing else new.
 
@@ -280,10 +272,10 @@ ADR 0031's consequences, in the shell's terms (design plan C.6 stands):
 | Foundation, ridge | unchanged (480–780 s; 720–1440 s) | the existing routes |
 | places | 5 | the most places any route reaches must be held at once by some route (rule 74) |
 
-Ten deep routes continue from the ridge routes' end state, at least one per title. Every route deepens two spheres, since the core asks for two: the pure titles come from the non-hybrid pairings (body with formation, sword with earth), resolved to the sphere trained higher; the pill routes pair a ridge sphere with the pill. Pure body (body + formation, *Temper the marrow* and *Ward the threshold*, the Rooted stance, the spur fight won once it is likely), pure sword (sword + earth, Pressing), pure earth (earth + sword, Open), pure formation (formation + body, the specimen case), pill (body + pill, *Draw the essence*, the refining drills as the hobby once the place exists, every draught), pill-fire (earth + pill, *Temper the fire*), mountain-vessel (body + earth), blade-body (sword + body, the spur fight lost first at the sword line's stats), earth-array (earth + formation), intent-warden (formation + sword). The second sphere also holds the other half of its ridge pair, so both halves of every ridge pair are witnessed. Every title, both halves of every pair, every commission, every stance, `spur_pair`, `ridge_room`, the draughts in effect and the specimen case must be witnessed. Grammar: `hobby` only with `length: "continuous"` and no `autoStart`; `stance` only on a technique with `held` and without `attune`, `cost`, `length` or `result`; `lasts` only on a preparation, a positive integer, and `held` on a preparation only with `lasts`; a technique whose `lock` names a technique must be locked back by it and carry a `warn` (the opening's channel and hollow readings share no key, so the pair rule asks for the lock alone); `foe.technique.every` an integer ≥ 2, `strike` an integer ≥ 0. The runner cuts timber to a floor of six on these routes, stops gathering herbs above the bill, keeps wages going until a Vigor-paid half has met its own use target (twelve for the first sphere's half, three for the second's), makes poultices as the herb sink while a herb-paid half still needs uses (the herb trickle fills the store otherwise), and waits for a walk parked on a gauge rather than restarting it or running something else over it.
+Ten deep routes continue from the ridge routes' end state, at least one per title. Every route deepens two spheres, since the core asks for two: the pure titles come from the non-hybrid pairings (body with formation, sword with earth), resolved to the sphere trained higher; the pill routes pair a ridge sphere with the pill. Pure body (body + formation, *Temper the marrow* and *Ward the threshold*, the spur fight won once it is likely), pure sword (sword + earth), pure earth (earth + sword), pure formation (formation + body, the specimen case), pill (body + pill, *Draw the essence*, the refining drills as the hobby once the place exists, every draught), pill-fire (earth + pill, *Temper the fire*), mountain-vessel (body + earth), blade-body (sword + body, the spur fight lost first at the sword line's stats), earth-array (earth + formation), intent-warden (formation + sword). The second sphere also holds the other half of its ridge pair, so both halves of every ridge pair are witnessed. Every title, both halves of every pair, every commission, `spur_pair`, `ridge_room`, the draughts in effect and the specimen case must be witnessed. Grammar: `hobby` only with `length: "continuous"` and no `autoStart`; `lasts` only on a preparation, a positive integer, and `held` on a preparation only with `lasts`; a technique whose `lock` names a technique must be locked back by it and carry a `warn` (the opening's channel and hollow readings share no key, so the pair rule asks for the lock alone); `foe.technique.every` an integer ≥ 2, `strike` an integer ≥ 0. The runner cuts timber to a floor of six on these routes, stops gathering herbs above the bill, keeps wages going until a Vigor-paid half has met its own use target (twelve for the first sphere's half, three for the second's), makes poultices as the herb sink while a herb-paid half still needs uses (the herb trickle fills the store otherwise), and waits for a walk parked on a gauge rather than restarting it or running something else over it.
 
-Tuning order if a band fails: too fast, lengthen the sphere sites to 240 s and the Second Direction to 300 s before touching bills; too slow, cut the commissions to 90 s and the teachings' Lore need to 4 before touching drill rates.
+Tuning order if a band fails: too fast, lengthen the sphere sites back toward 240 s and the Second Direction to 300 s before touching bills; too slow, cut the commissions to 90 s and the teachings' Lore need to 4 before touching drill rates. (The sites were 240 s in the first cut, raised from 150 to meet the floor; the design audit judged that wait inflation, so they are 180 s and the Direction asks four signs of six instead of three.)
 
 ## Save
 
-Version 7: `hobby`, `effects`, `stance` join the state; v6 refused by name (ADR 0031 §7).
+Version 7: `hobby`, `effects` join the state; v6 refused by name (ADR 0031 §7).

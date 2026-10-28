@@ -73,7 +73,7 @@ export interface RouteResult {
   foundationSeconds: number | null;
   /** When the route's goal flag was first held; Foundation for the opening routes. */
   goalSeconds: number | null;
-  actions: { id: string; at: number; elapsed: number; objective: Objective; unlocks: string[]; attune?: true; release?: string; stance?: true; hobby?: true }[];
+  actions: { id: string; at: number; elapsed: number; objective: Objective; unlocks: string[]; attune?: true; release?: string; hobby?: true }[];
   unlocks: { id: string; at: number }[];
   reached: string[];
   completed: string[];
@@ -122,6 +122,8 @@ function productive(engine: GameEngine, record: GameRecord, focused: boolean, qi
   if (record.max === 1 || record.kind === "breakthrough" || record.kind === "teaching" || record.length === "continuous") return true;
   // A preparation that lasts is worth taking whenever it is not in effect.
   if (record.kind === "preparation" && record.lasts) return !engine.state.effects.some(effect => effect.id === record.id);
+  // A trade out of a full store is worth making even into a full purse: it keeps the method paid back in that material usable.
+  if (record.group === "Trade" && Object.keys(record.cost ?? {}).some(id => engine.has(id) && engine.stat(id).value >= engine.stat(id).max)) return true;
   return Object.keys(record.result ?? {}).some(path => {
     const [id, field] = path.split(".");
     if (!engine.has(id!)) return false;
@@ -172,8 +174,6 @@ export interface RouteOptions {
    * Without it, chores wait until the slot is free, which overstates the time to each goal.
    */
   attentive?: boolean;
-  /** A stance taken as soon as it is visible. */
-  stance?: string;
   /** A practice run in the hobby place as soon as the place exists; it is kept out of the activity slot by `avoid`. */
   hobby?: string;
   /** Keep at least this much timber cut, instead of cutting toward the next listed piece alone. */
@@ -244,8 +244,7 @@ export function runRoute(name: string, options: RouteOptions = {}): RouteResult 
       const stat = engine.stat(record.id);
       if (record.kind === "family" ? stat.open : record.kind === "lead"
         ? engine.condition(record.need)
-        : record.kind === "resource" || record.kind === "flag" || stat.reps > 0 || stat.value > 0 || stat.ticks > 0
-        || (record.stance && engine.state.stance === record.id)) reached.add(record.id);
+        : record.kind === "resource" || record.kind === "flag" || stat.reps > 0 || stat.value > 0 || stat.ticks > 0) reached.add(record.id);
     }
     heldAtOnce = Math.max(heldAtOnce, engine.state.attuned.length);
     if (foundationSeconds === null && held(engine, "foundation") > 0) foundationSeconds = engine.state.activitySeconds;
@@ -301,12 +300,8 @@ export function runRoute(name: string, options: RouteOptions = {}): RouteResult 
       observe();
     }
   };
-  /** A stance is taken as soon as it is seen; a hobby is started as soon as there is a place for it, and kept. */
+  /** A hobby is started as soon as there is a place for it, and kept. */
   const keepLoadout = () => {
-    const stance = options.stance;
-    if (stance && engine.has(stance) && engine.state.stance !== stance && engine.visible(stance) && engine.takeStance(stance).ok) {
-      actions.push({ id: stance, at: engine.state.activitySeconds, elapsed: 0, objective: { kind: "repetitions", id: stance, target: 1 }, unlocks: [], stance: true });
-    }
     const hobby = options.hobby;
     if (hobby && engine.has(hobby) && engine.state.hobby !== hobby && engine.startHobby(hobby).ok) {
       actions.push({ id: hobby, at: engine.state.activitySeconds, elapsed: 0, objective: objectiveFor(engine, engine.record(hobby), focused, options.qiSense), unlocks: [], hobby: true });
@@ -511,7 +506,6 @@ interface DeepSpec {
   first: Sphere; firstHalf: 0 | 1; second: Sphere; secondHalf: 0 | 1;
   /** The title record the Second Direction must read. */
   title: string;
-  stance?: string;
   /** Fights the pair at the spur once the projection is likely, or deliberately before anything, to witness the loss. */
   fight?: true; loss?: true;
   specimen?: true; draughts?: true;
@@ -524,9 +518,9 @@ export type DeepRoute = "pure-body" | "pure-sword" | "pure-earth" | "pure-format
  * across them. The pure titles fall to the sphere trained higher when the two are not a hybrid pair.
  */
 export const DEEP_ROUTES: Record<DeepRoute, DeepSpec> = {
-  "pure-body": { first: "body", firstHalf: 0, second: "formation", secondHalf: 1, title: "iron_marrow_adept", stance: "rooted_stance", fight: true },
-  "pure-sword": { first: "sword", firstHalf: 0, second: "earth", secondHalf: 1, title: "spirit_blade", stance: "pressing_stance" },
-  "pure-earth": { first: "earth", firstHalf: 0, second: "sword", secondHalf: 1, title: "deep_listener", stance: "open_stance" },
+  "pure-body": { first: "body", firstHalf: 0, second: "formation", secondHalf: 1, title: "iron_marrow_adept", fight: true },
+  "pure-sword": { first: "sword", firstHalf: 0, second: "earth", secondHalf: 1, title: "spirit_blade" },
+  "pure-earth": { first: "earth", firstHalf: 0, second: "sword", secondHalf: 1, title: "deep_listener" },
   "pure-formation": { first: "formation", firstHalf: 0, second: "body", secondHalf: 1, title: "array_keeper", specimen: true },
   "pill": { first: "body", firstHalf: 1, second: "pill", secondHalf: 0, title: "pill_refiner", hobby: "refining_drills", draughts: true },
   "pill-fire": { first: "earth", firstHalf: 0, second: "pill", secondHalf: 1, title: "pill_refiner" },
@@ -575,7 +569,7 @@ export function runDeepRoute(name: DeepRoute, records: GameRecord[] = sourceReco
     records, start: waystation, goal: "second_direction", maxSeconds: 21600, maxActions: 4000, focused: false, attentive: true, timber: 6,
     preferences: { prefer, avoid: [], others: 999 },
     attune: [firstHalf, secondHalf, from.method, ...secondRidgeHalf ? [secondRidgeHalf] : [], "steady_breath"],
-    stance: deep.stance, hobby: deep.hobby,
+    hobby: deep.hobby,
     // A deliberate loss first, at Foundation stats: it keeps nothing and costs only the preparation.
     prelude: deep.loss ? ["spur_pair"] : [],
     enough: {

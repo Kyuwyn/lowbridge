@@ -28,7 +28,7 @@ The reference rules at stake:
 
 6. **Keys and the seam.** New keys: `t_school_pill`, five `t_deep_<sphere>`, `t_leaf` (a recovered leaf of the slip), `t_commission` (a commission done). Every one is read by a Direction pointer, a `need` or a sign, as ADR 0024 requires. The basin file gates only on basin ids, shared ids and keys; the records both the ridge and the basin need as vocabulary (`waystation`, the four leads, `first_direction`, `workbench`, `reading_desk`, `cottage`, `coffer`) move unchanged from `ridge.json` to `shared.json`, where ADR 0024's seam check exempts them.
 
-7. **Save v7.** `hobby`, `effects` and `stance` join the authoritative state ([ADR 0031](0031-basin-road-systems.md)); older saves are refused by name, not migrated, as ADR 0025 established for v6.
+7. **Save v7.** `hobby` and `effects` join the authoritative state ([ADR 0031](0031-basin-road-systems.md)); older saves are refused by name, not migrated, as ADR 0025 established for v6.
 
 **Divergences from *copy* rules, with reasons.**
 
@@ -46,7 +46,7 @@ The reference rules at stake:
 - **Supersedes design plan Part A rule 2** ("a class … raises its line's entry technique cap by +3") with "a Direction raises every carried sphere's cap by +3 and grants a place", and **rule 6's** "a class choice closes its same-tier rivals" with "a pair's halves close each other; Directions never lock". **Supersedes B.2 rows 2 and 3** (the Direction rows) and **B.3** as the class table.
 - **Amends [ADR 0023](0023-techniques-and-attunement.md)**: attunement places run 3 → 4 (First Direction) → 5 (Second Direction); the ridge's "one method per direction" becomes a pair per sphere with revised `held` tables.
 - **Amends [ADR 0024](0024-route-keys.md)**: the keys in §6 are added, and the eight shared records named there move to `shared.json`.
-- **Amends [ADR 0026](0026-combat-exchanges.md)** §1's "raised by" column: the class figures are now held figures, and stances are a second, exclusive loadout ([ADR 0031](0031-basin-road-systems.md)).
+- **Amends [ADR 0026](0026-combat-exchanges.md)** §1's "raised by" column: the class figures are now held figures ([ADR 0031](0031-basin-road-systems.md); the stances that ADR first added as a second loadout were withdrawn the same day).
 - **Amends [ADR 0025](0025-lifespan-and-checkpoints-cut.md)'s save shape**: v7.
 
 Still open: whether a third tier of pairs should ever occupy two places; whether a released deep half should keep its key (today a key counts owned records, and a locked half was never owned, so release changes nothing); whether the Second Direction's hybrid precedence should be a player choice when more than one hybrid matches; and the B4 roster on this model.

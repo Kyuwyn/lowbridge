@@ -1035,30 +1035,7 @@ describe("the hobby place", () => {
   });
 });
 
-describe("stances, foe techniques and lasting preparations", () => {
-  const stances = (): GameRecord[] => [
-    ...encounter(),
-    { id: "rooted", name: "Rooted stance", kind: "technique", stance: true, held: { "guard.max": 2, "speed.max": -1 } },
-    { id: "pressing", name: "Pressing stance", kind: "technique", stance: true, held: { "strike.max": 2 } },
-  ];
-
-  test("taking a stance changes the fight stats at once, a second replaces the first, and the fight projects with it", () => {
-    const game = new GameEngine(stances());
-    expect(game.fight("bandit")).toMatchObject({ you: { strike: 2, guard: 1, speed: 5 }, foeDamage: 2 });
-    expect(game.takeStance("rooted")).toEqual({ ok: true, reason: "Taken." });
-    expect(game.stat("guard").max).toBe(3);
-    expect(game.fight("bandit")).toMatchObject({ you: { guard: 3, speed: 4 }, foeDamage: 0, held: [{ id: "rooted", adds: { guard: 2, speed: -1 } }], verdict: "certain" });
-    expect(game.takeStance("pressing").ok).toBe(true);
-    expect(game.state.stance).toBe("pressing");
-    expect(game.stat("guard").max).toBe(1);
-    expect(game.fight("bandit")).toMatchObject({ you: { strike: 4, guard: 1, speed: 5 }, yourDamage: 3, held: [{ id: "pressing", adds: { strike: 2 } }] });
-    expect(game.takeStance("brace").reason).toBe("This is not a stance.");
-    expect(game.dropStance().ok).toBe(true);
-    expect(game.stat("strike").max).toBe(2);
-    // The flip hint names the stance that would turn the verdict.
-    expect(game.fight("bandit").flip).toBe("Taking the Rooted stance: about 99%");
-  });
-
+describe("foe techniques and lasting preparations", () => {
   test("a foe's technique falls on every n-th swing, and the exact projection agrees with seeded fights", () => {
     const technique = { name: "the rush", every: 2, strike: 6 };
     const records = encounter().map(record => record.id === "life" ? { ...record, initial: { value: 20, max: 20, rate: 0 } }

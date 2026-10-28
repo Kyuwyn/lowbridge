@@ -77,15 +77,13 @@ describe("the record vocabulary", () => {
     expect(complains(spoiled("bandit", record => { record.encounter!.foe.speed = 0; }, encounter()), "a foe needs speed above 0")).toBe(true);
     expect(complains(spoiled("bandit", record => { record.encounter!.foe.dodge = 75; }, encounter()), "dodge within 0-60")).toBe(true);
     expect(complains(validateGrammar(encounter().filter(record => record.id !== "dodge")), "a fight needs the resource records")).toBe(true);
-    expect(complains(spoiled("bandit", record => { record.held = { "strike.max": 1 }; }, encounter()), "held modifiers belong only to an attuned technique, a stance, or a preparation that lasts")).toBe(true);
+    expect(complains(spoiled("bandit", record => { record.held = { "strike.max": 1 }; }, encounter()), "held modifiers belong only to an attuned technique or a preparation that lasts")).toBe(true);
     expect(complains(spoiled("bandit", record => { record.encounter!.foe.technique = { name: "the rush", every: 1, strike: 6 }; }, encounter()), "a foe technique needs a name")).toBe(true);
   });
 
-  test("a hobby is a continuous practice, a stance is only its held table, and lasts belongs to a preparation", () => {
+  test("a hobby is a continuous practice and lasts belongs to a preparation", () => {
     expect(complains(validateGrammar(changed("mill_work", record => { record.hobby = true; })), "only a continuous practice can be a hobby")).toBe(true);
     expect(complains(validateGrammar(changed("rest", record => { record.hobby = true; })), "the idle filler cannot also be a hobby")).toBe(true);
-    expect(complains(validateGrammar(changed("rooted_stance", record => { record.cost = { qi: 1 }; })), "a stance carries no cost")).toBe(true);
-    expect(complains(validateGrammar(changed("rooted_stance", record => { delete record.held; })), "a stance is nothing but its held table")).toBe(true);
     expect(complains(validateGrammar(changed("take_settling_draught", record => { delete record.lasts; })), "held modifiers belong only to")).toBe(true);
     expect(complains(validateGrammar(changed("craft_walking_staff", record => { record.lasts = 10; })), "only a preparation lasts")).toBe(true);
     expect(complains(validateGrammar(changed("rise_with_load", record => { delete record.lock; })), "sink_the_load: closes rise_with_load, which does not close it back")).toBe(true);
@@ -244,7 +242,6 @@ describe("Part E validation over real opening content", () => {
     weak.stat("blade_intent").value = 0;
     // Strike comes from Circulation and the held halves now; with those stripped the man's guard of five is not passed.
     weak.state.attuned = weak.state.attuned.filter(id => !["sink_the_load", "cut_by_intent", "rise_with_load", "let_the_blade_wait"].includes(id));
-    weak.state.stance = null;
     weak.recompute();
     expect(weak.fight("ridge_bandit")).toMatchObject({ yourDamage: 0, winSeconds: Infinity, verdict: "hopeless", likely: false });
     // The branch spent its herbs on the direction; lay in the road's bill first.
