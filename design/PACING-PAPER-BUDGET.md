@@ -1,6 +1,6 @@
 # Early pacing paper budget: first worked allocation
 
-18 October 2026. **Every duration, price allowance, numerical home benefit, age conversion, and modeled visit setting in this document is provisional.** Q122 accepts the normal 8-12-hour rhythm between meaningful decisions; Q120-Q121 accept one-for-one stored time with prompt spending. Those rules constrain this exercise. They do not approve the numbers below. See the [pacing draft](PACING-DRAFT.md) and [ADR 0019](decisions/0019-early-campaign-pacing.md) for accepted targets.
+18 October 2026. **Every duration, price allowance, numerical home benefit, age conversion, and modeled visit setting in this document is provisional.** Q122 accepts the normal 8-12-hour rhythm between meaningful decisions; Q120-Q121 accept one-for-one stored time with prompt spending. Those rules constrain this exercise. They do not approve the numbers below. See the [pacing draft](PACING-DRAFT.md) and [ADR 0019](../docs/architecture/adr-0019-early-campaign-pacing.md) for accepted targets.
 
 This is an allocation to the existing Body → Iron Marrow → Jade Body example, not a measured playthrough or proof that other allocations cannot meet the earlier dates. It replaces the unallocated 176-hour envelope **as the current calculation example only**. Q123 accepts roughly 3-5 real days for both example journeys, superseding the earlier Cloudwell dates without approving the individual numerical inputs here. No implementation is authorized.
 

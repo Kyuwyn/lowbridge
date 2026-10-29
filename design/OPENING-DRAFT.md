@@ -1,6 +1,6 @@
 First arc working design: a foothold and a first foundation
 
-Status: First-arc design checkpoint. Direction, core rules, and activity package accepted; detailed design in progress, 16 October 2026. Accepted decisions are recorded in [ADR 0003](decisions/0003-opening-anchors.md). The village, both investigations, their distinct preparation needs, and their broad reward roles are accepted for development into the first playable arc. The accepted activity package comprises village errands, perception practice, field equipment, an optional home practice upgrade, both investigations, and method practice leading to the shared foundation. Exact names, effects, costs, durations, readiness requirements, and individual scenes below remain working proposals where not explicitly accepted.
+Status: First-arc design checkpoint. Direction, core rules, and activity package accepted; detailed design in progress, 16 October 2026. Accepted decisions are recorded in [ADR 0003](../docs/architecture/adr-0003-opening-anchors.md). The village, both investigations, their distinct preparation needs, and their broad reward roles are accepted for development into the first playable arc. The accepted activity package comprises village errands, perception practice, field equipment, an optional home practice upgrade, both investigations, and method practice leading to the shared foundation. Exact names, effects, costs, durations, readiness requirements, and individual scenes below remain working proposals where not explicitly accepted.
 
 **Accepted frame**
 
@@ -8,13 +8,13 @@ An ordinary mortal begins in a village at the edge of the wilds, where cultivati
 
 The player chooses among a small set of useful leads and reconstructs reliable practice through fieldwork. Expeditions follow a chosen destination and purpose between visits, pausing when a discovery creates a meaningful new choice. One primary activity runs at a time, with home improvements benefiting that activity. Home activities stop at a chosen objective and pause for the player's next decision. The first major breakthrough establishes a shared foundation without choosing a path, and a deliberate attempt succeeds once prepared. Completing every lead is unnecessary.
 
-Target pacing is a few short visits, roughly within the first day at ordinary play speed. This is an untested design target, not a deadline. Exact durations and offline processing implementation remain open; the accepted bank and acceleration rules are recorded in [ADR 0007](decisions/0007-away-time-and-acceleration.md).
+Target pacing is a few short visits, roughly within the first day at ordinary play speed. This is an untested design target, not a deadline. Exact durations and offline processing implementation remain open; the accepted bank and acceleration rules are recorded in [ADR 0007](../docs/architecture/adr-0007-away-time-and-acceleration.md).
 
 The accepted opening uses village work and home improvements to support two investigations: the damaged stream channel and the sheltered hollow. Either can establish the first foundation; the other remains worth exploring afterward. The channel provides a useful home arrangement, while the hollow provides a technique useful in the field. Their exact effects remain to be designed.
 
 Knowledge sets clear limits on practice: the fragment and discoveries determine what can currently be learned, and new understanding opens further growth or a new practice. Ordinary expeditions depend on preparation and access through equipment, techniques, and understood obstacles, with time and lifespan as their ongoing costs. The opening has no additional energy or food meter.
 
-An ordinary investigation obstacle pauses the outing with a useful finding about the obstacle or missing understanding. Discoveries are preserved; the cost is time already spent, and the next preparation is the player's decision. If lifespan is exhausted before the first breakthrough, retry instead restores the opening character and world state exactly, with no retained discoveries, skills, or purchases. The current time-bank balance is retained under [ADR 0007](decisions/0007-away-time-and-acceleration.md); spent banked time stays spent.
+An ordinary investigation obstacle pauses the outing with a useful finding about the obstacle or missing understanding. Discoveries are preserved; the cost is time already spent, and the next preparation is the player's decision. If lifespan is exhausted before the first breakthrough, retry instead restores the opening character and world state exactly, with no retained discoveries, skills, or purchases. The current time-bank balance is retained under [ADR 0007](../docs/architecture/adr-0007-away-time-and-acceleration.md); spent banked time stays spent.
 
 **Opening flow: working details**
 
@@ -31,7 +31,7 @@ These stages describe progress, not a mandatory number of visits or a fixed sequ
 
 | Activity role | Purpose and continuing value |
 |---|---|
-| Village work | Earn the means for useful equipment and home improvements. The benefit of a purchase should be apparent before the player spends time working toward it. The currency, earning rates, and purchase costs remain open; useful paid work throughout the campaign and currency plus selected crafting materials are accepted in [ADR 0009](decisions/0009-work-and-crafting-resources.md). |
+| Village work | Earn the means for useful equipment and home improvements. The benefit of a purchase should be apparent before the player spends time working toward it. The currency, earning rates, and purchase costs remain open; useful paid work throughout the campaign and currency plus selected crafting materials are accepted in [ADR 0009](../docs/architecture/adr-0009-work-and-crafting-resources.md). |
 | Practise perception | Develop the perception supported by current knowledge, up to its visible limit. Field observations can expand that knowledge and make more demanding perception practice possible. |
 | Prepare | Acquire or make a useful aid, improve the home, or address an identified obstacle. Preparation follows a chosen purpose; it is not a generic bar every outing must fill. |
 | Investigate a known site | Carry out established observation work under the chosen expedition purpose. New information changes possibilities; repeated work need not ask for another click each cycle. |
@@ -82,11 +82,11 @@ The hollow's higher perception requirement must come after an accessible observa
 
 **Proposed readiness and payoff**
 
-Readiness would mean reconstructing a workable exercise through fieldwork and demonstrating through practice that the character can sustain it. The remaining preparation should be visible and achievable, with the ready state clear before the deliberate attempt. Exact requirements and any material preparation remain open. The accepted rule is that this first attempt succeeds once ready. Later progression mixes prepared milestones and defining trials whose outcomes depend on preparation and choices, with no separate random failure roll; see [ADR 0005](decisions/0005-campaign-progression.md). Concrete trial placements and requirements remain open.
+Readiness would mean reconstructing a workable exercise through fieldwork and demonstrating through practice that the character can sustain it. The remaining preparation should be visible and achievable, with the ready state clear before the deliberate attempt. Exact requirements and any material preparation remain open. The accepted rule is that this first attempt succeeds once ready. Later progression mixes prepared milestones and defining trials whose outcomes depend on preparation and choices, with no separate random failure roll; see [ADR 0005](../docs/architecture/adr-0005-campaign-progression.md). Concrete trial placements and requirements remain open.
 
 The proposed transformation is internal circulation that no longer depends on the opening exercise's external support, making reliable perception available on further journeys. Longer life and a retry milestone follow the accepted broad role of major breakthroughs; values and checkpoint capture timing remain open. New leads would introduce enough alternatives for a later informed path commitment.
 
-The direction immediately after this breakthrough is accepted: new abilities open local leads and first contacts with cultivators, while the village remains the base. This gives the opening's home and discoveries continuing relevance. Later path commitment defines deepest advancement and signature abilities while leaving compatible supporting techniques learnable elsewhere. [ADR 0004](decisions/0004-wider-world-and-paths.md) records these decisions; exact abilities and encounters remain to be designed.
+The direction immediately after this breakthrough is accepted: new abilities open local leads and first contacts with cultivators, while the village remains the base. This gives the opening's home and discoveries continuing relevance. Later path commitment defines deepest advancement and signature abilities while leaving compatible supporting techniques learnable elsewhere. [ADR 0004](../docs/architecture/adr-0004-wider-world-and-paths.md) records these decisions; exact abilities and encounters remain to be designed.
 
 **Scope and next decisions**
 

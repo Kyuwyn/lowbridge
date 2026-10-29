@@ -55,7 +55,7 @@ Lowbridge is a browser cultivation incremental (TypeScript, Bun, no runtime deps
 
 ## Source of truth (binding, in this order)
 
-1. `design/DESIGN-PLAN-2026-10-18.md` (incl. §0 clarifications) and `design/decisions/*.md` (ADRs).
+1. `design/DESIGN-PLAN-2026-10-18.md` (incl. §0 clarifications) and `docs/architecture/adr-*.md` (ADRs).
 2. `design/IMPLEMENTATION-PLAN-2026-10-18.md`.
 3. `README.md`: run/test commands, player-facing behaviour of the current slice.
 

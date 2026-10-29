@@ -31,7 +31,7 @@ A weak-to-strong cultivation power fantasy built on Arcanum's machine (capped re
 - The UI holds no game rules and names content ids directly; renaming ids breaks rendering.
 - Content is declarative JSON validated by `bun run validate`, which also enforces pacing.
 - Scope is the current slice (village to Foundation, plus the ridge chapter). Systems out of scope are evidence for later slices, not reasons to add panels now.
-- Binding sources: `design/DESIGN-PLAN-2026-10-18.md`, `design/decisions/*.md`, then `design/IMPLEMENTATION-PLAN-2026-10-18.md`, then `README.md`.
+- Binding sources: `design/DESIGN-PLAN-2026-10-18.md`, `docs/architecture/adr-*.md`, then `design/IMPLEMENTATION-PLAN-2026-10-18.md`, then `README.md`.
 - No age, lifespan or retry; a failed attempt costs only time and preparation.
 
 ## Brand Commitments

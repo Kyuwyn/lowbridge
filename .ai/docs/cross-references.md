@@ -3,7 +3,7 @@
 
 | Concept | Code | Design | Docs |
 |---|---|---|---|
-| Record vocabulary | `src/types.ts:47`, `scripts/validate.ts:25-27` | `design/decisions/0021-compounding-vocabulary.md` | `components/engine.md`, `components/content.md` |
+| Record vocabulary | `src/types.ts:47`, `scripts/validate.ts:25-27` | `docs/architecture/adr-0021-compounding-vocabulary.md` | `components/engine.md`, `components/content.md` |
 | Recompute / derived fields | `src/engine.ts:198-246` | ADR 0021 | `components/engine.md` |
 | Tempo, slot, waiting list | `src/engine.ts:557-606`, `src/engine.ts:764-790` | ADR 0022 | `functional-workflows.md` |
 | Attunement | `scripts/validate.ts:160`, `scripts/validate.ts:185` | ADR 0023 | `domain-model.md` |

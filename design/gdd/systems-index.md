@@ -9,7 +9,7 @@
 
 ## Overview
 
-Lowbridge is a text-and-DOM cultivation incremental whose systems are already built. The core loop (chores and one sustained activity, capped resources, methods that compound earlier pay, breakthroughs) rests on thirteen systems. Design lives in the ADRs under `design/decisions/`, not in GDDs, and `CLAUDE.md` names those and the design plans as binding. This index records what exists and how it depends on itself; it does not plan new work.
+Lowbridge is a text-and-DOM cultivation incremental whose systems are already built. The core loop (chores and one sustained activity, capped resources, methods that compound earlier pay, breakthroughs) rests on thirteen systems. Design lives in the ADRs under `docs/architecture/`, not in GDDs, and `CLAUDE.md` names those and the design plans as binding. This index records what exists and how it depends on itself; it does not plan new work.
 
 ---
 

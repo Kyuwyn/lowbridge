@@ -28,7 +28,7 @@ Save format v6 as a sparse delta keyed by record id, a strict decoder that refus
 | ID | Rule | Criticality | Source |
 |---|---|---|---|
 | BR-persistence:001 | Only `value`/`exp`/`reps`/`ticks`/`started`/`paid` (+ `seen`/`locked`) are saved; all derived numbers are rebuilt | Core | `src/persistence.ts:9-11` |
-| BR-persistence:002 | Any version other than 6 is refused, with an export-then-restart message | Core | `src/persistence.ts:155-160`, `design/decisions/0025-lifespan-and-checkpoints-cut.md:23` |
+| BR-persistence:002 | Any version other than 6 is refused, with an export-then-restart message | Core | `src/persistence.ts:155-160`, `docs/architecture/adr-0025-lifespan-and-checkpoints-cut.md:23` |
 | BR-persistence:003 | Item ids the content no longer has are skipped | Core | `src/persistence.ts:147-150`, `src/persistence.ts:172-173`, `tests/persistence.test.ts:70` |
 | BR-persistence:004 | `attuned`, active and waiting entries, and a recorded fight, that name unknown ids are **refused** (the whole save is rejected) | Core | `src/persistence.ts:68`, `src/persistence.ts:113`, `src/persistence.ts:129`, `src/persistence.ts:138-141`, `src/persistence.ts:199`, `src/persistence.ts:219-223` |
 | BR-persistence:005 | Waiting entries hold no progress; duplicates refused | Supporting | `src/persistence.ts:225-226` |

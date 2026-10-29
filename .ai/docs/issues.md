@@ -10,12 +10,12 @@ All references below were re-checked against the source after the live-combat ch
 ### ISS-001 — IF-4 — The design says discoveries pause activity; the code never does
 - **family:** IF-4
 - **claim:** Possible design/code drift. The implementation plan, ADR 0007 and the README say away time advances an activity only to its objective or the next meaningful discovery, and that a discovery can pause it. The engine logs discoveries without pausing. The validator rejects `pause` on events ("discoveries never stop activity") and lists `pauseOnReveal` as a removed field, and a test pins the non-pausing behaviour. No ADR records the removal, so anyone who "fixes" the engine to match the docs would break tested behaviour.
-- **provenance:** `design/IMPLEMENTATION-PLAN-2026-10-18.md:25`, `design/decisions/0007-away-time-and-acceleration.md:7`, `design/decisions/0025-lifespan-and-checkpoints-cut.md:21`, `README.md:35`, `src/engine.ts:1243-1261`, `scripts/validate.ts:37`, `scripts/validate.ts:169`, `tests/engine.test.ts:284`
+- **provenance:** `design/IMPLEMENTATION-PLAN-2026-10-18.md:25`, `docs/architecture/adr-0007-away-time-and-acceleration.md:7`, `docs/architecture/adr-0025-lifespan-and-checkpoints-cut.md:21`, `README.md:35`, `src/engine.ts:1243-1261`, `scripts/validate.ts:37`, `scripts/validate.ts:169`, `tests/engine.test.ts:284`
 - **severity:** Medium
 - **criticality:** Core
 - **certainty:** HIGH
 - **lifecycle:** resolved (2026-10-27)
-- **resolution:** [ADR 0027](../../design/decisions/0027-locks-at-payment-and-stops.md) records that discoveries never stop activity and amends ADR 0007's stops. The implementation plan's away-time paragraph and the README now say an activity stops at its objective, a full store or an unaffordable drain, then the waiting list and Rest run, and only the rest is banked.
+- **resolution:** [ADR 0027](../../docs/architecture/adr-0027-locks-at-payment-and-stops.md) records that discoveries never stop activity and amends ADR 0007's stops. The implementation plan's away-time paragraph and the README now say an activity stops at its objective, a full store or an unaffordable drain, then the waiting list and Rest run, and only the rest is banked.
 - **baseline:** new
 - **suggested direction:** Record the decision in an ADR and update the plan and README, or restore pausing deliberately.
 
@@ -27,7 +27,7 @@ All references below were re-checked against the source after the live-combat ch
 - **criticality:** Supporting
 - **certainty:** HIGH
 - **lifecycle:** resolved (2026-10-27)
-- **resolution:** The report's current-pacing paragraph now carries the 27 October `bun run validate` figures and bands (direct routes 9.47 / 10.73 min to Foundation, 119/119 records) and marks the older sections as history; [ADR 0028](../../design/decisions/0028-ten-minute-foundation.md) names it as where the measured figure lives.
+- **resolution:** The report's current-pacing paragraph now carries the 27 October `bun run validate` figures and bands (direct routes 9.47 / 10.73 min to Foundation, 119/119 records) and marks the older sections as history; [ADR 0028](../../docs/architecture/adr-0028-ten-minute-foundation.md) names it as where the measured figure lives.
 - **baseline:** new
 - **suggested direction:** Regenerate the report from `bun run validate --json`.
 
@@ -39,14 +39,14 @@ All references below were re-checked against the source after the live-combat ch
 - **criticality:** Supporting
 - **certainty:** HIGH
 - **lifecycle:** resolved (2026-10-27)
-- **resolution:** One bound, recorded in [ADR 0028](../../design/decisions/0028-ten-minute-foundation.md): about ten minutes of honest play, enforced only by `bun run validate` (direct routes 480–780 s with Circulation by 600 s; preference routes within 1200 s; ridge 720–1440 s). The design plan's Part C bound and Part E check 4, the README and PRODUCT.md now say the same; `scripts/routes.ts` no longer exits on a time of its own; and with the sustained earners gone (ADR 0022 amendment) there is no sustained-only figure to report.
+- **resolution:** One bound, recorded in [ADR 0028](../../docs/architecture/adr-0028-ten-minute-foundation.md): about ten minutes of honest play, enforced only by `bun run validate` (direct routes 480–780 s with Circulation by 600 s; preference routes within 1200 s; ridge 720–1440 s). The design plan's Part C bound and Part E check 4, the README and PRODUCT.md now say the same; `scripts/routes.ts` no longer exits on a time of its own; and with the sustained earners gone (ADR 0022 amendment) there is no sustained-only figure to report.
 - **baseline:** new
 - **suggested direction:** Pick one bound, record it, and align `routes.ts` and the plan.
 
 ### ISS-004 — IF-4 — The route-key rules from ADR 0024 are not in force
 - **family:** IF-4
 - **claim:** Possible unenforced design rule. ADR 0024, the design plan and the implementation plan say three things: the shared module holds `t_` key records shown under Methods; no gate names another module's record id; and the validator runs three key checks. The code differs on each. No `t_` records exist, so keys are only tag counters, and the validator rejects a record whose id equals a tag, so a key record cannot be added as written. Tooltips show the raw tag strings. Ridge and shared gates name opening ids (`cot`, `garden_plot`, `strongbox`, `lean_to`, `jade_slip`). The validator has no carried/read checks, and `t_school_body` and `t_school_earth` are carried but never read. As a result, renaming an opening record silently changes ridge gates.
-- **provenance:** `design/decisions/0024-route-keys.md:13`, `design/decisions/0024-route-keys.md:32`, `design/DESIGN-PLAN-2026-10-18.md:359`, `design/DESIGN-PLAN-2026-10-18.md:375`, `design/IMPLEMENTATION-PLAN-2026-10-18.md:11`, `README.md:39`, `src/engine.ts:177-180`, `src/engine.ts:1372`, `scripts/validate.ts:120`, `src/data/ridge.json:141`, `src/data/ridge.json:301`, `src/data/ridge.json:307`, `src/data/shared.json:26`, `src/data/opening.json:125`, `src/data/opening.json:136`
+- **provenance:** `docs/architecture/adr-0024-route-keys.md:13`, `docs/architecture/adr-0024-route-keys.md:32`, `design/DESIGN-PLAN-2026-10-18.md:359`, `design/DESIGN-PLAN-2026-10-18.md:375`, `design/IMPLEMENTATION-PLAN-2026-10-18.md:11`, `README.md:39`, `src/engine.ts:177-180`, `src/engine.ts:1372`, `scripts/validate.ts:120`, `src/data/ridge.json:141`, `src/data/ridge.json:301`, `src/data/ridge.json:307`, `src/data/shared.json:26`, `src/data/opening.json:125`, `src/data/opening.json:136`
 - **severity:** Medium
 - **criticality:** Core
 - **certainty:** HIGH
@@ -80,7 +80,7 @@ All references below were re-checked against the source after the live-combat ch
 ### ISS-007 — IF-4 — The agent instructions and the implementation plan understate the slice's scope
 - **family:** IF-4
 - **claim:** Possible stale scope. `AGENTS.md`/`CLAUDE.md` describe the current slice as the village to Foundation, with combat, classes and the waystation out of scope, and the implementation plan says "No … classes, waystation". The code ships the ridge chapter with a waystation, a class record and fights. ADR 0026 is accepted for chapter 1 and the ridge, and the README now says the slice has one fight before Foundation and one on the ridge. Agents may refuse or undo in-scope ridge and combat work.
-- **provenance:** `AGENTS.md:89`, `CLAUDE.md:89`, `design/IMPLEMENTATION-PLAN-2026-10-18.md:3`, `src/data/ridge.json:236`, `src/data/opening.json:63`, `src/data/opening.json:235`, `design/decisions/0026-combat-exchanges.md:3`, `README.md:58`
+- **provenance:** `AGENTS.md:89`, `CLAUDE.md:89`, `design/IMPLEMENTATION-PLAN-2026-10-18.md:3`, `src/data/ridge.json:236`, `src/data/opening.json:63`, `src/data/opening.json:235`, `docs/architecture/adr-0026-combat-exchanges.md:3`, `README.md:58`
 - **severity:** Medium
 - **criticality:** Supporting
 - **certainty:** HIGH

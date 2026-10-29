@@ -2,15 +2,15 @@ Cultivation traditions: working design
 
 **Under review after Q62:** The user requested closer alignment with Arcanum's class and “Master of” system before developing the proposed three-method package. The earlier roster and single-path/retraining assumptions below are retained as design history and are being reconsidered; they must not constrain the replacement model prematurely. See the [source analysis](../research/arcanum-study-2026-10-16/CLASS-MASTERY-STUDY.md).
 
-**Q64 update:** One cumulative class choice now accompanies each of breakthroughs 2-4, retaining earlier classes and benefits. See [ADR 0014](decisions/0014-early-class-advancements.md) and the [class-map sketch](CULTIVATION-CLASS-MAP.md). Replacement-through-retraining no longer describes ordinary forward advancement through these choices; whether earlier choices can be revised remains open. The roster below is historical, not the approved replacement class catalog.
+**Q64 update:** One cumulative class choice now accompanies each of breakthroughs 2-4, retaining earlier classes and benefits. See [ADR 0014](../docs/architecture/adr-0014-early-class-advancements.md) and the [class-map sketch](CULTIVATION-CLASS-MAP.md). Replacement-through-retraining no longer describes ordinary forward advancement through these choices; whether earlier choices can be revised remains open. The roster below is historical, not the approved replacement class catalog.
 
-**Q65-Q66 update:** Body, Sword, Earth, and Formation are the four accepted starting class directions. The first dedicated Alchemy class appears at breakthrough 3, without excluding earlier alchemy discoveries or introductory practices. Each acquired class contributes +1 to each listed mastery. Starting assignments are Body; Sword + Spirit; Earth; Formation + Spirit, with Spirit meaning projected awareness and will. See [ADR 0015](decisions/0015-cumulative-class-masteries.md). Exact names, later assignments and classes, thresholds, and benefits remain in design.
+**Q65-Q66 update:** Body, Sword, Earth, and Formation are the four accepted starting class directions. The first dedicated Alchemy class appears at breakthrough 3, without excluding earlier alchemy discoveries or introductory practices. Each acquired class contributes +1 to each listed mastery. Starting assignments are Body; Sword + Spirit; Earth; Formation + Spirit, with Spirit meaning projected awareness and will. See [ADR 0015](../docs/architecture/adr-0015-cumulative-class-masteries.md). Exact names, later assignments and classes, thresholds, and benefits remain in design.
 
-Status: Second design checkpoint. Three-path roster and broad retraining rules accepted, 16 October 2026. [ADR 0004](decisions/0004-wider-world-and-paths.md) records the accepted decisions. Body Tempering, Intent, and Formation are the selected identities for the first complete campaign. Final names, specific techniques, examples, and detailed effects remain in design.
+Status: Second design checkpoint. Three-path roster and broad retraining rules accepted, 16 October 2026. [ADR 0004](../docs/architecture/adr-0004-wider-world-and-paths.md) records the accepted decisions. Body Tempering, Intent, and Formation are the selected identities for the first complete campaign. Final names, specific techniques, examples, and detailed effects remain in design.
 
 The first complete campaign uses three broad paths whose differences lie in the decisions they encourage: develop the self, direct a precise action, or prepare the surroundings. Each needs a complete route through the shared campaign to ascension, distinctive advanced capabilities, and meaningful choices within its progression. Three is the accepted roster size for this campaign scope.
 
-Q56 selects foundation through the second breakthrough as the current design slice. The [second-breakthrough working design](SECOND-BREAKTHROUGH-DRAFT.md) develops useful introductions and commitment through the accepted ridge waystation investigation. Players must use the intended path's introductory practice before committing; all three are explained and available, and trying the others is optional. [ADR 0012](decisions/0012-second-breakthrough-arc.md) records Q57-Q60: recovered texts in the accessible outskirts supply the introductions, fieldwork establishes their use, and a prepared second breakthrough grants the capability used to cross. Specific applications and detailed effects remain proposals.
+Q56 selects foundation through the second breakthrough as the current design slice. The [second-breakthrough working design](SECOND-BREAKTHROUGH-DRAFT.md) develops useful introductions and commitment through the accepted ridge waystation investigation. Players must use the intended path's introductory practice before committing; all three are explained and available, and trying the others is optional. [ADR 0012](../docs/architecture/adr-0012-second-breakthrough-arc.md) records Q57-Q60: recovered texts in the accessible outskirts supply the introductions, fieldwork establishes their use, and a prepared second breakthrough grants the capability used to cross. Specific applications and detailed effects remain proposals.
 
 **Accepted traditions: abilities and examples still proposed**
 
@@ -36,7 +36,7 @@ The first arc's home arrangement and perception technique remain shared foundati
 
 Each path should eventually offer both a distinctive cultivation practice and a defining application or trial. Shared encounters may support different approaches without requiring a separate location chain for each tradition. Exact branches, abilities, trials, and counts remain open.
 
-All three paths follow the campaign-wide knowledge rule accepted in Q61: practise within current understanding, with discoveries and new teachings opening deeper growth at meaningful limits. [ADR 0013](decisions/0013-knowledge-and-practice.md) records the rule; specific observations and practice limits remain content design.
+All three paths follow the campaign-wide knowledge rule accepted in Q61: practise within current understanding, with discoveries and new teachings opening deeper growth at meaningful limits. [ADR 0013](../docs/architecture/adr-0013-knowledge-and-practice.md) records the rule; specific observations and practice limits remain content design.
 
 **Accepted retraining direction**
 
@@ -46,7 +46,7 @@ The ordinary checkpoint rule restores saved character and world state exactly; t
 
 **Sect affiliation**
 
-Sect membership is optional for every path. Joining offers distinctive teaching and opportunities, while Body Tempering, Intent, and Formation can each reach ascension independently. Path commitment and sect affiliation are distinct choices. Specific sect teachings and the terms of joining or leaving remain open; [ADR 0010](decisions/0010-sects-and-relationships.md) records the accepted direction.
+Sect membership is optional for every path. Joining offers distinctive teaching and opportunities, while Body Tempering, Intent, and Formation can each reach ascension independently. Path commitment and sect affiliation are distinct choices. Specific sect teachings and the terms of joining or leaving remain open; [ADR 0010](../docs/architecture/adr-0010-sects-and-relationships.md) records the accepted direction.
 
 **Scope questions**
 

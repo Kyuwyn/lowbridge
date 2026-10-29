@@ -25,7 +25,7 @@ All game content as data: 122 records (shared 29, opening 34, ridge 59) concaten
 | BR-content:001 | Record order = shared, opening, ridge; this order is the display/reveal order | Supporting | `src/content.ts:7`, `src/engine.ts:97` |
 | BR-content:002 | Route keys are carried in `tags`; `g.t_<tag>` counts owned records carrying the tag | Core | `src/data/opening.json:125`, `src/data/opening.json:136`, `src/data/opening.json:149`, `src/engine.ts:177` |
 | BR-content:003 | A record id may not equal a tag name | Core | `scripts/validate.ts:120` |
-| BR-content:004 | Across a module boundary, gates should read route keys, never another module's record ids (ADR) | Core | `design/decisions/0024-route-keys.md:32` (the direction signs read school keys, but still name opening furnishings — see `.ai/docs/issues.md`) |
+| BR-content:004 | Across a module boundary, gates should read route keys, never another module's record ids (ADR) | Core | `docs/architecture/adr-0024-route-keys.md:32` (the direction signs read school keys, but still name opening furnishings — see `.ai/docs/issues.md`) |
 | BR-content:005 | Chapter-one timed actions run at most 180 s | Supporting | `scripts/validate.ts:34`, `scripts/validate.ts:234-235` |
 | BR-content:006 | Every field must be in the validator's vocabulary; removed fields are named as such | Core | `scripts/validate.ts:25-27`, `scripts/validate.ts:37`, `scripts/validate.ts:123-124` |
 

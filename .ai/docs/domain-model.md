@@ -12,10 +12,10 @@ Everything in the game is a **record** (`GameRecord`, `src/types.ts:47`) with a 
 |---|---|---|
 | Vigor | Resource spent by chores; refilled by the `rest` filler | `src/data/shared.json` (`vigor`), `src/data/opening.json` (`rest`, `autoStart`) |
 | Qi | Resource with a regenerating rate; paid by techniques | `src/data/shared.json` (`qi`) |
-| Knowledge (family) | Levelled record; practice adds `exp`, and level *n* costs 60·(*n*+1) XP; caps need understanding | `src/engine.ts:1212-1213`, `design/decisions/0013-knowledge-and-practice.md` |
+| Knowledge (family) | Levelled record; practice adds `exp`, and level *n* costs 60·(*n*+1) XP; caps need understanding | `src/engine.ts:1212-1213`, `docs/architecture/adr-0013-knowledge-and-practice.md` |
 | Derived field | `max`, `rate`, `open`, `length`, `yield`, `discount`: rebuilt by `recompute`, never saved | `src/types.ts:28-29`, `src/persistence.ts:9-10` |
 | `X.mod.Y` patch | Raises another record's payout table; folded in by `recompute` | `src/engine.ts:235-246` |
-| Tempo | From `length`: absent means instant, a number means timed, `"continuous"` means perpetual | `design/decisions/0022-chore-tempo.md` |
+| Tempo | From `length`: absent means instant, a number means timed, `"continuous"` means perpetual | `docs/architecture/adr-0022-chore-tempo.md` |
 | Slot / waiting list | One running activity; up to `WAITING_MAX` (6) queued | `src/engine.ts:6-17`, `src/engine.ts:618` |
 | Objective | What a run aims at: repetitions, a level, or a resource target | `src/persistence.ts:8` |
 | Technique / attunement | A technique runs only while attuned; slots come from the `attune_slots` resource; `held` modifiers apply while attuned | `src/data/shared.json` (`attune_slots`), `scripts/validate.ts:185` |
@@ -24,7 +24,7 @@ Everything in the game is a **record** (`GameRecord`, `src/types.ts:47`) with a 
 | Breakthrough | A record with a mandatory `core` plus `required` of N supporting `pointers` | `scripts/validate.ts:188-189`, `scripts/validate.ts:208-226` |
 | Foundation | The first breakthrough flag, which ends chapter one | `src/data/shared.json` (`foundation`) |
 | Bank | Idle seconds banked (base cap 3600 s) and spent one-for-one by acceleration | `src/types.ts:147`, `src/engine.ts:720-733` |
-| Encounter / fight | Deterministic exchanges using Life, Strike and Guard, played one at a time during the run; an undecided fight cannot be stopped | `src/engine.ts:984-1017`, `src/engine.ts:1062-1079`, `src/engine.ts:649-658`, `design/decisions/0026-combat-exchanges.md` |
+| Encounter / fight | Deterministic exchanges using Life, Strike and Guard, played one at a time during the run; an undecided fight cannot be stopped | `src/engine.ts:984-1017`, `src/engine.ts:1062-1079`, `src/engine.ts:649-658`, `docs/architecture/adr-0026-combat-exchanges.md` |
 | Discovery | A log entry when a record or event is revealed; it never pauses activity | `src/engine.ts:1237-1272` |
 | Home space / place | A floor-span counter (`home_space`) and per-home slots for arrangements | `scripts/validate.ts:40`, `scripts/validate.ts:171-172` |
 | Class | A record with a `title`; the slice grants `shu_apprentice` and four ridge directions | `src/data/opening.json:63`, `scripts/validate.ts:175` |

@@ -3,7 +3,7 @@
 <!--
 One-page brief for the CCGS skills at the `minimal` tier. It summarises; it does
 not bind. Binding sources, in order: design/DESIGN-PLAN-2026-10-18.md and
-design/decisions/*.md, then design/IMPLEMENTATION-PLAN-2026-10-18.md, then
+docs/architecture/adr-*.md, then design/IMPLEMENTATION-PLAN-2026-10-18.md, then
 README.md. Where this page and those disagree, they win.
 Drawn from PRODUCT.md, README.md, design/IMPLEMENTATION-PLAN-2026-10-18.md and
 design/CHAPTER-2-BASIN-ROAD.md on 2026-10-29.
