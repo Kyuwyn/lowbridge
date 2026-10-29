@@ -30,7 +30,7 @@ project:
 # precedence order.
 
 modes:
-  rigor: minimal
+  rigor: full
   automation: guided
 
 commands:
