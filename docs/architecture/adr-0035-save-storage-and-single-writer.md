@@ -1,7 +1,7 @@
 # ADR-0035: Save storage and single-writer access
 
 ## Status
-Proposed
+Accepted
 
 ## Date
 2026-10-29
