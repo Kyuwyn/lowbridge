@@ -23,3 +23,36 @@ Design consequences: local discoveries and home improvements should remain usefu
 Retraining is part of the continuing character's journey. It preserves shared progress while the new specialization is developed. Exact costs, availability, and the treatment of particular former techniques remain undecided. Exact checkpoint restoration still applies: a retry restores whichever path and retraining state belonged to that checkpoint. This does not establish a manual rewind or a special exception that preserves retraining progress across a retry.
 
 The [path working design](../../design/PATHS-DRAFT.md) develops this accepted roster with proposed examples and tradeoffs. [ADR 0005](adr-0005-campaign-progression.md) records commitment timing, the eight-breakthrough target, and the mixture of prepared milestones and defining trials. Sect membership is now optional for every path, offering distinctive teaching and opportunities while each path remains viable independently; [ADR 0010](adr-0010-sects-and-relationships.md) records this and the small recurring cast. Specific sect teachings and membership terms, exact introductory applications, the meaning of technique compatibility, detailed later breakthrough and trial rules, exact realm structure, and exact post-foundation rewards remain open.
+
+## Status
+
+Superseded by ADR-0014
+
+## Date
+
+2026-10-29. This records the retrofit that added the template sections; the decision itself dates from 16 October 2026, as the status line at the top says.
+
+## Engine Compatibility
+
+| Field | Value |
+|-------|-------|
+| **Engine** | None — TypeScript 7.0 on Bun 1.4.3, plain DOM |
+| **Domain** | Core |
+| **Layer** | Feature |
+| **Knowledge Risk** | N/A — no engine, so no `docs/engine-reference/` VERSION.md |
+| **References Consulted** | None |
+| **Post-Cutoff APIs Used** | None |
+| **Verification Required** | None |
+
+## ADR Dependencies
+
+| Field | Value |
+|-------|-------|
+| **Depends On** | ADR-0001, ADR-0003 |
+| **Enables** | None (superseded) |
+| **Blocks** | None |
+| **Ordering Note** | Superseded by ADR-0014, which replaces the three-path roster and the single-path replacement and retraining model with cumulative directions. ADR-0030 later replaces that structure with sphere technique pairs and one Direction per tier. Read ADR-0014, then ADR-0030. |
+
+## GDD Requirements Addressed
+
+None. Superseded: nothing in `design/gdd/systems-index.md` is governed by this ADR. Its progression structure now follows ADR-0014 and ADR-0030.
