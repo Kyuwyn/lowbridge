@@ -1,7 +1,7 @@
 # ADR-0036: Platform stack and the whole-second time model
 
 ## Status
-Proposed
+Accepted
 
 ## Date
 2026-10-29
