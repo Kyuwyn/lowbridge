@@ -10,7 +10,8 @@
     "test": "bun test",
     "validate": "bun scripts/validate.ts",
     "validate:design": "python3 design/validation/opening-sim.py && python3 design/validation/b4-gates.py",
-    "smoke": "bun scripts/browser-smoke.ts"
+    "smoke": "bun scripts/browser-smoke.ts",
+    "perf": "bun scripts/perf.ts"
   },
   "devDependencies": {
     "@types/bun": "1.4.3",
