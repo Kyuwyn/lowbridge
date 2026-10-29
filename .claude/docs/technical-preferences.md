@@ -10,42 +10,42 @@
 
 ## Engine & Language
 
-- **Engine**: [TO BE CONFIGURED — run /setup-engine]
-- **Language**: [TO BE CONFIGURED]
-- **Rendering**: [TO BE CONFIGURED]
-- **Physics**: [TO BE CONFIGURED]
+- **Engine**: None — plain DOM, no game engine (CCGS engine skills do not apply; see CLAUDE.md)
+- **Language**: TypeScript 7.0 on Bun 1.4.3
+- **Rendering**: DOM and CSS (`src/ui.ts`, `src/style.css`)
+- **Physics**: None
 
 ## Input & Platform
 
 <!-- Written by /setup-engine. Read by /ux-design, /ux-review, /test-setup, /team-ui, and /dev-story -->
 <!-- to scope interaction specs, test helpers, and implementation to the correct input methods. -->
 
-- **Target Platforms**: [TO BE CONFIGURED — e.g., PC, Console, Mobile, Web]
-- **Input Methods**: [TO BE CONFIGURED — e.g., Keyboard/Mouse, Gamepad, Touch, Mixed]
-- **Primary Input**: [TO BE CONFIGURED — the dominant input for this game]
-- **Gamepad Support**: [TO BE CONFIGURED — Full / Partial / None]
-- **Touch Support**: [TO BE CONFIGURED — Full / Partial / None]
-- **Platform Notes**: [TO BE CONFIGURED — any platform-specific UX constraints]
+- **Target Platforms**: Web (desktop browser first; phone layout at ≤650 px)
+- **Input Methods**: Keyboard/Mouse, Touch
+- **Primary Input**: Mouse with hover tooltips; keyboard focus must reveal the same
+- **Gamepad Support**: None
+- **Touch Support**: Partial (ⓘ pins tooltips)
+- **Platform Notes**: One tab per profile (Web Locks); saves in IndexedDB with Export/Import
 
 ## Naming Conventions
 
-- **Classes**: [TO BE CONFIGURED]
-- **Variables**: [TO BE CONFIGURED]
-- **Signals/Events**: [TO BE CONFIGURED]
-- **Files**: [TO BE CONFIGURED]
-- **Scenes/Prefabs**: [TO BE CONFIGURED]
-- **Constants**: [TO BE CONFIGURED]
+- **Classes**: PascalCase
+- **Variables**: camelCase; content record ids snake_case
+- **Signals/Events**: N/A
+- **Files**: kebab-case.ts
+- **Scenes/Prefabs**: N/A
+- **Constants**: UPPER_SNAKE_CASE
 
 ## Performance Budgets
 
-- **Target Framerate**: [TO BE CONFIGURED]
-- **Frame Budget**: [TO BE CONFIGURED]
-- **Draw Calls**: [TO BE CONFIGURED]
-- **Memory Ceiling**: [TO BE CONFIGURED]
+- **Target Framerate**: N/A (text DOM, 1-second ticks); pacing budgets are enforced by `bun run validate` (ADR 0028)
+- **Frame Budget**: N/A
+- **Draw Calls**: N/A
+- **Memory Ceiling**: N/A
 
 ## Testing
 
-- **Framework**: [TO BE CONFIGURED]
+- **Framework**: `bun test`, plus `bun run validate` (content, pacing, reachability) and `bun run smoke` (Playwright)
 - **Minimum Coverage**: [TO BE CONFIGURED]
 - **Required Tests**: Balance formulas, gameplay systems, networking (if applicable)
 
