@@ -31,3 +31,36 @@ The first complete campaign uses three paths: Body Tempering, Intent, and Format
 Not yet decided: exact technique compatibility, retraining costs and treatment of old techniques, specific introductory practices, the amount of narrative branching, realm names and internal structure within the eight-breakthrough target, exact trial placements and detailed trial rules, supporting systems, detailed pacing, ending variants, or post-ending interaction. The opening method and first breakthrough do not commit the protagonist to a path. [ADR 0005](adr-0005-campaign-progression.md) records campaign progression and combat's role; [ADR 0010](adr-0010-sects-and-relationships.md) records sect membership and relationship scope.
 
 The user chose this direction over reincarnation- or lineage-centered progression, and over a campaign ending in deathless residence within the mortal world. Those alternatives are not part of the current foundation.
+
+## Status
+
+Accepted
+
+## Date
+
+2026-10-29. This records the retrofit that added the template sections; the decision itself dates from 16 October 2026, as the status line at the top says.
+
+## Engine Compatibility
+
+| Field | Value |
+|-------|-------|
+| **Engine** | None — TypeScript 7.0 on Bun 1.4.3, plain DOM |
+| **Domain** | Core |
+| **Layer** | Foundation |
+| **Knowledge Risk** | N/A — no engine, so no `docs/engine-reference/` VERSION.md |
+| **References Consulted** | None |
+| **Post-Cutoff APIs Used** | None |
+| **Verification Required** | None |
+
+## ADR Dependencies
+
+| Field | Value |
+|-------|-------|
+| **Depends On** | None |
+| **Enables** | ADR-0004, ADR-0005, ADR-0006, ADR-0010 |
+| **Blocks** | None |
+| **Ordering Note** | Later ADRs amend parts of this one without replacing its pillars: ADR-0014 replaces the three named paths with four directions, ADR-0025 cuts lifespan, and ADR-0030 removes the exclusive directions. Read those before relying on the path, lifespan or retraining rows above. |
+
+## GDD Requirements Addressed
+
+Foundational — no GDD requirement. Enables: every system in `design/gdd/systems-index.md`, whose design follows from the campaign identity recorded here.
