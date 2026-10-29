@@ -1,7 +1,7 @@
 # ADR-0037: The content expression language
 
 ## Status
-Proposed
+Accepted
 
 ## Date
 2026-10-29
