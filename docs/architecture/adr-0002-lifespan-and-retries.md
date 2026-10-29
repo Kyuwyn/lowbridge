@@ -36,3 +36,36 @@ Q118 accepts fixed authored starting values of age 18 and natural lifespan 80: 6
 Q120 accepts one-for-one bank exchange: one unused real hour stores one bank hour, and spending it supplies one hour of normal activity progress. Time already used for activity is not credited again. Q121 accepts prompt delivery to the current objective, stopping at completion or its next meaningful decision and retaining unused balance. If the bank runs out first, unfinished work continues at ordinary speed. Spending must be enabled again for another objective or a continuation after a decision pause. Normal lifespan costs and all activity prerequisites remain; the exact cap, controls, and processing implementation remain open. See [ADR 0007](adr-0007-away-time-and-acceleration.md).
 
 Q123 accepts the compact working pace: roughly 3-5 real days through Cloudwell for the focused and specified curious journeys, preserving the current content and Q122's regular decisions. This supersedes the former 7-10-day focused and 10-14-day curious Cloudwell targets. Foundation still targets the first day; intermediate dates need alignment with the compact schedule. The full eight-breakthrough campaign's several-week target remains separate. Individual timers, prices, home effects, bank capacity, fictional-time conversion, and modeled visit settings are still provisional. See [ADR 0019](adr-0019-early-campaign-pacing.md).
+
+## Status
+
+Superseded by ADR-0025
+
+## Date
+
+2026-10-29. This records the retrofit that added the template sections; the decision itself was last updated on 18 October 2026, as the status line at the top says.
+
+## Engine Compatibility
+
+| Field | Value |
+|-------|-------|
+| **Engine** | None — TypeScript 7.0 on Bun 1.4.3, plain DOM |
+| **Domain** | Core |
+| **Layer** | Core |
+| **Knowledge Risk** | N/A — no engine, so no `docs/engine-reference/` VERSION.md |
+| **References Consulted** | None |
+| **Post-Cutoff APIs Used** | None |
+| **Verification Required** | None |
+
+## ADR Dependencies
+
+| Field | Value |
+|-------|-------|
+| **Depends On** | ADR-0001 |
+| **Enables** | None (superseded) |
+| **Blocks** | None |
+| **Ordering Note** | Superseded by ADR-0025, which removes age, lifespan, the fictional calendar, checkpoints and retry and voids Q116-Q119. The time-bank rules this ADR also states survive unchanged in ADR-0007. Read those two instead. |
+
+## GDD Requirements Addressed
+
+None. Superseded: nothing in `design/gdd/systems-index.md` is governed by this ADR. Time and tempo now follow ADR-0007 and ADR-0025.
