@@ -26,7 +26,7 @@ Still open: whether ten minutes survives human play, and whether the ridge, at r
 
 ## Status
 
-Proposed
+Accepted
 
 ## Date
 

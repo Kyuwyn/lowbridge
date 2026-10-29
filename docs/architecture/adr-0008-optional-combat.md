@@ -20,7 +20,7 @@ Still open: detailed resolution, encounter frequency and variety, equipment and 
 
 ## Status
 
-Proposed
+Accepted
 
 ## Date
 

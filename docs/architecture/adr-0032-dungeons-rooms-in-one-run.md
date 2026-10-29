@@ -38,7 +38,7 @@ Still open: a shared room pool once a third dungeon shares a room; a boss room t
 
 ## Status
 
-Proposed
+Accepted
 
 ## Date
 

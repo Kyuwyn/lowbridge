@@ -33,7 +33,7 @@ Still open: aligned intermediate calendar targets for both journeys, representat
 
 ## Status
 
-Proposed
+Accepted
 
 ## Date
 

@@ -40,7 +40,7 @@ Still open: whether a hobby should ever run at full pace (a later arrangement co
 
 ## Status
 
-Proposed
+Accepted
 
 ## Date
 

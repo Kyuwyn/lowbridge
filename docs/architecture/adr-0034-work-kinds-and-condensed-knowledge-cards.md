@@ -30,7 +30,7 @@ Still open: whether later chapters' knowledges should be migrated to kinds as th
 
 ## Status
 
-Proposed
+Accepted
 
 ## Date
 

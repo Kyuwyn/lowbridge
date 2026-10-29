@@ -14,7 +14,7 @@ See [ADR 0003](adr-0003-opening-anchors.md) for the opening decisions, [ADR 0012
 
 ## Status
 
-Proposed
+Accepted
 
 ## Date
 

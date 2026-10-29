@@ -54,7 +54,7 @@ The [fourth-breakthrough draft](../../design/FOURTH-BREAKTHROUGH-DRAFT.md) devel
 
 ## Status
 
-Proposed
+Accepted
 
 ## Date
 

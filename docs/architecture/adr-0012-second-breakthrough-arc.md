@@ -63,7 +63,7 @@ Q95 accepts an old, settled landslide as the first route investigation: part of 
 
 ## Status
 
-Proposed
+Accepted
 
 ## Date
 

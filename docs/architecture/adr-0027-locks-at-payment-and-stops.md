@@ -24,7 +24,7 @@ Still open: whether a later chapter wants a real decision pause, authored as a s
 
 ## Status
 
-Proposed
+Accepted
 
 ## Date
 

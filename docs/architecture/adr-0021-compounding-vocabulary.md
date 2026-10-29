@@ -44,7 +44,7 @@ Still open: the magnitude of any patch, and whether a patch deserves a log line 
 
 ## Status
 
-Proposed
+Accepted
 
 ## Date
 

@@ -19,7 +19,7 @@ Still open: the number and identities of sects and characters, membership benefi
 
 ## Status
 
-Proposed
+Accepted
 
 ## Date
 

@@ -34,7 +34,7 @@ Still open: per-level effects for knowledges introduced after the first slice, a
 
 ## Status
 
-Proposed
+Accepted
 
 ## Date
 

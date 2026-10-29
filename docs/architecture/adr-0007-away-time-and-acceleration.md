@@ -28,7 +28,7 @@ Q46 explicitly distinguishes the bank from character and world state restored by
 
 ## Status
 
-Proposed
+Accepted
 
 ## Date
 

@@ -65,7 +65,7 @@ Status: Accepted for chapter 1 and the ridge; every number is content and provis
 
 ## Status
 
-Proposed
+Accepted
 
 ## Date
 

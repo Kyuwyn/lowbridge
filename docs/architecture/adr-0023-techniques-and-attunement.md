@@ -50,7 +50,7 @@ Still open: the slot schedule beyond Foundation, whether releasing an attunement
 
 ## Status
 
-Proposed
+Accepted
 
 ## Date
 

@@ -20,7 +20,7 @@ See the [source study](../../research/arcanum-study-2026-10-16/CLASS-MASTERY-STU
 
 ## Status
 
-Proposed
+Accepted
 
 ## Date
 

@@ -53,7 +53,7 @@ Still open: whether a third tier of pairs should ever occupy two places; whether
 
 ## Status
 
-Proposed
+Accepted
 
 ## Date
 

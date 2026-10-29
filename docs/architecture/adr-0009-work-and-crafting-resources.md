@@ -20,7 +20,7 @@ Still open: individual jobs and how they become available, earnings and work dur
 
 ## Status
 
-Proposed
+Accepted
 
 ## Date
 

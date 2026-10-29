@@ -74,7 +74,7 @@ Q107 accepts one shared settling draught for the optional faster continuation ac
 
 ## Status
 
-Proposed
+Accepted
 
 ## Date
 

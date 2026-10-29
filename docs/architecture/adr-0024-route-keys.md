@@ -46,7 +46,7 @@ Still open: the keys each later slice grants; and whether a key should ever be r
 
 ## Status
 
-Proposed
+Accepted
 
 ## Date
 

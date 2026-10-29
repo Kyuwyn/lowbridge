@@ -17,7 +17,7 @@ The [campaign outline](../../design/CAMPAIGN-OUTLINE.md) consolidates the accept
 
 ## Status
 
-Proposed
+Accepted
 
 ## Date
 

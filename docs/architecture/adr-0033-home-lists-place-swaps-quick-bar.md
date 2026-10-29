@@ -23,7 +23,7 @@ Still open: whether a later home should offer a second place of one kind; a quic
 
 ## Status
 
-Proposed
+Accepted
 
 ## Date
 

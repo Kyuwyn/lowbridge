@@ -34,7 +34,7 @@ Still open: whether any later stage wants a bounded non-terminal cost in place o
 
 ## Status
 
-Proposed
+Accepted
 
 ## Date
 

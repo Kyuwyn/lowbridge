@@ -32,7 +32,7 @@ Still open: a Craft knowledge or family that the fifth make could train; Alchemy
 
 ## Status
 
-Proposed
+Accepted
 
 ## Date
 

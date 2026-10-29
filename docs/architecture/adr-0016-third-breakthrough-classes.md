@@ -56,7 +56,7 @@ Q91 accepts the five practical demonstrations: maintain taught circulation throu
 
 ## Status
 
-Proposed
+Accepted
 
 ## Date
 
