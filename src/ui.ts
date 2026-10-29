@@ -1,6 +1,6 @@
 import { GAUGE, GameEngine, WAITING_MAX } from "./engine";
 import type { ActiveTask, BillRow, Changes, GameRecord, GameState, LogEntry, Objective, Stat, TooltipBlock, TooltipBlockKind } from "./types";
-import { homeCategories, openingContext, routeKeys } from "./content";
+import { homeCategories, openingContext, routeKeys, uiIds } from "./content";
 
 export interface UICallbacks {
   beforeChange?(): void;
@@ -47,11 +47,11 @@ const groups: { id: string; title: string; tab: Tab; matches(record: GameRecord)
   { id: "preparations", title: "Preparations", tab: "craft", matches: record => record.kind === "preparation" },
 ];
 const notActions = new Set(["resource", "family", "flag", "breakthrough", "lead", "work"]);
-const bodyIds = ["vigor", "qi", "life", "strain", "focus"];
+const bodyIds: readonly string[] = uiIds.body;
 /** The slip's leaf eight as each reading completes it: the chipped sentence is finished by the method you settle on. */
 const rebuiltLeaf: Record<string, string> = {
-  carry_current: "“…when the pooled breath turns, do not follow it. Wait at the turning. The rest is to take it up and carry it where you are going.”",
-  settle_breath: "“…when the pooled breath turns, do not follow it. Wait at the turning. The rest is to let it down and keep still while it settles.”",
+  [uiIds.carryCurrent]: "“…when the pooled breath turns, do not follow it. Wait at the turning. The rest is to take it up and carry it where you are going.”",
+  [uiIds.settleBreath]: "“…when the pooled breath turns, do not follow it. Wait at the turning. The rest is to let it down and keep still while it settles.”",
 };
 /** How far ahead the unattended-runway probe may look: a day is longer than any bank. */
 const runwayHorizon = 86400;
@@ -566,9 +566,9 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
     wasFighting = fighting;
     tabViews.get("fight")!.button.hidden = !fight || !encounter;
     if (!fight || !record || !encounter) { if (selectedTab === "fight") selectedTab = "tasks"; return; }
-    const { foe } = encounter, Foe = `${foe.name.charAt(0).toUpperCase()}${foe.name.slice(1)}`, lifeName = label("life");
+    const { foe } = encounter, Foe = `${foe.name.charAt(0).toUpperCase()}${foe.name.slice(1)}`, lifeName = label(uiIds.life);
     const room = fight.room === undefined ? undefined : record.rooms![fight.room]!;
-    const limit = room ? room.length : engine.stat(record.id).length, life = engine.stat("life");
+    const limit = room ? room.length : engine.stat(record.id).length, life = engine.stat(uiIds.life);
     setText(fightTitle, room ? `${label(record.id)} · ${room.name}` : label(record.id));
     setText(fightStatus, !fight.result ? `Fighting ${foe.name} · ${duration(fight.seconds)} of ${duration(limit)}`
       : fight.result === "won" ? `${Foe} falls after ${duration(fight.seconds)}.`
@@ -816,7 +816,7 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
     }
     const ownedText = mode !== "instant" ? "Done" : record.kind === "home" ? "Current home" : record.kind === "arrangement" ? "Installed" : "Owned";
     const modeText = mode === "timed" ? "Timed · takes the activity slot until done" : mode === "continuous" ? "Continuous · takes the activity slot until its objective"
-      : record.cost && "vigor" in record.cost ? "Instant chore · spends Vigor" : "Instant · leaves the activity running";
+      : record.cost && uiIds.vigor in record.cost ? "Instant chore · spends Vigor" : "Instant · leaves the activity running";
     /** Redraws the cell and says what the tab counts: whether it carries a New or Next mark, and whether it matches the ledger filter. */
     function update(): { marked: boolean; match: boolean } {
       const unshown = { marked: false, match: false };
@@ -835,7 +835,7 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
       const resume = !running && stat.paid, waste = !locked && !owned ? wasteText(stat) : "", isNext = nextIds.has(record.id) && !owned && !running && steerable;
       const place = engine.state.waiting.findIndex(entry => entry.id === record.id) + 1;
       if (queue) queue.hidden = !queueing || running || owned || place > 0 || Boolean(record.autoStart);
-      const isNew = !seenIds.has(record.id) && !owned && !running && record.id !== "rest" && !isNext;
+      const isNew = !seenIds.has(record.id) && !owned && !running && record.id !== uiIds.rest && !isNext;
       const use = filterResource ? resourceUse(record, filterResource) : { gives: false, spends: false };
       const mark = running || owned ? "" : use.gives && use.spends ? "Gives · spends" : use.gives ? "Gives" : use.spends ? "Spends" : "";
       const home = (engine.finished(record.id) ? doneGroups.get(tab)?.grid : undefined) ?? grid;
@@ -850,7 +850,7 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
       }
       if (hobby) {
         const asHobby = engine.state.hobby === record.id;
-        hobby.hidden = running || owned || !engine.has("hobby_slots") || engine.stat("hobby_slots").max < 1;
+        hobby.hidden = running || owned || !engine.has(uiIds.hobbySlots) || engine.stat(uiIds.hobbySlots).max < 1;
         setText(hobby, asHobby ? "Hobby · running" : "Hobby");
         hobby.disabled = asHobby;
         hobby.setAttribute("aria-pressed", String(asHobby));
@@ -903,7 +903,7 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
         render();
       }
     });
-    ui(preparation ? "preparations" : body ? "body" : record.id === "coin" ? "currency" : "materials").append(row);
+    ui(preparation ? "preparations" : body ? "body" : record.id === uiIds.coin ? "currency" : "materials").append(row);
     return { record, body, preparation, row, amount, bar, note, detail, tipFlow };
   });
   const familyRows = engine.records.filter(record => record.kind === "family").map(record => {
@@ -968,7 +968,7 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
   /** One panel per breakthrough; Foundation's keeps the `foundation-*` hooks the smoke test drives. */
   const journeyRank = (id: string) => { const index = openingContext.breakthroughs.indexOf(id); return index < 0 ? openingContext.breakthroughs.length : index; };
   const breakthroughPanels = engine.records.filter(record => record.breakthrough).sort((a, b) => journeyRank(a.id) - journeyRank(b.id)).map(record => {
-    const breakthrough = record.breakthrough!, settlingLabel = record.id === "settling", primary = settlingLabel;
+    const breakthrough = record.breakthrough!, settlingLabel = record.id === uiIds.settling, primary = settlingLabel;
     const panel = element("section", "foundation-panel");
     panel.innerHTML = `<div class="section-heading"><h3 data-part="title"></h3><span class="mode-badge mode-timed">Timed breakthrough</span></div><div class="foundation-body"><div class="foundation-checks"><div><h4>The core</h4><ul class="foundation-list" data-part="core"></ul></div><div><h4 data-part="count"></h4><ul class="foundation-list" data-part="pointers"></ul></div></div><div class="foundation-footer"><div><h4 class="foundation-bill-heading">The bill</h4><ul class="foundation-list foundation-bill" data-part="bill"></ul><p class="card-facts" data-part="time"></p><h4 class="foundation-rewards-heading">On completion</h4><ul class="foundation-rewards" data-part="rewards"></ul><p class="card-requirement" data-part="need"></p></div><button type="button" class="primary-button card-button" data-part="start" data-action="start"></button></div><details class="action-details"><summary>Breakthrough details</summary><p class="card-description" data-part="description"></p></details></div>`;
     const part = <T extends HTMLElement = HTMLElement>(name: string) => {
@@ -1124,7 +1124,7 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
   /** The hobby place under the slot: a practice at half pace, with its own Stop. It shows only once the place exists. */
   ui("hobby-stop").addEventListener("click", () => { void change(() => { const result = engine.stopHobby(); if (!result.ok) announce(result.reason); }); });
   function renderHobby(): void {
-    const block = ui("hobby"), place = engine.records.some(record => record.id === "hobby_slots") && engine.stat("hobby_slots").max >= 1;
+    const block = ui("hobby"), place = engine.records.some(record => record.id === uiIds.hobbySlots) && engine.stat(uiIds.hobbySlots).max >= 1;
     block.hidden = !place;
     if (!place) return;
     const hobby = engine.state.hobby;
@@ -1164,9 +1164,9 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
   }
   /** What the completion banner celebrates: Reedmarket, the latest breakthrough, or arriving at the waystation, which ends the ridge. */
   function latestCompletion(): GameRecord | undefined {
-    if (current("reedmarket") > 0) return engine.record("reedmarket");
+    if (current(uiIds.reedmarket) > 0) return engine.record(uiIds.reedmarket);
     const reached = latestBreakthrough();
-    return current("waystation") > 0 && reached?.id !== "second_direction" ? engine.record("waystation") : reached;
+    return current(uiIds.waystation) > 0 && reached?.id !== uiIds.secondDirection ? engine.record(uiIds.waystation) : reached;
   }
   ui("completion-dismiss").addEventListener("click", () => {
     const latest = latestCompletion();
@@ -1182,26 +1182,26 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
   function renderCompletion(completion: GameRecord): void {
     const reached = latestBreakthrough(), standings = reached ? standingsOf(reached) : [];
     let title: string, text: string, story = "", heading = "", changes: string[] = [], review: string;
-    if (completion.id === "waystation") {
+    if (completion.id === uiIds.waystation) {
       // The crossing's own completion entry dates the arrival; time spent resting there since does not count.
-      const crossing = engine.records.find(record => record.result && "waystation" in record.result && engine.stat(record.id).reps > 0);
+      const crossing = engine.records.find(record => record.result && uiIds.waystation in record.result && engine.stat(record.id).reps > 0);
       const arrived = crossing && engine.state.log.find(entry => entry.kind === "completion" && entry.text.startsWith(`${crossing.name ?? crossing.id}:`));
-      title = label("waystation");
+      title = label(uiIds.waystation);
       text = [reached?.breakthrough?.title, ...standings, `${duration(arrived?.activitySeconds ?? engine.state.activitySeconds)} of activity`].filter(Boolean).join(" · ");
       story = "A fire, a ledger, and a keeper who asks which way you came up. The road goes on above the waystation.";
       review = "Review the road ahead";
-    } else if (completion.id === "settling") {
+    } else if (completion.id === uiIds.settling) {
       title = "Foundation reached";
       text = "The method holds. What was an incomplete reading is now your own.";
       heading = "What Foundation changed"; changes = blockLines(engine.tooltip(completion.id), "mod");
       review = "Review Foundation";
-    } else if (completion.id === "reedmarket") {
-      title = label("reedmarket");
+    } else if (completion.id === uiIds.reedmarket) {
+      title = label(uiIds.reedmarket);
       text = [engine.title(), `${duration(engine.state.activitySeconds)} of activity`].join(" · ");
       story = "A street of stalls at the basin's edge, and three leaves of the slip somewhere beyond it.";
       review = "Review the road ahead";
     } else {
-      const second = completion.id === "second_direction";
+      const second = completion.id === uiIds.secondDirection;
       title = `${completion.breakthrough?.title ?? label(completion.id)}${standings.length ? `: ${standings.join(" · ")}` : ""}`;
       text = second ? "The title is read from what you hold. A fifth method can be held, a hobby runs beside the slot, and the terrace above the slide is open."
         : `${completion.breakthrough?.title ?? label(completion.id)}. The direction holds, and the way up to the ridge waystation is open to a held method of its school.`;
@@ -1242,12 +1242,12 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
   function render(status?: string): void {
     if (disposed) return;
     if (status !== undefined) saveStatus = status;
-    const state = engine.state, active = state.active, foundationReached = current("foundation") > 0;
+    const state = engine.state, active = state.active, foundationReached = current(uiIds.foundation) > 0;
     const bankFull = state.bank.seconds + 1e-9 >= state.bank.cap, accelerating = state.bank.accelerating;
     const filler = active ? engine.record(active.id).autoStart === true : false;
     setText(ui("save-status"), saveStatus); setText(ui("bank-amount"), `${duration(state.bank.seconds)} / ${duration(state.bank.cap)}`); bankMeter.update(state.bank.seconds, state.bank.cap);
     ui("bank").classList.toggle("is-full", bankFull && !active); ui("bank").classList.toggle("is-accelerating", accelerating);
-    setText(ui("stage"), current("reedmarket") > 0 ? "Reedmarket" : current("second_direction") > 0 ? "The basin road" : current("waystation") > 0 ? "The ridge" : foundationReached ? "Foundation" : "The village");
+    setText(ui("stage"), current(uiIds.reedmarket) > 0 ? "Reedmarket" : current(uiIds.secondDirection) > 0 ? "The basin road" : current(uiIds.waystation) > 0 ? "The ridge" : foundationReached ? "Foundation" : "The village");
     const scene = [...openingContext.scenes].reverse().find(candidate => engine.condition(candidate.when)) ?? openingContext.scenes[0]!;
     // The scene sets the stage's accent, so the climb from the village reads in the chrome as well as the copy.
     shell.dataset.stage = scene.id;
@@ -1291,7 +1291,7 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
     // Past Foundation the engine names the standing itself: the highest class held, else Foundation.
     setText(ui("character-stage"), engine.title());
     const home = engine.records.find(record => record.kind === "home" && current(record.id) > 0 && engine.visible(record.id));
-    const homeName = home?.name ?? openingContext.place, homeSpace = engine.stat("home_space");
+    const homeName = home?.name ?? openingContext.place, homeSpace = engine.stat(uiIds.homeSpace);
     setText(ui("home-name"), homeName); setText(ui("home-space"), `${number(homeSpace.value)} / ${number(homeSpace.max)} occupied`);
     // The waiting list matters once there is a second sustained pursuit to hand the slot to.
     const sustained = new Set(cells.filter(cell => modeOf(cell.record) !== "instant" && !cell.record.autoStart && engine.visible(cell.record.id)).map(cell => cell.record.id));
@@ -1367,12 +1367,12 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
       const shown = group.grid.querySelectorAll(".task-cell:not([hidden])").length;
       group.details.hidden = shown === 0; setText(group.count, shown ? String(shown) : "");
     }
-    const apprenticed = current("shu_apprentice") > 0;
+    const apprenticed = current(uiIds.shuApprentice) > 0;
     // The spellbook opens with the first technique the method makes available.
     const techniquesVisible = cells.some(cell => cell.tab === "techniques" && !cell.cell.hidden);
     const craftVisible = cells.some(cell => cell.tab === "craft" && !cell.cell.hidden);
     // How many methods are held ready, of how many can be; absent until the content defines attunement at all.
-    const slots = engine.records.some(record => record.id === "attune_slots") ? engine.stat("attune_slots") : undefined;
+    const slots = engine.records.some(record => record.id === uiIds.attuneSlots) ? engine.stat(uiIds.attuneSlots) : undefined;
     techniqueHead.gauge.hidden = !slots;
     if (slots) {
       setText(techniqueHead.value, `${number(slots.value)} / ${number(slots.max)}`);
@@ -1402,7 +1402,7 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
     const completion = latestCompletion();
     ui("completion").hidden = !completion || seenCompletion === completion.id; ui("completion-detail").hidden = !foundationReached;
     if (completion) renderCompletion(completion);
-    const atWaystation = current("waystation") > 0, atReedmarket = current("reedmarket") > 0, secondTaken = current("second_direction") > 0;
+    const atWaystation = current(uiIds.waystation) > 0, atReedmarket = current(uiIds.reedmarket) > 0, secondTaken = current(uiIds.secondDirection) > 0;
     setText(ui("completion-heading"), atReedmarket ? "Beyond Reedmarket" : secondTaken ? "Beyond the Second Direction" : atWaystation ? "Beyond the waystation" : "Beyond Foundation");
     setText(ui("completion-stage"), atReedmarket ? "Stage complete" : secondTaken ? "The terrace lies ahead" : atWaystation ? "The basin road lies ahead" : "The ridge lies ahead");
     setText(ui("completion-lead"), atReedmarket
@@ -1419,11 +1419,11 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
         : atWaystation
           ? "Four things on Han's board: route records toward the basin, a chime at dusk, a spur that ends at a slide, and the slip's other nine leaves. Each sphere carried to five opens a deeper teaching; two spheres deepened and three methods held take the Second Direction."
           : "Old Ridge rises beyond the porters' path. Walk its outskirts to find the teachings; any sphere carried to four takes the First Direction, and a held method of its school carries you to the waystation.");
-    ui("slip").hidden = current("jade_slip") === 0; ui("character-methods").hidden = visibleFamilies === 0;
+    ui("slip").hidden = current(uiIds.jadeSlip) === 0; ui("character-methods").hidden = visibleFamilies === 0;
     // A reading is settled once its rival has closed, which happens the moment it is first attuned.
     const reading = Object.keys(rebuiltLeaf).find(id => engine.has(id) && !engine.locked(id) && (engine.record(id).lock ?? []).some(other => engine.locked(other)));
-    const leafHunt = engine.has("slip_leaves") && engine.visible("slip_leaves");
-    const recovered = leafHunt ? ` · ${3 + engine.tagCount("t_leaf") + 2 * Number(engine.has("shu_three_leaves") && current("shu_three_leaves") > 0 && !engine.locked("shu_three_leaves"))} of 12 recovered` : "";
+    const leafHunt = engine.has(uiIds.slipLeaves) && engine.visible(uiIds.slipLeaves);
+    const recovered = leafHunt ? ` · ${3 + engine.tagCount(uiIds.leafKey) + 2 * Number(engine.has(uiIds.shuThreeLeaves) && current(uiIds.shuThreeLeaves) > 0 && !engine.locked(uiIds.shuThreeLeaves))} of 12 recovered` : "";
     setText(ui("slip-summary"), `${reading ? "The Cracked Jade Slip · leaves 1, 2 and 8, the eighth rebuilt" : "The Cracked Jade Slip · leaves 1, 2, 8"}${recovered}`);
     ui("slip-rebuilt").hidden = !reading;
     if (reading) setText(ui("slip-rebuilt"), `Leaf 8, as you have rebuilt it through ${label(reading)}: ${rebuiltLeaf[reading]}`);
@@ -1435,7 +1435,7 @@ export function createUI(initialEngine: GameEngine, callbacks: UICallbacks): Low
     }
     keySection.hidden = keysHeld === 0;
     const reached = latestBreakthrough();
-    setText(ui("character-stage-detail"), !foundationReached ? "Mortal, no breakthrough yet" : reached && reached.id !== "settling" ? `Foundation · ${reached.breakthrough?.title ?? reached.name}` : "Foundation");
+    setText(ui("character-stage-detail"), !foundationReached ? "Mortal, no breakthrough yet" : reached && reached.id !== uiIds.settling ? `Foundation · ${reached.breakthrough?.title ?? reached.name}` : "Foundation");
     setText(ui("character-time"), duration(state.activitySeconds));
     // A lead's `need` is its resolution (the route runner counts it reached then); until it holds, the lead says what is still owed.
     for (const { record, item, status } of leadItems) {

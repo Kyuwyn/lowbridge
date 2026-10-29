@@ -41,6 +41,36 @@ export const routeKeys: Record<string, RouteKey> = {
 /** The Home tab's lists, in the order shown; every arrangement names one as its `category`. */
 export const homeCategories = ["Rest", "Practice", "Study", "Herbs", "Storage", "Craft"] as const;
 
+/**
+ * Every content id and route key the interface names by hand, and only these (ADR 0038). `src/ui.ts`
+ * reads them from here, and `bun run validate` fails when one names no record or key, so a rename
+ * breaks the check instead of the page.
+ */
+export const uiIds = {
+  /** The Body panel's gauges, in display order. */
+  body: ["vigor", "qi", "life", "strain", "focus"],
+  vigor: "vigor",
+  life: "life",
+  rest: "rest",
+  coin: "coin",
+  homeSpace: "home_space",
+  attuneSlots: "attune_slots",
+  hobbySlots: "hobby_slots",
+  settling: "settling",
+  foundation: "foundation",
+  waystation: "waystation",
+  secondDirection: "second_direction",
+  reedmarket: "reedmarket",
+  jadeSlip: "jade_slip",
+  slipLeaves: "slip_leaves",
+  leafKey: "t_leaf",
+  shuApprentice: "shu_apprentice",
+  shuThreeLeaves: "shu_three_leaves",
+  /** The two readings of leaf eight, whose rebuilt sentence the Character tab quotes. */
+  carryCurrent: "carry_current",
+  settleBreath: "settle_breath",
+} as const;
+
 export const openingContext: { title: string; place: string; scenes: Scene[]; beats: StoryBeat[]; breakthroughs: string[] } = {
   /** The breakthroughs in the order the journey takes them; the shell celebrates the latest one held. */
   breakthroughs: ["settling", "first_direction", "second_direction"],

@@ -1,4 +1,4 @@
-import { homeCategories, openingContext, routeKeys, records as sourceRecords } from "../src/content";
+import { homeCategories, openingContext, routeKeys, uiIds, records as sourceRecords } from "../src/content";
 import opening from "../src/data/opening.json";
 import ridge from "../src/data/ridge.json";
 import shared from "../src/data/shared.json";
@@ -384,6 +384,10 @@ export function validateContext(records: GameRecord[]): string[] {
   }
   for (const tag of Object.keys(routeKeys)) if (!carried.has(tag)) errors.push(`routeKeys names ${tag}, which no record carries`);
   for (const beat of openingContext.beats) for (const id of beat.focus) if (!ids.has(id)) errors.push(`beat ${beat.id}: focus names unknown record ${id}`);
+  // The interface names these by hand; a rename must fail here, not blank a panel (ADR 0038).
+  for (const [role, value] of Object.entries(uiIds)) for (const id of [value].flat()) {
+    if (id.startsWith("t_") ? !routeKeys[id] : !ids.has(id)) errors.push(`uiIds.${role} names ${id}, which is not a ${id.startsWith("t_") ? "route key" : "record"}`);
+  }
   const listed = new Set(openingContext.breakthroughs);
   for (const id of listed) if (records.find(record => record.id === id)?.kind !== "breakthrough") errors.push(`openingContext.breakthroughs names ${id}, which is not a breakthrough`);
   for (const record of records) if (record.kind === "breakthrough" && !listed.has(record.id)) errors.push(`breakthrough ${record.id} is missing from openingContext.breakthroughs, the journey's order`);
