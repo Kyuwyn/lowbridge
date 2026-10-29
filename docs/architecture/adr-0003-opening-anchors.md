@@ -34,3 +34,36 @@ These anchors do not establish a chosen-one history, the method's provenance, a 
 The opening's two investigations and their broad reward roles are now accepted: the channel yields a useful home arrangement, while the hollow yields a technique useful in the field. Exact effects, names, individual scenes, and costs remain design work.
 
 This is the first-arc design checkpoint: the opening direction, core rules, and activity package are accepted. Remaining details include the method's source, exact improvement effects, how routine objectives are selected and presented, breakthrough requirements, and expedition stop/resume details. The next interview slice concerns the world after the first breakthrough and the structure of later path commitment. Acceptance of the activity package does not settle every proposed mechanic or scene in the working draft.
+
+## Status
+
+Accepted
+
+## Date
+
+2026-10-29. This records the retrofit that added the template sections; the decision itself dates from 16 October 2026, as the status line at the top says.
+
+## Engine Compatibility
+
+| Field | Value |
+|-------|-------|
+| **Engine** | None — TypeScript 7.0 on Bun 1.4.3, plain DOM |
+| **Domain** | Core |
+| **Layer** | Feature |
+| **Knowledge Risk** | N/A — no engine, so no `docs/engine-reference/` VERSION.md |
+| **References Consulted** | None |
+| **Post-Cutoff APIs Used** | None |
+| **Verification Required** | None |
+
+## ADR Dependencies
+
+| Field | Value |
+|-------|-------|
+| **Depends On** | ADR-0001 |
+| **Enables** | ADR-0013, ADR-0022, ADR-0024, ADR-0026 |
+| **Blocks** | None |
+| **Ordering Note** | Later ADRs overtake some rows above: ADR-0025 removes the lifespan and retry rows and the lifespan cost of outings; ADR-0027 means discoveries never pause an outing; ADR-0028 replaces "within the first day" with about ten active minutes to Foundation; ADR-0022 adds instant chores and a waiting list beside the one primary activity. Read those before relying on those rows. |
+
+## GDD Requirements Addressed
+
+No system GDD exists yet. This ADR governs Practice and knowledge, Breakthroughs, directions and titles, and Time, tempo and the activity slot in `design/gdd/systems-index.md`; trace its rows to their requirements when those GDDs are written.
