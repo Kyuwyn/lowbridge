@@ -31,3 +31,36 @@ Every path's ridge site is also sped by one opening knowledge (Lore for the insc
 Effects stay small because direct play is paced by ordinary activity: the measured direct routes must remain inside the opening's 35-45-minute Foundation window and the ridge's 90-240-minute waystation window, which `bun run validate` enforces. Saves from versions 3 and 4 are credited for knowledge levels and milestones already earned.
 
 Still open: per-level effects for knowledges introduced after the first slice, and balance beyond the measured routes.
+
+## Status
+
+Proposed
+
+## Date
+
+2026-10-29. This records the retrofit that added the template sections; the decision itself dates from 19 October 2026, as the status line at the top says.
+
+## Engine Compatibility
+
+| Field | Value |
+|-------|-------|
+| **Engine** | None — TypeScript 7.0 on Bun 1.4.3, plain DOM |
+| **Domain** | Core |
+| **Layer** | Core |
+| **Knowledge Risk** | N/A — no engine, so no `docs/engine-reference/` VERSION.md |
+| **References Consulted** | None |
+| **Post-Cutoff APIs Used** | None |
+| **Verification Required** | None |
+
+## ADR Dependencies
+
+| Field | Value |
+|-------|-------|
+| **Depends On** | ADR-0013 |
+| **Enables** | ADR-0021, ADR-0034 |
+| **Blocks** | None |
+| **Ordering Note** | ADR-0028 replaces its Foundation and ridge time windows with the validator bands. ADR-0030 turns each direction and its crossing into one First Direction. ADR-0025 voids the old-save credit sentence. ADR-0034 limits per-level effects for kinds spanning chapters to `mod`, `held` and `at`. Cited but not listed as dependencies (superseded, or written later): ADR-0026. |
+
+## GDD Requirements Addressed
+
+No system GDD exists yet. This ADR governs Practice and knowledge in `design/gdd/systems-index.md`; trace its rules to their requirements when those GDDs are written.

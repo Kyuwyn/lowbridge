@@ -48,3 +48,36 @@ The floor still sits between two bounds. Below parity, an attentive player is ne
 **Amendment, 27 October 2026 (wages).** The review found Wen's wage paying coin that the First Direction sign "Two hundred coin earned in wages" did not count, and running on after the ferry road had closed the mill. The fifth sack now adds +0.05/s to `coin_earned` beside the +0.05 coin/s, so the wage counts as wages. `ferry_hauling` carries a `mod` that cancels both rates once taken (`-0.05 * (g.mill_work.reps >= 5)`), since the ferry road closes the mill, and its `warn` says so: "The ferry road closes the sack work at the mill for good, and Wen's wage with it." The mill's and the ferry's descriptions and Wen's "hires a boy" line say the same.
 
 Still open: the passive rates once measured in play; the first later-chapter earner and the loop count that should make it worth leaving running; and whether `boost` wants a second flag here.
+
+## Status
+
+Proposed
+
+## Date
+
+2026-10-29. This records the retrofit that added the template sections; the decision itself dates from 20 October 2026, amended 27 October 2026, as the status line at the top says.
+
+## Engine Compatibility
+
+| Field | Value |
+|-------|-------|
+| **Engine** | None — TypeScript 7.0 on Bun 1.4.3, plain DOM |
+| **Domain** | Core |
+| **Layer** | Core |
+| **Knowledge Risk** | N/A — no engine, so no `docs/engine-reference/` VERSION.md |
+| **References Consulted** | None |
+| **Post-Cutoff APIs Used** | None |
+| **Verification Required** | None |
+
+## ADR Dependencies
+
+| Field | Value |
+|-------|-------|
+| **Depends On** | ADR-0003, ADR-0007 |
+| **Enables** | ADR-0023, ADR-0026, ADR-0027, ADR-0028, ADR-0029, ADR-0031, ADR-0032 |
+| **Blocks** | None |
+| **Ordering Note** | ADR-0027 amends the stop rules: locks apply at payment and a discovery never stops the slot. ADR-0028 sets the pacing bands. ADR-0031 adds the hobby slot and has Rest refill Focus. ADR-0032 extends the reserve rule to every dungeon room. Cited but not listed as dependencies (superseded, or written later): ADR-0023, ADR-0026. |
+
+## GDD Requirements Addressed
+
+No system GDD exists yet. This ADR governs Time, tempo and the activity slot in `design/gdd/systems-index.md`; trace its rules to their requirements when those GDDs are written.

@@ -60,3 +60,36 @@ Q93 accepts a small market settlement on the outer edge of the Cloudwell basin a
 Q94 selects one short route-finding expedition on the first journey from the waystation to the market settlement. The records provide a lead that must be investigated before the connection becomes routine travel. Once the route is established, later trips in either direction use ordinary travel time and lifespan without repeating that investigation. Early access remains possible for every starting class; breakthrough 3, the optional survey spur, combat, sect membership, and relocation are not prerequisites. Q95 settles the route problem below; exact approaches, gear, pauses, costs, and durations remain open. Normal checkpoint restoration still applies to route discoveries.
 
 Q95 accepts an old, settled landslide as the first route investigation: part of the recorded ridge trail is gone. Comparing surviving rock landmarks from an accessible rise reveals an intact terrace reconnecting with the road below. The cultivator traces the walkable bypass and continues to the market settlement, establishing ordinary travel in both directions. Any starting class can complete the investigation through observation and suitable ordinary preparation; no road rebuilding or later cultivation ability is required. Exact landmarks, approaches, intermediate pauses, gear, costs, and durations remain open.
+
+## Status
+
+Proposed
+
+## Date
+
+2026-10-29. This records the retrofit that added the template sections; the decision itself dates from 16 October 2026, updated 17 October 2026, as the status line at the top says.
+
+## Engine Compatibility
+
+| Field | Value |
+|-------|-------|
+| **Engine** | None — TypeScript 7.0 on Bun 1.4.3, plain DOM |
+| **Domain** | Core |
+| **Layer** | Feature |
+| **Knowledge Risk** | N/A — no engine, so no `docs/engine-reference/` VERSION.md |
+| **References Consulted** | None |
+| **Post-Cutoff APIs Used** | None |
+| **Verification Required** | None |
+
+## ADR Dependencies
+
+| Field | Value |
+|-------|-------|
+| **Depends On** | ADR-0005, ADR-0007, ADR-0008 |
+| **Enables** | ADR-0013, ADR-0014, ADR-0016, ADR-0018 |
+| **Blocks** | None |
+| **Ordering Note** | Its first-class rows and class-specific crossings are overtaken by ADR-0014, then ADR-0030, which uses one First Direction, derived titles and crossings that read a held half. ADR-0025 voids the lifespan costs and checkpoint clauses. Chapter two (ADR-0030, ADR-0031) realises the regional travel and slide-bypass rows. Cited but not listed as dependencies (superseded, or written later): ADR-0004. |
+
+## GDD Requirements Addressed
+
+No system GDD exists yet. This ADR governs Breakthroughs, directions and titles in `design/gdd/systems-index.md`; trace its rules to their requirements when those GDDs are written.

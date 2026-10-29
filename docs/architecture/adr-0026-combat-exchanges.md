@@ -62,3 +62,36 @@ Status: Accepted for chapter 1 and the ridge; every number is content and provis
 **Amendment, 27 October 2026 (the cache).** The review found the cache reachable only through a fight that the Earth and Formation lines cannot win, so their players were shut out of a reward the Body and Sword lines could take. The two tracing sites in §7 give those lines a non-fight path; the Body and Sword lines still fight for it. §7 was re-checked after the change: the bandit's numbers, the Strike figures at Foundation and the Body and Sword lines are untouched, so the "Cannot win" verdict on the direct routes at Foundation and the near-certain wins after the Body and Sword crossings stand. What changed is that the Earth and Formation direct routes, which used to leave the cache, now trace and search it (`bun run validate`, 122/122 records reachable).
 
 **Still open.** Stances or other per-fight approaches beyond held methods; foe techniques; per-swing effects (healing, damage over time, Qi spent in a fight); critical hits; dungeons of several fights and how Life carries between them; encounter pools; a bestiary; whether a fight's rolls should be seeded at entry.
+
+## Status
+
+Proposed
+
+## Date
+
+2026-10-29. This records the retrofit that added the template sections; the decision itself dates from 21 October 2026, amended 27 October 2026, as the status line at the top says.
+
+## Engine Compatibility
+
+| Field | Value |
+|-------|-------|
+| **Engine** | None — TypeScript 7.0 on Bun 1.4.3, plain DOM |
+| **Domain** | Core |
+| **Layer** | Feature |
+| **Knowledge Risk** | N/A — no engine, so no `docs/engine-reference/` VERSION.md |
+| **References Consulted** | None |
+| **Post-Cutoff APIs Used** | None |
+| **Verification Required** | None |
+
+## ADR Dependencies
+
+| Field | Value |
+|-------|-------|
+| **Depends On** | ADR-0003, ADR-0008, ADR-0021, ADR-0022, ADR-0023, ADR-0024 |
+| **Enables** | ADR-0029, ADR-0030, ADR-0031, ADR-0032 |
+| **Blocks** | None |
+| **Ordering Note** | ADR-0030 turns its class figures into held figures. ADR-0031 adds foe techniques and rules stances out of this slice. ADR-0032 lets a fight be one room of a dungeon. |
+
+## GDD Requirements Addressed
+
+No system GDD exists yet. This ADR governs Fights in `design/gdd/systems-index.md`; trace its rules to their requirements when those GDDs are written.

@@ -71,3 +71,36 @@ Q105 accepts the remaining preparation for reinforced and grounded internal circ
 Q106 accepts reusable setup for the arrangement and measured-pulse routes at the full trial site. The arrangement fits the taught layout to known currents using ordinary reusable field markers, with components and reachable controls placed before intake and active tending during the attempt. The pulse route uses a suitable ordinary blade, an accessible narrow feeding thread identified from archive guidance and site observations, and a stable position where the thread is perceptible and within demonstrated range. Suitable existing equipment, earlier knowledge, and gentle demonstrations count; only missing setup needs restoration on later attempts. The arrangement requires active tending, and the blade route needs no separate formation or special spirit weapon. Both support slower settling without mandatory additional consumables. Intended-class readiness still applies. Exact equipment, setup time, costs, and durations remain open.
 
 Q107 accepts one shared settling draught for the optional faster continuation across the three trial approaches. Carry a dose into the attempt; after intake stops, choosing the faster response consumes it to help existing circulation settle and release the held qi sooner while the chosen technique continues as required. Every supported history can buy and use it before breakthrough 4; making it personally is optional. The settling draught is separate from the baseline conditioning dose: conditioning supports the exposure approach, while settling shortens the remaining work. Both can serve their distinct purposes in one attempt. Choosing slower settling or withdrawing at the pause leaves the draught unused. The choice shows remaining time, lifespan cost, and the dose spent. Exact seller, recipe, price, and time saved remain open.
+
+## Status
+
+Proposed
+
+## Date
+
+2026-10-29. This records the retrofit that added the template sections; the decision itself dates from 16 October 2026, updated 18 October 2026, as the status line at the top says.
+
+## Engine Compatibility
+
+| Field | Value |
+|-------|-------|
+| **Engine** | None — TypeScript 7.0 on Bun 1.4.3, plain DOM |
+| **Domain** | Core |
+| **Layer** | Feature |
+| **Knowledge Risk** | N/A — no engine, so no `docs/engine-reference/` VERSION.md |
+| **References Consulted** | None |
+| **Post-Cutoff APIs Used** | None |
+| **Verification Required** | None |
+
+## ADR Dependencies
+
+| Field | Value |
+|-------|-------|
+| **Depends On** | ADR-0005, ADR-0007, ADR-0008, ADR-0010, ADR-0012, ADR-0013, ADR-0014, ADR-0016, ADR-0017 |
+| **Enables** | ADR-0019 |
+| **Blocks** | None |
+| **Ordering Note** | Breakthrough 4 is outside the current slice. ADR-0025 voids the lifespan and checkpoint rows and leaves the setback rule. ADR-0027 limits activity stops to its listed stops, so the trial's mid-trial pause must be authored as an objective stop. ADR-0030's model has not yet been applied to this trial's classes. Cited but not listed as dependencies (superseded, or written later): ADR-0002. |
+
+## GDD Requirements Addressed
+
+No system GDD exists yet. This ADR governs Breakthroughs, directions and titles in `design/gdd/systems-index.md`; trace its rules to their requirements when those GDDs are written.

@@ -37,3 +37,36 @@ Status: Accepted semantics for the engine expansions shipped with the basin road
 **Supersessions.** Supersedes design plan Part A rule 12's "strain gauges" wording with the two named gauges, Strain and Focus; supersedes rule 13's hobby schedule (B3 grants it) with "the Second Direction grants one hobby slot". Settles ADR 0026's open foe techniques, and ADR 0029's open lasting preparation; ADR 0026's open "stances" is settled as *not for this slice* (§3). Amends ADR 0026 §5: the "time to fell" figures are mean outcome times from the exact replay, not average races.
 
 Still open: whether a hobby should ever run at full pace (a later arrangement could raise `HOBBY_RATE` through content if it became a derived field); a third gauge; per-swing effects beyond a heavier strike (healing, Qi spent in a fight); whether a pre-fight loadout should return at a method's price once the basin has more than one fight; whether an effect should stack to a cap rather than reset; and the balance of every figure above.
+
+## Status
+
+Proposed
+
+## Date
+
+2026-10-29. This records the retrofit that added the template sections; the decision itself dates from 27 October 2026, as the status line at the top says.
+
+## Engine Compatibility
+
+| Field | Value |
+|-------|-------|
+| **Engine** | None — TypeScript 7.0 on Bun 1.4.3, plain DOM |
+| **Domain** | Core |
+| **Layer** | Feature |
+| **Knowledge Risk** | N/A — no engine, so no `docs/engine-reference/` VERSION.md |
+| **References Consulted** | None |
+| **Post-Cutoff APIs Used** | None |
+| **Verification Required** | None |
+
+## ADR Dependencies
+
+| Field | Value |
+|-------|-------|
+| **Depends On** | ADR-0022, ADR-0025, ADR-0026, ADR-0029, ADR-0030 |
+| **Enables** | ADR-0032, ADR-0033 |
+| **Blocks** | None |
+| **Ordering Note** | Withdrew its own stances the same day (section 3). No later ADR amends it; ADR-0032 and ADR-0033 restate its settlements unchanged. |
+
+## GDD Requirements Addressed
+
+No system GDD exists yet. This ADR governs Home, furnishings and the hobby place; Resources, caps and derived-field recompute; Fights; Crafting, preparations and draughts; Save and persistence in `design/gdd/systems-index.md`; trace its rules to their requirements when those GDDs are written.

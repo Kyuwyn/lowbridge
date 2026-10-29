@@ -27,3 +27,36 @@ Four kinds replace today's repeated targets with identical numbers: Reading work
 **Consequences.** No save change: work kinds have no history worth saving, derived fields are never saved, and a new id loads fresh. `bun run validate` timings are identical to the figures before the change; reachability counts the four kinds (223/223). Adding a target to a kind is now one `work` entry on the action, with no new line on the knowledge's card.
 
 Still open: whether later chapters' knowledges should be migrated to kinds as they are written, and whether the Character tab should offer the full per-target list on demand.
+
+## Status
+
+Proposed
+
+## Date
+
+2026-10-29. This records the retrofit that added the template sections; the decision itself dates from 28 October 2026, as the status line at the top says.
+
+## Engine Compatibility
+
+| Field | Value |
+|-------|-------|
+| **Engine** | None — TypeScript 7.0 on Bun 1.4.3, plain DOM |
+| **Domain** | Core |
+| **Layer** | Core |
+| **Knowledge Risk** | N/A — no engine, so no `docs/engine-reference/` VERSION.md |
+| **References Consulted** | None |
+| **Post-Cutoff APIs Used** | None |
+| **Verification Required** | None |
+
+## ADR Dependencies
+
+| Field | Value |
+|-------|-------|
+| **Depends On** | ADR-0013, ADR-0020, ADR-0021 |
+| **Enables** | None |
+| **Blocks** | None |
+| **Ordering Note** | None. It amends ADR-0020 for kinds whose members span more than one chapter. It adds the `work` record kind, so it is not UI-only. |
+
+## GDD Requirements Addressed
+
+No system GDD exists yet. This ADR governs Practice and knowledge; Content grammar and expressions; Interface in `design/gdd/systems-index.md`; trace its rules to their requirements when those GDDs are written.

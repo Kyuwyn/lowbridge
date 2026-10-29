@@ -29,3 +29,36 @@ Status: Accepted three-verb model, the `preparation` kind, the workbench as the 
 **Supersessions.** Settles the open part of [ADR 0009](adr-0009-work-and-crafting-resources.md): recipes exist, materials have a kept use, and a recipe is timed work at a bench rather than a purchase. Adds `preparation` to the kinds in design plan Part D. Does not change [ADR 0022](adr-0022-chore-tempo.md): chores stay instant; a recipe is timed because the bench is a place you stand at, not a click.
 
 Still open: a Craft knowledge or family that the fifth make could train; Alchemy's Refining line and Essence for B3 and later; whether made pieces can be sold; whether a lost fight should spend a kit piece; and the balance of every bonus, in particular whether Strike +2 trivialises the ridge bandit at Circulation 3 to 5.
+
+## Status
+
+Proposed
+
+## Date
+
+2026-10-29. This records the retrofit that added the template sections; the decision itself dates from 27 October 2026, as the status line at the top says.
+
+## Engine Compatibility
+
+| Field | Value |
+|-------|-------|
+| **Engine** | None — TypeScript 7.0 on Bun 1.4.3, plain DOM |
+| **Domain** | Core |
+| **Layer** | Feature |
+| **Knowledge Risk** | N/A — no engine, so no `docs/engine-reference/` VERSION.md |
+| **References Consulted** | None |
+| **Post-Cutoff APIs Used** | None |
+| **Verification Required** | None |
+
+## ADR Dependencies
+
+| Field | Value |
+|-------|-------|
+| **Depends On** | ADR-0006, ADR-0009, ADR-0021, ADR-0022, ADR-0023, ADR-0026 |
+| **Enables** | ADR-0031 |
+| **Blocks** | None |
+| **Ordering Note** | ADR-0031 extends `preparation` with `lasts` and `held`, settling the lasting-preparation question. The save is now v7, not six (ADR-0030, ADR-0031). |
+
+## GDD Requirements Addressed
+
+No system GDD exists yet. This ADR governs Crafting, preparations and draughts; Home, furnishings and the hobby place in `design/gdd/systems-index.md`; trace its rules to their requirements when those GDDs are written.

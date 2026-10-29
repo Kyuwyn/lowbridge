@@ -43,3 +43,36 @@ A technique counts toward its keys once it has been used. The counter has no cei
 **Amendment, 27 October 2026 (the seam in force).** The direction signs no longer name opening furnishings. A seventh key, `t_furnished` ("Furnished home"), is carried by the cot, the herb plot and the strongbox, and all four signs read "A furnished home: a cot, a herb plot or a strongbox" as `g.t_furnished >= 1`. The ridge's coffer now asks only `g.foundation > 0`, and its cottage `g.foundation > 0 && g.home_space.max >= 4`, a shared store rather than the lean-to's id. With no gate left crossing, the last check of the Consequences runs: `validateModuleSeams` fails any `require`, `need`, breakthrough core or pointer, or event `when` in `opening.json` or `ridge.json` that names a record from the other chapter's file. The shared file is exempt: it is the common vocabulary both chapters read, and its own reveals may name chapter records.
 
 Still open: the keys each later slice grants; and whether a key should ever be read as an exclusion (`g.t_hollow == 0`, the reference's "never studied" shape).
+
+## Status
+
+Proposed
+
+## Date
+
+2026-10-29. This records the retrofit that added the template sections; the decision itself dates from 20 October 2026, amended 27 October 2026, as the status line at the top says.
+
+## Engine Compatibility
+
+| Field | Value |
+|-------|-------|
+| **Engine** | None — TypeScript 7.0 on Bun 1.4.3, plain DOM |
+| **Domain** | Core |
+| **Layer** | Feature |
+| **Knowledge Risk** | N/A — no engine, so no `docs/engine-reference/` VERSION.md |
+| **References Consulted** | None |
+| **Post-Cutoff APIs Used** | None |
+| **Verification Required** | None |
+
+## ADR Dependencies
+
+| Field | Value |
+|-------|-------|
+| **Depends On** | ADR-0003, ADR-0023 |
+| **Enables** | ADR-0025, ADR-0026, ADR-0030 |
+| **Blocks** | None |
+| **Ordering Note** | ADR-0030 adds the pill school key, the five deep keys, `t_leaf` and `t_commission`, moves eight ridge records to `shared.json`, and replaces the four direction signs with one `first_direction` whose pointers read keys. Cited but not listed as dependencies (superseded, or written later): ADR-0015. |
+
+## GDD Requirements Addressed
+
+No system GDD exists yet. This ADR governs Techniques and attunement; Content grammar and expressions in `design/gdd/systems-index.md`; trace its rules to their requirements when those GDDs are written.

@@ -21,3 +21,36 @@ Status: Accepted. Date: 27 October 2026. Basis: the design audits of 27 October 
 Still open: whether a later chapter wants a real decision pause, authored as a stop the player is told about rather than a discovery.
 
 **Amendment, 28 October 2026 ([ADR 0033](adr-0033-home-lists-place-swaps-quick-bar.md)).** Point 3 now covers floor pieces only: a piece that fills a place is swapped, never taken down, and the piece it replaces is kept. A swap asks first, in the same words, only when the piece stepping aside holds an attunement place that a method needs.
+
+## Status
+
+Proposed
+
+## Date
+
+2026-10-29. This records the retrofit that added the template sections; the decision itself dates from 27 October 2026, amended 28 October 2026, as the status line at the top says.
+
+## Engine Compatibility
+
+| Field | Value |
+|-------|-------|
+| **Engine** | None — TypeScript 7.0 on Bun 1.4.3, plain DOM |
+| **Domain** | Core |
+| **Layer** | Core |
+| **Knowledge Risk** | N/A — no engine, so no `docs/engine-reference/` VERSION.md |
+| **References Consulted** | None |
+| **Post-Cutoff APIs Used** | None |
+| **Verification Required** | None |
+
+## ADR Dependencies
+
+| Field | Value |
+|-------|-------|
+| **Depends On** | ADR-0007, ADR-0022, ADR-0023 |
+| **Enables** | ADR-0032, ADR-0033 |
+| **Blocks** | None |
+| **Ordering Note** | ADR-0033 narrows point 3: the take-down confirmation covers floor pieces only, and a piece that fills a place is swapped and kept. Points 1, 2 and 4 stand. |
+
+## GDD Requirements Addressed
+
+No system GDD exists yet. This ADR governs Time, tempo and the activity slot; Interface in `design/gdd/systems-index.md`; trace its rules to their requirements when those GDDs are written.

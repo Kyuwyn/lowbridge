@@ -50,3 +50,36 @@ The reference rules at stake:
 - **Amends [ADR 0025](adr-0025-lifespan-and-checkpoints-cut.md)'s save shape**: v7.
 
 Still open: whether a third tier of pairs should ever occupy two places; whether a released deep half should keep its key (today a key counts owned records, and a locked half was never owned, so release changes nothing); whether the Second Direction's hybrid precedence should be a player choice when more than one hybrid matches; and the B4 roster on this model.
+
+## Status
+
+Proposed
+
+## Date
+
+2026-10-29. This records the retrofit that added the template sections; the decision itself dates from 27 October 2026, as the status line at the top says.
+
+## Engine Compatibility
+
+| Field | Value |
+|-------|-------|
+| **Engine** | None — TypeScript 7.0 on Bun 1.4.3, plain DOM |
+| **Domain** | Core |
+| **Layer** | Feature |
+| **Knowledge Risk** | N/A — no engine, so no `docs/engine-reference/` VERSION.md |
+| **References Consulted** | None |
+| **Post-Cutoff APIs Used** | None |
+| **Verification Required** | None |
+
+## ADR Dependencies
+
+| Field | Value |
+|-------|-------|
+| **Depends On** | ADR-0021, ADR-0023, ADR-0024, ADR-0025, ADR-0026 |
+| **Enables** | ADR-0031 |
+| **Blocks** | None |
+| **Ordering Note** | Supersedes ADR-0015 and the rosters of ADR-0016, and amends ADR-0023, ADR-0024, ADR-0026 and ADR-0025's save shape. Its save v7 detail is recorded with ADR-0031, the same-day companion that builds on it; ADR-0031 also withdrew the stances. Cited but not listed as dependencies (superseded, or written later): ADR-0015, ADR-0016, ADR-0031. |
+
+## GDD Requirements Addressed
+
+No system GDD exists yet. This ADR governs Techniques and attunement; Breakthroughs, directions and titles; Save and persistence in `design/gdd/systems-index.md`; trace its rules to their requirements when those GDDs are written.

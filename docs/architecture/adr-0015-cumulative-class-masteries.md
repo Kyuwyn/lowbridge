@@ -24,3 +24,36 @@ The decision does not approve the later class roster, its assignments or mastery
 Subsequent Q67 accepts the five breakthrough-3 candidates, their mastery gates and contributions, and Pill Refiner's accessibility from every starting class through teaching and practical preparation. [ADR 0016](adr-0016-third-breakthrough-classes.md) records that addition; the exact preparation and benefit packages remain open.
 
 See [ADR 0014](adr-0014-early-class-advancements.md) for class timing and the starting directions, [ADR 0013](adr-0013-knowledge-and-practice.md) for practice limits, and [ADR 0002](adr-0002-lifespan-and-retries.md) for checkpoint retries.
+
+## Status
+
+Superseded by ADR-0030
+
+## Date
+
+2026-10-29. This records the retrofit that added the template sections; the decision itself dates from 16 October 2026, as the status line at the top says.
+
+## Engine Compatibility
+
+| Field | Value |
+|-------|-------|
+| **Engine** | None — TypeScript 7.0 on Bun 1.4.3, plain DOM |
+| **Domain** | Core |
+| **Layer** | Feature |
+| **Knowledge Risk** | N/A — no engine, so no `docs/engine-reference/` VERSION.md |
+| **References Consulted** | None |
+| **Post-Cutoff APIs Used** | None |
+| **Verification Required** | None |
+
+## ADR Dependencies
+
+| Field | Value |
+|-------|-------|
+| **Depends On** | ADR-0013, ADR-0014 |
+| **Enables** | None (superseded) |
+| **Blocks** | None |
+| **Ordering Note** | Superseded by ADR-0030, which replaces mastery totals with key counts (`g.t_deep_<sphere>`, `g.t_school_<sphere>`). ADR-0025 voids its checkpoint row. Read ADR-0030 instead. Cited but not listed as dependencies (superseded, or written later): ADR-0002. |
+
+## GDD Requirements Addressed
+
+None. Superseded by ADR-0030: nothing in `design/gdd/systems-index.md` is governed by this ADR.

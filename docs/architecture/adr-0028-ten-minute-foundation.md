@@ -23,3 +23,36 @@ On 27 October the direct routes measured 9.47 min (channel) and 10.73 min (hollo
 **Supersessions.** Supersedes design plan Part E check 4's 45-minute and 27-minute bounds and the bound line that opens Part C, the validator's 720–1200 s and 850 s bands, the ridge window of 900–2700 s, and the README's and PRODUCT.md's fifteen minutes. Does not change [ADR 0019](adr-0019-early-campaign-pacing.md)'s later-stage targets, which stay provisional and unmeasured.
 
 Still open: whether ten minutes survives human play, and whether the ridge, at roughly sixteen to twenty minutes, wants the same honest-play review once later chapters exist.
+
+## Status
+
+Proposed
+
+## Date
+
+2026-10-29. This records the retrofit that added the template sections; the decision itself dates from 27 October 2026, as the status line at the top says.
+
+## Engine Compatibility
+
+| Field | Value |
+|-------|-------|
+| **Engine** | None — TypeScript 7.0 on Bun 1.4.3, plain DOM |
+| **Domain** | Core |
+| **Layer** | Core |
+| **Knowledge Risk** | N/A — no engine, so no `docs/engine-reference/` VERSION.md |
+| **References Consulted** | None |
+| **Post-Cutoff APIs Used** | None |
+| **Verification Required** | None |
+
+## ADR Dependencies
+
+| Field | Value |
+|-------|-------|
+| **Depends On** | ADR-0019, ADR-0022 |
+| **Enables** | ADR-0032 |
+| **Blocks** | None |
+| **Ordering Note** | None. ADR-0030 keeps the Foundation and ridge bands; the basin-road bands live in `design/CHAPTER-2-BASIN-ROAD.md`. |
+
+## GDD Requirements Addressed
+
+No system GDD exists yet. This ADR governs Pacing and route validation in `design/gdd/systems-index.md`; trace its rules to their requirements when those GDDs are written.

@@ -47,3 +47,36 @@ Before them the opening offered three methods, two of which lock each other, so 
 **Amendment, 27 October 2026 (held state).** The review found the hollow's Rest reward paid once the hollow key was carried, so a player who had used *Settle the breath* once and then released it kept the reward. Whether a method is held is now an expression: the engine resolves a read-only field `g.<id>.attuned`, 1 while that method holds an attunement place and 0 otherwise, read from the saved attuned list rather than stored on the stat. `bun run validate` allows it only on records with `attune`. Rest's Composure effect reads it (`0.3 * g.settle_breath.attuned`), so lying still teaches Composure while *Settle the breath* is held and stops when it is released.
 
 Still open: the slot schedule beyond Foundation, whether releasing an attunement should cost anything, whether any later technique should occupy two places, and the balance of qi spent against what each technique pays.
+
+## Status
+
+Proposed
+
+## Date
+
+2026-10-29. This records the retrofit that added the template sections; the decision itself dates from 20 October 2026, amended 27 October 2026, as the status line at the top says.
+
+## Engine Compatibility
+
+| Field | Value |
+|-------|-------|
+| **Engine** | None — TypeScript 7.0 on Bun 1.4.3, plain DOM |
+| **Domain** | Core |
+| **Layer** | Feature |
+| **Knowledge Risk** | N/A — no engine, so no `docs/engine-reference/` VERSION.md |
+| **References Consulted** | None |
+| **Post-Cutoff APIs Used** | None |
+| **Verification Required** | None |
+
+## ADR Dependencies
+
+| Field | Value |
+|-------|-------|
+| **Depends On** | ADR-0013, ADR-0022 |
+| **Enables** | ADR-0024, ADR-0025, ADR-0026, ADR-0027, ADR-0029, ADR-0030, ADR-0033 |
+| **Blocks** | None |
+| **Ordering Note** | ADR-0030 raises attunement places to 4 at the First Direction and 5 at the Second, and turns one method per ridge direction into an opposed pair per sphere. ADR-0033 swaps a place-giving furnishing instead of taking it down. Cited but not listed as dependencies (superseded, or written later): ADR-0015, ADR-0024, ADR-0025. |
+
+## GDD Requirements Addressed
+
+No system GDD exists yet. This ADR governs Techniques and attunement in `design/gdd/systems-index.md`; trace its rules to their requirements when those GDDs are written.

@@ -53,3 +53,36 @@ Q89 accepts the five first applications: more efficient heavy hauling for Iron M
 Q90 accepts three bounded recovery/study objectives: reconstruct the complete conditioning sequence from annotated sheets for Iron Marrow; compare circulation and ground-current accounts for Mountain Vessel; and match a survey plan with its marker-layout overlay and interpret the supplied annotations for Earth Array. Each supplies the intended preparation teaching and eligible missing basics through ordinary study. Only the intended source is required, qualifying earlier study counts, and there is no separate puzzle interface or additional retrieval chain. Teaching alone completes no practical demonstration or common milestone. Exact document names, prose, placement, and durations remain open.
 
 Q91 accepts the five practical demonstrations: maintain taught circulation through manageable load, posture, and exertion changes for Iron Marrow; hold a brief stationary ground connection under understood conditions for Mountain Vessel; make a controlled blade-contact cut without disturbing marked surrounding material for Spirit Blade; configure and manually maintain a small fixed layout through taught adjustments for Earth Array; or produce a usable beginner extract with an ordinary vessel and controlled heating for Pill Refiner. Each uses capabilities available before acquisition. The intended demonstration completes both that class-preparation step and the shared reliable-method milestone, without a duplicate examination. Qualifying earlier work counts; other teaching, mastery, equipment/material, and three-of-five requirements still apply. Exact thresholds, ingredients, and durations remain open.
+
+## Status
+
+Proposed
+
+## Date
+
+2026-10-29. This records the retrofit that added the template sections; the decision itself dates from 16 October 2026, updated 17 October 2026, as the status line at the top says.
+
+## Engine Compatibility
+
+| Field | Value |
+|-------|-------|
+| **Engine** | None — TypeScript 7.0 on Bun 1.4.3, plain DOM |
+| **Domain** | Core |
+| **Layer** | Feature |
+| **Knowledge Risk** | N/A — no engine, so no `docs/engine-reference/` VERSION.md |
+| **References Consulted** | None |
+| **Post-Cutoff APIs Used** | None |
+| **Verification Required** | None |
+
+## ADR Dependencies
+
+| Field | Value |
+|-------|-------|
+| **Depends On** | ADR-0005, ADR-0007, ADR-0008, ADR-0010, ADR-0012, ADR-0013, ADR-0014 |
+| **Enables** | ADR-0017, ADR-0018, ADR-0019, ADR-0030 |
+| **Blocks** | None |
+| **Ordering Note** | ADR-0030 supersedes its class roster and mastery gates, turning them into derived titles, and makes its common milestones the Second Direction's pointers (with leaves added). The prepared milestone with no trial stands. ADR-0025 voids the lifespan references. Cited but not listed as dependencies (superseded, or written later): ADR-0002, ADR-0015. |
+
+## GDD Requirements Addressed
+
+No system GDD exists yet. This ADR governs Breakthroughs, directions and titles in `design/gdd/systems-index.md`; trace its rules to their requirements when those GDDs are written.

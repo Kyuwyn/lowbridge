@@ -20,3 +20,36 @@ Status: Accepted. Date: 28 October 2026. Basis: the owner's requests of 28 Octob
 **Consequences.** `bun run validate` figures are unchanged: the route runner now treats a kept piece as worth nothing (`productive` in `scripts/routes.ts`), so no route swaps back and forth. The browser smoke checks the order of the Home lists, a paid swap, a free swap back, the floor take-down confirmation, binding a technique with Shift+1 and using it with 1 from another view.
 
 Still open: whether a later home should offer a second place of one kind; a quick bar per journey rather than per browser; binding by touch.
+
+## Status
+
+Proposed
+
+## Date
+
+2026-10-29. This records the retrofit that added the template sections; the decision itself dates from 28 October 2026, as the status line at the top says.
+
+## Engine Compatibility
+
+| Field | Value |
+|-------|-------|
+| **Engine** | None — TypeScript 7.0 on Bun 1.4.3, plain DOM |
+| **Domain** | Core |
+| **Layer** | Feature |
+| **Knowledge Risk** | N/A — no engine, so no `docs/engine-reference/` VERSION.md |
+| **References Consulted** | None |
+| **Post-Cutoff APIs Used** | None |
+| **Verification Required** | None |
+
+## ADR Dependencies
+
+| Field | Value |
+|-------|-------|
+| **Depends On** | ADR-0023, ADR-0027, ADR-0031 |
+| **Enables** | None |
+| **Blocks** | None |
+| **Ordering Note** | None. It amends ADR-0027 point 3. It is not UI-only: place swaps keep pieces and the validator requires `category` on slot records. |
+
+## GDD Requirements Addressed
+
+No system GDD exists yet. This ADR governs Home, furnishings and the hobby place; Interface in `design/gdd/systems-index.md`; trace its rules to their requirements when those GDDs are written.

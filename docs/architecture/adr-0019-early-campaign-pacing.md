@@ -30,3 +30,36 @@ Q123 accepts the compact working pace: roughly 3-5 real days through Cloudwell f
 Real elapsed time, simulated activity, and age remain distinct. Banked acceleration advances chosen work with its normal lifespan cost; unused time and decision pauses do not themselves age the cultivator. The stopping and bank rules in [ADR 0007](adr-0007-away-time-and-acceleration.md) and lifespan/retry rules in [ADR 0002](adr-0002-lifespan-and-retries.md) remain in force. Targets do not authorize bypassing meaningful pauses or choosing new activities automatically.
 
 Still open: aligned intermediate calendar targets for both journeys, representative reserve objectives, age display units and calendar convention, exact activity-to-age conversion, lifespan extensions, activity durations, resource costs, exact bank capacity and presentation, and measured differences between supported class histories. These targets do not establish implementation or release readiness.
+
+## Status
+
+Proposed
+
+## Date
+
+2026-10-29. This records the retrofit that added the template sections; the decision itself dates from updated 18 October 2026, as the status line at the top says.
+
+## Engine Compatibility
+
+| Field | Value |
+|-------|-------|
+| **Engine** | None — TypeScript 7.0 on Bun 1.4.3, plain DOM |
+| **Domain** | Core |
+| **Layer** | Core |
+| **Knowledge Risk** | N/A — no engine, so no `docs/engine-reference/` VERSION.md |
+| **References Consulted** | None |
+| **Post-Cutoff APIs Used** | None |
+| **Verification Required** | None |
+
+## ADR Dependencies
+
+| Field | Value |
+|-------|-------|
+| **Depends On** | ADR-0005, ADR-0007, ADR-0014, ADR-0016, ADR-0017, ADR-0018 |
+| **Enables** | ADR-0025, ADR-0028 |
+| **Blocks** | None |
+| **Ordering Note** | ADR-0025 voids Q116-Q119 (lifespan budget, fictional years, starting age and lifespan, the fictional-time scale); Q114 and Q120-Q123 stand as provisional targets. ADR-0028 replaces "Foundation within the first day" with about ten minutes of honest play and keeps the later-stage targets. Cited but not listed as dependencies (superseded, or written later): ADR-0002. |
+
+## GDD Requirements Addressed
+
+No system GDD exists yet. This ADR governs Pacing and route validation in `design/gdd/systems-index.md`; trace its rules to their requirements when those GDDs are written.

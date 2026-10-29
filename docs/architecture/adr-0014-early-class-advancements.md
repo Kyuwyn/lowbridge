@@ -17,3 +17,36 @@ The former single-path replacement/retraining model is no longer the structure f
 The accepted ridge arc still places the prepared second breakthrough before crossing into the waystation. Its recovered teachings, introductions, and capability applications must be developed for the four starting directions. The first substantial lead still points toward another connected region, with relocation separate. Optional combat and sect membership, knowledge-limited practice, and the existing lifespan/time-bank rules remain in force.
 
 See the [source study](../../research/arcanum-study-2026-10-16/CLASS-MASTERY-STUDY.md), [campaign progression decision](adr-0005-campaign-progression.md), and [ridge arc decision](adr-0012-second-breakthrough-arc.md). Earlier three-path records remain design history where they conflict with this accepted early advancement structure.
+
+## Status
+
+Proposed
+
+## Date
+
+2026-10-29. This records the retrofit that added the template sections; the decision itself dates from 16 October 2026, as the status line at the top says.
+
+## Engine Compatibility
+
+| Field | Value |
+|-------|-------|
+| **Engine** | None — TypeScript 7.0 on Bun 1.4.3, plain DOM |
+| **Domain** | Core |
+| **Layer** | Feature |
+| **Knowledge Risk** | N/A — no engine, so no `docs/engine-reference/` VERSION.md |
+| **References Consulted** | None |
+| **Post-Cutoff APIs Used** | None |
+| **Verification Required** | None |
+
+## ADR Dependencies
+
+| Field | Value |
+|-------|-------|
+| **Depends On** | ADR-0005, ADR-0007, ADR-0008, ADR-0010, ADR-0012, ADR-0013 |
+| **Enables** | ADR-0015, ADR-0016, ADR-0017, ADR-0018, ADR-0019 |
+| **Blocks** | None |
+| **Ordering Note** | ADR-0030 replaces the four exclusive starting directions and class picks with one sphere-agnostic Direction per tier, sphere technique pairs and derived titles; the breakthrough 2-4 schedule and the cumulative history stand. ADR-0025 voids the lifespan, checkpoint and retry mentions. Cited but not listed as dependencies (superseded, or written later): ADR-0002, ADR-0004. |
+
+## GDD Requirements Addressed
+
+No system GDD exists yet. This ADR governs Breakthroughs, directions and titles in `design/gdd/systems-index.md`; trace its rules to their requirements when those GDDs are written.

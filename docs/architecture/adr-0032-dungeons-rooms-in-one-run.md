@@ -35,3 +35,36 @@ Status: Accepted semantics for the two basin-road dungeons, the surveyors' adit 
 **Supersessions.** Supersedes ADR 0026's divergence "a fight is a single timed run, not a multi-floor site" with "a fight is a single timed run, or one room of a dungeon". Settles ADR 0026's open "dungeons of several fights and how Life carries between them" (§4) and "encounter pools" (as inline rooms, for this slice). Amends the chapter-two document's groups and record tables.
 
 Still open: a shared room pool once a third dungeon shares a room; a boss room that resets rooms behind it on a loss (rule 27's clash with ADR 0026); a per-room `cost` beyond the drains; healing inside a dungeon (a rest room, a draught taken between rooms); a room list that unlocks entry by entry (rule 36); and the balance of every figure above.
+
+## Status
+
+Proposed
+
+## Date
+
+2026-10-29. This records the retrofit that added the template sections; the decision itself dates from 28 October 2026, as the status line at the top says.
+
+## Engine Compatibility
+
+| Field | Value |
+|-------|-------|
+| **Engine** | None — TypeScript 7.0 on Bun 1.4.3, plain DOM |
+| **Domain** | Core |
+| **Layer** | Feature |
+| **Knowledge Risk** | N/A — no engine, so no `docs/engine-reference/` VERSION.md |
+| **References Consulted** | None |
+| **Post-Cutoff APIs Used** | None |
+| **Verification Required** | None |
+
+## ADR Dependencies
+
+| Field | Value |
+|-------|-------|
+| **Depends On** | ADR-0022, ADR-0026, ADR-0027, ADR-0028, ADR-0031 |
+| **Enables** | None |
+| **Blocks** | None |
+| **Ordering Note** | None. It replaces ADR-0026's single-timed-run divergence and settles 0026's open dungeon items. |
+
+## GDD Requirements Addressed
+
+No system GDD exists yet. This ADR governs Sites and dungeons; Fights in `design/gdd/systems-index.md`; trace its rules to their requirements when those GDDs are written.

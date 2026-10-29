@@ -25,3 +25,36 @@ Still open: the exact storage-cap value, activity-to-fictional-time conversion, 
 Q46 explicitly distinguishes the bank from character and world state restored by a checkpoint. Retrying does not refund banked time spent during the unsuccessful stretch or remove time accumulated afterward. This boundary also applies before the first breakthrough, when character and world state return to the opening starting state. The implementation must preserve elapsed-time accounting so a restore does not credit already processed time again. Character discoveries, skills, purchases, and other post-checkpoint gains still rewind under the ordinary retry rule.
 
 [ADR 0008](adr-0008-optional-combat.md) records the subsequent optional combat control and setback decisions. The [brief](../../design/BRIEF.md) tracks subsequent economic and social scope decisions. See [ADR 0002](adr-0002-lifespan-and-retries.md) for aging and retries and the [brief](../../design/BRIEF.md) for the full accepted campaign direction.
+
+## Status
+
+Proposed
+
+## Date
+
+2026-10-29. This records the retrofit that added the template sections; the decision itself dates from 18 October 2026, as the status line at the top says.
+
+## Engine Compatibility
+
+| Field | Value |
+|-------|-------|
+| **Engine** | None — TypeScript 7.0 on Bun 1.4.3, plain DOM |
+| **Domain** | Core |
+| **Layer** | Core |
+| **Knowledge Risk** | N/A — no engine, so no `docs/engine-reference/` VERSION.md |
+| **References Consulted** | None |
+| **Post-Cutoff APIs Used** | None |
+| **Verification Required** | None |
+
+## ADR Dependencies
+
+| Field | Value |
+|-------|-------|
+| **Depends On** | ADR-0003, ADR-0006 |
+| **Enables** | ADR-0008, ADR-0012, ADR-0013, ADR-0014, ADR-0016, ADR-0018, ADR-0019, ADR-0022, ADR-0025, ADR-0027 |
+| **Blocks** | None |
+| **Ordering Note** | ADR-0025 voids the bank-across-checkpoint-retries row and leaves the lifespan rows with nothing to apply to; the bank itself stands. ADR-0027 means unused away time stops only at an objective or another listed stop, never at a discovery, and away time runs through the slot, then the waiting list (ADR-0022), then the bank. Cited but not listed as dependencies (superseded, or written later): ADR-0002. |
+
+## GDD Requirements Addressed
+
+No system GDD exists yet. This ADR governs Time, tempo and the activity slot in `design/gdd/systems-index.md`; trace its rules to their requirements when those GDDs are written.

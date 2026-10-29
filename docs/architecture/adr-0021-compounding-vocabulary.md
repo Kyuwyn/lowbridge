@@ -41,3 +41,36 @@ Contributions are additive sums; there is no multiplier form. `open` is true if 
 **Amendment, 27 October 2026.** The design audits found that no ridge record patched a chapter-one payout and that the third check above was not run. Both now hold. The ridge's direction classes patch earlier records: Body Disciple adds one Vigor cap per Labour level (`labour.mod.vigor.max`), Earth Listener one Strain cap per Stone Sense level (`stonework.mod.strain.max`), and Formation Student makes the straw pallet, the cot, the practice mat and the herb plot pay more (`straw_pallet.mod.rest.rate`, `cot.mod.rest.rate`, `practice_mat.mod.breath_gathering.rate`, `garden_plot.mod.herbs.rate`). The tooltip shows each patched value with its source. `bun run validate` treats the shared and opening files as the village chapter and the ridge file as the next, and fails with "The ridge patches no earlier chapter's payout; ADR 0021 asks every later chapter for at least one X.mod.Y patch" if a later chapter carries no `X.mod.Y` whose `X` belongs to an earlier one.
 
 Still open: the magnitude of any patch, and whether a patch deserves a log line separate from the cap-raiser line.
+
+## Status
+
+Proposed
+
+## Date
+
+2026-10-29. This records the retrofit that added the template sections; the decision itself dates from 20 October 2026, amended 27 October 2026, as the status line at the top says.
+
+## Engine Compatibility
+
+| Field | Value |
+|-------|-------|
+| **Engine** | None — TypeScript 7.0 on Bun 1.4.3, plain DOM |
+| **Domain** | Core |
+| **Layer** | Foundation |
+| **Knowledge Risk** | N/A — no engine, so no `docs/engine-reference/` VERSION.md |
+| **References Consulted** | None |
+| **Post-Cutoff APIs Used** | None |
+| **Verification Required** | None |
+
+## ADR Dependencies
+
+| Field | Value |
+|-------|-------|
+| **Depends On** | ADR-0013, ADR-0020 |
+| **Enables** | ADR-0025, ADR-0026, ADR-0029, ADR-0030, ADR-0034 |
+| **Blocks** | None |
+| **Ordering Note** | ADR-0030 removes the ridge direction classes whose `mod` tables carried the 27 October example patches; their payouts move into sphere-pair `held` tables. The save it cites is now v7. The patch idiom and the six derived fields stand. Cited but not listed as dependencies (superseded, or written later): ADR-0025. |
+
+## GDD Requirements Addressed
+
+No system GDD exists yet. This ADR governs Content grammar and expressions; Resources, caps and derived-field recompute in `design/gdd/systems-index.md`; trace its rules to their requirements when those GDDs are written.

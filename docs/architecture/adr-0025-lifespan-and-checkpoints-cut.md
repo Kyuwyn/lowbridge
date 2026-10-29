@@ -31,3 +31,36 @@ The reference has no mortality and no checkpoint. Rule 14 (*copy*) names its fou
 **Supersessions.** Supersedes [ADR 0002](adr-0002-lifespan-and-retries.md) in full; that ADR is history, and nothing in it is in force. Amends [ADR 0007](adr-0007-away-time-and-acceleration.md): the bank is unchanged, and only its retry row is void. Amends [ADR 0019](adr-0019-early-campaign-pacing.md): no fictional calendar, no age 18 and lifespan 80, no 0.25 fictional years per activity hour, Q116-Q119 void, Q114 and Q120-Q123 standing and provisional. Supersedes design plan Part A rule 10, Part B.6's conversion line and Part F's "ADR 0002 spent banked time stays spent" row, which together recorded the refund rule this decision withdraws.
 
 Still open: whether any later stage wants a bounded non-terminal cost in place of the cut pressure, and what the Part E playtest question above returns.
+
+## Status
+
+Proposed
+
+## Date
+
+2026-10-29. This records the retrofit that added the template sections; the decision itself dates from 20 October 2026, as the status line at the top says.
+
+## Engine Compatibility
+
+| Field | Value |
+|-------|-------|
+| **Engine** | None — TypeScript 7.0 on Bun 1.4.3, plain DOM |
+| **Domain** | Core |
+| **Layer** | Core |
+| **Knowledge Risk** | N/A — no engine, so no `docs/engine-reference/` VERSION.md |
+| **References Consulted** | None |
+| **Post-Cutoff APIs Used** | None |
+| **Verification Required** | None |
+
+## ADR Dependencies
+
+| Field | Value |
+|-------|-------|
+| **Depends On** | ADR-0005, ADR-0007, ADR-0008, ADR-0019, ADR-0021, ADR-0023, ADR-0024 |
+| **Enables** | ADR-0030, ADR-0031 |
+| **Blocks** | None |
+| **Ordering Note** | ADR-0030 and ADR-0031 move the save from v6 to v7 and keep the rule that older saves are refused, not migrated. Everything else stands. Cited but not listed as dependencies (superseded, or written later): ADR-0002. |
+
+## GDD Requirements Addressed
+
+No system GDD exists yet. This ADR governs Save and persistence; Time, tempo and the activity slot in `design/gdd/systems-index.md`; trace its rules to their requirements when those GDDs are written.

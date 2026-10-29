@@ -51,3 +51,36 @@ Q111 accepts all seven class practice demonstrations: linked bodily circulation 
 Q112 accepts seven optional first applications: Jade Body's exposed-gully observation; Sword Heart's precise mineral-core recovery; Mountain Heart's paid terrace survey; Stone Ward's durable boundary supporting gathering; Spirit Warden's response to a known surge during observation; Spirit Alchemist's preserved herb specimen for a paid comparison; and Golden Cauldron's Alchemy-1 purifying wash that shortens suitable mineral recovery. Needed application knowledge and the recipe are included in the class teaching, without another mandatory teaching or practice tier. Ordinary setup, materials, travel, and activity time still apply. These demonstrate lasting benefits, and necessary campaign resources remain available through other approaches. Exact rewards, materials, effects, costs, and durations remain open.
 
 The [fourth-breakthrough draft](../../design/FOURTH-BREAKTHROUGH-DRAFT.md) develops these accepted directions and checks entry from every qualifying history. Exact lessons, exercise parameters, application details, recipes, capability thresholds, numerical effects, materials, costs, and durations remain in design. Shared trial readiness and class preparation may overlap when an accomplishment actually satisfies both conditions.
+
+## Status
+
+Proposed
+
+## Date
+
+2026-10-29. This records the retrofit that added the template sections; the decision itself dates from updated 18 October 2026, as the status line at the top says.
+
+## Engine Compatibility
+
+| Field | Value |
+|-------|-------|
+| **Engine** | None — TypeScript 7.0 on Bun 1.4.3, plain DOM |
+| **Domain** | Core |
+| **Layer** | Feature |
+| **Knowledge Risk** | N/A — no engine, so no `docs/engine-reference/` VERSION.md |
+| **References Consulted** | None |
+| **Post-Cutoff APIs Used** | None |
+| **Verification Required** | None |
+
+## ADR Dependencies
+
+| Field | Value |
+|-------|-------|
+| **Depends On** | ADR-0008, ADR-0013, ADR-0014, ADR-0016 |
+| **Enables** | ADR-0018, ADR-0019 |
+| **Blocks** | None |
+| **Ordering Note** | Breakthrough 4 is outside the current slice. ADR-0030 leaves this ADR untouched until its chapter is designed; its mastery gates rest on superseded ADR-0015 and will be read as key counts then. ADR-0018 is its companion. ADR-0025 voids the lifespan requirements in its test. Cited but not listed as dependencies (superseded, or written later): ADR-0002, ADR-0015, ADR-0018. |
+
+## GDD Requirements Addressed
+
+No system GDD exists yet. This ADR governs Breakthroughs, directions and titles in `design/gdd/systems-index.md`; trace its rules to their requirements when those GDDs are written.
