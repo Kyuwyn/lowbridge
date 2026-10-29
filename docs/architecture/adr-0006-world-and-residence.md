@@ -20,3 +20,36 @@ Residences should offer both useful conditions and development potential. The br
 Still open: the exact number and identities of regions, their connections and access conditions, travel costs, specific residence conditions, specific improvement choices and capacity values, reconfiguration rules, crafting recipes and material sources, relocation requirements and costs, and the treatment of a former residence. The accepted capacity constraint does not yet select its units, numerical budget, furniture slots, a layout grid, or reconfiguration costs. Focused crafting leaves specific recipes and acquisition routes open.
 
 The [home working design](../../design/HOME-DRAFT.md) illustrates the accepted combination with proposed examples. [ADR 0007](adr-0007-away-time-and-acceleration.md) records the subsequent decision to bank unused away time. Its fixed-cap direction, acceleration for one objective, accrual while open or closed, and retention of the current bank across retries are now accepted. [ADR 0008](adr-0008-optional-combat.md) records the subsequent optional combat decisions. [ADR 0009](adr-0009-work-and-crafting-resources.md) records useful paid work throughout the campaign and currency plus selected materials for focused crafting. The [brief](../../design/BRIEF.md) tracks the current design frontier. Exact checkpoint restoration under [ADR 0002](adr-0002-lifespan-and-retries.md) continues to apply to the home state captured by that checkpoint.
+
+## Status
+
+Accepted
+
+## Date
+
+2026-10-29. This records the retrofit that added the template sections; the decision itself dates from 16 October 2026, as the status line at the top says.
+
+## Engine Compatibility
+
+| Field | Value |
+|-------|-------|
+| **Engine** | None — TypeScript 7.0 on Bun 1.4.3, plain DOM |
+| **Domain** | Core |
+| **Layer** | Feature |
+| **Knowledge Risk** | N/A — no engine, so no `docs/engine-reference/` VERSION.md |
+| **References Consulted** | None |
+| **Post-Cutoff APIs Used** | None |
+| **Verification Required** | None |
+
+## ADR Dependencies
+
+| Field | Value |
+|-------|-------|
+| **Depends On** | ADR-0001, ADR-0003 |
+| **Enables** | ADR-0007, ADR-0008, ADR-0009, ADR-0029 |
+| **Blocks** | None |
+| **Ordering Note** | ADR-0002, which this ADR cites, is superseded and is not a dependency. ADR-0025 voids the checkpoint-restoration sentence and the retention of the bank across retries; ADR-0022 amends the one-primary-activity structure; ADR-0029 and ADR-0033 settle crafting and home detail left open here. |
+
+## GDD Requirements Addressed
+
+No system GDD exists yet. This ADR governs Home, furnishings and the hobby place, and Crafting, preparations and draughts in `design/gdd/systems-index.md`; trace its rows to their requirements when those GDDs are written.
