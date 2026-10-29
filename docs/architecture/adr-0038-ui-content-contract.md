@@ -1,7 +1,7 @@
 # ADR-0038: The interface-to-content contract
 
 ## Status
-Proposed
+Accepted
 
 ## Date
 2026-10-29

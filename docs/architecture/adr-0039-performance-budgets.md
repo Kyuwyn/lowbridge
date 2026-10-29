@@ -1,7 +1,7 @@
 # ADR-0039: Performance budgets for the tick, render and preview
 
 ## Status
-Proposed
+Accepted
 
 ## Date
 2026-10-29
