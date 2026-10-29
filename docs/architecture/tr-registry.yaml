@@ -1,0 +1,416 @@
+# TR-ID registry: stable technical-requirement IDs for Lowbridge.
+# Written by /architecture-review. Append-only: never renumber or delete an entry;
+# mark it deprecated or "superseded-by: TR-<system>-NNN" instead.
+# LAYOUT: section `requirements`, entries `  - id: TR-<system>-NNN` with fields two columns deeper.
+# status: active | deprecated | "superseded-by: TR-<system>-NNN"
+# gdd: the binding document the requirement was extracted from (no system GDDs exist; see design/gdd/systems-index.md).
+version: 1
+last_updated: 2026-10-29
+
+requirements:
+  - id: TR-grammar-001
+    system: "Content grammar"
+    gdd: design/DESIGN-PLAN-2026-10-18.md
+    requirement: "One record vocabulary; the UI renders by field; fields outside the vocabulary fail validation"
+    source: "Plan Part D"
+    status: active
+    created: 2026-10-29
+  - id: TR-grammar-002
+    system: "Content grammar"
+    gdd: design/DESIGN-PLAN-2026-10-18.md
+    requirement: "A restricted expression language in data, one evaluator shared by runtime and validator"
+    source: "Plan Part D, Impl plan"
+    status: active
+    created: 2026-10-29
+  - id: TR-grammar-003
+    system: "Content grammar"
+    gdd: design/DESIGN-PLAN-2026-10-18.md
+    requirement: "Route keys `g.t_<tag>` are derived counters; no gate crosses a chapter file; `shared.json` exempt"
+    source: "Plan A16"
+    status: active
+    created: 2026-10-29
+  - id: TR-grammar-004
+    system: "Content grammar"
+    gdd: design/DESIGN-PLAN-2026-10-18.md
+    requirement: "`g.<id>.attuned` is read-only and allowed only on `attune` records"
+    source: "Plan Part D"
+    status: active
+    created: 2026-10-29
+  - id: TR-grammar-005
+    system: "Content grammar"
+    gdd: design/DESIGN-PLAN-2026-10-18.md
+    requirement: "Work kinds pay every member; a cross-chapter kind takes only `mod`, `held`, `at`"
+    source: "Plan Part D"
+    status: active
+    created: 2026-10-29
+  - id: TR-grammar-006
+    system: "Content grammar"
+    gdd: design/DESIGN-PLAN-2026-10-18.md
+    requirement: "Content is JSON modules concatenated in a fixed order; reveal order is array order"
+    source: "Plan Part D, Impl plan"
+    status: active
+    created: 2026-10-29
+  - id: TR-time-001
+    system: "Time and tempo"
+    gdd: design/DESIGN-PLAN-2026-10-18.md
+    requirement: "Tempo is `length`: instant, timed, continuous"
+    source: "Plan A9"
+    status: active
+    created: 2026-10-29
+  - id: TR-time-002
+    system: "Time and tempo"
+    gdd: design/DESIGN-PLAN-2026-10-18.md
+    requirement: "One slot, a six-deep waiting list, an `autoStart` Rest; runs while away"
+    source: "Plan A9"
+    status: active
+    created: 2026-10-29
+  - id: TR-time-003
+    system: "Time and tempo"
+    gdd: design/DESIGN-PLAN-2026-10-18.md
+    requirement: "A run that cannot pay its next second is refused; an encounter needs its whole reserve"
+    source: "Plan A9"
+    status: active
+    created: 2026-10-29
+  - id: TR-time-004
+    system: "Time and tempo"
+    gdd: design/DESIGN-PLAN-2026-10-18.md
+    requirement: "A timed bill is paid once; its `lock` applies at payment"
+    source: "Plan A9"
+    status: active
+    created: 2026-10-29
+  - id: TR-time-005
+    system: "Time and tempo"
+    gdd: design/IMPLEMENTATION-PLAN-2026-10-18.md
+    requirement: "Discoveries never stop activity; the stop conditions are enumerated"
+    source: "Impl plan"
+    status: active
+    created: 2026-10-29
+  - id: TR-time-006
+    system: "Time and tempo"
+    gdd: design/DESIGN-PLAN-2026-10-18.md
+    requirement: "Bank 1:1, accrues only when nothing runs, never double-credited, acceleration per objective"
+    source: "Plan A9, Impl plan"
+    status: active
+    created: 2026-10-29
+  - id: TR-time-007
+    system: "Time and tempo"
+    gdd: design/DESIGN-PLAN-2026-10-18.md
+    requirement: "A 1-second tick, elapsed-time settlement on return and load, `settle()` before every action"
+    source: "Plan Part D, Impl plan"
+    status: active
+    created: 2026-10-29
+  - id: TR-time-008
+    system: "Time and tempo"
+    gdd: design/CHAPTER-2-BASIN-ROAD.md
+    requirement: "A hobby slot at half pace beside the activity slot"
+    source: "Ch2 C2.6"
+    status: active
+    created: 2026-10-29
+  - id: TR-res-001
+    system: "Resources and recompute"
+    gdd: design/DESIGN-PLAN-2026-10-18.md
+    requirement: "Six derived fields, never saved, rebuilt after every mutation and on load"
+    source: "Plan A14"
+    status: active
+    created: 2026-10-29
+  - id: TR-res-002
+    system: "Resources and recompute"
+    gdd: design/DESIGN-PLAN-2026-10-18.md
+    requirement: "Four contribution sources with their scales; `X.mod.Y` folded in before the payout"
+    source: "Plan A14"
+    status: active
+    created: 2026-10-29
+  - id: TR-res-003
+    system: "Resources and recompute"
+    gdd: design/DESIGN-PLAN-2026-10-18.md
+    requirement: "A fixed-point recompute, bounded so a content cycle fails loudly"
+    source: "Plan Part D"
+    status: active
+    created: 2026-10-29
+  - id: TR-res-004
+    system: "Resources and recompute"
+    gdd: design/DESIGN-PLAN-2026-10-18.md
+    requirement: "Discounts stack and floor at half the listed amount"
+    source: "Plan A9"
+    status: active
+    created: 2026-10-29
+  - id: TR-res-005
+    system: "Resources and recompute"
+    gdd: design/CHAPTER-2-BASIN-ROAD.md
+    requirement: "Focus as a second gauge; outings drain Strain and Focus in different proportions"
+    source: "Ch2"
+    status: active
+    created: 2026-10-29
+  - id: TR-res-006
+    system: "Resources and recompute"
+    gdd: docs/architecture/adr-0032-dungeons-rooms-in-one-run.md
+    requirement: "Drains are charged the same way reserves and tooltips read them"
+    source: "ADR 0032"
+    status: active
+    created: 2026-10-29
+  - id: TR-save-001
+    system: "Save and persistence"
+    gdd: design/DESIGN-PLAN-2026-10-18.md
+    requirement: "Saves hold authoritative history only, are versioned, and older versions are refused by name"
+    source: "Plan Part D"
+    status: active
+    created: 2026-10-29
+  - id: TR-save-002
+    system: "Save and persistence"
+    gdd: design/IMPLEMENTATION-PLAN-2026-10-18.md
+    requirement: "IndexedDB storage (`current` + `backup`) with atomic transactions"
+    source: "Impl plan"
+    status: active
+    created: 2026-10-29
+  - id: TR-save-003
+    system: "Save and persistence"
+    gdd: design/IMPLEMENTATION-PLAN-2026-10-18.md
+    requirement: "Export/import; malformed imports and unknown ids are refused without disturbing the running game"
+    source: "Impl plan"
+    status: active
+    created: 2026-10-29
+  - id: TR-save-004
+    system: "Save and persistence"
+    gdd: CLAUDE.md
+    requirement: "One tab per profile (Web Locks)"
+    source: "CLAUDE.md, `src/main.ts`"
+    status: active
+    created: 2026-10-29
+  - id: TR-save-005
+    system: "Save and persistence"
+    gdd: design/IMPLEMENTATION-PLAN-2026-10-18.md
+    requirement: "A fight and its dungeon room are saved mid-fight"
+    source: "Impl plan"
+    status: active
+    created: 2026-10-29
+  - id: TR-save-006
+    system: "Save and persistence"
+    gdd: design/CHAPTER-2-BASIN-ROAD.md
+    requirement: "Per-browser UI preferences live in `localStorage`, outside the save"
+    source: "Ch2"
+    status: active
+    created: 2026-10-29
+  - id: TR-practice-001
+    system: "Practice and knowledge"
+    gdd: design/DESIGN-PLAN-2026-10-18.md
+    requirement: "Practice grows within current understanding; no universal activity formula"
+    source: "Plan Part F"
+    status: active
+    created: 2026-10-29
+  - id: TR-practice-002
+    system: "Practice and knowledge"
+    gdd: design/DESIGN-PLAN-2026-10-18.md
+    requirement: "Every level pays; milestones at stated levels; per-level effects bounded by chapter"
+    source: "Plan A1"
+    status: active
+    created: 2026-10-29
+  - id: TR-practice-003
+    system: "Practice and knowledge"
+    gdd: design/DESIGN-PLAN-2026-10-18.md
+    requirement: "Every later chapter patches an earlier payout, enforced by the validator"
+    source: "Plan E6"
+    status: active
+    created: 2026-10-29
+  - id: TR-tech-001
+    system: "Techniques and attunement"
+    gdd: design/DESIGN-PLAN-2026-10-18.md
+    requirement: "Learn, attune, use; places are a resource; a falling cap truncates the list; releases are logged"
+    source: "Plan A15"
+    status: active
+    created: 2026-10-29
+  - id: TR-tech-002
+    system: "Techniques and attunement"
+    gdd: design/DESIGN-PLAN-2026-10-18.md
+    requirement: "Opposed pairs lock each other with `warn`; places run 3 → 4 → 5"
+    source: "Plan Part F"
+    status: active
+    created: 2026-10-29
+  - id: TR-tech-003
+    system: "Techniques and attunement"
+    gdd: design/CHAPTER-2-BASIN-ROAD.md
+    requirement: "`held` is paid through one contribution path while attuned or while a preparation is in effect"
+    source: "Ch2"
+    status: active
+    created: 2026-10-29
+  - id: TR-tech-004
+    system: "Techniques and attunement"
+    gdd: design/DESIGN-PLAN-2026-10-18.md
+    requirement: "Places reached never exceed methods some route holds at once (rule 74)"
+    source: "Plan E8"
+    status: active
+    created: 2026-10-29
+  - id: TR-bt-001
+    system: "Breakthroughs"
+    gdd: design/DESIGN-PLAN-2026-10-18.md
+    requirement: "A mandatory core, N-of-M pointers and a bill that pays caps, unlocks and bank cap"
+    source: "Plan A5"
+    status: active
+    created: 2026-10-29
+  - id: TR-bt-002
+    system: "Breakthroughs"
+    gdd: design/DESIGN-PLAN-2026-10-18.md
+    requirement: "A Direction is sphere-agnostic, never locks, and raises every carried sphere"
+    source: "Plan Part F"
+    status: active
+    created: 2026-10-29
+  - id: TR-bt-003
+    system: "Breakthroughs"
+    gdd: design/DESIGN-PLAN-2026-10-18.md
+    requirement: "Titles are derived by ordered events; `title()` counts event `changes`"
+    source: "Plan Part F"
+    status: active
+    created: 2026-10-29
+  - id: TR-fight-001
+    system: "Fights"
+    gdd: design/DESIGN-PLAN-2026-10-18.md
+    requirement: "Six stats, swings on Speed clocks, stats captured at the first second"
+    source: "Plan A17"
+    status: active
+    created: 2026-10-29
+  - id: TR-fight-002
+    system: "Fights"
+    gdd: design/DESIGN-PLAN-2026-10-18.md
+    requirement: "Unseeded rolls in play through an injectable source; scripted in tests; seeded in the validator"
+    source: "Plan E9"
+    status: active
+    created: 2026-10-29
+  - id: TR-fight-003
+    system: "Fights"
+    gdd: design/DESIGN-PLAN-2026-10-18.md
+    requirement: "Exact win chance with graded verdicts and a flip hint; foe techniques inside it"
+    source: "Plan A17"
+    status: active
+    created: 2026-10-29
+  - id: TR-fight-004
+    system: "Fights"
+    gdd: design/IMPLEMENTATION-PLAN-2026-10-18.md
+    requirement: "An undecided fight cannot be stopped or displaced; a finished fight survives automatic starts"
+    source: "Impl plan"
+    status: active
+    created: 2026-10-29
+  - id: TR-fight-005
+    system: "Fights"
+    gdd: design/IMPLEMENTATION-PLAN-2026-10-18.md
+    requirement: "A cost budget for the exact projection, which the tooltip and Fight tab recompute"
+    source: "Impl plan"
+    status: active
+    created: 2026-10-29
+  - id: TR-sites-001
+    system: "Sites and dungeons"
+    gdd: design/CHAPTER-2-BASIN-ROAD.md
+    requirement: "A dungeon is a site with `rooms`; its `length` is derived; no new state"
+    source: "Ch2"
+    status: active
+    created: 2026-10-29
+  - id: TR-sites-002
+    system: "Sites and dungeons"
+    gdd: design/CHAPTER-2-BASIN-ROAD.md
+    requirement: "Doors with a per-room reserve; a lost room resets alone"
+    source: "Ch2"
+    status: active
+    created: 2026-10-29
+  - id: TR-sites-003
+    system: "Sites and dungeons"
+    gdd: design/DESIGN-PLAN-2026-10-18.md
+    requirement: "Outings draw a strain budget; an emptied gauge stops with discoveries kept"
+    source: "Plan A12"
+    status: active
+    created: 2026-10-29
+  - id: TR-home-001
+    system: "Home"
+    gdd: design/CHAPTER-2-BASIN-ROAD.md
+    requirement: "Places are exclusive slots; a swap keeps the piece; place pieces pay only while placed"
+    source: "Ch2"
+    status: active
+    created: 2026-10-29
+  - id: TR-home-002
+    system: "Home"
+    gdd: design/CHAPTER-2-BASIN-ROAD.md
+    requirement: "Every arrangement names a Home category"
+    source: "Ch2"
+    status: active
+    created: 2026-10-29
+  - id: TR-home-003
+    system: "Home"
+    gdd: design/IMPLEMENTATION-PLAN-2026-10-18.md
+    requirement: "Taking down or swapping asks, and names a method it would release"
+    source: "Impl plan"
+    status: active
+    created: 2026-10-29
+  - id: TR-craft-001
+    system: "Crafting"
+    gdd: design/DESIGN-PLAN-2026-10-18.md
+    requirement: "Make, keep, take: recipes are timed and stop at `max` or `fill`; preparations are instant with a `cost`"
+    source: "Plan Part D"
+    status: active
+    created: 2026-10-29
+  - id: TR-craft-002
+    system: "Crafting"
+    gdd: design/CHAPTER-2-BASIN-ROAD.md
+    requirement: "Lasting preparations sit in a saved `effects` list and reset rather than stack"
+    source: "Ch2"
+    status: active
+    created: 2026-10-29
+  - id: TR-ui-001
+    system: "Interface"
+    gdd: design/IMPLEMENTATION-PLAN-2026-10-18.md
+    requirement: "The UI holds no game rules and calls the same engine surface as the route runner"
+    source: "Impl plan"
+    status: active
+    created: 2026-10-29
+  - id: TR-ui-002
+    system: "Interface"
+    gdd: design/gdd/systems-index.md
+    requirement: "The UI names content ids directly; the validator does not catch a rename"
+    source: "Systems index risk"
+    status: active
+    created: 2026-10-29
+  - id: TR-ui-003
+    system: "Interface"
+    gdd: design/DESIGN-PLAN-2026-10-18.md
+    requirement: "One tooltip schema with a fixed block order"
+    source: "Plan C.6"
+    status: active
+    created: 2026-10-29
+  - id: TR-ui-004
+    system: "Interface"
+    gdd: CLAUDE.md
+    requirement: "Desktop first, phone secondary; at ≤650 px the centre column is `display: contents`"
+    source: "CLAUDE.md, Ch2 C2.6"
+    status: active
+    created: 2026-10-29
+  - id: TR-ui-005
+    system: "Interface"
+    gdd: design/IMPLEMENTATION-PLAN-2026-10-18.md
+    requirement: "Native keyboard controls and visible missing requirements"
+    source: "Impl plan"
+    status: active
+    created: 2026-10-29
+  - id: TR-ui-006
+    system: "Interface"
+    gdd: design/DESIGN-PLAN-2026-10-18.md
+    requirement: "TypeScript on Bun, plain DOM, no runtime dependencies"
+    source: "Plan Part F, Impl plan"
+    status: active
+    created: 2026-10-29
+  - id: TR-pacing-001
+    system: "Pacing and validation"
+    gdd: design/DESIGN-PLAN-2026-10-18.md
+    requirement: "Foundation 480–780 s, preference routes ≤1200 s, Circulation by 600 s, ridge 720–1440 s"
+    source: "Plan E4"
+    status: active
+    created: 2026-10-29
+  - id: TR-pacing-002
+    system: "Pacing and validation"
+    gdd: design/CHAPTER-2-BASIN-ROAD.md
+    requirement: "Second Direction 1800–3600 s, arrival ≤900 s, basin timed records ≤300 s, dungeons ≤600 s"
+    source: "Ch2 C2.7"
+    status: active
+    created: 2026-10-29
+  - id: TR-pacing-003
+    system: "Pacing and validation"
+    gdd: design/DESIGN-PLAN-2026-10-18.md
+    requirement: "Routes play the real engine with a fixed seed; every record reachable; every dungeon cleared somewhere"
+    source: "Plan E1, E9"
+    status: active
+    created: 2026-10-29
