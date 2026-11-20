@@ -3,6 +3,7 @@
 > **Status**: Approved 2026-11-20 (lean re-review after the fifth full review; no pillar-level or design blocker. Recommended follow-ups are in the review log and move to implementation: ADR 2/3, the schema module and its tests)
 > **Author**: Will + agents
 > **Last Updated**: 2026-11-20
+> **Amendments**: A1 2026-11-20 — ops-table entries gain `operandRange`, checked at R8.3 step 7 (requested by Modifier pipeline #2 for `scale_bp`; approved by the designer). Touches R6.1, R8.3 step 7, AC-R8-2a, AC-R6-10, ADR 4
 > **Last Verified**: 2026-11-20
 > **Implements Pillar**: 3 (The build is a problem) and 4 (No dead ends, no attention tax); supports 1 (The forge is the milestone) and 2 (Methods matter)
 > **Creative Director Review (CD-GDD-ALIGN)**: REVISED 2026-11-19. Six findings applied: `contrib` is a total map; each method must patch a contribution and a route; no ingredient only fills a slot; protected ids need an alias; the fantasy anchor no longer fixes the preview model; numerals as words in proper names are allowed
@@ -449,8 +450,12 @@ schema row stores as the integer n):
    - An op result that is not a safe integer is a load error naming the method, record and field.
      It is reported at step 7, where the result is first computed, before the row's own
      range.
-   - The loader takes an **ops table** keyed by op name, each entry `{fn, noOpCheck}` where `fn`
-     is a pure function `(current, operand) → int`, so no check here waits on system 2. The MVP
+   - The loader takes an **ops table** keyed by op name, each entry `{fn, noOpCheck,
+     operandRange}` where `fn` is a pure function `(current, operand) → int`, so no check here
+     waits on system 2. `operandRange` is an inclusive integer interval inside ±(2⁵³−1) that a
+     method patch's operand must lie in; for `set` and `add` it is the whole safe range, so
+     their meaning is unchanged (**amendment A1**, 2026-11-20, requested by the Modifier
+     pipeline #2 for `scale_bp`'s 0–100,000 and approved by the designer). The MVP
      set, owned here, is `set` (result = operand) and `add` (result = current + operand), both
      with `noOpCheck: true`. The no-op check of step 7 and F8 runs for every op whose entry says
      `noOpCheck: true`; an op that #2 adds with `false` is exempt, and its own GDD says why. The
@@ -634,7 +639,8 @@ schema row stores as the integer n):
       (R6.1); then its legality (R6.2: the field exists on the target's type, its row includes
       `method`, a bool field takes `set` with 0 or 1, `key` is present exactly on map fields and
       names an existing key, and no earlier entry has the same triple, so a duplicate is
-      reported on the later entry); then the op result is a safe integer; then, for an op whose
+      reported on the later entry); then the operand lies in its op's `operandRange` (R6.1,
+      amendment A1); then the op result is a safe integer; then, for an op whose
       table entry says `noOpCheck: true`, the result differs from the input (F8, R6.1);
    8. every declared product pair stays inside exact integer range (F1, F6);
    9. text is within its limits and passes R4.6 and R7.2: length, trimming, digits, control
@@ -1617,6 +1623,11 @@ names a step asserts the `step` field too.
   not carry (`iron_seed.duration`) (step 7), **WHEN** loaded, **THEN** load error at the step
   shown naming the method. **GIVEN** a method whose `patches` is `[]`, **THEN** it loads and its
   frozen set deep-equals `checked` (the Validator, not the loader, rejects it).
+
+- **AC-R6-10** [unit] (amendment A1) **GIVEN** a test ops table with an op whose
+  `operandRange` is 0–100, **WHEN** a patch uses it with operand 101 or −1, **THEN** load error
+  at step 7 naming the method, record and field, before the op result is computed; operand 100
+  loads (if the result differs from the input).
 ### R7 Values and text
 - **AC-R7-1** [unit] **GIVEN** `smelt_ore.duration` as `1.5`, `"1000"`, `"10%"`, `NaN`,
   `Infinity` or `-0`, **WHEN** loaded, **THEN** load error. **GIVEN** a test schema with a field
@@ -1644,8 +1655,9 @@ names a step asserts the `step` field too.
   lists exactly: the eight R1 types and their fields; the registry rows; the three atoms; the R4.7
   form table with each form's step, including the named checks (`≤ <field>`, `2..M−1`,
   `all keys of type`, `distinct`, `strictly ascending`) and the `n ≤ cap` atom rule; the ordered
-  `rows[]` with per-cell notes; the `owners` list; the R6.1 ops table (`set`, `add`, each
-  `{fn, noOpCheck: true}`); the reserved-id list
+  `rows[]` with per-cell notes; the `owners` list; the R6.1 ops table (`set` and `add`, each
+  `{fn, noOpCheck: true, operandRange}` with the whole safe range, plus the ops #2 adds); the
+  reserved-id list
   with all four R2.1 categories; the label table (R7.2); the placeholder stat names; and the
   declared product-pair list (empty until #2 and #4 declare pairs).
 - **AC-R8-2b** [unit] **[blocked: ADR 2]** **GIVEN** the schema module and its generator,
@@ -1889,7 +1901,8 @@ splits of multi-bullet ACs (R1-2, R1-3, R4-4, R4-9, R5-6, F1) are still recommen
    read (AC-R8-3). It pins the one runtime and version that runs the build-tier text check
    (`bun`, per `package.json`), and records its ICU and Unicode version.
 4. How a patch entry `{target, field, key?, op, operand}` is serialised (`op` is a name), and the
-   ops table (each entry `{fn, noOpCheck}`; the MVP `set` and `add` here; more from #2).
+   ops table (each entry `{fn, noOpCheck, operandRange}`, amendment A1; the MVP `set` and `add`
+   here; `scale_bp` from #2).
 5. The integer helpers (`div_floor`, `bp_of`) and the unit encoding per field.
 6. The content fingerprint algorithm and its digest width (the canonical text and the hex
    rendering are pinned in R8.5).

@@ -128,8 +128,9 @@ are #1's and keep its meaning; `scale_bp` is added here. Every stage uses the sa
   to it like `set` and `add`.
 - No `min`, `max` or `mul` op exists. Ceilings come from the registry ranges (P6) and from the
   operand bounds the owning GDD sets for its own entries (tending's ceilings are #10's).
-- `scale_bp`'s operand range needs one change to #1: an ops entry gains `operandRange`, checked
-  at step 7. That is **amendment A1** (Open Questions), pending the designer's approval.
+- `scale_bp`'s operand range is enforced at load through `operandRange` on its ops entry,
+  checked at #1 R8.3 step 7 (**amendment A1** to #1, applied 2026-11-20). At runtime the stage
+  checks the same range (P3.2).
 
 #### P3. Stage entries
 
@@ -403,8 +404,7 @@ Each case says who catches it: **load error** (#1 R8.3), **validator error** or 
 ### Ops and entries
 
 - **If a method patch uses `scale_bp` with an operand outside 0–100,000**: load error at step 7
-  (amendment A1). Until A1 is applied, the same patch fails because `scale_bp` returns a value
-  that is not a safe integer for an out-of-range operand, so loading still stops at step 7.
+  (`operandRange`, #1 amendment A1), before the op result is computed.
 - **If a method patch uses `scale_bp` and the result equals the input** (for example
   `scale_bp(1, 15000)`): load error (no-op check, #1 F8). The marked set must equal the changed
   set.
@@ -539,7 +539,7 @@ by its record `name`, and a clamp step reads as a limit, never as "clamp".
 |---|---|---|---|
 | P1, P3.2, P5.3 | #1 R4, R4.1, R4.4 | Rows, `modifiableBy`, `sealInput`, the tending/seal rule | Approved |
 | P1.2, P8.1 | #1 R6, R8.1, F8 | `applyMethod`, `checked`, frozen sets, `changed(m)` | Approved |
-| P2 | #1 R6.1 | The ops table; `set` and `add` keep #1's meaning | Approved; A1 pending |
+| P2 | #1 R6.1, R8.3 step 7 | The ops table; `set` and `add` keep #1's meaning; `operandRange` | Approved; A1 applied 2026-11-20 |
 | P6 | #1 R4.5, R4.7 | Clamp after the Foundation and tending stages; range forms | Approved |
 | P7, M1 | #1 F5, F6 | `div_floor`, `bp_of` | Approved |
 | P11 | #1 R8.2, R8.3 step 8 | Declared product pairs | Approved |
@@ -675,7 +675,7 @@ rewrites their input. Review manually before production.*
 
 | # | Question | Owner | Resolve by |
 |---|---|---|---|
-| 1 | **Amendment A1 to #1 R6.1 and R8.3 step 7**: an ops-table entry becomes `{fn, noOpCheck, operandRange}`, and step 7 checks the operand against `operandRange` (for `scale_bp`, 0–100,000). Until applied, `scale_bp`'s `fn` returns a non-safe result for an out-of-range operand, so step 7 still fails, with a less exact cause | Designer | Before the schema module is built |
+| 1 | Resolved 2026-11-20: amendment A1 applied to #1 (ops entries `{fn, noOpCheck, operandRange}`; step 7 checks the operand; `scale_bp` 0–100,000) | Designer | Done |
 | 2 | Is `resource.cap` a seal input (#1 Open Question 1)? If yes, the Foundation stage moves a seal input after the forge | #3 with #6 | #6 GDD |
 | 3 | Which `source` does a Foundation entry carry: the ingredient, the realm, or both as two entries? | #6 | #6 GDD |
 | 4 | Does a tending choice survive the activity stopping (rest filling the slot, live or away)? It decides where #4 splits `advance` | #10 with #4 | #10 GDD |
