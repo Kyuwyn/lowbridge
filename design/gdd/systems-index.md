@@ -72,8 +72,9 @@ output, and the save stores that snapshot.
 to most of a cap (rule 18) and the first cap hit within a minute (rule 17). Caps are what the
 Foundation's makeup sets, so the forge's effect on the next realm is defined here. Caps limit
 the resources activities consume and produce, never which ingredients are held. The concept
-states this, so no makeup is ruled out by storage. The GDD names the caps and affinities, which
-are currently unnamed (concept, Open Questions).
+states this, so no makeup is ruled out by storage. The GDD names the resources and their caps.
+The affinities are named by Forge and proving (#6) instead (designer, 2026-11-20; #1 amendment
+A3).
 
 **4. Activity slot, rest and away time.** One slot for the whole game (anti-pillar; diverges from
 rule 24). An activity runs until it cannot continue (an input runs out, its output is at cap) or
@@ -96,7 +97,7 @@ before any Foundation exists.
 
 **6. Forge and proving.** The heart of pillars 1 and 3 and the hook. A Foundation is exactly
 four distinct ingredients of six (rules 12, 49). The concept diverges from rule 12: no bill and
-no lock. The GDD owns the ingredient records, the Foundation stats, the interactions that make a
+no lock. The GDD owns the ingredient records, the affinity records and their names, the Foundation stats, the interactions that make a
 makeup a trade-off (affinity clashes, caps), the three doors and their door tests, the 0–6 seal
 measure, and the preview rule: seals show only for makeups whose every ingredient is in hand.
 It must show how "no makeup is co-optimal under both methods" holds from interactions alone,
@@ -231,7 +232,7 @@ rules.
 |---|-------------|----------|----------|--------|------------|------------|
 | 1 | Content records and schema (inferred) | Core | MVP | Approved | design/gdd/content-records-and-schema.md | — |
 | 2 | Modifier pipeline and recompute (inferred) | Core | MVP | Approved | design/gdd/modifier-pipeline-and-recompute.md | Content records and schema |
-| 3 | Resources and caps | Economy | MVP | Not Started | — | Content records and schema, Modifier pipeline |
+| 3 | Resources and caps | Economy | MVP | Designed | design/gdd/resources-and-caps.md | Content records and schema, Modifier pipeline |
 | 4 | Activity slot, rest and away time | Core | MVP | Not Started | — | Content records and schema, Modifier pipeline, Resources and caps |
 | 5 | Combat resolver (inferred) | Gameplay | MVP | Approved | design/gdd/combat-resolver.md | Content records and schema |
 | 6 | Forge and proving | Progression | MVP | Not Started | — | Resources and caps, Modifier pipeline, Combat resolver (contract owned by the Forge) |
@@ -240,7 +241,7 @@ rules.
 | 9 | Fight and dungeon routes | Gameplay | MVP | Not Started | — | Activity slot, Combat resolver, Forge and proving, Methods |
 | 10 | Tending | Gameplay | MVP | Not Started | — | Activity slot, Modifier pipeline, Content records and schema (field registry) |
 | 11 | Save and run lifecycle | Persistence | MVP | Not Started | — | Content records and schema, Resources and caps, Activity slot, Forge and proving, Methods |
-| 12 | Content validator and balance enumeration | Meta | MVP | Not Started | — | Content records and schema, Modifier pipeline, Forge and proving, Methods, Crafting route, Fight and dungeon routes, Tending |
+| 12 | Content validator and balance enumeration | Meta | MVP | Not Started | — | Content records and schema, Modifier pipeline, Resources and caps, Forge and proving, Methods, Crafting route, Fight and dungeon routes, Tending |
 | 13 | Interface shell and goal line (inferred) | UI | MVP | Not Started | — | Resources and caps, Activity slot, Forge and proving, Methods, Tending |
 | 14 | Method marks and number breakdowns | UI | MVP | Not Started | — | Modifier pipeline, Methods |
 | 15 | Forge screen (inferred) | UI | MVP | Not Started | — | Forge and proving, Methods, Method marks and number breakdowns |
@@ -482,10 +483,10 @@ session. Wave B starts after the checkpoint, and its order can change on what th
 | Metric | Count |
 |--------|-------|
 | Total systems identified | 20 |
-| Design docs started | 3 |
+| Design docs started | 4 |
 | Design docs reviewed | 3 |
 | Design docs approved | 3 |
-| MVP systems designed | 3/15 |
+| MVP systems designed | 4/15 |
 | Vertical Slice systems designed | 0/3 |
 
 ---

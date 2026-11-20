@@ -7,7 +7,79 @@
 
 entities: []
 
-items: []
+items:
+  - name: ash_tallow
+    status: active
+    source: design/gdd/resources-and-caps.md
+    type: resource
+    tier: raw
+    base_cap: 40
+    start: 0
+    note: "provisional until Crafting route (#8) and Fight and dungeon routes (#9) approve (K1.3)"
+    referenced_by: []
+  - name: ironbark_log
+    status: active
+    source: design/gdd/resources-and-caps.md
+    type: resource
+    tier: raw
+    base_cap: 30
+    start: 0
+    note: provisional (K1.3)
+    referenced_by: []
+  - name: rough_jade
+    status: active
+    source: design/gdd/resources-and-caps.md
+    type: resource
+    tier: raw
+    base_cap: 20
+    start: 0
+    note: provisional (K1.3)
+    referenced_by: []
+  - name: rendered_oil
+    status: active
+    source: design/gdd/resources-and-caps.md
+    type: resource
+    tier: refined
+    base_cap: 12
+    start: 0
+    note: provisional (K1.3)
+    referenced_by: []
+  - name: seasoned_plank
+    status: active
+    source: design/gdd/resources-and-caps.md
+    type: resource
+    tier: refined
+    base_cap: 10
+    start: 0
+    note: provisional (K1.3)
+    referenced_by: []
+  - name: jade_blank
+    status: active
+    source: design/gdd/resources-and-caps.md
+    type: resource
+    tier: refined
+    base_cap: 8
+    start: 0
+    note: provisional (K1.3)
+    referenced_by: []
+  - name: hearth_lamp
+    status: active
+    source: design/gdd/resources-and-caps.md
+    type: resource
+    tier: key item (base cap 1; never an input, read by a reached atom)
+    base_cap: 1
+    start: 0
+    note: provisional (K1.3)
+    referenced_by: []
+  - name: tuning_chisel
+    status: active
+    source: design/gdd/resources-and-caps.md
+    type: resource
+    tier: key item (base cap 1; never an input, read by a reached atom)
+    base_cap: 1
+    start: 0
+    note: provisional (K1.3)
+    referenced_by: []
 
 formulas:
   - name: high_water
@@ -156,6 +228,55 @@ formulas:
     variables: [life_end_C, L_C, life_end_F, L_F]
     output: "loss 0 to 9999; win 10000 to 20000; monotone in every stat"
     referenced_by: []
+  - name: effective_cap
+    status: active
+    source: design/gdd/resources-and-caps.md
+    expression: "cap(id) = final value of (id, cap) in effective(set_m, F, none) (#2 M4) for a resource; INGREDIENT_HELD_MAX for an ingredient"
+    variables: [base, F, INGREDIENT_HELD_MAX]
+    output: "1 to 10^9; the base cap before the forge, then the base cap or a value in raise_envelope"
+    referenced_by: []
+  - name: settle
+    status: active
+    source: design/gdd/resources-and-caps.md
+    expression: "throws unless in <= held (checked before netting); raw = held - in + out; held' = min(raw, cap); lost = raw - held'"
+    variables: [held, in, out, cap]
+    output: "held' 0 to cap; lost 0 to out for a unit, 0 to held - cap for a re-clamp; marks update once after the call"
+    referenced_by: []
+  - name: start_held
+    status: active
+    source: design/gdd/resources-and-caps.md
+    expression: "held0 = min(start, cap) for a resource; 0 for an ingredient"
+    variables: [start, cap]
+    output: "0 to cap; marks start at held0"
+    referenced_by: []
+  - name: room
+    status: active
+    source: design/gdd/resources-and-caps.md
+    expression: "room = cap - held; full = (room = 0)"
+    variables: [cap, held]
+    output: "0 to cap"
+    referenced_by: []
+  - name: raise_envelope
+    status: active
+    source: design/gdd/resources-and-caps.md
+    expression: "lo(b) = max(b + 1, ceil_div(b * RAISE_MIN_BP, 10000)); hi(b) = div_floor(b * RAISE_MAX_BP, 10000); pass if E = b or lo <= E <= hi (b >= 2); E = 1 and no entry for b = 1"
+    variables: [b, E, RAISE_MIN_BP, RAISE_MAX_BP]
+    output: "bool; hi >= lo for every b >= 2"
+    referenced_by: []
+  - name: bill_share
+    status: active
+    source: design/gdd/resources-and-caps.md
+    expression: "share_bp(r) = div_floor(B(r) * 10000, b(r)); B(r) = largest inputs amount of r over sources"
+    variables: [B, b]
+    output: "1 and up; V2 passes from BILL_FLOOR_BP to 10000"
+    referenced_by: []
+  - name: first_cap
+    status: active
+    source: design/gdd/resources-and-caps.md
+    expression: "fill_units = ceil_div(b - start, out); ok = start < b AND fill_units <= div_floor(FIRST_CAP_MS, duration)"
+    variables: [b, start, out, duration, FIRST_CAP_MS]
+    output: "bool; forms no units-times-duration product"
+    referenced_by: []
 
 constants:
   - name: id_max_length
@@ -300,4 +421,28 @@ constants:
     source: design/gdd/combat-resolver.md
     value: 3
     unit: opponents per resolver call (equals max_fights_per_source)
+    referenced_by: []
+  - name: bill_floor_bp
+    status: active
+    source: design/gdd/resources-and-caps.md
+    value: 7000
+    unit: basis points of the base cap (V2 floor for the largest bill)
+    referenced_by: []
+  - name: raise_min_bp
+    status: active
+    source: design/gdd/resources-and-caps.md
+    value: 12000
+    unit: basis points of the base cap (smallest Foundation raise)
+    referenced_by: []
+  - name: raise_max_bp
+    status: active
+    source: design/gdd/resources-and-caps.md
+    value: 17500
+    unit: basis points of the base cap (largest Foundation raise)
+    referenced_by: []
+  - name: first_cap_ms
+    status: active
+    source: design/gdd/resources-and-caps.md
+    value: 45000
+    unit: ms after the commit (V7)
     referenced_by: []
