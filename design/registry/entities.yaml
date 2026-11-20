@@ -1,0 +1,124 @@
+# Entity registry: cross-system facts that one GDD owns and others must not contradict.
+# Created 2026-11-20 by /design-system content-records-and-schema (run by hand).
+# STATUS values: active | deprecated
+# LAYOUT: sections entities, items, formulas, constants at column 0; each entry starts
+#   "  - name: <name>"; fields sit at column 4; a value holding ": " is quoted.
+# Append-only: deprecate an entry, never delete or rename it.
+
+entities: []
+
+items: []
+
+formulas:
+  - name: high_water
+    status: active
+    source: design/gdd/content-records-and-schema.md
+    expression: "high_water[id] = max(high_water_prev[id], held[id]); high_water_prev starts at min(start, effective cap)"
+    variables: [high_water_prev, held]
+    output: "0 to 10^9; never decreases within a run; starts at min(start[id], effective cap)"
+    referenced_by: []
+  - name: atom_met
+    status: active
+    source: design/gdd/content-records-and-schema.md
+    expression: "reached(id, n) = high_water[id] >= n; committed() = committed_method != none; forged(realm) = realm in forged_realms"
+    variables: [high_water, n, committed_method, forged_realms]
+    output: "bool; monotone false to true"
+    referenced_by: []
+  - name: gate_met
+    status: active
+    source: design/gdd/content-records-and-schema.md
+    expression: "true if absent, else AND of atom_met over the gate"
+    variables: [atom_met]
+    output: "bool; monotone"
+    referenced_by: []
+  - name: shortfall
+    status: active
+    source: design/gdd/content-records-and-schema.md
+    expression: "shortfall(id, n) = n - held[id] for each unmet reached atom"
+    variables: [n, held]
+    output: "1 to n"
+    referenced_by: []
+  - name: div_floor
+    status: active
+    source: design/gdd/content-records-and-schema.md
+    expression: "largest integer q with q * d <= a; d >= 1"
+    variables: [a, d]
+    output: "exact integer, rounds toward minus infinity; d <= 0 throws"
+    referenced_by: []
+  - name: bp_of
+    status: active
+    source: design/gdd/content-records-and-schema.md
+    expression: "div_floor(x * b, 10000)"
+    variables: [x, b]
+    output: "exact while |x * b| <= 2^53 - 1"
+    referenced_by: []
+  - name: record_state
+    status: active
+    source: design/gdd/content-records-and-schema.md
+    expression: "hidden if reveal unmet; waiting if no commit; withdrawn if disabled in committed set; actionable if need met; else waiting"
+    variables: [reveal, need, committed_method, enabled]
+    output: "hidden | waiting | withdrawn | actionable; derived, never saved"
+    referenced_by: []
+  - name: method_change_set
+    status: active
+    source: design/gdd/content-records-and-schema.md
+    expression: "changed(m) = set of (target, field, key?) over m.patches; output differs from input exactly there"
+    variables: [patches]
+    output: "0 to |patches| triples"
+    referenced_by: []
+
+constants:
+  - name: id_max_length
+    status: active
+    source: design/gdd/content-records-and-schema.md
+    value: 32
+    unit: code points
+    referenced_by: []
+  - name: name_max_length
+    status: active
+    source: design/gdd/content-records-and-schema.md
+    value: 24
+    unit: code points
+    referenced_by: []
+  - name: desc_max_length
+    status: active
+    source: design/gdd/content-records-and-schema.md
+    value: 80
+    unit: code points
+    referenced_by: []
+  - name: flavor_max_length
+    status: active
+    source: design/gdd/content-records-and-schema.md
+    value: 140
+    unit: code points
+    referenced_by: []
+  - name: commit_text_max_length
+    status: active
+    source: design/gdd/content-records-and-schema.md
+    value: 200
+    unit: code points
+    referenced_by: []
+  - name: basis_point_scale
+    status: active
+    source: design/gdd/content-records-and-schema.md
+    value: 10000
+    unit: basis points per 100 percent
+    referenced_by: []
+  - name: duration_ceiling
+    status: active
+    source: design/gdd/content-records-and-schema.md
+    value: 86400000
+    unit: ms per unit
+    referenced_by: []
+  - name: max_fights_per_source
+    status: active
+    source: design/gdd/content-records-and-schema.md
+    value: 3
+    unit: fights
+    referenced_by: []
+  - name: max_doors_per_realm
+    status: active
+    source: design/gdd/content-records-and-schema.md
+    value: 6
+    unit: doors
+    referenced_by: []
