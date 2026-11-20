@@ -1,6 +1,6 @@
 # Modifier Pipeline and Recompute
 
-> **Status**: Designed 2026-11-20 (pending `/design-review` in a fresh session)
+> **Status**: Approved 2026-11-20 (lean review; recommended follow-ups in `design/gdd/reviews/modifier-pipeline-and-recompute-review-log.md`)
 > **Creative Director Review (CD-GDD-ALIGN)**: NOT ASSESSED 2026-11-20 — auto mode could not check Agent calls in this session (a hook rewrites their input); run the gate or `/design-review` with agents allowed
 > **Author**: Will + agents
 > **Last Updated**: 2026-11-20

@@ -1,6 +1,6 @@
 # Combat Resolver
 
-> **Status**: Designed (pending `/design-review` in a fresh session)
+> **Status**: Approved 2026-11-20 (lean review; recommended follow-ups in `design/gdd/reviews/combat-resolver-review-log.md`)
 > **Creative Director Review (CD-GDD-ALIGN)**: NOT ASSESSED 2026-11-20 — the gate's agent spawn was blocked in the authoring session (auto mode cannot review an Agent call a hook rewrites); run it with `/design-review`
 > **Author**: designer + Claude (`/design-system`)
 > **Last Updated**: 2026-11-20
