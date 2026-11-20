@@ -66,6 +66,48 @@ formulas:
     variables: [patches]
     output: "0 to |patches| triples"
     referenced_by: []
+  - name: op_result
+    status: active
+    source: design/gdd/modifier-pipeline-and-recompute.md
+    expression: "set gives x; add gives v + x; scale_bp gives bp_of(v, x)"
+    variables: [op, v, x]
+    output: "safe integer; inside the row's range only after the stage clamp"
+    referenced_by: []
+  - name: stage_apply
+    status: active
+    source: design/gdd/modifier-pipeline-and-recompute.md
+    expression: "one entry gives op_result(op, v, operand); 1 to 16 add entries with distinct sources give v + sum of operands; no entries give v"
+    variables: [v, entries]
+    output: "abs value at most 17 * B before the clamp (B = row's largest absolute bound)"
+    referenced_by: []
+  - name: stage_clamp
+    status: active
+    source: design/gdd/modifier-pipeline-and-recompute.md
+    expression: "min(max(v, lo), hi) over the row's interval, once per stage, only on values the Foundation or tending stage touched"
+    variables: [v, lo, hi]
+    output: "lo to hi; a changed value adds a clamp step to its trail"
+    referenced_by: []
+  - name: effective_value
+    status: active
+    source: design/gdd/modifier-pipeline-and-recompute.md
+    expression: "clamp_T(stage_apply(clamp_F(stage_apply(v_method, F)), T)); method, then Foundation, then tending; pure in (frozen set, F, T)"
+    variables: [v_method, F, T]
+    output: "the row's range; for a sealInput row tended equals untended"
+    referenced_by: []
+  - name: trail_replay
+    status: active
+    source: design/gdd/modifier-pipeline-and-recompute.md
+    expression: "fold steps from base with op_result (a clamp step takes its result); must equal final"
+    variables: [base, steps]
+    output: "equals final; 0 to 35 steps"
+    referenced_by: []
+  - name: scale_product_bound
+    status: active
+    source: design/gdd/modifier-pipeline-and-recompute.md
+    expression: "max_abs(row) * SCALE_BP_MAX <= 2^53 - 1 for contrib, inputs, outputs, duration, cap"
+    variables: [max_abs, scale_bp_operand_max]
+    output: "true; largest product 10^14"
+    referenced_by: []
 
 constants:
   - name: id_max_length
@@ -162,5 +204,23 @@ constants:
     status: active
     source: design/gdd/content-records-and-schema.md
     value: 20
+    unit: ms, median, build runtime
+    referenced_by: []
+  - name: scale_bp_operand_max
+    status: active
+    source: design/gdd/modifier-pipeline-and-recompute.md
+    value: 100000
+    unit: basis points
+    referenced_by: []
+  - name: max_adds_per_value
+    status: active
+    source: design/gdd/modifier-pipeline-and-recompute.md
+    value: 16
+    unit: add entries per value per stage
+    referenced_by: []
+  - name: recompute_time_ceiling_provisional
+    status: active
+    source: design/gdd/modifier-pipeline-and-recompute.md
+    value: 2
     unit: ms, median, build runtime
     referenced_by: []

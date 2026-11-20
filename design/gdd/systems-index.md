@@ -230,7 +230,7 @@ rules.
 | # | System Name | Category | Priority | Status | Design Doc | Depends On |
 |---|-------------|----------|----------|--------|------------|------------|
 | 1 | Content records and schema (inferred) | Core | MVP | Approved | design/gdd/content-records-and-schema.md | — |
-| 2 | Modifier pipeline and recompute (inferred) | Core | MVP | Not Started | — | Content records and schema |
+| 2 | Modifier pipeline and recompute (inferred) | Core | MVP | Designed | design/gdd/modifier-pipeline-and-recompute.md | Content records and schema |
 | 3 | Resources and caps | Economy | MVP | Not Started | — | Content records and schema, Modifier pipeline |
 | 4 | Activity slot, rest and away time | Core | MVP | Not Started | — | Content records and schema, Modifier pipeline, Resources and caps |
 | 5 | Combat resolver (inferred) | Gameplay | MVP | Not Started | — | Content records and schema |
@@ -482,10 +482,10 @@ session. Wave B starts after the checkpoint, and its order can change on what th
 | Metric | Count |
 |--------|-------|
 | Total systems identified | 20 |
-| Design docs started | 1 |
+| Design docs started | 2 |
 | Design docs reviewed | 1 |
 | Design docs approved | 1 |
-| MVP systems designed | 1/15 |
+| MVP systems designed | 2/15 |
 | Vertical Slice systems designed | 0/3 |
 
 ---
