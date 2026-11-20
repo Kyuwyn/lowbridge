@@ -13,9 +13,9 @@ formulas:
   - name: high_water
     status: active
     source: design/gdd/content-records-and-schema.md
-    expression: "high_water[id] = max(high_water_prev[id], held[id]); high_water_prev starts at min(start, effective cap)"
+    expression: "high_water[id] = max(high_water_prev[id], held[id]), once per unit completion (deduct inputs, add outputs, clamp, then update); high_water_prev starts at min(start, effective cap)"
     variables: [high_water_prev, held]
-    output: "0 to 10^9; never decreases within a run; starts at min(start[id], effective cap)"
+    output: "0 to 10^9; never decreases within a run; starts at min(start[id], effective cap); held never exceeds it; an ingredient is held 0 or 1 (clamped by #3)"
     referenced_by: []
   - name: atom_met
     status: active
@@ -121,4 +121,46 @@ constants:
     source: design/gdd/content-records-and-schema.md
     value: 6
     unit: doors
+    referenced_by: []
+  - name: resource_cap_max
+    status: active
+    source: design/gdd/content-records-and-schema.md
+    value: 1000000000
+    unit: units
+    referenced_by: []
+  - name: contrib_abs_max
+    status: active
+    source: design/gdd/content-records-and-schema.md
+    value: 1000000
+    unit: stat points
+    referenced_by: []
+  - name: stats_max
+    status: active
+    source: design/gdd/content-records-and-schema.md
+    value: 1000000
+    unit: stat points
+    referenced_by: []
+  - name: ingredient_held_max
+    status: active
+    source: design/gdd/content-records-and-schema.md
+    value: 1
+    unit: ingredients
+    referenced_by: []
+  - name: thresholds_count
+    status: active
+    source: design/gdd/content-records-and-schema.md
+    value: 2
+    unit: thresholds per door
+    referenced_by: []
+  - name: safe_integer_max
+    status: active
+    source: design/gdd/content-records-and-schema.md
+    value: 9007199254740991
+    unit: integer
+    referenced_by: []
+  - name: load_time_ceiling_provisional
+    status: active
+    source: design/gdd/content-records-and-schema.md
+    value: 20
+    unit: ms, median, build runtime
     referenced_by: []
