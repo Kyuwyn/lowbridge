@@ -1,6 +1,6 @@
 # Resources and Caps
 
-> **Status**: Designed 2026-11-20 (pending `/design-review` in a fresh session)
+> **Status**: Approved 2026-11-20 (lean review; recommended follow-ups in `design/gdd/reviews/resources-and-caps-review-log.md`)
 > **Author**: Will + agents
 > **Last Updated**: 2026-11-20
 > **Last Verified**: 2026-11-20
