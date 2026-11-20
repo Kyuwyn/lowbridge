@@ -233,7 +233,7 @@ rules.
 | 2 | Modifier pipeline and recompute (inferred) | Core | MVP | Not Started | — | Content records and schema |
 | 3 | Resources and caps | Economy | MVP | Not Started | — | Content records and schema, Modifier pipeline |
 | 4 | Activity slot, rest and away time | Core | MVP | Not Started | — | Content records and schema, Modifier pipeline, Resources and caps |
-| 5 | Combat resolver (inferred) | Gameplay | MVP | Not Started | — | Content records and schema |
+| 5 | Combat resolver (inferred) | Gameplay | MVP | Designed | design/gdd/combat-resolver.md | Content records and schema |
 | 6 | Forge and proving | Progression | MVP | Not Started | — | Resources and caps, Modifier pipeline, Combat resolver (contract owned by the Forge) |
 | 7 | Methods | Progression | MVP | Not Started | — | Forge and proving, Modifier pipeline |
 | 8 | Crafting route | Economy | MVP | Not Started | — | Resources and caps, Activity slot, Forge and proving, Methods |
@@ -482,10 +482,10 @@ session. Wave B starts after the checkpoint, and its order can change on what th
 | Metric | Count |
 |--------|-------|
 | Total systems identified | 20 |
-| Design docs started | 1 |
+| Design docs started | 2 |
 | Design docs reviewed | 1 |
 | Design docs approved | 1 |
-| MVP systems designed | 1/15 |
+| MVP systems designed | 2/15 |
 | Vertical Slice systems designed | 0/3 |
 
 ---

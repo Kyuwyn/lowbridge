@@ -66,6 +66,55 @@ formulas:
     variables: [patches]
     output: "0 to |patches| triples"
     referenced_by: []
+  - name: combat_life_start
+    status: active
+    source: design/gdd/combat-resolver.md
+    expression: "max(1, vigor)"
+    variables: [vigor]
+    output: "1 to 1000000 Life"
+    referenced_by: []
+  - name: combat_hit
+    status: active
+    source: design/gdd/combat-resolver.md
+    expression: "1 if might + guard = 0, else max(1, div_floor(might^2, might + guard))"
+    variables: [might, guard]
+    output: "1 to 1000000 Life per strike"
+    referenced_by: []
+  - name: combat_rate
+    status: active
+    source: design/gdd/combat-resolver.md
+    expression: "SPEED_BASE + speed"
+    variables: [speed, SPEED_BASE]
+    output: "SPEED_BASE to 1000000 + SPEED_BASE strikes per time unit"
+    referenced_by: []
+  - name: combat_strikes_needed
+    status: active
+    source: design/gdd/combat-resolver.md
+    expression: "div_floor(L + hit - 1, hit)"
+    variables: [L, hit]
+    output: "1 to 1000000 strikes"
+    referenced_by: []
+  - name: combat_won
+    status: active
+    source: design/gdd/combat-resolver.md
+    expression: "n(C->F) * rate(F) <= n(F->C) * rate(C); tie goes to the challenger"
+    variables: [n_challenger, n_opponent, rate_challenger, rate_opponent]
+    output: "boolean"
+    referenced_by: []
+  - name: combat_life_left
+    status: active
+    source: design/gdd/combat-resolver.md
+    expression: "win: L_C - div_floor(n(C->F) * rate(F) - 1, rate(C)) * hit(F->C); loss: L_F - div_floor(n(F->C) * rate(C), rate(F)) * hit(C->F)"
+    variables: [L_C, L_F, n_challenger, n_opponent, rate_challenger, rate_opponent, hit_challenger, hit_opponent]
+    output: "1 to starting Life of the winner"
+    referenced_by: []
+  - name: combat_score
+    status: active
+    source: design/gdd/combat-resolver.md
+    expression: "win: 10000 + div_floor(life_end_C * 10000, L_C); loss: div_floor((L_F - life_end_F) * 10000, L_F)"
+    variables: [life_end_C, L_C, life_end_F, L_F]
+    output: "loss 0 to 9999; win 10000 to 20000; monotone in every stat"
+    referenced_by: []
 
 constants:
   - name: id_max_length
@@ -163,4 +212,34 @@ constants:
     source: design/gdd/content-records-and-schema.md
     value: 20
     unit: ms, median, build runtime
+    referenced_by: []
+  - name: speed_base
+    status: active
+    source: design/gdd/combat-resolver.md
+    value: 100
+    unit: strike rate at speed 0 (safe range 10 to 10000)
+    referenced_by: []
+  - name: combat_score_win_floor
+    status: active
+    source: design/gdd/combat-resolver.md
+    value: 10000
+    unit: proving points (every win scores at least this, every loss below it)
+    referenced_by: []
+  - name: combat_score_max
+    status: active
+    source: design/gdd/combat-resolver.md
+    value: 20000
+    unit: proving points
+    referenced_by: []
+  - name: combat_stat_count
+    status: active
+    source: design/gdd/combat-resolver.md
+    value: 4
+    unit: "stats (might, guard, vigor, speed)"
+    referenced_by: []
+  - name: max_opponents_per_call
+    status: active
+    source: design/gdd/combat-resolver.md
+    value: 3
+    unit: opponents per resolver call (equals max_fights_per_source)
     referenced_by: []

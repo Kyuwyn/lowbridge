@@ -365,6 +365,10 @@ schema row stores as the integer n):
 4. The keys are ids from the stat-name list that #5 closes. Until then the schema module holds a
    placeholder constant (`stat_a`, `stat_b`). Keys follow the id pattern, so `__proto__` and
    integer-like keys fail at R8.3 step 3.
+   **Amended 2026-11-20 by Combat resolver (#5), designer-approved:** the list is closed as
+   `might`, `guard`, `vigor`, `speed`, in that order (`design/gdd/combat-resolver.md` C1). The
+   row itself is unchanged. This GDD's fixtures and acceptance criteria keep `stat_a` and
+   `stat_b` by loading against a test schema (R8.2).
 5. Tagged `sealInput` for every combatant, even though only proving opponents feed seals. A row
    covers a whole type, so the conservative tag keeps tending away from all of them.
 6. The proving result's scale is set by #6. Each threshold is 0–1,000,000 until #6 narrows it.
@@ -588,8 +592,9 @@ schema row stores as the integer n):
    `owners` list, the gate atoms, the default ops table, the reserved-id list, the label table
    and the stat-name list exist as data the code can read. The checks take the schema as an
    input, so tests can pass a modified schema; the shipped one is the default. Checks read that
-   value. The stat-name list is a placeholder constant (`stat_a` and `stat_b`) until #5 closes
-   it. The schema also holds a list of **declared product pairs**, each `{value, factor}` where
+   value. The stat-name list is `might`, `guard`, `vigor`, `speed` (closed by #5; amended
+   2026-11-20, see R4 note 4); tests may pass a schema with the placeholder `stat_a` and
+   `stat_b`. The schema also holds a list of **declared product pairs**, each `{value, factor}` where
    each side is `{row: "type.field"}` (that row's largest absolute range bound) or
    `{const: n}` (a positive safe integer). #2 declares basis-point pairs, and #4 declares the
    pair (largest output, most units one `advance` may complete, F1). The list is empty until
@@ -1297,7 +1302,7 @@ This system has no screen, but it fixes rules every screen must follow:
 | Modifier pipeline (#2) | R4.5, R6.1, F5, F6, F8 | Operations, stage order, clamping, rounding points, basis-point pairs | Not yet designed |
 | Resources and caps (#3) | R4 rows `resource.*`; Edge Cases on caps | Cap and start values; clamping `held`; whether `cap` is a seal input | Not yet designed |
 | Activity slot (#4) | R4 rows `source.*`; F1; rest as a source | Stop rule; high-water marks; durations in ms | Not yet designed |
-| Combat resolver (#5) | `combatant.stats` | Closed stat names | Not yet designed |
+| Combat resolver (#5) | `combatant.stats` | Closed stat names | Designed 2026-11-20; list closed in R4 note 4 |
 | Forge and proving (#6) | R4 rows `ingredient.*`, `door.*`, `realm.*`; R5.3 ingredient counts | Seal function; `forged` state; affinity-only `contrib` keys | Not yet designed |
 | Methods (#7) | R6; `method.*`, `source.enabled` | Committed state; which patches exist | Not yet designed |
 | Save and run lifecycle (#11) | R2.3, R8.5, Edge Cases on saves | Alias map, retired-id list, fingerprint handling | Not yet designed |
