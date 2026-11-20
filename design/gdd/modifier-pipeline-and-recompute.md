@@ -2,6 +2,7 @@
 
 > **Status**: Approved 2026-11-20 (lean review; recommended follow-ups in `design/gdd/reviews/modifier-pipeline-and-recompute-review-log.md`)
 > **Creative Director Review (CD-GDD-ALIGN)**: NOT ASSESSED 2026-11-20 — auto mode could not check Agent calls in this session (a hook rewrites their input); run the gate or `/design-review` with agents allowed
+> **Amendments**: A1 2026-11-20 — Open Question 2 and the "Seals and marks" cap case settled by Resources and caps (#3, K8): `resource.cap` stays `sealInput: yes`, and a seal reads the cap from before the forge's own entries (designer-approved). Touches Edge Cases "Seals and marks", Open Questions row 2
 > **Author**: Will + agents
 > **Last Updated**: 2026-11-20
 > **Last Verified**: 2026-11-20
@@ -459,6 +460,9 @@ Each case says who catches it: **load error** (#1 R8.3), **validator error** or 
 - **If `resource.cap` stays `sealInput: yes`** (#1 Open Question 1): the Foundation stage
   changes a seal input after the forge. That does not break P10, which is about tending, but it
   means a seal read after the forge differs from the one read at the forge. #3 and #6 settle it.
+  **Settled 2026-11-20 (A1):** Resources and caps (#3, K8) keeps the tag. A seal reads the cap
+  from before the forge's own entries, and #6 records it in the forge snapshot, so the raise
+  never moves a recorded seal.
 - **If a method patch and a Foundation entry change the same value**: legal only if the row
   lists both stages; no such row exists today. The trail shows both steps, method first.
 
@@ -676,7 +680,7 @@ rewrites their input. Review manually before production.*
 | # | Question | Owner | Resolve by |
 |---|---|---|---|
 | 1 | Resolved 2026-11-20: amendment A1 applied to #1 (ops entries `{fn, noOpCheck, operandRange}`; step 7 checks the operand; `scale_bp` 0–100,000) | Designer | Done |
-| 2 | Is `resource.cap` a seal input (#1 Open Question 1)? If yes, the Foundation stage moves a seal input after the forge | #3 with #6 | #6 GDD |
+| 2 | Resolved 2026-11-20 (A1): yes, `resource.cap` stays a seal input. A seal reads the cap from before the forge's own entries (#3 K8) | #3 with #6 | Done; #6 confirms |
 | 3 | Which `source` does a Foundation entry carry: the ingredient, the realm, or both as two entries? | #6 | #6 GDD |
 | 4 | Does a tending choice survive the activity stopping (rest filling the slot, live or away)? It decides where #4 splits `advance` | #10 with #4 | #10 GDD |
 | 5 | Is 16 `add` entries per value enough for the realm ladder, when several realms' Foundations may stack? | #19 | Alpha |

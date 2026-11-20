@@ -3,7 +3,7 @@
 > **Status**: Approved 2026-11-20 (lean re-review after the fifth full review; no pillar-level or design blocker. Recommended follow-ups are in the review log and move to implementation: ADR 2/3, the schema module and its tests)
 > **Author**: Will + agents
 > **Last Updated**: 2026-11-20
-> **Amendments**: A1 2026-11-20 — ops-table entries gain `operandRange`, checked at R8.3 step 7 (requested by Modifier pipeline #2 for `scale_bp`; approved by the designer). Touches R6.1, R8.3 step 7, AC-R8-2a, AC-R6-10, ADR 4 · A2 2026-11-20 — the stat-name list is closed as `might`, `guard`, `vigor`, `speed` (requested by Combat resolver #5; approved by the designer). Touches R4 note 4, R8.2, Cross-References
+> **Amendments**: A1 2026-11-20 — ops-table entries gain `operandRange`, checked at R8.3 step 7 (requested by Modifier pipeline #2 for `scale_bp`; approved by the designer). Touches R6.1, R8.3 step 7, AC-R8-2a, AC-R6-10, ADR 4 · A2 2026-11-20 — the stat-name list is closed as `might`, `guard`, `vigor`, `speed` (requested by Combat resolver #5; approved by the designer). Touches R4 note 4, R8.2, Cross-References · A3 2026-11-20 — `resource.cap` keeps `sealInput: yes` (Open Question 1 settled by Resources and caps #3, K8), and the affinity records are named by Forge and proving (#6), not #3 (designer-approved). Touches R4 note 1, Interactions rows 3 and 6, Open Questions row 1
 > **Last Verified**: 2026-11-20
 > **Implements Pillar**: 3 (The build is a problem) and 4 (No dead ends, no attention tax); supports 1 (The forge is the milestone) and 2 (Methods matter)
 > **Creative Director Review (CD-GDD-ALIGN)**: REVISED 2026-11-19. Six findings applied: `contrib` is a total map; each method must patch a contribution and a route; no ingredient only fills a slot; protected ids need an alias; the fantasy anchor no longer fixes the preview model; numerals as words in proper names are allowed
@@ -359,6 +359,9 @@ schema row stores as the integer n):
 
 1. `resource.cap` is tagged `sealInput: yes` provisionally. The conservative tag keeps tending
    away from it. #3 and #6 may lower it to `no` before the row leaves "provisional".
+   **Amended 2026-11-20 (A3), designer-approved:** kept `yes` by Resources and caps (#3, K8).
+   A seal that reads a cap reads the cap in force before that forge's own entries (the base cap
+   in the MVP). The row itself is unchanged.
 2. `contrib` is a total map: exactly one key per affinity in content, and at least one affinity
    exists whenever an ingredient does. No other key type until #6 defines one. 0 is allowed.
 3. An absent key means none. A value of 0 is not allowed, so a patch cannot "remove" an entry in
@@ -768,10 +771,10 @@ fields in R4. None of them may add a field, type or gate atom without amending t
 | # | System | Reads from this system | Gives back / registers | Interface owner |
 |---|---|---|---|---|
 | 2 | Modifier pipeline | Registry rows (`modifiableBy`, `sealInput`); `applyMethod` output | Patch operations, stage order, rounding points, provenance for breakdowns | Pipeline owns operations; this GDD owns target legality |
-| 3 | Resources and caps | `resource` records | Rows for `resource.cap` and `resource.start`; names the caps and the affinity records | Shared: this GDD owns the type, #3 owns the values |
+| 3 | Resources and caps | `resource` records | Rows for `resource.cap` and `resource.start`; names the resources and their caps (A3: the affinity records are #6's) | Shared: this GDD owns the type, #3 owns the values |
 | 4 | Activity slot | `source` records (`inputs`, `outputs`, `duration`, `enabled`) | Their rows; the high-water marks that `reached` reads; whether rest is a source | #4 owns the stop rule and the marks |
 | 5 | Combat resolver | `combatant` records | The closed list of stat names in `combatant.stats` | #5 |
-| 6 | Forge and proving | `ingredient`, `affinity`, `door`, `realm` records | Their rows; the `forged` state that `forged` reads; the seal function | #6 |
+| 6 | Forge and proving | `ingredient`, `affinity`, `door`, `realm` records | Their rows; the `forged` state that `forged` reads; the seal function; names the affinity records (A3) | #6 |
 | 7 | Methods | `method` records; R6 legality | `commitText`, `patches` and `enabled` rows; the committed state that `committed` reads | #7 owns which patches exist; this GDD owns legality |
 | 8 | Crafting route | `source` records with no fights | Content only, with no new fields | This GDD |
 | 9 | Fight and dungeon routes | `source` records with fights | The `source.fights` row; how floors chain, using `reached` on floor outputs | #9 |
@@ -1882,7 +1885,7 @@ splits of multi-bullet ACs (R1-2, R1-3, R4-4, R4-9, R5-6, F1) are still recommen
 
 | # | Question | Owner | Resolve by |
 |---|---|---|---|
-| 1 | Is `resource.cap` a seal input? If yes, seals depend on the previous Foundation, which reforge must handle | Resources and caps (#3) with Forge and proving (#6) | Before the #6 GDD is approved |
+| 1 | Resolved 2026-11-20 (A3): `resource.cap` stays a seal input. A seal reads the cap from before that forge's own entries, and Reforge (#16) states which cap a reforge's seals read (Resources and caps #3, K8) | Resources and caps (#3) with Forge and proving (#6) | Done; #6 confirms K8.2 |
 | 2 | Do ingredients have counts (needing a cap row and `reached(ingredient, n > 1)`) or are they held 0/1? | Forge and proving (#6) | #6 GDD |
 | 3 | Is rest a `source` record, and if so how is it exempt from "does nothing"? | Activity slot (#4) | #4 GDD |
 | 4 | May pre-release saves be wiped? Until decided, renames are free and the alias map is empty | Designer | Before the save format ADR |
