@@ -277,6 +277,41 @@ formulas:
     variables: [b, start, out, duration, FIRST_CAP_MS]
     output: "bool; forms no units-times-duration product"
     referenced_by: []
+  - name: rest_bank
+    status: active
+    source: design/gdd/activity-slot-rest-and-away-time.md
+    expression: "budget = running ? dt + min(dt, b) : 0; used = min(budget, A_stop); b' = min(BANK_CAP, b + dt - used); t' = t + used"
+    variables: [dt, b, running, A_stop, t, BANK_CAP]
+    output: "b' 0 to BANK_CAP; used 0 to 2 dt; from run start sum(used) + b <= sum(dt) (activity time never exceeds real time); composes exactly"
+    referenced_by: []
+  - name: progress_rescale
+    status: active
+    source: design/gdd/activity-slot-rest-and-away-time.md
+    expression: "p' = div_floor(p * D', D), on a recompute during play only (never on load)"
+    variables: [p, D, D']
+    output: "0 <= p' < D'; never gains; product at most 86400000^2"
+    referenced_by: []
+  - name: run_unit_bound
+    status: active
+    source: design/gdd/activity-slot-rest-and-away-time.md
+    expression: "units_max = 1 + ceil((AWAY_CAP - 1) / UNIT_FLOOR_MS)"
+    variables: [AWAY_CAP, UNIT_FLOOR_MS]
+    output: "86401 with the provisional constants; at most UNITS_MAX (T3)"
+    referenced_by: []
+  - name: units_to_stop
+    status: active
+    source: design/gdd/activity-slot-rest-and-away-time.md
+    expression: "U = min over ids of u; net = out - in; u = 0 if held < in; div_floor(held - in, -net) + 1 if net < 0; ceil(room / net) if net > 0 and an output; else infinity"
+    variables: [held, in, out, room]
+    output: "0 to infinity units; a read-only projection, never used to skip units"
+    referenced_by: []
+  - name: eta
+    status: active
+    source: design/gdd/activity-slot-rest-and-away-time.md
+    expression: "eta(r, b) = r <= 2b ? ceil(r / 2) : r - b"
+    variables: [r, b]
+    output: "0 to r real ms; pacing ceilings read b = 0, floors b = BANK_CAP"
+    referenced_by: []
 
 constants:
   - name: id_max_length
@@ -445,4 +480,40 @@ constants:
     source: design/gdd/resources-and-caps.md
     value: 45000
     unit: ms after the commit (V7)
+    referenced_by: []
+  - name: bank_cap_ms
+    status: active
+    source: design/gdd/activity-slot-rest-and-away-time.md
+    value: 1800000
+    unit: ms of held breath (rest bank cap, 30 min)
+    referenced_by: []
+  - name: rest_speed
+    status: active
+    source: design/gdd/activity-slot-rest-and-away-time.md
+    value: 2
+    unit: activity ms per real ms while held breath is spent (integer only)
+    referenced_by: []
+  - name: away_cap_ms
+    status: active
+    source: design/gdd/activity-slot-rest-and-away-time.md
+    value: 86400000
+    unit: activity ms since the last input (provisional; architecture pins the value)
+    referenced_by: []
+  - name: unit_floor_ms
+    status: active
+    source: design/gdd/activity-slot-rest-and-away-time.md
+    value: 1000
+    unit: ms (shortest effective source duration, T1)
+    referenced_by: []
+  - name: units_max
+    status: active
+    source: design/gdd/activity-slot-rest-and-away-time.md
+    value: 100000
+    unit: units one advance may complete (declared product pair with source.inputs and source.outputs)
+    referenced_by: []
+  - name: dt_max
+    status: active
+    source: design/gdd/activity-slot-rest-and-away-time.md
+    value: 1125899906842624
+    unit: real ms (2^50; a larger dt is clamped, exactly)
     referenced_by: []

@@ -233,7 +233,7 @@ rules.
 | 1 | Content records and schema (inferred) | Core | MVP | Approved | design/gdd/content-records-and-schema.md | — |
 | 2 | Modifier pipeline and recompute (inferred) | Core | MVP | Approved | design/gdd/modifier-pipeline-and-recompute.md | Content records and schema |
 | 3 | Resources and caps | Economy | MVP | Approved | design/gdd/resources-and-caps.md | Content records and schema, Modifier pipeline |
-| 4 | Activity slot, rest and away time | Core | MVP | Not Started | — | Content records and schema, Modifier pipeline, Resources and caps |
+| 4 | Activity slot, rest and away time | Core | MVP | Designed | design/gdd/activity-slot-rest-and-away-time.md | Content records and schema, Modifier pipeline, Resources and caps, Combat resolver |
 | 5 | Combat resolver (inferred) | Gameplay | MVP | Approved | design/gdd/combat-resolver.md | Content records and schema |
 | 6 | Forge and proving | Progression | MVP | Not Started | — | Resources and caps, Modifier pipeline, Combat resolver (contract owned by the Forge) |
 | 7 | Methods | Progression | MVP | Not Started | — | Forge and proving, Modifier pipeline |
@@ -310,7 +310,7 @@ the reforge, the phone layout, accessibility, further realms and the codex wait.
 
 1. Modifier pipeline and recompute — depends on: Content records and schema
 2. Resources and caps — depends on: Content records and schema, Modifier pipeline
-3. Activity slot, rest and away time — depends on: Content records and schema, Modifier pipeline, Resources and caps
+3. Activity slot, rest and away time — depends on: Content records and schema, Modifier pipeline, Resources and caps, Combat resolver (for sources with fights; Combat resolver Open Question 6)
 4. Combat resolver — depends on: Content records and schema
 
 These four are rule machinery, not content. The resolver sits here, not in Feature, because
@@ -483,10 +483,10 @@ session. Wave B starts after the checkpoint, and its order can change on what th
 | Metric | Count |
 |--------|-------|
 | Total systems identified | 20 |
-| Design docs started | 4 |
+| Design docs started | 5 |
 | Design docs reviewed | 4 |
 | Design docs approved | 4 |
-| MVP systems designed | 4/15 |
+| MVP systems designed | 5/15 |
 | Vertical Slice systems designed | 0/3 |
 
 ---
