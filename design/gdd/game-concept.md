@@ -90,7 +90,7 @@ method is what makes forging it twice worthwhile.
    - *Supply.* No source runs out, so tending yield never enlarges a finite supply.
 2. **Methods.** One equipped cultivation method. It changes what each ingredient contributes at the forge, and what other systems pay: which routes work and which sources yield which ingredient. A method may re-price a route or switch it off, a crafting recipe included (amended 2026-11-20, third design review of Content records and schema); pillar 4's guarantee, checked by the validator, is the only limit on switching routes off: under every method each ingredient keeps two sources, one with no fight anywhere in its input chain, and that fightless source stays within the price ceiling (fourth design review of Content records and schema, 2026-11-20). In the MVP no method re-prices: a method only feeds or quenches an ingredient's contribution and opens sources, and re-pricing is reconsidered for the Vertical Slice (`methods.md` W3, designer 2026-11-20). The method is chosen freely until the player commits to it with an explicit step ("Begin circulating [method]") that names what the commit closes and how to redo it (rule 54). Gathering starts after the commit, so the lock never fires on its own or while the player is away. After the commit the method is fixed for the run in the MVP. The price of switching later is designed together with reforge.
 3. **Three gathering routes.** Crafting, an auto-resolved fight and a dungeon of chained fights, each a source of forge ingredients.
-4. **One activity slot with tending.** One thing runs at a time. An activity runs until it cannot continue (an input runs out or its output is at cap) or the away-time cap is reached, counted from the player's last input; then rest fills the slot (rule 23). The same rule applies live and away. Tending is an optional, discrete choice on the running activity, with no repeated, held or timed input. It raises speed and yield, each up to a stated ceiling; untended, the activity runs at its base rate. What tending gives up, and how it behaves while away, are set in the tending design document under two constraints: tending gives something up, and it never lapses merely because the player leaves.
+4. **One activity slot with tending.** One thing runs at a time. An activity runs until it cannot continue (an input runs out or its output is at cap) or the away-time cap is reached, counted from the player's last input; then rest fills the slot (rule 23). The same rule applies live and away. Tending is an optional, discrete choice on a gatherer, whether to heap it, with no repeated, held or timed input. It raises speed (read as output per minute) and yield, each up to a stated ceiling; untended, the activity runs at its base rate. What tending gives up, and how it behaves while away, are set in the tending design document under two constraints: tending gives something up, and it never lapses merely because the player leaves.
 5. **Capped resources.** Everything starts small and capped, and bills are sized to most of a cap (rule 18).
 
 ---
@@ -131,12 +131,12 @@ player.
 ### Moment-to-Moment (30 seconds)
 
 The player chooses the next action for the one activity slot (gather, refine, fight a
-floor), chooses whether to tend whatever is running, and spends a resource before its cap stops the activity that fills it. It is
+floor), chooses whether to heap whatever gatherer is running, and spends a resource before its cap stops the activity that fills it. It is
 satisfying because caps start small and fill fast, so there is always something to spend
 (rule 18). When the running activity can no longer continue, rest fills the slot by itself
 (rule 23); stopping tending only returns the activity to its base rate.
 
-Tending raises speed and yield, each up to a stated ceiling. It never raises the quality
+Tending raises speed (output per minute) and yield, each up to a stated ceiling. It never raises the quality
 ceiling of a forge: every makeup earns the same seals whether or not the player tended.
 Tending is a discrete choice that gives something up and never lapses because the player leaves; what that choice is, concretely, is still to be designed.
 
@@ -150,7 +150,8 @@ which route supplies an ingredient under the method already chosen.
 
 One forge and its proving. The natural stopping point is a finished Foundation, measured
 in seals, or later a reforge. The reasons to come back are the new
-realm's caps, one visible locked source, and what the last activity produced while away.
+realm's caps, one visible locked source, and the stores the last run filled, with the breath
+held for the next.
 
 ### Long-Term Progression
 
@@ -446,6 +447,7 @@ Stopping at the MVP is a graceful fallback: one realm ending in a forge is a com
 | Design review (full, re-review) | 2026-11-19 | NEEDS REVISION | Three decisions applied the same day: the trade-off lives inside the forge; the measure is seals 0–6, one proving fight per door; the designer's run is a smoke test (UNTESTED). Method lock made an explicit commit. Awaiting a targeted re-check, not a full panel |
 | Design review (lean, re-review) | 2026-11-19 | NEEDS REVISION | The prior four blockers closed. Two fixes applied the same day: the preview shows seals only for makeups whose ingredients are in hand; validator monotonicity holds from each method's commit state. Also: pillar 2 says routes, not recipes; tending gives something up and never lapses on leaving; a removed route is replaced |
 | Design review (lean, re-review 2) | 2026-11-20 | NEEDS REVISION | Prior blockers closed; one new: over-gathering was free. Applied the same day: forging consumes the chosen ingredients and the forge document must show gathering all M is not dominant; side-by-side view hides contribution values; fightless source held to a price ceiling; stale tending wording and the rule 83 citation fixed; three open questions added |
+| Wording amendments (with the Interface shell spec, #13) | 2026-11-21 | Designer-approved | Mechanic 4 and the Core Loop read "heap whatever gatherer is running", with speed read as output per minute (`tending.md` Open Question 1). Session-Level reads "the stores the last run filled, with the breath held for the next" (`activity-slot-rest-and-away-time.md` Open Question 2) |
 
 Recorded designer decisions against reviewer advice:
 

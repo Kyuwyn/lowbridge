@@ -247,7 +247,7 @@ rules.
 | 10 | Tending | Gameplay | MVP | Approved | design/gdd/tending.md | Activity slot, Modifier pipeline, Content records and schema (field registry), Resources and caps, Crafting route |
 | 11 | Save and run lifecycle | Persistence | MVP | Approved | design/gdd/save-and-run-lifecycle.md | Content records and schema, Modifier pipeline, Resources and caps, Activity slot, Forge and proving, Methods, Tending |
 | 12 | Content validator and balance enumeration | Meta | MVP | Designed | design/gdd/content-validator-and-balance-enumeration.md | Content records and schema, Modifier pipeline, Resources and caps, Activity slot, Combat resolver, Forge and proving, Methods, Crafting route, Fight and dungeon routes, Tending, Save and run lifecycle |
-| 13 | Interface shell and goal line (inferred) | UI | MVP | Not Started | — | Resources and caps, Activity slot, Forge and proving, Methods, Tending, Save and run lifecycle |
+| 13 | Interface shell and goal line (inferred) | UI | MVP | Designed | design/ux/interface-shell.md | Content records and schema, Modifier pipeline, Resources and caps, Activity slot, Combat resolver, Forge and proving, Methods, Crafting route, Fight and dungeon routes, Tending, Save and run lifecycle |
 | 14 | Method marks and number breakdowns | UI | MVP | Not Started | — | Modifier pipeline, Methods |
 | 15 | Forge screen (inferred) | UI | MVP | Not Started | — | Forge and proving, Methods, Method marks and number breakdowns, Save and run lifecycle |
 | 16 | Reforge and post-commit method switch | Progression | Vertical Slice | Not Started | — | Forge and proving, Methods, Resources and caps, Save and run lifecycle |
@@ -338,7 +338,7 @@ after the routes.
 
 ### Presentation Layer (depends on features)
 
-1. Interface shell and goal line — depends on: Resources and caps, Activity slot, Forge and proving, Methods, Tending, Save and run lifecycle
+1. Interface shell and goal line — depends on: Content records and schema, Modifier pipeline, Resources and caps, Activity slot, Combat resolver, Forge and proving, Methods, Crafting route, Fight and dungeon routes, Tending, Save and run lifecycle (each lists #13 as a dependent)
 2. Method marks and number breakdowns — depends on: Modifier pipeline, Methods
 3. Forge screen — depends on: Forge and proving, Methods, Method marks and number breakdowns, Save and run lifecycle (the last-run line)
 4. Phone layout (VS) — depends on: Interface shell and goal line, Forge screen
@@ -489,10 +489,10 @@ session. Wave B starts after the checkpoint, and its order can change on what th
 | Metric | Count |
 |--------|-------|
 | Total systems identified | 20 |
-| Design docs started | 12 |
+| Design docs started | 13 |
 | Design docs reviewed | 11 |
 | Design docs approved | 11 |
-| MVP systems designed | 12/15 |
+| MVP systems designed | 13/15 |
 | Vertical Slice systems designed | 0/3 |
 
 ---
