@@ -775,7 +775,7 @@ overflow once per id. All five were fixed in Core Rules before these criteria we
 | 3 | The K1 chain makes the player switch between filling and spending about ten times in the first two minutes. Does #4's stop rule, or something it queues, keep that from becoming an attention tax (pillar 4)? | Activity slot (#4) | #4 GDD |
 | 4 | Away, an activity stops at one store's fill (40 Ash Tallow, or one render), then rest runs. What makes "what the last activity produced while away" worth returning for (concept, retention hooks)? | Activity slot (#4) | #4 GDD |
 | 5 | Resolved 2026-11-20 by #6 (UI Requirements item 2): yes, for previewable makeups only, under the same rule as the seals; caps follow the Foundation's affinities (G11). The layout stays #15's | Forge and proving (#6), Forge screen (#15) | Done in #6; layout in #15 UX spec |
-| 6 | Do #8's recipes fit the provisional set (K1), and does V7 hold under both methods once methods patch durations and outputs? | Crafting route (#8), Methods (#7) | #8 GDD |
+| 6 | Do #8's recipes fit the provisional set (K1), and does V7 hold under both methods once methods patch durations and outputs? V7 half resolved 2026-11-20 by #7 (W3, W11): no MVP method patches `inputs`, `outputs` or `duration`, and no patch can reach the authored-enabled no-input source, so V7 reads the same values under both methods. #8's half stays open | Crafting route (#8), Methods (#7) | #8 GDD |
 | 7 | V3 lets tending raise a yield up to a full store. Should #10 also keep tended outputs to about a third of a cap, so the last unit of a run spills little (economy designer's suggestion)? | Tending (#10) | #10 GDD |
 | 8 | Which cap does a reforge's seal read (K8.3)? | Reforge (#16) | Before the Vertical Slice |
 

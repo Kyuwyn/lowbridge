@@ -80,6 +80,26 @@ items:
     start: 0
     note: provisional (K1.3)
     referenced_by: []
+  - name: ember_breath
+    status: active
+    source: design/gdd/methods.md
+    type: method
+    feeds: "ember_marrow might +10"
+    quenches: "ironbark_heartwood guard"
+    opens: "three hunts, paying ember_marrow, cloud_lotus, tidewater_pearl (#9 authors)"
+    redo_cost: absent
+    note: "patches are #6 S9's, kept unchanged (W6); best makeup echo_jade, ironbark_heartwood, ember_marrow, cloud_lotus at 4 seals"
+    referenced_by: [design/gdd/forge-and-proving.md]
+  - name: still_water
+    status: active
+    source: design/gdd/methods.md
+    type: method
+    feeds: "echo_jade vigor +20; tidewater_pearl vigor +30"
+    quenches: none
+    opens: "the dungeon's three floors, paying ember_marrow, cloud_lotus, tidewater_pearl (#9 authors)"
+    redo_cost: absent
+    note: "patches are #6 S9's, kept unchanged (W6); best makeup echo_jade, ironbark_heartwood, ember_marrow, tidewater_pearl at 4 seals"
+    referenced_by: [design/gdd/forge-and-proving.md]
 
 formulas:
   - name: high_water
@@ -137,7 +157,7 @@ formulas:
     expression: "changed(m) = set of (target, field, key?) over m.patches; output differs from input exactly there"
     variables: [patches]
     output: "0 to |patches| triples"
-    referenced_by: []
+    referenced_by: [design/gdd/methods.md]
   - name: op_result
     status: active
     source: design/gdd/modifier-pipeline-and-recompute.md
@@ -360,13 +380,41 @@ formulas:
     expression: "T(X, m) = sum over sources s used by the chains of X of ceil_div(D_s(X), out_s) * d_s; shared inputs made once; no by-product credit"
     variables: [X, D_s, out_s, d_s]
     output: "0 ms upward; B9 needs T_all >= 1.35 x T_best, +6 min, <= 60 min"
-    referenced_by: []
+    referenced_by: [design/gdd/methods.md]
   - name: source_price
     status: active
     source: design/gdd/forge-and-proving.md
     expression: "price(s) = d_s + sum over inputs r of ceil_div(in_s[r], out_r) * price(src(r)) + sum of reached-atom prices; ceiling(i) = max(div_floor(p_i * FIGHTLESS_CEILING_BP, 10000), p_i + FIGHTLESS_SLACK_MS)"
     variables: [d_s, in_s, out_r, p_i, FIGHTLESS_CEILING_BP, FIGHTLESS_SLACK_MS]
     output: "1 ms upward; B10 passes when the cheapest fightless price <= ceiling"
+    referenced_by: [design/gdd/methods.md]
+  - name: gives_up
+    status: active
+    source: design/gdd/methods.md
+    expression: "givesUp(m) = for each method o != m in id order: o, then opened(o) in id order, where opened(o) = sources s with (s, enabled) in changed(o); each prints as Closes: {name}"
+    variables: [m, o, opened]
+    output: "(M - 1) x (1 + |opened(o)|) lines; 4 in the MVP"
+    referenced_by: [design/gdd/content-records-and-schema.md]
+  - name: redo_line
+    status: active
+    source: design/gdd/methods.md
+    expression: "redoLine(m) = Redo: only by starting a new run, if redoCost is absent; else Redo: {duration(redoCost)} to change method"
+    variables: [redoCost, duration]
+    output: "one line; the number only from the field"
+    referenced_by: [design/gdd/content-records-and-schema.md]
+  - name: route_count
+    status: active
+    source: design/gdd/methods.md
+    expression: "routes(i, m) = number of enabled sources in set_m whose outputs hold ingredient i"
+    variables: [i, m, enabled, outputs]
+    output: "0 upward; #1 R8.4 needs >= 2; exactly 2 for all 12 pairs under the route plan"
+    referenced_by: []
+  - name: price_leak
+    status: active
+    source: design/gdd/methods.md
+    expression: "leak(m) = [T(best_m, m) <= min over makeups X of T(X, m)]; H5 fails when 1"
+    variables: [T, best_m]
+    output: "0 or 1; not evaluated when B1 fails"
     referenced_by: []
 
 constants:
@@ -381,7 +429,7 @@ constants:
     source: design/gdd/content-records-and-schema.md
     value: 24
     unit: code points
-    referenced_by: []
+    referenced_by: [design/gdd/methods.md]
   - name: desc_max_length
     status: active
     source: design/gdd/content-records-and-schema.md
@@ -536,13 +584,13 @@ constants:
     source: design/gdd/resources-and-caps.md
     value: 45000
     unit: ms after the commit (V7)
-    referenced_by: []
+    referenced_by: [design/gdd/methods.md]
   - name: bank_cap_ms
     status: active
     source: design/gdd/activity-slot-rest-and-away-time.md
     value: 1800000
     unit: ms of held breath (rest bank cap, 30 min)
-    referenced_by: []
+    referenced_by: [design/gdd/methods.md]
   - name: rest_speed
     status: active
     source: design/gdd/activity-slot-rest-and-away-time.md
@@ -614,31 +662,31 @@ constants:
     source: design/gdd/forge-and-proving.md
     value: 13500
     unit: basis points of the best makeup gathering time (B9; safe 12500 to 15000)
-    referenced_by: []
+    referenced_by: [design/gdd/methods.md]
   - name: overgather_min_ms
     status: active
     source: design/gdd/forge-and-proving.md
     value: 360000
     unit: ms more than the best makeup (B9)
-    referenced_by: []
+    referenced_by: [design/gdd/methods.md]
   - name: overgather_max_ms
     status: active
     source: design/gdd/forge-and-proving.md
     value: 3600000
     unit: ms to gather all ingredients at most (B9)
-    referenced_by: []
+    referenced_by: [design/gdd/methods.md]
   - name: fightless_ceiling_bp
     status: active
     source: design/gdd/forge-and-proving.md
     value: 20000
     unit: basis points of the cheapest other source price (B10; safe 15000 to 25000)
-    referenced_by: []
+    referenced_by: [design/gdd/methods.md]
   - name: fightless_slack_ms
     status: active
     source: design/gdd/forge-and-proving.md
     value: 60000
     unit: ms of absolute slack (B10)
-    referenced_by: []
+    referenced_by: [design/gdd/methods.md]
   - name: door_threshold_min
     status: active
     source: design/gdd/forge-and-proving.md
@@ -651,3 +699,21 @@ constants:
     value: 20000
     unit: proving points (each door threshold; equals combat_score_max)
     referenced_by: []
+  - name: feed_max
+    status: active
+    source: design/gdd/methods.md
+    value: 40
+    unit: stat points per feed (H1; safe 30 to 60)
+    referenced_by: []
+  - name: method_patch_max
+    status: active
+    source: design/gdd/methods.md
+    value: 8
+    unit: triples per method (H4; safe 5 to 12)
+    referenced_by: []
+  - name: mvp_source_target
+    status: active
+    source: design/gdd/methods.md
+    value: 23
+    unit: source records in the MVP, 20 enabled under each method (a content target, not a check; Y3)
+    referenced_by: [design/gdd/content-records-and-schema.md]

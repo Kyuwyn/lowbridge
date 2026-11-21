@@ -1198,7 +1198,7 @@ scope when B1 fails; the tie orders; and the forge's error path and event order.
 
 | # | Question | Owner | Resolve by |
 |---|---|---|---|
-| 1 | S9's content is provisional. Do Methods' real patches and the routes' real durations still pass B1–B13, and does each method's best makeup stay at 4 seals? | Methods (#7), Crafting route (#8), Fight and dungeon routes (#9) | #7 GDD; checked again at #8 and #9 |
+| 1 | S9's content is provisional. Do Methods' real patches and the routes' real durations still pass B1–B13, and does each method's best makeup stay at 4 seals? Methods' half resolved 2026-11-20 by #7 (W6): S9's patches are the real ones, unchanged, so B1–B8, B11 and B12 pass as S9 shows and each best stays at 4. B9, B10 and B13 wait on #8 and #9 | Methods (#7), Crafting route (#8), Fight and dungeon routes (#9) | Checked again at #8 and #9 |
 | 2 | S9's table is sensitive: the Gate's vigor at 190 instead of 191 breaks B1 under Still Water. Should B1 also require a margin, for example that the best makeup stays unique when any one door stat moves by 1? | Forge and proving (#6), Validator (#12) | #12 GDD |
 | 3 | Does the theme fit as players read it? B4 is a proxy; the playtest named in "Checked by review" is the real test (CD-PLAYTEST concern 3) | Designer | First playtest of the Wave A build |
 | 4 | What form does the headroom signal take, and does it help the player find better makeups without naming them (CD-PLAYTEST concern 2)? | Forge screen (#15) | #15 UX spec |

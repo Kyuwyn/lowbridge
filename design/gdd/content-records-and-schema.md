@@ -3,7 +3,7 @@
 > **Status**: Approved 2026-11-20 (lean re-review after the fifth full review; no pillar-level or design blocker. Recommended follow-ups are in the review log and move to implementation: ADR 2/3, the schema module and its tests)
 > **Author**: Will + agents
 > **Last Updated**: 2026-11-20
-> **Amendments**: A1 2026-11-20 — ops-table entries gain `operandRange`, checked at R8.3 step 7 (requested by Modifier pipeline #2 for `scale_bp`; approved by the designer). Touches R6.1, R8.3 step 7, AC-R8-2a, AC-R6-10, ADR 4 · A2 2026-11-20 — the stat-name list is closed as `might`, `guard`, `vigor`, `speed` (requested by Combat resolver #5; approved by the designer). Touches R4 note 4, R8.2, Cross-References · A3 2026-11-20 — `resource.cap` keeps `sealInput: yes` (Open Question 1 settled by Resources and caps #3, K8), and the affinity records are named by Forge and proving (#6), not #3 (designer-approved). Touches R4 note 1, Interactions rows 3 and 6, Open Questions row 1 · A4 2026-11-20 — adds the R4 row `affinity.widens` (note 10), sets the affinity count to 4, and narrows `door.thresholds` to 10,000–20,000 each (requested by Forge and proving #6; approved by the designer). Touches R1 table, R4 rows and notes 6 and 10, Interactions row 6, Cross-References, Open Questions rows 2, 9 and 12
+> **Amendments**: A1 2026-11-20 — ops-table entries gain `operandRange`, checked at R8.3 step 7 (requested by Modifier pipeline #2 for `scale_bp`; approved by the designer). Touches R6.1, R8.3 step 7, AC-R8-2a, AC-R6-10, ADR 4 · A2 2026-11-20 — the stat-name list is closed as `might`, `guard`, `vigor`, `speed` (requested by Combat resolver #5; approved by the designer). Touches R4 note 4, R8.2, Cross-References · A3 2026-11-20 — `resource.cap` keeps `sealInput: yes` (Open Question 1 settled by Resources and caps #3, K8), and the affinity records are named by Forge and proving (#6), not #3 (designer-approved). Touches R4 note 1, Interactions rows 3 and 6, Open Questions row 1 · A4 2026-11-20 — adds the R4 row `affinity.widens` (note 10), sets the affinity count to 4, and narrows `door.thresholds` to 10,000–20,000 each (requested by Forge and proving #6; approved by the designer). Touches R1 table, R4 rows and notes 6 and 10, Interactions row 6, Cross-References, Open Questions rows 2, 9 and 12 · A5 2026-11-20 — `method.redoCost` is milliseconds of slot time (note 8); with `redoCost` absent the redo line reads "Redo: only by starting a new run"; the commit dialog also carries Methods' gives-up lines; R1's source target becomes ~23 (requested by Methods #7; approved by the designer). Touches R1 table, R4 row `method.redoCost` and note 8, R7.2, Edge Cases "Method patches", Cross-References, AC-R7-4, Open Questions rows 10 and 11
 > **Last Verified**: 2026-11-20
 > **Implements Pillar**: 3 (The build is a problem) and 4 (No dead ends, no attention tax); supports 1 (The forge is the milestone) and 2 (Methods matter)
 > **Creative Director Review (CD-GDD-ALIGN)**: REVISED 2026-11-19. Six findings applied: `contrib` is a total map; each method must patch a contribution and a route; no ingredient only fills a slot; protected ids need an alias; the fantasy anchor no longer fixes the preview model; numerals as words in proper names are allowed
@@ -129,7 +129,7 @@ error. Adding a type is a change to this GDD.
 | `ingredient` | 6 | A forge ingredient. Holding one makes it available to a makeup | `contrib` |
 | `affinity` | 4 | A named Foundation stat axis, one per fighting stat (#6 G3). It names the stat for tooltips, marks and breakdowns, and lists the stores it widens | `widens` |
 | `method` | 2 | A cultivation method: its commit text, its redo price and its patches to other records | `commitText`, `redoCost`, `patches` |
-| `source` | ~20 | One activity the slot can run, per unit: crafting recipes, single fights, dungeon floors, and rest if system 4 authors rest this way | `inputs`, `outputs`, `duration`, `fights`, `enabled` |
+| `source` | ~23 | One activity the slot can run, per unit: crafting recipes, single fights, dungeon floors, and rest if system 4 authors rest this way | `inputs`, `outputs`, `duration`, `fights`, `enabled` |
 | `combatant` | ~7 | A fixed opponent for route fights and proving fights | `stats` |
 | `door` | 3 | One door of the next realm: its proving opponent and tier thresholds | `opponent`, `thresholds` |
 | `realm` | 1 | One realm's forge: which ingredients are offered, how many make a Foundation, which doors test it | `ingredients`, `makeupSize`, `doors` |
@@ -338,7 +338,7 @@ error, and so is a row with no owner.
 | `affinity.widens` | ref-list | — | refs resource; 0–16 entries; distinct [10] | no, default [] | — | no | Forge and proving (#6) |
 | `method.commitText` | text | — | 1–200 chars | yes | — | no | Methods (#7) |
 | `method.patches` | patch-list | — | rule R6 [7] | no, default [] | — | no | Methods (#7) |
-| `method.redoCost` | int | redo units [8] | 0–1,000,000,000 | no | — | no | Methods (#7) |
+| `method.redoCost` | int | ms [8] | 0–1,000,000,000 | no | — | no | Methods (#7) |
 | `source.reveal` | gate | — | rule R5 | no | — | no | this GDD |
 | `source.need` | gate | — | rule R5 | no | — | no | this GDD |
 | `source.inputs` | ref→int map | units per unit | keys of type resource, ingredient; values 1–1,000,000,000 [3] | no, default {} | method | no | Activity slot (#4) |
@@ -386,6 +386,9 @@ schema row stores as the integer n):
    owns legality.
 8. The numeric field the commit dialog's redo line reads (R7.2). Absent means the method offers
    no redo. Its unit and meaning belong to Methods (#7) and Reforge (#16).
+   **Amended 2026-11-20 by Methods (#7, A5), designer-approved:** the unit is milliseconds of
+   untended slot time, the price of leaving the method after committing to it. Reforge (#16)
+   decides how it is paid. No MVP method carries it (`design/gdd/methods.md` W9).
 9. The entry count of `realm.ingredients` is the realm's M.
 10. **Added 2026-11-20 by Forge and proving (#6, A4), designer-approved.** The stores an
     affinity's effective value widens after the forge (`design/gdd/forge-and-proving.md` G11,
@@ -540,8 +543,13 @@ schema row stores as the integer n):
        interface's, from the field, rule 97; a direction word is a recommended addition, not
        part of this GDD yet);
      - the **redo line**, generated from `method.redoCost` (Methods #7, Reforge #16). When the
-       field is absent the line reads "Redo: not offered". When it is present the line states
-       the price from that field.
+       field is absent the line reads "Redo: only by starting a new run" (amended 2026-11-20,
+       A5: the MVP's one redo is the fast new game, #11). When it is present the line states
+       the price from that field, in Methods' template (`design/gdd/methods.md` Y2).
+     - **Amended 2026-11-20 (A5):** between the closes list and the redo line the dialog also
+       shows Methods' gives-up lines (`givesUpLines`, `design/gdd/methods.md` W1, Y1): "Closes:
+       {other method}", then one "Closes: {source}" line for each source only another method
+       opens.
 
      The price is therefore always a field, never authored text.
    - **No text field contains a digit**: not `name`, `desc`, `flavor` or `commitText`. Every
@@ -1130,6 +1138,8 @@ Each case says **who catches it**:
 - **If no method offers a redo (`method.redoCost` absent on every method, the MVP)**: the commit
   is permanent for the run. This is pillar 4 debt that Methods (#7) and Reforge (#16) must
   clear, not an exception this GDD accepts. The commit dialog says so in the redo line (R7.2).
+  **Amended 2026-11-20 (A5):** Methods (#7, W9) names the fast new game as the MVP's redo, so
+  the line reads "Redo: only by starting a new run". #16 clears the rest of the debt.
 - **If a source is disabled in both frozen sets**: validator error. The content could never be
   used (rule 74).
 - **If a source has no inputs and no outputs, or its outputs equal its inputs**: validator
@@ -1323,7 +1333,7 @@ This system has no screen, but it fixes rules every screen must follow:
 | Activity slot (#4) | R4 rows `source.*`; F1; rest as a source | Stop rule; high-water marks; durations in ms | Not yet designed |
 | Combat resolver (#5) | `combatant.stats` | Closed stat names | Designed 2026-11-20; list closed in R4 note 4 |
 | Forge and proving (#6) | R4 rows `ingredient.*`, `affinity.*`, `door.*`, `realm.*`; R5.3 ingredient counts | Seal function; `forged` state; affinity-only `contrib` keys | Designed 2026-11-20; amended this GDD (A4) |
-| Methods (#7) | R6; `method.*`, `source.enabled` | Committed state; which patches exist | Not yet designed |
+| Methods (#7) | R6; `method.*`, `source.enabled` | Committed state; which patches exist; the closed surface (feed, quench, open) | Designed 2026-11-20; amended this GDD (A5) |
 | Save and run lifecycle (#11) | R2.3, R8.5, Edge Cases on saves | Alias map, retired-id list, fingerprint handling | Not yet designed |
 | Content validator (#12) | R8.4; every "validator error" edge case | State and enumeration checks | Not yet designed |
 | Method marks (#14), Forge screen (#15), Interface shell (#13) | UI Requirements; F8 | Marking exactly the change set; generated need text | Not yet designed |
@@ -1658,8 +1668,8 @@ names a step asserts the `step` field too.
   seed: Ember", "Changes: Jade seed: Frost", "Changes: Smelt ore: Time", "Closes: Smelt ore".
 - **AC-R7-4** [integration] **[blocked: #7, #13]** **GIVEN** each method, **WHEN** the commit
   dialog is built, **THEN** it shows the lines of AC-R7-3 and, when the method has no
-  `redoCost`, the line "Redo: not offered", never text from `commitText`. When `redoCost` is
-  present the line states the price from that field (its template is #7's, Open Question 10).
+  `redoCost`, the line "Redo: only by starting a new run" (A5), never text from `commitText`.
+  When `redoCost` is present the line states the price from that field, in #7's template (Y2).
 - **AC-U-1** [integration] **[blocked: #14, #15]** **GIVEN** the method-choice view, **WHEN** a
   method's change set holds an `add` 2 and a `set` 4 on `ingredient.contrib`, **THEN** the view
   shows the delta for the `add`, shows "changed" with no number for the `set`, and no
@@ -1904,8 +1914,8 @@ splits of multi-bullet ACs (R1-2, R1-3, R4-4, R4-9, R5-6, F1) are still recommen
 | 7 | Does the realm ladder need a door-tier atom? | Realm ladder (#19) | Alpha |
 | 8 | Which browser runner (for Chromium and Firefox) runs AC-R8-4? The package tool is `bun` and `package.json` lists playwright (project rules) | Technical Director | Architecture |
 | 9 | Resolved 2026-11-20 by #6 (G9.3, B3, S9): the price holds with deltas shown, because base contributions stay hidden until held and totals clash; B3 checks that the plain-sum pick is never the best | Forge and proving (#6) | Done |
-| 10 | What are the unit and meaning of `method.redoCost` (registered here as an optional int), and which method offers a real redo, so the MVP's permanent commit is cleared? | Methods (#7), Reforge (#16) | #7 GDD |
-| 11 | How many sources does the MVP need once every fightless recipe a method can switch off has a second fightless source? R1's "~20" may be too low | Methods (#7), Crafting route (#8), Fight and dungeon routes (#9) | #7 GDD |
+| 10 | Resolved 2026-11-20 by #7 (W9, A5): `redoCost` is milliseconds of slot time, the price of leaving a method; no MVP method carries it, and the redo line names the new run, the MVP's one redo. #16 decides how a switch is paid | Methods (#7), Reforge (#16) | Done |
+| 11 | Resolved 2026-11-20 by #7 (Y3, A5): about 23 sources, 20 under each method; no MVP method switches a recipe off. R1's target is now ~23 | Methods (#7), Crafting route (#8), Fight and dungeon routes (#9) | Done |
 | 12 | Resolved 2026-11-20 by #6 (G12, S8): a fightless source's price is at most max(2 × p, p + 60 s), where p is the price of the ingredient's cheapest other enabled source, in untended slot time | Forge and proving (#6) | Done |
 
 **ADRs required** (representation decisions this GDD leaves out, per TD finding 8):

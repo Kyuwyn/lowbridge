@@ -32,7 +32,7 @@ The MVP documents are written in two waves with a build between them (PR-SCOPE, 
 specs (systems 1–7, 14, 15). It ends at a **forge-and-methods checkpoint**: a playable build with
 both methods played in one session. That is the first play evidence for pillar 2. The
 checkpoint's sources are stubbed in behaviour (a timed button), but they are real source records
-that the Methods patch surface adds, removes and re-prices. So the build tests "which routes
+that the Methods patch surface opens or leaves shut (`methods.md` W3). So the build tests "which routes
 work", not just what ingredients contribute. The checkpoint's forge screen carries the goal line
 and the first-screen instruction, so the prototype's lost first run is not repeated (CD-SYSTEMS). **Wave B** covers the routes, tending, save, validator and shell (systems 8–13). At
 the designer's stated 12 hours a week, the 15 MVP documents take 46–56 sessions, about 8–9.5
@@ -122,8 +122,8 @@ Three further instructions come from CD-SYSTEMS on 2026-11-19:
   delivers the concept's "Foundation you can point at" and "one visible locked source" hooks.
 
 **7. Methods.** Pillar 2. Two methods, visible side by side from the first screen. Each changes
-what each ingredient contributes at the forge and which routes work, and re-prices crafting
-without removing it. The method is chosen freely until an explicit commit ("Begin circulating
+what each ingredient contributes at the forge and which routes work. In the MVP it neither
+re-prices nor removes a route: it feeds, quenches or opens (`methods.md` W3). The method is chosen freely until an explicit commit ("Begin circulating
 [method]") that names what it closes and how to redo it (rule 54). Gathering starts only after
 the commit. Identity lives where the numbers live (rule 71). Late content patches earlier
 content (rule 4), narrowed to a closed patch surface. This GDD owns that patch surface. Pillar 2
@@ -236,7 +236,7 @@ rules.
 | 4 | Activity slot, rest and away time | Core | MVP | Approved | design/gdd/activity-slot-rest-and-away-time.md | Content records and schema, Modifier pipeline, Resources and caps, Combat resolver |
 | 5 | Combat resolver (inferred) | Gameplay | MVP | Approved | design/gdd/combat-resolver.md | Content records and schema |
 | 6 | Forge and proving | Progression | MVP | Approved | design/gdd/forge-and-proving.md | Content records and schema, Resources and caps, Modifier pipeline, Combat resolver (contract owned by the Forge) |
-| 7 | Methods | Progression | MVP | Not Started | — | Forge and proving, Modifier pipeline |
+| 7 | Methods | Progression | MVP | Designed | design/gdd/methods.md | Content records and schema, Forge and proving, Modifier pipeline |
 | 8 | Crafting route | Economy | MVP | Not Started | — | Resources and caps, Activity slot, Forge and proving, Methods |
 | 9 | Fight and dungeon routes | Gameplay | MVP | Not Started | — | Activity slot, Combat resolver, Forge and proving, Methods |
 | 10 | Tending | Gameplay | MVP | Not Started | — | Activity slot, Modifier pipeline, Content records and schema (field registry) |
@@ -409,7 +409,8 @@ session. Wave B starts after the checkpoint, and its order can change on what th
   resolver GDD must produce exactly that function. The validator checks this by enumeration.
 - **Methods ↔ Crafting route / Fight and dungeon routes.** A method adds, removes and re-prices
   routes, and routes are what a method patches. Resolution: the Methods GDD owns the closed
-  patch surface (contribution, source yield and price, route availability). Route GDDs author
+  patch surface: in the MVP, contribution and route availability only; source yield, price and
+  duration are closed (`methods.md` W3). Route GDDs author
   base values only. Per-method values live in content and the balance table.
 - **Forge and proving ↔ Methods** (soft). "No makeup is co-optimal under both methods" cannot be
   tuned without methods, and methods patch the forge. Resolution: the Forge GDD tunes against
@@ -483,10 +484,10 @@ session. Wave B starts after the checkpoint, and its order can change on what th
 | Metric | Count |
 |--------|-------|
 | Total systems identified | 20 |
-| Design docs started | 6 |
+| Design docs started | 7 |
 | Design docs reviewed | 6 |
 | Design docs approved | 6 |
-| MVP systems designed | 6/15 |
+| MVP systems designed | 7/15 |
 | Vertical Slice systems designed | 0/3 |
 
 ---
