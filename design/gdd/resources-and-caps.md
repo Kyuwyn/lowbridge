@@ -6,6 +6,7 @@
 > **Last Verified**: 2026-11-20
 > **Implements Pillar**: 1 (The forge is the milestone) and 4 (No dead ends, no attention tax); supports 3 (The build is a problem)
 > **Creative Director Review (CD-GDD-ALIGN)**: APPROVED 2026-11-20 — two cosmetic Player Fantasy findings applied; the attention-tax risk of Open Question 3 is carried to #4's CD-GDD-ALIGN as a pillar item
+> **Amendments**: A1 2026-11-21 — Open Question 7 marked resolved by Tending (#10, `tending.md` J1(b)): yes, a heaped unit brings at most a third of its resource's base cap (status edit only, no rule change; designer-approved). Touches Open Questions row 7
 
 ## Summary
 
@@ -776,7 +777,7 @@ overflow once per id. All five were fixed in Core Rules before these criteria we
 | 4 | Away, an activity stops at one store's fill (40 Ash Tallow, or one render), then rest runs. What makes "what the last activity produced while away" worth returning for (concept, retention hooks)? | Activity slot (#4) | #4 GDD |
 | 5 | Resolved 2026-11-20 by #6 (UI Requirements item 2): yes, for previewable makeups only, under the same rule as the seals; caps follow the Foundation's affinities (G11). The layout stays #15's | Forge and proving (#6), Forge screen (#15) | Done in #6; layout in #15 UX spec |
 | 6 | Do #8's recipes fit the provisional set (K1), and does V7 hold under both methods once methods patch durations and outputs? V7 half resolved 2026-11-20 by #7 (W3, W11): no MVP method patches `inputs`, `outputs` or `duration`, and no patch can reach the authored-enabled no-input source, so V7 reads the same values under both methods. #8's half resolved 2026-11-21 by #8 (`crafting-route.md` L1.4, L2): the recipes fit K1 unchanged, with every store's largest bill at 75–100% of its cap | Crafting route (#8), Methods (#7) | Done |
-| 7 | V3 lets tending raise a yield up to a full store. Should #10 also keep tended outputs to about a third of a cap, so the last unit of a run spills little (economy designer's suggestion)? | Tending (#10) | #10 GDD |
+| 7 | V3 lets tending raise a yield up to a full store. Should #10 also keep tended outputs to about a third of a cap, so the last unit of a run spills little (economy designer's suggestion)? Resolved 2026-11-21 by #10 (`tending.md` J1(b), constant `tended_share_divisor` 3): yes. A heaped unit's output is at most ⌊cap / 3⌋ of its resource's base cap, checked by the validator under every frozen set; V3 still bounds every unit by a full store | Tending (#10) | Done |
 | 8 | Which cap does a reforge's seal read (K8.3)? | Reforge (#16) | Before the Vertical Slice |
 
 **ADRs required** (representation this GDD leaves out):

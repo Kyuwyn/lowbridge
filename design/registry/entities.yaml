@@ -253,7 +253,7 @@ formulas:
     expression: "clamp_T(stage_apply(clamp_F(stage_apply(v_method, F)), T)); method, then Foundation, then tending; pure in (frozen set, F, T)"
     variables: [v_method, F, T]
     output: "the row's range; for a sealInput row tended equals untended"
-    referenced_by: []
+    referenced_by: [design/gdd/tending.md]
   - name: trail_replay
     status: active
     source: design/gdd/modifier-pipeline-and-recompute.md
@@ -375,10 +375,10 @@ formulas:
   - name: progress_rescale
     status: active
     source: design/gdd/activity-slot-rest-and-away-time.md
-    expression: "p' = div_floor(p * D', D), on a recompute during play only (never on load)"
+    expression: "p' = min(p, div_floor(p * D', D)), on a recompute during play only (never on load); amended A2 2026-11-21 (was div_floor(p * D', D))"
     variables: [p, D, D']
-    output: "0 <= p' < D'; never gains; product at most 86400000^2"
-    referenced_by: []
+    output: "0 <= p' < D'; p' <= p (never grows; a lengthening keeps ms, a shortening keeps the fraction); product at most 86400000^2"
+    referenced_by: [design/gdd/tending.md]
   - name: run_unit_bound
     status: active
     source: design/gdd/activity-slot-rest-and-away-time.md
@@ -518,6 +518,34 @@ formulas:
     expression: "premium_ok(i, m) = [price(f_im) * 10000 <= PREMIUM_MAX_BP * price(r_im)]; band(i) = [ceil_div(max over m of price(f_im) * 10000, PREMIUM_MAX_BP), min over m of ceiling_m(i)] with ceiling_m from source_price"
     variables: [f_im, r_im, PREMIUM_MAX_BP, FIGHTLESS_CEILING_BP, FIGHTLESS_SLACK_MS]
     output: "0 or 1, U3 fails when 0; recipe bands in s: EJ 280-448, IH 317.5-508, EM 317.5-508, CL 842.5-1016, GM 692.5-1108, TP 1180-1524"
+    referenced_by: [design/gdd/tending.md]
+  - name: heap_add
+    status: active
+    source: design/gdd/tending.md
+    expression: "heap_add(out) = max(1, div_floor(out * HEAP_YIELD_BP, 10000)); out_t = out + heap_add(out); out read from checked (D3.2)"
+    variables: [out, HEAP_YIELD_BP]
+    output: "1 to 5e8; skim 5 -> 7, fell 3 -> 4, quarry 2 -> 3"
+    referenced_by: []
+  - name: heap_duration
+    status: active
+    source: design/gdd/tending.md
+    expression: "d_t = bp_of(d, HEAP_TIME_BP) (#2 scale_bp)"
+    variables: [d, HEAP_TIME_BP]
+    output: "above d for every d >= 1000 in the safe range; 5000 -> 6250; at most DURATION_CEILING by J1(d)"
+    referenced_by: []
+  - name: fill_time
+    status: active
+    source: design/gdd/tending.md
+    expression: "fill(R, o, D) = ceil_div(R, o) * D; heap_wins(R) = [fill(R, out_t, d_t) < fill(R, out, d)]"
+    variables: [R, o, D]
+    output: "D to 8.64e16 activity ms (Validator BigInt); skim wins 25 of 40 rooms, fell 16 of 30, quarry 16 of 20"
+    referenced_by: []
+  - name: heap_ceilings
+    status: active
+    source: design/gdd/tending.md
+    expression: "J1 = [out_t * 10000 <= YIELD_CEIL_BP * out] and [out_t <= div_floor(cap, 3)] and [out_t * d * 10000 <= RATE_CEIL_BP * out * d_t] and [d_t <= DURATION_CEILING]"
+    variables: [out, out_t, d, d_t, cap, YIELD_CEIL_BP, RATE_CEIL_BP, DURATION_CEILING]
+    output: "bool; speed ratios skim 1.12, fell 1.067, quarry 1.20; quarry yield at the ceiling exactly"
     referenced_by: []
 
 constants:
@@ -562,7 +590,7 @@ constants:
     source: design/gdd/content-records-and-schema.md
     value: 86400000
     unit: ms per unit
-    referenced_by: []
+    referenced_by: [design/gdd/tending.md]
   - name: max_fights_per_source
     status: active
     source: design/gdd/content-records-and-schema.md
@@ -711,7 +739,7 @@ constants:
     source: design/gdd/activity-slot-rest-and-away-time.md
     value: 1000
     unit: ms (shortest effective source duration, T1)
-    referenced_by: [design/gdd/crafting-route.md]
+    referenced_by: [design/gdd/crafting-route.md, design/gdd/tending.md]
   - name: units_max
     status: active
     source: design/gdd/activity-slot-rest-and-away-time.md
@@ -838,3 +866,33 @@ constants:
     value: 300000
     unit: ms for some ingredient's cheapest source under each method (U5, rule 17; safe 180000 to 420000)
     referenced_by: [design/gdd/crafting-route.md]
+  - name: heap_yield_bp
+    status: active
+    source: design/gdd/tending.md
+    value: 4000
+    unit: basis points of a gatherer's output added per heaped unit, floor 1 (Z1; safe 1000 to 5000)
+    referenced_by: []
+  - name: heap_time_bp
+    status: active
+    source: design/gdd/tending.md
+    value: 12500
+    unit: basis points of a gatherer's duration per heaped unit (Z2; safe 12000 to 15000)
+    referenced_by: []
+  - name: yield_ceil_bp
+    status: active
+    source: design/gdd/tending.md
+    value: 15000
+    unit: basis points of untended output a heaped unit may bring at most (J1(a); safe 12500 to 20000)
+    referenced_by: []
+  - name: rate_ceil_bp
+    status: active
+    source: design/gdd/tending.md
+    value: 12500
+    unit: basis points of untended output per minute a heaped gatherer may bring at most (J1(c); safe 10500 to 15000; inert at the shipped heap)
+    referenced_by: []
+  - name: tended_share_divisor
+    status: active
+    source: design/gdd/tending.md
+    value: 3
+    unit: a heaped unit is at most base cap divided by this (J1(b); answers #3 Open Question 7)
+    referenced_by: [design/gdd/resources-and-caps.md]

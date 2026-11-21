@@ -6,6 +6,7 @@
 > **Last Verified**: 2026-11-20
 > **Implements Pillar**: 2 (Methods matter), 4 (No dead ends, no attention tax)
 > **Creative Director Review (CD-GDD-ALIGN)**: APPROVED 2026-11-20 (no blocker; its one watch item, whether the descent reads as its own way to gather, is already Open Question 5 for the first MVP playtest)
+> **Amendments**: A1 2026-11-21 — Open Question 3 marked resolved by Tending (#10, `tending.md` D1, J3): routes are not tendable, and U3 holds under every tending set (status edit only, no rule change; designer-approved). Touches Open Questions row 3
 
 ## Summary
 
@@ -1109,7 +1110,7 @@ unchecked content facts.*
 |---|---|---|---|
 | 1 | Resolved 2026-11-21 by #8 (`crafting-route.md` L2, L6): bills at 60, 70 and 70 s are inside X3's limits, and every recipe is inside its band on those bills (X3, "On #8's real bills"). A later change to either GDD re-runs the X3 generator | Crafting route (#8), with this GDD | Done |
 | 2 | Resolved 2026-11-21 by #8's X6: a recipe with a by-product is an error, so T2 never fires on an ingredient source | Crafting route (#8) | Done |
-| 3 | Tending changes `outputs` and `duration`. Does a tended fight route keep U3's premium over a tended recipe, and are tended route durations still at least 1,000 ms (T1)? Tending's ceilings should be set against N1's durations | Tending (#10) | #10 GDD |
+| 3 | Tending changes `outputs` and `duration`. Does a tended fight route keep U3's premium over a tended recipe, and are tended route durations still at least 1,000 ms (T1)? Tending's ceilings should be set against N1's durations. Resolved 2026-11-21 by #10 (`tending.md` D1, J3): routes are not tendable, so their durations and T1 are unchanged; only the three hearth gatherers heap, and the validator runs U3 under every tending set (8 in the MVP), so a tended recipe never closes the route premium | Tending (#10) | Done |
 | 4 | Validator: (a) what exit status does "not evaluated" give, so that a blocked U3 neither breaks the build before #8 nor reads as a pass? (b) The archived attempt's validator capped every timed action at 180 s. That rule does not bind this game, and eight of N1's nine routes exceed it, so #12 must not inherit it. (c) Should the unchecked content facts (bill families, creature speed, N4.1's +3 margin) become a check? (d) Resolved 2026-11-21 by #6 A2: S7 takes the larger of a `reached(id, n)` atom's demand and the rest of that id's demand, so a floor's gate ingredient is made once, as X3 counts it. #8's L6.4 and AC-J-1 now use the same count | Validator (#12), with Forge and proving (#6) | #12 GDD |
 | 5 | Route fights cannot be lost, so the descent's difference from the hunts is its order, its prices and its thinner margins. Does it read as a different way to gather (rule 73), or as recipes in costume (`game-designer`'s risk)? | Designer | First MVP playtest |
 | 6 | The producer's candidate cut order reduces the dungeon to one floor. That would remove the pearl's descent, which carries Still Water's H5 margin (N6.5), and would change W5. If that cut is ever taken, re-run H5 and B9 first | Designer, with Methods (#7) | Only if the cut is taken |
