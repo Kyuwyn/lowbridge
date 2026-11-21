@@ -3,7 +3,7 @@
 > **Status**: Approved 2026-11-20 (lean re-review after the fifth full review; no pillar-level or design blocker. Recommended follow-ups are in the review log and move to implementation: ADR 2/3, the schema module and its tests)
 > **Author**: Will + agents
 > **Last Updated**: 2026-11-20
-> **Amendments**: A1 2026-11-20 — ops-table entries gain `operandRange`, checked at R8.3 step 7 (requested by Modifier pipeline #2 for `scale_bp`; approved by the designer). Touches R6.1, R8.3 step 7, AC-R8-2a, AC-R6-10, ADR 4 · A2 2026-11-20 — the stat-name list is closed as `might`, `guard`, `vigor`, `speed` (requested by Combat resolver #5; approved by the designer). Touches R4 note 4, R8.2, Cross-References · A3 2026-11-20 — `resource.cap` keeps `sealInput: yes` (Open Question 1 settled by Resources and caps #3, K8), and the affinity records are named by Forge and proving (#6), not #3 (designer-approved). Touches R4 note 1, Interactions rows 3 and 6, Open Questions row 1
+> **Amendments**: A1 2026-11-20 — ops-table entries gain `operandRange`, checked at R8.3 step 7 (requested by Modifier pipeline #2 for `scale_bp`; approved by the designer). Touches R6.1, R8.3 step 7, AC-R8-2a, AC-R6-10, ADR 4 · A2 2026-11-20 — the stat-name list is closed as `might`, `guard`, `vigor`, `speed` (requested by Combat resolver #5; approved by the designer). Touches R4 note 4, R8.2, Cross-References · A3 2026-11-20 — `resource.cap` keeps `sealInput: yes` (Open Question 1 settled by Resources and caps #3, K8), and the affinity records are named by Forge and proving (#6), not #3 (designer-approved). Touches R4 note 1, Interactions rows 3 and 6, Open Questions row 1 · A4 2026-11-20 — adds the R4 row `affinity.widens` (note 10), sets the affinity count to 4, and narrows `door.thresholds` to 10,000–20,000 each (requested by Forge and proving #6; approved by the designer). Touches R1 table, R4 rows and notes 6 and 10, Interactions row 6, Cross-References, Open Questions rows 2, 9 and 12
 > **Last Verified**: 2026-11-20
 > **Implements Pillar**: 3 (The build is a problem) and 4 (No dead ends, no attention tax); supports 1 (The forge is the milestone) and 2 (Methods matter)
 > **Creative Director Review (CD-GDD-ALIGN)**: REVISED 2026-11-19. Six findings applied: `contrib` is a total map; each method must patch a contribution and a route; no ingredient only fills a slot; protected ids need an alias; the fantasy anchor no longer fixes the preview model; numerals as words in proper names are allowed
@@ -127,7 +127,7 @@ error. Adding a type is a change to this GDD.
 |---|---|---|---|
 | `resource` | ~8 | A capped amount the player holds: raw materials, refined goods, crafted key items | `cap`, `start` |
 | `ingredient` | 6 | A forge ingredient. Holding one makes it available to a makeup | `contrib` |
-| `affinity` | 3–4 | A named Foundation stat axis. Text only; it gives stats a name for tooltips, marks and breakdowns | — |
+| `affinity` | 4 | A named Foundation stat axis, one per fighting stat (#6 G3). It names the stat for tooltips, marks and breakdowns, and lists the stores it widens | `widens` |
 | `method` | 2 | A cultivation method: its commit text, its redo price and its patches to other records | `commitText`, `redoCost`, `patches` |
 | `source` | ~20 | One activity the slot can run, per unit: crafting recipes, single fights, dungeon floors, and rest if system 4 authors rest this way | `inputs`, `outputs`, `duration`, `fights`, `enabled` |
 | `combatant` | ~7 | A fixed opponent for route fights and proving fights | `stats` |
@@ -335,6 +335,7 @@ error, and so is a row with no owner.
 | `resource.cap` | int | units | 1–1,000,000,000 | yes | foundation | yes [1] | Resources and caps (#3) |
 | `resource.start` | int | units | 0–1,000,000,000; ≤ cap | no, default 0 | — | no | Resources and caps (#3) |
 | `ingredient.contrib` | ref→int map | stat points | values −1,000,000–1,000,000; all keys of type affinity [2] | yes | method | yes | Forge and proving (#6) |
+| `affinity.widens` | ref-list | — | refs resource; 0–16 entries; distinct [10] | no, default [] | — | no | Forge and proving (#6) |
 | `method.commitText` | text | — | 1–200 chars | yes | — | no | Methods (#7) |
 | `method.patches` | patch-list | — | rule R6 [7] | no, default [] | — | no | Methods (#7) |
 | `method.redoCost` | int | redo units [8] | 0–1,000,000,000 | no | — | no | Methods (#7) |
@@ -347,7 +348,7 @@ error, and so is a row with no owner.
 | `source.enabled` | bool | — | — | no, default true | method | no | Methods (#7) |
 | `combatant.stats` | name→int map | stat points | keys of the stat-name list; values 0–1,000,000 [4] | yes | — | yes [5] | Combat resolver (#5) |
 | `door.opponent` | ref | — | refs combatant | yes | — | yes | Forge and proving (#6) |
-| `door.thresholds` | int-list | proving points [6] | exactly 2 entries; strictly ascending; each 0–1,000,000 | yes | — | yes | Forge and proving (#6) |
+| `door.thresholds` | int-list | proving points [6] | exactly 2 entries; strictly ascending; each 10,000–20,000 | yes | — | yes | Forge and proving (#6) |
 | `realm.ingredients` | ref-list | — | refs ingredient; 3–12 entries; distinct [9] | yes | — | yes | Forge and proving (#6) |
 | `realm.makeupSize` | int | ingredients | 2..M−1 | yes | — | yes | Forge and proving (#6) |
 | `realm.doors` | ref-list | — | refs door; 1–6 entries; distinct | yes | — | yes | Forge and proving (#6) |
@@ -376,11 +377,20 @@ schema row stores as the integer n):
 5. Tagged `sealInput` for every combatant, even though only proving opponents feed seals. A row
    covers a whole type, so the conservative tag keeps tending away from all of them.
 6. The proving result's scale is set by #6. Each threshold is 0–1,000,000 until #6 narrows it.
+   **Amended 2026-11-20 by Forge and proving (#6, A4), designer-approved:** each threshold is
+   10,000–20,000, the combat resolver's win floor to its maximum score (#5 F7), so a lost fight
+   is always tier 0 (`design/gdd/forge-and-proving.md` G6, S4). This GDD's fixtures and
+   acceptance criteria keep their threshold values (`[10, 20]`, the AC-R4 bounds row) by loading
+   against a test schema (R8.2).
 7. The patch operations are owned by the Modifier pipeline (#2) beyond `set` and `add`. This GDD
    owns legality.
 8. The numeric field the commit dialog's redo line reads (R7.2). Absent means the method offers
    no redo. Its unit and meaning belong to Methods (#7) and Reforge (#16).
 9. The entry count of `realm.ingredients` is the realm's M.
+10. **Added 2026-11-20 by Forge and proving (#6, A4), designer-approved.** The stores an
+    affinity's effective value widens after the forge (`design/gdd/forge-and-proving.md` G11,
+    S6). Not a seal input, because no seal reads a cap (#3 K8.2). #6's B12 rejects a key item
+    (base cap 1) in the list.
 
 #### R5. Gates
 
@@ -774,7 +784,7 @@ fields in R4. None of them may add a field, type or gate atom without amending t
 | 3 | Resources and caps | `resource` records | Rows for `resource.cap` and `resource.start`; names the resources and their caps (A3: the affinity records are #6's) | Shared: this GDD owns the type, #3 owns the values |
 | 4 | Activity slot | `source` records (`inputs`, `outputs`, `duration`, `enabled`) | Their rows; the high-water marks that `reached` reads; whether rest is a source | #4 owns the stop rule and the marks |
 | 5 | Combat resolver | `combatant` records | The closed list of stat names in `combatant.stats` | #5 |
-| 6 | Forge and proving | `ingredient`, `affinity`, `door`, `realm` records | Their rows; the `forged` state that `forged` reads; the seal function; names the affinity records (A3) | #6 |
+| 6 | Forge and proving | `ingredient`, `affinity`, `door`, `realm` records | Their rows; the `forged` state that `forged` reads; the seal function; names the affinity records (A3); `affinity.widens` and thresholds 10,000–20,000 (A4) | #6 |
 | 7 | Methods | `method` records; R6 legality | `commitText`, `patches` and `enabled` rows; the committed state that `committed` reads | #7 owns which patches exist; this GDD owns legality |
 | 8 | Crafting route | `source` records with no fights | Content only, with no new fields | This GDD |
 | 9 | Fight and dungeon routes | `source` records with fights | The `source.fights` row; how floors chain, using `reached` on floor outputs | #9 |
@@ -1312,7 +1322,7 @@ This system has no screen, but it fixes rules every screen must follow:
 | Resources and caps (#3) | R4 rows `resource.*`; Edge Cases on caps | Cap and start values; clamping `held`; whether `cap` is a seal input | Not yet designed |
 | Activity slot (#4) | R4 rows `source.*`; F1; rest as a source | Stop rule; high-water marks; durations in ms | Not yet designed |
 | Combat resolver (#5) | `combatant.stats` | Closed stat names | Designed 2026-11-20; list closed in R4 note 4 |
-| Forge and proving (#6) | R4 rows `ingredient.*`, `door.*`, `realm.*`; R5.3 ingredient counts | Seal function; `forged` state; affinity-only `contrib` keys | Not yet designed |
+| Forge and proving (#6) | R4 rows `ingredient.*`, `affinity.*`, `door.*`, `realm.*`; R5.3 ingredient counts | Seal function; `forged` state; affinity-only `contrib` keys | Designed 2026-11-20; amended this GDD (A4) |
 | Methods (#7) | R6; `method.*`, `source.enabled` | Committed state; which patches exist | Not yet designed |
 | Save and run lifecycle (#11) | R2.3, R8.5, Edge Cases on saves | Alias map, retired-id list, fingerprint handling | Not yet designed |
 | Content validator (#12) | R8.4; every "validator error" edge case | State and enumeration checks | Not yet designed |
@@ -1886,17 +1896,17 @@ splits of multi-bullet ACs (R1-2, R1-3, R4-4, R4-9, R5-6, F1) are still recommen
 | # | Question | Owner | Resolve by |
 |---|---|---|---|
 | 1 | Resolved 2026-11-20 (A3): `resource.cap` stays a seal input. A seal reads the cap from before that forge's own entries, and Reforge (#16) states which cap a reforge's seals read (Resources and caps #3, K8) | Resources and caps (#3) with Forge and proving (#6) | Done; #6 confirms K8.2 |
-| 2 | Do ingredients have counts (needing a cap row and `reached(ingredient, n > 1)`) or are they held 0/1? | Forge and proving (#6) | #6 GDD |
+| 2 | Resolved 2026-11-20 by #6 (G2): ingredients are held 0/1, with no counts, so `INGREDIENT_HELD_MAX` stays 1 | Forge and proving (#6) | Done |
 | 3 | Is rest a `source` record, and if so how is it exempt from "does nothing"? | Activity slot (#4) | #4 GDD |
 | 4 | May pre-release saves be wiped? Until decided, renames are free and the alias map is empty | Designer | Before the save format ADR |
 | 5 | Decided 2026-11-20: the method-choice view shows both methods' projected added/removed sources by name, ignoring `reveal` for sources the change sets touch (Edge Cases, "Before the commit"). Open: its layout and how it marks removed routes | Forge screen (#15), Method marks (#14) | Their UX specs |
 | 6 | How does a post-commit method switch keep `committed()` monotone? | Reforge (#16) | Before the Vertical Slice |
 | 7 | Does the realm ladder need a door-tier atom? | Realm ladder (#19) | Alpha |
 | 8 | Which browser runner (for Chromium and Firefox) runs AC-R8-4? The package tool is `bun` and `package.json` lists playwright (project rules) | Technical Director | Architecture |
-| 9 | Does the over-gathering price still hold now the method-choice view shows value patches (as `add` deltas, or "changed" for `set`) before the commit (concept mechanic 1 Preview rule, amended)? The balance table is a gate of #6's approval | Forge and proving (#6) | #6 GDD (balance table) |
+| 9 | Resolved 2026-11-20 by #6 (G9.3, B3, S9): the price holds with deltas shown, because base contributions stay hidden until held and totals clash; B3 checks that the plain-sum pick is never the best | Forge and proving (#6) | Done |
 | 10 | What are the unit and meaning of `method.redoCost` (registered here as an optional int), and which method offers a real redo, so the MVP's permanent commit is cleared? | Methods (#7), Reforge (#16) | #7 GDD |
 | 11 | How many sources does the MVP need once every fightless recipe a method can switch off has a second fightless source? R1's "~20" may be too low | Methods (#7), Crafting route (#8), Fight and dungeon routes (#9) | #7 GDD |
-| 12 | What price ceiling does check 3 of R8.4 apply, and what does it measure? | Forge and proving (#6) | #6 GDD |
+| 12 | Resolved 2026-11-20 by #6 (G12, S8): a fightless source's price is at most max(2 × p, p + 60 s), where p is the price of the ingredient's cheapest other enabled source, in untended slot time | Forge and proving (#6) | Done |
 
 **ADRs required** (representation decisions this GDD leaves out, per TD finding 8):
 

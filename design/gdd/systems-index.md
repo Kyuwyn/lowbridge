@@ -235,7 +235,7 @@ rules.
 | 3 | Resources and caps | Economy | MVP | Approved | design/gdd/resources-and-caps.md | Content records and schema, Modifier pipeline |
 | 4 | Activity slot, rest and away time | Core | MVP | Designed | design/gdd/activity-slot-rest-and-away-time.md | Content records and schema, Modifier pipeline, Resources and caps, Combat resolver |
 | 5 | Combat resolver (inferred) | Gameplay | MVP | Approved | design/gdd/combat-resolver.md | Content records and schema |
-| 6 | Forge and proving | Progression | MVP | Not Started | — | Resources and caps, Modifier pipeline, Combat resolver (contract owned by the Forge) |
+| 6 | Forge and proving | Progression | MVP | Designed | design/gdd/forge-and-proving.md | Content records and schema, Resources and caps, Modifier pipeline, Combat resolver (contract owned by the Forge) |
 | 7 | Methods | Progression | MVP | Not Started | — | Forge and proving, Modifier pipeline |
 | 8 | Crafting route | Economy | MVP | Not Started | — | Resources and caps, Activity slot, Forge and proving, Methods |
 | 9 | Fight and dungeon routes | Gameplay | MVP | Not Started | — | Activity slot, Combat resolver, Forge and proving, Methods |
@@ -493,7 +493,7 @@ session. Wave B starts after the checkpoint, and its order can change on what th
 
 ## Next Steps
 
-- [ ] Regenerate the forge prototype's balance table under the current rules
+- [x] Regenerate the forge prototype's balance table under the current rules (done 2026-11-20 in Forge and proving, S9)
 - [ ] Update the concept's Scope Risks (timebox 4 → about 9 weeks) and its MVP timeline row ("Design: 8–9.5 weeks at 12 h/week; build: re-estimated after `/create-architecture`")
 - [ ] Decide the rest of the producer's candidate cut order and the review budget (Producer Note)
 - [ ] Wave A checkpoint: playable forge and methods with real source records stubbed in behaviour, the goal line and instruction on the forge screen, and both methods played. Decide tending's tier from it

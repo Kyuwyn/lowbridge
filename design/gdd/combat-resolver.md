@@ -632,11 +632,11 @@ vigor 180, speed 50} from F8; SPEED_BASE is 100.
 
 | # | Question | Owner | Resolve by |
 |---|---|---|---|
-| 1 | The proving contract: how the Foundation under the method becomes four stats, which stats each door's opponent stresses so that the three doors test different things, and the threshold values. Should `door.thresholds` narrow from 0–1,000,000 to 0–20,000 (F7's range), by an amendment to #1? | Forge and proving (#6) | #6 GDD |
+| 1 | Resolved 2026-11-20 by #6 (G5, G6, S3, S9; #1 amendment A4): the Foundation's stats come from its affinities after clashes; the doors' opponents are S9's; `door.thresholds` narrows to 10,000–20,000, so a lost fight is always tier 0 | Forge and proving (#6) | Done |
 | 2 | Is a fight source that its challenger cannot win, under some method, a validator error? Before the forge every route outcome is a content fact (C9), so such a source can never pay | Fight and dungeon routes (#9), Validator (#12) | #9 GDD |
-| 3 | After the forge (#6's post-forge section), do route fights use the baseline or the Foundation's stats? If the Foundation's, the "one visible locked source" could be a fight the baseline cannot win | Forge and proving (#6), Fight and dungeon routes (#9) | #6 GDD |
+| 3 | Resolved 2026-11-20 by #6 (G13.2): route fights keep the baseline in the MVP; the locked source is each door's `flavor` text (G13.4) | Forge and proving (#6), Fight and dungeon routes (#9) | Done |
 | 4 | Does a lost unit consume its inputs, or only its time? Rule 27 says time only; #4 and #9 decide what "time" includes | Activity slot (#4), Fight and dungeon routes (#9) | #4 GDD |
-| 5 | Is SPEED_BASE 100 right once #6 sets the Foundation's stat ranges? | Forge and proving (#6) with this GDD | #6 balance table |
+| 5 | Resolved 2026-11-20 by #6 (B11, S9): `SPEED_BASE` 100 stays; B11 holds every Foundation's and door's speed at or below it | Forge and proving (#6) with this GDD | Done |
 | 6 | Row #4 of the systems index should list the Combat resolver among its dependencies (Dependencies, bidirectionality) | Systems index owner (`/map-systems`) | Next systems index update |
 
 **ADRs required** (representation decisions this GDD leaves out):
