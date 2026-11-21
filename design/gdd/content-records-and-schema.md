@@ -3,7 +3,7 @@
 > **Status**: Approved 2026-11-20 (lean re-review after the fifth full review; no pillar-level or design blocker. Recommended follow-ups are in the review log and move to implementation: ADR 2/3, the schema module and its tests)
 > **Author**: Will + agents
 > **Last Updated**: 2026-11-21
-> **Amendments**: A1 2026-11-20 — ops-table entries gain `operandRange`, checked at R8.3 step 7 (requested by Modifier pipeline #2 for `scale_bp`; approved by the designer). Touches R6.1, R8.3 step 7, AC-R8-2a, AC-R6-10, ADR 4 · A2 2026-11-20 — the stat-name list is closed as `might`, `guard`, `vigor`, `speed` (requested by Combat resolver #5; approved by the designer). Touches R4 note 4, R8.2, Cross-References · A3 2026-11-20 — `resource.cap` keeps `sealInput: yes` (Open Question 1 settled by Resources and caps #3, K8), and the affinity records are named by Forge and proving (#6), not #3 (designer-approved). Touches R4 note 1, Interactions rows 3 and 6, Open Questions row 1 · A4 2026-11-20 — adds the R4 row `affinity.widens` (note 10), sets the affinity count to 4, and narrows `door.thresholds` to 10,000–20,000 each (requested by Forge and proving #6; approved by the designer). Touches R1 table, R4 rows and notes 6 and 10, Interactions row 6, Cross-References, Open Questions rows 2, 9 and 12 · A5 2026-11-20 — `method.redoCost` is milliseconds of slot time (note 8); with `redoCost` absent the redo line reads "Redo: only by starting a new run"; the commit dialog also carries Methods' gives-up lines; R1's source target becomes ~23 (requested by Methods #7; approved by the designer). Touches R1 table, R4 row `method.redoCost` and note 8, R7.2, Edge Cases "Method patches", Cross-References, AC-R7-4, Open Questions rows 10 and 11 · A6 2026-11-21 — a door or affinity id retired without an alias is a validator error, as an ingredient, realm or method already was; Open Question 4 resolved (saves may be wiped until the first public build) (requested by Save and run lifecycle #11; approved by the designer). Touches Edge Cases "Saves across content versions", Cross-References, Open Questions row 4
+> **Amendments**: A1 2026-11-20 — ops-table entries gain `operandRange`, checked at R8.3 step 7 (requested by Modifier pipeline #2 for `scale_bp`; approved by the designer). Touches R6.1, R8.3 step 7, AC-R8-2a, AC-R6-10, ADR 4 · A2 2026-11-20 — the stat-name list is closed as `might`, `guard`, `vigor`, `speed` (requested by Combat resolver #5; approved by the designer). Touches R4 note 4, R8.2, Cross-References · A3 2026-11-20 — `resource.cap` keeps `sealInput: yes` (Open Question 1 settled by Resources and caps #3, K8), and the affinity records are named by Forge and proving (#6), not #3 (designer-approved). Touches R4 note 1, Interactions rows 3 and 6, Open Questions row 1 · A4 2026-11-20 — adds the R4 row `affinity.widens` (note 10), sets the affinity count to 4, and narrows `door.thresholds` to 10,000–20,000 each (requested by Forge and proving #6; approved by the designer). Touches R1 table, R4 rows and notes 6 and 10, Interactions row 6, Cross-References, Open Questions rows 2, 9 and 12 · A5 2026-11-20 — `method.redoCost` is milliseconds of slot time (note 8); with `redoCost` absent the redo line reads "Redo: only by starting a new run"; the commit dialog also carries Methods' gives-up lines; R1's source target becomes ~23 (requested by Methods #7; approved by the designer). Touches R1 table, R4 row `method.redoCost` and note 8, R7.2, Edge Cases "Method patches", Cross-References, AC-R7-4, Open Questions rows 10 and 11 · A6 2026-11-21 — a door or affinity id retired without an alias is a validator error, as an ingredient, realm or method already was; Open Question 4 resolved (saves may be wiped until the first public build) (requested by Save and run lifecycle #11; approved by the designer). Touches Edge Cases "Saves across content versions", Cross-References, Open Questions row 4 · A7 2026-11-21 — the closes list names Methods' verbs: a positive `add` on `ingredient.contrib` gives "Feeds: {label}" and a `set` to 0 gives "Quenches: {label}"; every other triple keeps "Changes: {label}" (requested by Method marks #14, answering Methods #7 Open Question 7; approved by the designer); Open Question 5's marking half marked answered by #14 MK5 (status edit only, designer-approved). Touches R7.2, AC-R7-3, Open Questions row 5
 > **Last Verified**: 2026-11-20
 > **Implements Pillar**: 3 (The build is a problem) and 4 (No dead ends, no attention tax); supports 1 (The forge is the milestone) and 2 (Methods matter)
 > **Creative Director Review (CD-GDD-ALIGN)**: REVISED 2026-11-19. Six findings applied: `contrib` is a total map; each method must patch a contribution and a route; no ingredient only fills a slot; protected ids need an alias; the fantasy anchor no longer fixes the preview model; numerals as words in proper names are allowed
@@ -532,16 +532,20 @@ schema row stores as the integer n):
        `closesLines(method, content)` (R8.1). It has one line per triple, in (target, field, key)
        order (UTF-16 code units, the order of R8.5's patch sort), with these templates:
        `enabled` set to 0 gives "Closes: {target name}"; `enabled` set to 1 gives
-       "Opens: {target name}"; every other triple gives "Changes: {label}". A changed value's
+       "Opens: {target name}"; on `ingredient.contrib`, an `add` with a positive operand gives
+       "Feeds: {label}" and a `set` to 0 gives "Quenches: {label}" (**amendment A7**,
+       2026-11-21: Methods #7's verbs, requested by Method marks #14 and approved by the
+       designer); every other triple gives "Changes: {label}". A changed value's
        label is built from names: the target's `name`, then the map key's `name` for a map field
        ("Iron seed: Ember") or the field's label from the schema module's label table for a
        scalar field ("Smelt ore: Time").
        The label table has one entry in the MVP, `source.duration` "Time" (the only scalar value
        field a method may patch besides `enabled`, which is listed as a source opened or
        closed); its entries are text under R4.6 and a new one is a change to this GDD. The list
-       shows each value as changed, with no number and no direction word (the number is the
-       interface's, from the field, rule 97; a direction word is a recommended addition, not
-       part of this GDD yet);
+       shows each value as changed, with no number (the number is the interface's, from the
+       field, rule 97). The verb is the only direction word: "Feeds" and "Quenches" on
+       contributions (A7), and "Changes" carries none. Each line's mark is Method marks'
+       (`design/ux/method-marks.md`, MK3);
      - the **redo line**, generated from `method.redoCost` (Methods #7, Reforge #16). When the
        field is absent the line reads "Redo: only by starting a new run" (amended 2026-11-20,
        A5: the MVP's one redo is the fast new game, #11). When it is present the line states
@@ -1665,8 +1669,9 @@ names a step asserts the `step` field too.
   **WHEN** loaded, **THEN** load error.
 - **AC-R7-3** [unit] **GIVEN** each method of the fixture, **WHEN** `closesLines(method, checked)`
   is called, **THEN** it returns exactly these lines in this order. `ember_breath`: "Opens: Deep
-  vein", "Changes: Iron seed: Ember", "Changes: Smelt ore: Time". `still_water`: "Changes: Iron
-  seed: Ember", "Changes: Jade seed: Frost", "Changes: Smelt ore: Time", "Closes: Smelt ore".
+  vein", "Feeds: Iron seed: Ember", "Changes: Smelt ore: Time". `still_water`: "Quenches: Iron
+  seed: Ember", "Feeds: Jade seed: Frost", "Changes: Smelt ore: Time", "Closes: Smelt ore"
+  (A7).
 - **AC-R7-4** [integration] **[blocked: #7, #13]** **GIVEN** each method, **WHEN** the commit
   dialog is built, **THEN** it shows the lines of AC-R7-3 and, when the method has no
   `redoCost`, the line "Redo: only by starting a new run" (A5), never text from `commitText`.
@@ -1910,7 +1915,7 @@ splits of multi-bullet ACs (R1-2, R1-3, R4-4, R4-9, R5-6, F1) are still recommen
 | 2 | Resolved 2026-11-20 by #6 (G2): ingredients are held 0/1, with no counts, so `INGREDIENT_HELD_MAX` stays 1 | Forge and proving (#6) | Done |
 | 3 | Is rest a `source` record, and if so how is it exempt from "does nothing"? | Activity slot (#4) | #4 GDD |
 | 4 | Resolved 2026-11-21 by the designer in #11 (D11.2): saves may be wiped until the first public build. Until then a record of another format is refused by name with a new run offered, renames stay free and the alias map stays empty; from the first public build on, ids freeze and format changes migrate | Designer | Done |
-| 5 | Decided 2026-11-20: the method-choice view shows both methods' projected added/removed sources by name, ignoring `reveal` for sources the change sets touch (Edge Cases, "Before the commit"). Open: its layout and how it marks removed routes | Forge screen (#15), Method marks (#14) | Their UX specs |
+| 5 | Decided 2026-11-20: the method-choice view shows both methods' projected added/removed sources by name, ignoring `reveal` for sources the change sets touch (Edge Cases, "Before the commit"). How it marks removed routes was answered 2026-11-21 by Method marks (#14, `design/ux/method-marks.md` MK5: a neutral closed glyph, then "Opens under" with the opening method's hollow glyph). Open: its layout | Forge screen (#15) | #15 UX spec |
 | 6 | How does a post-commit method switch keep `committed()` monotone? | Reforge (#16) | Before the Vertical Slice |
 | 7 | Does the realm ladder need a door-tier atom? | Realm ladder (#19) | Alpha |
 | 8 | Which browser runner (for Chromium and Firefox) runs AC-R8-4? The package tool is `bun` and `package.json` lists playwright (project rules) | Technical Director | Architecture |
