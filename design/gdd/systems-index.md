@@ -2,7 +2,7 @@
 
 > **Status**: Approved
 > **Created**: 2026-11-19
-> **Last Updated**: 2026-11-20
+> **Last Updated**: 2026-11-21
 > **Source Concept**: design/gdd/game-concept.md
 
 Rule numbers ("rule 23") refer to `research/arcanum-reference/12-design-rules.md` (1–38, 70–74),
@@ -162,7 +162,8 @@ fast new game so the other method can be tried. The fast new game is a test affo
 reset loop (anti-pillar). It depends on every state owner, so it follows them. Each gameplay
 GDD declares the non-derived state it owns. Save composes those declared slices and owns only
 versioning, migration and the fast new game. How the slices compose is an ADR. The designer
-still has to decide whether saves may be wiped before the first public build.
+decided on 2026-11-21 that saves may be wiped until the first public build, refused by name and
+never deleted silently (`save-and-run-lifecycle.md` D11.2).
 
 **12. Content validator and balance enumeration.** MVP required item 5. It runs schema
 checks, then the pillar 4 static checks on patched data: two sources per ingredient under each
@@ -244,11 +245,11 @@ rules.
 | 8 | Crafting route | Economy | MVP | Approved | design/gdd/crafting-route.md | Content records and schema, Resources and caps, Activity slot, Forge and proving, Methods |
 | 9 | Fight and dungeon routes | Gameplay | MVP | Approved | design/gdd/fight-and-dungeon-routes.md | Content records and schema, Resources and caps, Activity slot, Combat resolver, Forge and proving, Methods |
 | 10 | Tending | Gameplay | MVP | Not Started | — | Activity slot, Modifier pipeline, Content records and schema (field registry) |
-| 11 | Save and run lifecycle | Persistence | MVP | Not Started | — | Content records and schema, Resources and caps, Activity slot, Forge and proving, Methods |
-| 12 | Content validator and balance enumeration | Meta | MVP | Not Started | — | Content records and schema, Modifier pipeline, Resources and caps, Forge and proving, Methods, Crafting route, Fight and dungeon routes, Tending |
-| 13 | Interface shell and goal line (inferred) | UI | MVP | Not Started | — | Resources and caps, Activity slot, Forge and proving, Methods, Tending |
+| 11 | Save and run lifecycle | Persistence | MVP | Designed | design/gdd/save-and-run-lifecycle.md | Content records and schema, Modifier pipeline, Resources and caps, Activity slot, Forge and proving, Methods, Tending |
+| 12 | Content validator and balance enumeration | Meta | MVP | Not Started | — | Content records and schema, Modifier pipeline, Resources and caps, Forge and proving, Methods, Crafting route, Fight and dungeon routes, Tending, Save and run lifecycle |
+| 13 | Interface shell and goal line (inferred) | UI | MVP | Not Started | — | Resources and caps, Activity slot, Forge and proving, Methods, Tending, Save and run lifecycle |
 | 14 | Method marks and number breakdowns | UI | MVP | Not Started | — | Modifier pipeline, Methods |
-| 15 | Forge screen (inferred) | UI | MVP | Not Started | — | Forge and proving, Methods, Method marks and number breakdowns |
+| 15 | Forge screen (inferred) | UI | MVP | Not Started | — | Forge and proving, Methods, Method marks and number breakdowns, Save and run lifecycle |
 | 16 | Reforge and post-commit method switch | Progression | Vertical Slice | Not Started | — | Forge and proving, Methods, Resources and caps, Save and run lifecycle |
 | 17 | Phone layout | UI | Vertical Slice | Not Started | — | Interface shell and goal line, Forge screen |
 | 18 | Accessibility and settings (inferred) | Meta | Vertical Slice | Not Started | — | Interface shell and goal line, Method marks and number breakdowns |
@@ -328,7 +329,7 @@ access to the pipeline. Its door-test contract is owned by the Forge.
 3. Crafting route — depends on: Content records and schema, Resources and caps, Activity slot, Forge and proving, Methods
 4. Fight and dungeon routes — depends on: Content records and schema, Resources and caps, Activity slot, Combat resolver, Forge and proving, Methods
 5. Tending — depends on: Activity slot, Modifier pipeline, Content records and schema (the field registry's `sealInput` tags constrain it)
-6. Save and run lifecycle — depends on: Content records and schema, Resources and caps, Activity slot, Forge and proving, Methods
+6. Save and run lifecycle — depends on: Content records and schema, Modifier pipeline, Resources and caps, Activity slot, Forge and proving, Methods, Tending (its slice)
 7. Reforge and post-commit method switch (VS) — depends on: Forge and proving, Methods, Resources and caps, Save and run lifecycle
 8. Realm ladder (Alpha) — depends on: Forge and proving, Resources and caps, Reforge, Save and run lifecycle
 
@@ -337,16 +338,16 @@ after the routes.
 
 ### Presentation Layer (depends on features)
 
-1. Interface shell and goal line — depends on: Resources and caps, Activity slot, Forge and proving, Methods, Tending
+1. Interface shell and goal line — depends on: Resources and caps, Activity slot, Forge and proving, Methods, Tending, Save and run lifecycle
 2. Method marks and number breakdowns — depends on: Modifier pipeline, Methods
-3. Forge screen — depends on: Forge and proving, Methods, Method marks and number breakdowns
+3. Forge screen — depends on: Forge and proving, Methods, Method marks and number breakdowns, Save and run lifecycle (the last-run line)
 4. Phone layout (VS) — depends on: Interface shell and goal line, Forge screen
 
 None of these hold game rules. They read state and the modifier breakdowns.
 
 ### Polish Layer (depends on everything)
 
-1. Content validator and balance enumeration — depends on: Content records and schema, Modifier pipeline, Forge and proving, Methods, Crafting route, Fight and dungeon routes, Tending. MVP tier despite its layer.
+1. Content validator and balance enumeration — depends on: Content records and schema, Modifier pipeline, Forge and proving, Methods, Crafting route, Fight and dungeon routes, Tending, Save and run lifecycle (the alias rule and migration fixtures). MVP tier despite its layer.
 2. Accessibility and settings (VS) — depends on: Interface shell and goal line, Method marks and number breakdowns
 3. In-game codex (Full Vision) — depends on: Content records and schema
 
@@ -488,10 +489,10 @@ session. Wave B starts after the checkpoint, and its order can change on what th
 | Metric | Count |
 |--------|-------|
 | Total systems identified | 20 |
-| Design docs started | 9 |
+| Design docs started | 10 |
 | Design docs reviewed | 9 |
 | Design docs approved | 9 |
-| MVP systems designed | 9/15 |
+| MVP systems designed | 10/15 |
 | Vertical Slice systems designed | 0/3 |
 
 ---
