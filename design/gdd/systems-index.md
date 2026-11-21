@@ -246,7 +246,7 @@ rules.
 | 9 | Fight and dungeon routes | Gameplay | MVP | Approved | design/gdd/fight-and-dungeon-routes.md | Content records and schema, Resources and caps, Activity slot, Combat resolver, Forge and proving, Methods |
 | 10 | Tending | Gameplay | MVP | Approved | design/gdd/tending.md | Activity slot, Modifier pipeline, Content records and schema (field registry), Resources and caps, Crafting route |
 | 11 | Save and run lifecycle | Persistence | MVP | Approved | design/gdd/save-and-run-lifecycle.md | Content records and schema, Modifier pipeline, Resources and caps, Activity slot, Forge and proving, Methods, Tending |
-| 12 | Content validator and balance enumeration | Meta | MVP | Not Started | — | Content records and schema, Modifier pipeline, Resources and caps, Forge and proving, Methods, Crafting route, Fight and dungeon routes, Tending, Save and run lifecycle |
+| 12 | Content validator and balance enumeration | Meta | MVP | Designed | design/gdd/content-validator-and-balance-enumeration.md | Content records and schema, Modifier pipeline, Resources and caps, Activity slot, Combat resolver, Forge and proving, Methods, Crafting route, Fight and dungeon routes, Tending, Save and run lifecycle |
 | 13 | Interface shell and goal line (inferred) | UI | MVP | Not Started | — | Resources and caps, Activity slot, Forge and proving, Methods, Tending, Save and run lifecycle |
 | 14 | Method marks and number breakdowns | UI | MVP | Not Started | — | Modifier pipeline, Methods |
 | 15 | Forge screen (inferred) | UI | MVP | Not Started | — | Forge and proving, Methods, Method marks and number breakdowns, Save and run lifecycle |
@@ -347,7 +347,7 @@ None of these hold game rules. They read state and the modifier breakdowns.
 
 ### Polish Layer (depends on everything)
 
-1. Content validator and balance enumeration — depends on: Content records and schema, Modifier pipeline, Forge and proving, Methods, Crafting route, Fight and dungeon routes, Tending, Save and run lifecycle (the alias rule and migration fixtures). MVP tier despite its layer.
+1. Content validator and balance enumeration — depends on: Content records and schema, Modifier pipeline, Resources and caps, Activity slot, Combat resolver, Forge and proving, Methods, Crafting route, Fight and dungeon routes, Tending, Save and run lifecycle (the alias rule and migration fixtures). MVP tier despite its layer.
 2. Accessibility and settings (VS) — depends on: Interface shell and goal line, Method marks and number breakdowns
 3. In-game codex (Full Vision) — depends on: Content records and schema
 
@@ -489,10 +489,10 @@ session. Wave B starts after the checkpoint, and its order can change on what th
 | Metric | Count |
 |--------|-------|
 | Total systems identified | 20 |
-| Design docs started | 11 |
+| Design docs started | 12 |
 | Design docs reviewed | 11 |
 | Design docs approved | 11 |
-| MVP systems designed | 11/15 |
+| MVP systems designed | 12/15 |
 | Vertical Slice systems designed | 0/3 |
 
 ---
