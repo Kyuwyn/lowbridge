@@ -9,7 +9,8 @@
 > **Template**: UX Spec
 > **Implements Pillar**: 4 (No dead ends, no attention tax); supports 1 (The forge is the milestone), 2 (Methods matter) and 3 (The build is a problem)
 > **Binding inputs**: systems index rationale 13, row 13 and the risk register's Interface shell row; the concept's pillars, Visual Identity Anchor and MVP required item 8; GDDs #1–#11 (all Approved)
-> **Amendments made with this spec** (designer-approved 2026-11-21): #1 A7 (`source.group`) and A8 (the `opened` event); #11 A1 (the storage request becomes a menu action); #8 A1 and #9 A2 (group values, Open Questions answered); status edits to #3, #4 and #10; two concept rewordings. Requirement Trace lists each
+> **Aligned with**: Method marks (#14, `design/ux/method-marks.md` D3, BD2, BD6, glyph sheet, Transitions), on the designer's decisions taken in #14's session (2026-11-21)
+> **Amendments made with this spec** (designer-approved 2026-11-21): #1 A8 (`source.group`) and A9 (the `opened` event); #11 A1 (the storage request becomes a menu action); #8 A1 and #9 A2 (group values, Open Questions answered); status edits to #3, #4 and #10; two concept rewordings. Requirement Trace lists each
 
 Rule numbers ("rule 32") refer to `research/arcanum-reference/12-design-rules.md` (1–38, 70–74),
 `research/hundred-days-reference/06-design-rules.md` (39–69) and
@@ -88,7 +89,7 @@ I choose a method" (AC-13-01).
 
 | With | This spec owns | The other spec owns |
 |---|---|---|
-| Method marks and number breakdowns (#14), written in parallel | The detail container: how it opens (tap, click or Enter), where it sits, its stack and Back, how it closes, focus. Which fields a card shows, and in what order. Which numbers are tap targets: every number that comes from a field (#1 R7.2) | What a number breakdown shows inside the container: the base, each stage and its source, and a clamp read as a limit (#2 P8). What a method mark looks like on any value (in a row, a card or the goal line) and how it shows direction. The closed-route mark. The heap glyph inside a breakdown (#10). **This spec designs none of #14's contents.** It reserves the space and hands the value to #14's renderer |
+| Method marks and number breakdowns (#14), written in parallel | The detail container: how it opens (tap, click or Enter on a record), where it sits, its drill-down stack and back line, how it closes, focus, line size. Which fields a card shows, and in what order. What opens it: records only (a source's name, a store, an ingredient, a door, the goal line, the method chip, the running line), never a number or a mark (#14 D3) | What a number breakdown shows inside the container, under each rule-derived number's own line: the base, each stage and its source, a clamp read as a limit (#2 P8), and a composed number's part lines (#14 BD1–BD9). What a method mark looks like on any value (in a row, a card or the goal line) and how it shows direction. The glyph sheet: each method's glyph, solid when circulating and hollow otherwise, and the neutral closed, heap and limit glyphs. **This spec designs none of #14's contents.** It reserves the space, hands the value to #14's renderer, and places #14's solid glyph on the method chip and its heap glyph on the heap toggle |
 | Forge screen (#15), later | The Forge view's place in the frame: a centre view beside the Road, with its own tab. The switch to the Road after the commit. The goal line and the instruction lines after the Wave A checkpoint. The dialog container. The persistent display of the Foundation (#6 UI flag) | Everything inside the Forge view: the method-choice view, the commit dialog's contents, plans, previews, the headroom signal, the forge confirmation, the forge's visual event, the `lastRun` line, and the accent before the commit |
 | Phone layout (#17), vertical slice | The narrow layout's zones, components and limits, which are a constraint from the MVP | Delivery and polish at the vertical slice. #17 may refine this layout. It may not take a rule 32 item off the narrow screen without amending this spec |
 | Accessibility and settings (#18), vertical slice | The accessibility floor stated under Accessibility | The tier, the settings (themes, text size), and everything beyond the floor |
@@ -119,13 +120,13 @@ from a *copy* rule is stated, with its reason, in the right-hand column.
 | 37 Desktop-only layout | Arcanum, beat | A narrow layout from the MVP |
 | 38 Irreversible actions confirm | Arcanum, beat | Every irreversible action says what it clears: New run and Load save here, the commit and the forge in #15 |
 | 54 Irreversible choices say what they close | Hundred Days, copy | The new-run dialog names the method and the Foundation it clears |
-| 58 Closed lists for free-text enums | Hundred Days, copy | `source.group` is free text, but a group of one source is a load error (#1 A7), so a typo cannot open a group of its own |
+| 58 Closed lists for free-text enums | Hundred Days, copy | `source.group` is free text, but a group of one source is a load error (#1 A8), so a typo cannot open a group of its own |
 | 66 Search once a list passes ~50 records | Hundred Days, copy | Not needed: the MVP road has 23 sources |
 | 67 A phone layout is not optional | Hundred Days, avoid the reference | The narrow layout is specified now |
 | 68 One notice channel | Hundred Days, avoid the reference | One log and one notice strip. No toasts, no tickers, no pop-ups |
 | 70 Flavour comments on the mechanic | Arcanum, copy | `flavor` comes last in a card, and in the ladder beats' log lines |
 | 71 Identity lives where the numbers live | Arcanum, copy | The method's tint appears only on the method chip and on values the method changed (#14) |
-| 97 Every number explains itself | Magic Research 2, copy | Every number that comes from a field is a tap target for #14's breakdown |
+| 97 Every number explains itself | Magic Research 2, copy | Every rule-derived number in a card shows #14's breakdown under its own line, already expanded. **Diverged, with #14 (its D3):** the breakdown is reached through the record, not by tapping the number. Reason: dense rows at 390 px cannot give each number a 44 px target (rule 67) |
 | 98 A phone layout is achievable | Magic Research 2, copy | The bottom tab bar is copied. **Diverged:** there is no resource drawer and no bell. Reason: rule 32 wins, so the stores stay on screen as chips |
 | 99 One goal line, one event channel | Magic Research 2, copy | The goal line names the next step, and every unlock is a typed event that stays readable in the log. There are no pop-ups, so nothing needs suppressing |
 
@@ -297,12 +298,12 @@ Questions 4).
 | C8 | Ingredient row | Z3 | Stat display | Name and "in hand", "not yet" or "in the Foundation" | Tap: Ingredient card | New |
 | C9 | View tabs | Z4 / N5 | Tab list | Road · Forge (wide); Road · Forge · Log (narrow) | Yes | Standard tabs |
 | C10 | Group heading | Z4 / N3 | Text | The group's `source.group` text | No | New |
-| C11 | Source row | Z4 / N3 | List row | State glyph, name, output, bill, duration, fight result, kept progress, reason; heap toggle on gatherers; Start when Ready | Name: Source card; numbers: breakdowns; toggle; Start | New: Source row |
+| C11 | Source row | Z4 / N3 | List row | State glyph, name, output, bill, duration, fight result, kept progress, reason; heap toggle on gatherers; Start when Ready | Name: Source card; toggle; Start. Numbers are not targets | New: Source row |
 | C12 | Ladder block | Z4 / N3 | Grouped rows | A rail, the floors in order, depth glyphs, a break at a sealed floor; one closed row when every floor is closed | As C11 | New: Ladder block |
 | C13 | Post-forge road note | Z4 / N3 | Text | One line once the realm is forged | No | — |
 | C14 | Log | Z5 / N3 (Log tab) | Live list | Entries, newest first; the away block | Scroll only | New: Event log |
 | C15 | Pinned log line | N4 | Text | The newest entry, or the away block's header | Tap: Log tab | New |
-| C16 | Detail container | Overlay | Anchored card (wide) / bottom sheet (narrow) | A card in rule 33's field order, or a #14 breakdown | Close, Back, tap targets inside | New: Detail card |
+| C16 | Detail container | Overlay | Anchored card (wide) / bottom sheet (narrow) | A card in rule 33's field order, with #14's breakdown under each rule-derived number; a drilled frame under its back line | Close, the back line, part lines (›), records named inside | New: Detail card |
 | C17 | Dialog container | Overlay | Modal dialog | New run, Copy save, Load save; #15's commit dialog and forge confirmation | Yes | Standard modal |
 | C18 | Session screens | Full screen | Text and buttons | Loading, Elsewhere, Superseded, Refused, Content error, No lock support | Per screen | New |
 
@@ -328,7 +329,8 @@ Questions 4).
     door's name and `desc`.
   - After the forge: the Foundation, which has the four ingredients, the four affinities by name
     and glyph with their stats (#6 Visual/Audio: each also names its stat), each door's tier and
-    `flavor` (#6 G13.4), and the seal total. Every number opens its breakdown (#14).
+    `flavor` (#6 G13.4), and the seal total. Every number shows its breakdown under its own line,
+    and the seals, each door's score and each stat drill down (#14 BD5, BD6).
 - The doors' `flavor` names what lies beyond each door. It appears in the Goal card only once the
   realm is forged (#6 G13.4).
 
@@ -359,8 +361,10 @@ Shell strings. Each number comes from a realm field, so the text stays true if c
 
 - Before the commit: a neutral glyph and "No method yet". The shell sets no accent before the commit,
   because #15 owns the accent before the commit.
-- After the commit: the method's glyph, name and tint. It is the interface's only accent (Visual
-  Identity Anchor, principle 1), and the glyph carries the meaning in greyscale (principle 3).
+- After the commit: the method's solid glyph from #14's glyph sheet, its name and its tint (#14
+  MK9). It is the interface's only accent (Visual Identity Anchor, principle 1), and the glyph
+  carries the meaning in greyscale (principle 3). The neutral glyph before the commit is this
+  spec's and stays distinct from every #14 glyph (Open Questions 3).
 - Tap opens the Method card: `desc`, the closes list (`closesLines`, #1 R7.2), the redo line (#7 Y2:
   "Redo: only by starting a new run"), and "{other method}: closed for this run. A new run can
   choose it." The other method stays readable (#7 UI Requirements 4).
@@ -406,7 +410,7 @@ Shell strings. Each number comes from a realm field, so the text stays true if c
 #### C10–C13 The road
 
 - **Grouping (#8 Open Question 5, answered: by line).** Each source carries `source.group`, a
-  display-only heading (#1 A7). Sources with the same text form one group. Groups appear in the
+  display-only heading (#1 A8). Sources with the same text form one group. Groups appear in the
   order of their first source in content, and rows in content order. The MVP's groups, authored
   with #8's and #9's content:
 
@@ -452,12 +456,15 @@ Shell strings. Each number comes from a realm field, so the text stays true if c
   | Running | It is the slot's occupant | running | Progress, as on the running line | No (Stop is on the running line) |
 
   Each unavailable state has its own glyph shape, so hue never carries the difference (#9
-  Visual/Audio, "Distinct shapes"). The glyph shapes are art (Open Questions 3).
+  Visual/Audio, "Distinct shapes"). The glyph shapes are art (Open Questions 3). Each must also
+  differ in silhouette from #14's method glyphs and its neutral closed, heap and limit glyphs
+  (#14 glyph sheet).
 - **Before the commit,** every row reads "Needs a method committed" first and offers no Start.
   Gatherer toggles are disabled with the same text (#10 UI Requirements 2).
 - **C11a The heap toggle (gatherers only, #10 UI Requirements).** A native toggle on the row itself,
-  never in an overflow menu. Its label is "Heap {source}". Its state is a glyph plus a word: "Level"
-  when off, "Heaped" when on. The row's figures show both yields side by side: "5 per 5 s · heaped 7
+  never in an overflow menu. Its label is "Heap {source}". It carries #14's neutral heap glyph, the
+  same shape as a breakdown's heap line, and its state is a word beside the toggle's own position:
+  "Level" when off, "Heaped" when on. The row's figures show both yields side by side: "5 per 5 s · heaped 7
   per 6.25 s" (#10 UI Requirements 3). There is no recommendation, no computed fill time and no
   highlight (#10 Visual/Audio, "No steering"). Rows of other sources carry no toggle.
   - "Level" stands in for #10's "the gatherer's verb", because no field holds a verb (Open
@@ -466,7 +473,7 @@ Shell strings. Each number comes from a realm field, so the text stays true if c
   every source in it has `fights` and every source after the first has a `need`. Both tests read
   fields, so no id is named in the shell (rule 1).
   - The ladder has a continuous rail on its left edge, floors in content order, and the depth glyph
-    repeated once, twice or three times, in a neutral shape family distinct from the method glyphs.
+    repeated once, twice or three times, in a neutral shape family distinct from every #14 glyph.
   - A sealed floor is a visible break in the rail, with the sealed glyph. Its reason line states its
     condition before it opens (#9 Visual/Audio).
   - Floors are never indented, and depth never fades: floor III keeps full contrast.
@@ -485,23 +492,37 @@ Specified under Events Fired: the event-to-line table, merging, the away block a
 
 #### C16 Detail container (the one tooltip)
 
-- **Opening.** Tap, click, or Enter or Space on a focused tap target. The tap targets are a record's
-  name, a store, the goal line, the method chip, the running line, and every number that comes from
-  a field. A number opens its breakdown (#14) directly. **Hover opens nothing.** On a mouse, a tap
-  target shows a pointer cursor and an underline (rule 33, beaten; MVP required item 8).
+- **Opening.** Tap, click, or Enter or Space on a focused record: a source's name, a store, an
+  ingredient, the goal line, the method chip or the running line. Numbers and marks are never
+  targets. Each rule-derived number in the card shows its #14 breakdown directly under its own
+  line, already expanded, and a base-only number shows bare (#14 D3, BD2). **Hover opens
+  nothing.** On a mouse, a record shows a pointer cursor and an ink underline on its name (rule 33,
+  beaten; MVP required item 8). No number takes a hover underline, so a hover never reads as #14's
+  channel underline (#14 MK2).
 - **Wide: an anchored card.** It opens below its target if there is room, otherwise above, aligned
   to the target's start edge and kept 16 px inside the viewport. It is 320–400 px wide, at most 70%
   of the viewport tall, and scrolls inside.
 - **Narrow: a bottom sheet.** Full width, at most the viewport height less the pinned header, so the
   goal band, running line and store chips stay visible while it is open (rule 32). A scrim covers
   only the content zone.
-- **One at a time.** Opening another target replaces the card.
-- **Stack.** A tap target inside the card (a number, or a record named in it) opens in the same
-  container, and Back returns. Close clears the stack.
-- **Live.** The card repaints with the game. It never closes on a game event.
+- **One at a time.** Opening another record from outside the card replaces it and clears its stack.
+- **Drill-down stack (#14 BD6).** Two kinds of line inside a card open in the same container, one
+  level deeper: a **part line** of a composed breakdown, which ends in "›", and a **record named in
+  the card** (a source under Opens, an ingredient under Sources, a door in the Goal card).
+  - The new frame replaces the content in the same frame, with no slide and no fade. Its first line
+    is the **back line**, "‹ {parent label} {parent value}", or "‹ {record}" when the parent is a
+    record, and focus moves to it.
+  - Back returns to the parent frame and puts focus on the line that was opened.
+  - Depth is unbounded. The MVP's deepest chain is six levels (#14 BD6).
+  - The stack is interface state and is never saved (Data Requirements).
+- **Line size.** Part lines and the back line are full width and at least 44 px tall with a coarse
+  pointer. Breakdown lines wrap and never truncate, so the container never scrolls sideways, at
+  390 px or at the 320 px reflow floor.
+- **Live.** The card repaints with the game, a drilled frame and its back line's value included. It
+  never closes on a game event.
 - **Closing.** The close button, Esc, a click or tap outside the card (wide), or a tap on the scrim
-  (narrow). A click outside also acts on what it lands on, so Start works with a card open. Focus
-  returns to the target that opened the card.
+  (narrow). Each closes the whole stack. A click outside also acts on what it lands on, so Start
+  works with a card open. Focus returns to the record that opened the first frame.
 - **The fields, in one order for every record type that has them** (rule 33; #1 UI Requirements,
   "Render by field, not by type"). A block with nothing to show is left out.
 
@@ -514,15 +535,17 @@ Specified under Events Fired: the event-to-line table, merging, the away block a
   | 5 | Needs | Every line of the need text (#1 R5.5), in the gate's order |
   | 6 | Takes | Each input with the amount held and any shortfall |
   | 7 | Gives | Each output; for a gatherer, untended and heaped side by side |
-  | 8 | Fights | Each opponent by name, with the exact result: the verdict, the Life kept with its base, and the decider (#5 UI Requirements 1). The four stats on each side open on tap (#14) |
+  | 8 | Fights | Each opponent by name, with the exact result: the verdict, the Life kept with its base, and the decider (#5 UI Requirements 1). #14's breakdown under the result shows the four stats on each side (#5 UI Requirements 3) |
   | 9 | Contributes | An ingredient's `contrib` under the method, only while it is in hand (#6 G7.3; #1: a base contribution is never shown before the ingredient is held). Otherwise: "What it gives shows once it is in hand." |
   | 10 | Widens | An affinity's stores (`affinity.widens`) |
   | 11 | Opens | The sources whose `need` names this record (a key item, or a floor's ingredient). For a method, its closes list and redo line |
   | 12 | Sources | For an ingredient, each source that pays it, by route family ("Recipe", "Hunt", "Floor") and state (#7 UI Requirements 5) |
   | 13 | Flavour | `flavor`, in italics, always last (rule 70) |
 
-- Every number in blocks 1–12 is a tap target. Marks on marked values are #14's.
-- A breakdown opened in the container is titled "{record}: {field}". #14 fills the rest.
+- No number in blocks 1–12 is a target. Each rule-derived one carries #14's breakdown block under
+  its own line. Marks on marked values are #14's.
+- A drilled frame starts with the back line, then the part's label and value as its title. #14
+  fills the rest (#14 W4).
 
 #### C17 Dialog container
 
@@ -719,7 +742,8 @@ entry is one tap away on the Log tab. Rows, chips and cards never truncate.
   │ Takes Rendered Oil ×6 (held 9)            │
   │ Gives Echo Jade 1                         │
   │ Fights Pangolin: wins, keeps 46 of 100    │
-  │        Life; outlasted   [stats]          │
+  │        Life; outlasted                    │
+  │   {#14 breakdown: the four stats}         │
   │ {flavor, italic}                          │
   └───────────────────────────────────────[×]─┘
 ```
@@ -772,7 +796,7 @@ notice never covers the goal band.
 | Heap toggle | Disabled before the commit · Level · Heaped (#10 D2) |
 | Ladder block | Open (some floor not Closed) · Collapsed to one closed row (every floor Closed) |
 | Menu item "Keep my save in this browser" | Offered · "This browser keeps your save" (granted, inert) · Not shown (the browser has no such request, or storage is not keeping) |
-| Detail container | Closed · Open on a record · Open on a breakdown (with Back) |
+| Detail container | Closed · Open on a record (depth 0) · Drilled (depth 1 or more: a part or a named record, under the back line) |
 | Dialogs | Open · Busy (until the write commits) · Failed (with Copy save) |
 
 ### Empty and edge states
@@ -811,17 +835,18 @@ D2.4). **Before every rules action** the rules core settles time to now (#4 S3.4
 | Component | Action | Mouse | Keyboard | Touch | Immediate feedback | Outcome |
 |---|---|---|---|---|---|---|
 | Source name (C11) | Open its card | Click | Enter or Space on focus | Tap | The card opens, anchored, or the sheet rises | Interface only |
-| Any number from a field | Open its breakdown | Click | Enter or Space | Tap | The container opens on #14's breakdown | Interface only |
+| Part line (›), or a record named in a card | Drill down one level | Click | Enter or Space | Tap | The content is replaced in the same frame; the back line comes first and takes focus (#14 BD6) | Interface only |
+| Back line (‹) | Up one level | Click | Enter or Space | Tap | The parent frame returns, with focus on the line that was opened | Interface only |
 | Start (C11) | Start the source | Click | Enter or Space | Tap | In the same frame: the row turns Running and the running line shows it | `start(id)`. A refused Start (the state changed under the tap) changes nothing; the row already shows the new reason. No log line |
 | Stop (C5) | Stop the run | Click | Enter or Space | Tap | In the same frame: "Resting · {source} stopped" | `stop()` |
 | Heap toggle (C11a) | Flip heaping | Click | Space on focus | Tap | It flips in the input's frame. The row's figures update, and a running unit's bar jumps to its true fraction without easing (#10 Game Feel) | `setHeap(id, on)` |
 | Goal line (C1) | Open the Goal card | Click | Enter or Space | Tap | The card opens | Interface only |
 | Method chip (C3) | Open the Method card | Click | Enter or Space | Tap | The card opens | Interface only |
 | Running line (C5), outside Stop | Open the Running card | Click | Enter or Space | Tap | The card opens | Interface only |
-| Store row or chip (C7) | Open the Store card | Click | Enter or Space | Tap | The card opens. Its cap opens #14's cap breakdown (#3 UI Requirements) | Interface only |
+| Store row or chip (C7) | Open the Store card | Click | Enter or Space | Tap | The card opens, with #14's cap breakdown under the cap's line (#3 UI Requirements; #14 W3) | Interface only |
 | Ingredient row (C8) | Open the Ingredient card | Click | Enter or Space | Tap | The card opens | Interface only |
 | View tab (C9) | Switch views | Click | Arrow keys within the tab list, Enter | Tap | The view changes and keeps its own scroll position | Interface only |
-| Card close, Back | Close or step back | Click × or outside, Back | Esc closes; Back is a button | Tap ×, scrim, Back | The container closes and focus returns, or the previous content shows | Interface only |
+| Card close | Close the whole stack | Click × or outside | Esc | Tap × or the scrim | The container closes and focus returns to the record that opened it | Interface only |
 | Menu (C4) | Open the menu | Click | Enter, then arrows; Esc closes | Tap | The list opens | Interface only |
 | New run… | Open the dialog | Click | Enter | Tap | The dialog opens | — |
 | New run: Confirm | Start a new run | Click | Enter | Tap | Busy until the write commits | `newRun()` |
@@ -834,11 +859,11 @@ D2.4). **Before every rules action** the rules core settles time to now (#4 S3.4
 | Refused: New run, Copy save, Load save | As above | Click | Enter | Tap | As above | As above |
 | Notice: Copy save, Copy report, Dismiss, Details | As named | Click | Enter | Tap | As named | Dismiss and Details are interface only |
 | Pinned log line (C15) | Open the Log tab | — | Enter | Tap | The Log tab opens at the top | Interface only |
-| Log entries | Read | Wheel scrolls | Arrow keys scroll the focused log | Swipe scrolls | — | Log entries hold event amounts, not field values, so they carry no breakdown taps |
+| Log entries | Read | Wheel scrolls | Arrow keys scroll the focused log | Swipe scrolls | — | Log entries hold event amounts, not field values, so they open nothing |
 | Commit dialog, forge confirmation | #15's | | | | Shown in C17 | `commit(m)`, `forge(plan)` (#7, #6) |
 
-**Hover, right-click and wheel (mouse).** Hover shows a pointer cursor and an underline on tap
-targets, and nothing else. Right-click keeps the browser default. The wheel scrolls the zone under
+**Hover, right-click and wheel (mouse).** Hover shows a pointer cursor and an ink underline on a
+record's name, and nothing else. Numbers take no hover underline (#14 MK2). Right-click keeps the browser default. The wheel scrolls the zone under
 the pointer (Z3, Z4 and Z5 scroll on their own).
 
 **No keyboard shortcuts in the MVP** beyond Esc, Tab, Enter, Space and the arrow keys. Rule 33's
@@ -854,7 +879,7 @@ state.
 | Data | Source system | Read / write | Notes |
 |---|---|---|---|
 | The realm: `ingredients`, `makeupSize`, `doors`; door `name`, `desc`, `flavor` | Forge and proving (#6), Content (#1) | Read | N, M and D in the goal line and instructions |
-| Record text: `name`, `desc`, `flavor`; `source.group` | Content (#1; A7) | Read | Render by field (#1 UI Requirements) |
+| Record text: `name`, `desc`, `flavor`; `source.group` | Content (#1; A8) | Read | Render by field (#1 UI Requirements) |
 | Each source's derived state (hidden, waiting, withdrawn, actionable) | `recordState` (#1 F7, R8.1) | Read | Never saved |
 | Whether a source can run now, and its S5 reason text | Activity slot (#4 S5, S3.1) | Read | The reason line; must read "{name} is in hand" for a base-cap-1 store (Open Questions 6) |
 | Need text | `needText` (#1 R5.5) | Read | Displayed only, never authored or rewritten |
@@ -882,7 +907,7 @@ is the same word.
 
 **Architecture flags.** These need decisions outside this spec:
 
-- The events ADR: the payloads of every event below, including `opened` (#1 A8), and whether a stop
+- The events ADR: the payloads of every event below, including `opened` (#1 A9), and whether a stop
   or refusal reason travels as text or as ids that a rules-core text function renders (#3 ADR 2, #4
   ADR 4, #11 ADR 8).
 - `requestPersistence()` and its result, in the storage ADR (#11 ADR 2, amended by A1).
@@ -932,7 +957,7 @@ player took (AC-13-20). The shell derives no event of its own.
 | `committed {method}` (#7) | Everything: tint, marks, rows, method chip, instructions; centre view → Road | "Circulating {method}." followed by its closes list, one line per entry (#1 R7.2) |
 | `forged {realm, method, makeup, seals, doors}` (#6) | Goal line, ingredients, road note | "Foundation forged from {four names}: {s} of {2D} seals. {door} {tier}, …" |
 | `heapChanged {source, on}` (#10) | Toggle, row figures, bars | None: the toggle is the feedback, with no "changed" badge (#10 Visual/Audio) |
-| `opened {sources}` (#1 A8) | Rows | Joined to the line of the unit that caused it ("Opens: …"). Alone: "{names} open." |
+| `opened {sources}` (#1 A9) | Rows | Joined to the line of the unit that caused it ("Opens: …"). Alone: "{names} open." |
 | `saveLoaded {notice, recovered}` (#11) | Notice strip | The notice's lines, copied to the log, then the away block |
 | `saveRefused {reason, found}` (#11) | The Refused screen | None (there is no run) |
 | `newRunStarted {}` (#11) | Everything; the log is cleared | "A new run begins." |
@@ -983,7 +1008,8 @@ The interface's motion is information, never decoration that delays it.
 | Progress bars | Repainted every frame from *p* / *D* (#4 Game Feel). At double speed a bar visibly moves twice as fast. After a rescale it jumps to its true fraction, with no easing (#10 Game Feel) |
 | Numbers | Change only at a settle, in that frame, with no counting up (#3 Game Feel: "Numbers move only at a settle") |
 | A stop, a unit completed, a spill, a floor opening, a heap flip | No animation. Each is a state change in place, in the frame it happens (#4, #9, #10 Visual/Audio) |
-| The commit | In the confirm's frame, every marked value, the tint, the method chip and the road states change together (#7 Game Feel, AC-W7-4). Then a decorative sweep of the tint along the channel lines that join the panels, at most 600 ms, carries the concept's "the method's tint moving through the interface" (Sensation aesthetic). The sweep starts after the state has changed and never delays it. None under reduced motion. Its look is the art bible's (Open Questions 3) |
+| The commit | In the confirm's frame, every marked value, the tint, the method chip and the road states change together (#7 Game Feel, AC-W7-4). Then a decorative sweep of the tint along the channel lines that join the panels, ending within 400 ms of the commit, carries the concept's "the method's tint moving through the interface" (Sensation aesthetic). It runs alongside #14's channel-underline draw-in, which has the same 400 ms bound (#14 Transitions). Both start on the same `committed` event, neither waits for the other, and neither delays a value or blocks input. None under reduced motion. Its look is the art bible's (Open Questions 3) |
+| Drill down and back in the container | The content swaps in one frame, with no slide and no fade, so the reading position stays put (#14 Transitions) |
 | The forge | The goal line becomes the Foundation in the `forged` frame. The forge's visual event is #15's (Visual Identity Anchor, known limit) |
 | Notices | Appear and leave instantly. No toast and no timed dismissal (rule 68) |
 
@@ -1009,10 +1035,10 @@ Narrow: the skip link, the header, the notice strip, the content, the pinned log
 - [x] Every action a mouse can do, the keyboard can do (Interaction Map)
 - [x] Focus is always visible: a 2 px ring that is never removed (Accessibility)
 - [x] Focus stays inside an open dialog or narrow sheet until it closes (C16, C17)
-- [x] Esc closes the card, the sheet, the menu or the dialog, and never leaves the game
+- [x] Esc closes the card or the sheet with its whole stack, the menu or the dialog, and never leaves the game
 
 **Mouse**
-- [x] Hover state defined for every tap target: a pointer cursor and an underline, and no content
+- [x] Hover state defined for every record: a pointer cursor and an ink underline on its name (never on a number), and no content
 - [x] Hit targets at least 32 × 32 CSS px with a fine pointer, 44 × 44 preferred
 - [x] Right-click keeps the browser default
 - [x] The wheel scrolls the zone under the pointer: Z3, Z4 and Z5 each scroll on their own
@@ -1042,7 +1068,8 @@ the MVP (#18) and the items below, which take WCAG 2.2 AA as the working baselin
 
 **Keyboard and focus.** A skip link comes first in the tab order. The focus ring is 2 px and keeps
 3:1 contrast against both colours next to it. Focus moves into an opened card or dialog and returns
-to its trigger when it closes.
+to its trigger when it closes. Inside a card, drilling down moves focus to the back line, and Back
+returns it to the line that was opened (C16).
 
 **Screen readers.**
 
@@ -1187,8 +1214,13 @@ ingredients, four per makeup, three doors (Furnace Gate, Deep Well, Listening Ha
 - [ ] **AC-13-18** [unit] For each record type, a card shows its blocks in the order Title, Kind,
   Description, Time, Needs, Takes, Gives, Fights, Contributes, Widens, Opens, Sources, Flavour, and
   leaves out empty blocks. An ingredient not in hand shows no contribution number.
-- [ ] **AC-13-19** [integration] A number inside a card opens #14's breakdown in the same container,
-  and Back returns to the card. On narrow widths the sheet never covers the pinned header.
+- [ ] **AC-13-19** [integration] Tapping a record opens its card with #14's breakdown under each
+  rule-derived number, and tapping a number or a mark opens nothing of its own. Activating a part
+  line (›) replaces the content with that part's frame, whose first line is "‹ {parent} {value}"
+  and holds focus. Back restores the parent with focus on the opened line. Esc closes the whole
+  stack and returns focus to the record, and opening another record clears the stack. With a
+  coarse pointer, part and back lines are at least 44 px tall, and at 390 px the container never
+  scrolls sideways. On narrow widths the sheet never covers the pinned header.
 
 **The event channel**
 
@@ -1251,7 +1283,8 @@ ingredients, four per makeup, three doors (Furnace Gate, Deep Well, Listening Ha
 - [ ] **AC-13-33** [visual] With a coarse pointer every target is at least 44 × 44 CSS px; with a fine
   pointer at least 32 × 32.
 - [ ] **AC-13-34** [visual] Under a greyscale filter, every row state, a full store, each door tier,
-  the ×2 mark, the heap state and the method stay distinguishable by glyph and word.
+  the ×2 mark, the heap state and the method stay distinguishable by glyph and word, and no state
+  glyph shares a silhouette with a #14 glyph.
 - [ ] **AC-13-35** [visual] With reduced motion set, the commit shows no sweep and the sheet does not
   slide.
 
@@ -1276,7 +1309,7 @@ covers it.
 | Systems index ¶13, row 13 | Stores against caps, the running activity, the log and the method never leave the screen (rule 32) | Layout Zones; AC-13-06 |
 | Systems index ¶13 | One goal line from the first screen: slots, doors, seals (rule 99) | C1; AC-13-01, 02, 05 |
 | Systems index ¶13; CD-PLAYTEST concern 5 | Three lines of first-screen instruction | C2; AC-13-01, 03, 04 |
-| Systems index ¶13 | One event channel: the rules core emits typed events, the shell only displays them (rules 68, 99) | Events Fired; #1 A8; AC-13-20 |
+| Systems index ¶13 | One event channel: the rules core emits typed events, the shell only displays them (rules 68, 99) | Events Fired; #1 A9; AC-13-20 |
 | Systems index ¶13 | Takes the goal line and first-screen instruction over from #15 after Wave A | Scope: the Wave A hand-over |
 | Systems index ¶13; #6 UI flag | Shows the forged Foundation | C1 after the forge; AC-13-05 |
 | Systems index ¶13; concept MVP item 8 | One tooltip schema, opened by tap, nothing hover-only (rule 33) | C16; AC-13-17, 18 |
@@ -1285,13 +1318,13 @@ covers it.
 | Concept, Visual Identity Anchor | One owner per accent; glyph before hue; neutral stone base; channel lines | C3, C11, Accessibility, Transitions (commit sweep) |
 | #1 UI Requirements | Render by field, not by type | C16 field order; AC-13-18 |
 | #1 UI Requirements, R5.5 | Need text generated and displayed only; "Needs a method committed" first before the commit | C11 row states; AC-13-10 |
-| #1 UI Requirements, R7.2 | Every number comes from a field and carries a breakdown | C16; Interaction Map |
+| #1 UI Requirements, R7.2 | Every number comes from a field and carries a breakdown | C16 (#14's breakdown under each number's line); AC-13-19 |
 | #1 UI Requirements | Text limits fit phone-width buttons | Localization |
 | #1 UI Requirements | Load errors: one plain screen naming record and field, no play, no write | C18 Content error; AC-13-26 |
 | #1 Formulas owned elsewhere | Number formatting is #13's | Number and duration formats; AC-13-16 |
 | #2 UI Requirements | A breakdown names each step's source; a clamp reads as a limit | #14 (C16 hosts it) |
 | #3 UI Requirements | Persistent stores; which show before first named (#13's decision) | C7; AC-13-06 |
-| #3 UI Requirements | Tapping a cap opens its breakdown (#14) | Interaction Map |
+| #3 UI Requirements | Tapping a cap opens its breakdown (#14) | Interaction Map: the Store card shows the cap's breakdown under its line (#14 W3) |
 | #3 UI Requirements, Visual/Audio | Full with a glyph and "full"; spills merged per `advance` as log lines; no animation | C7; Events Fired |
 | #3 Game Feel | Numbers change in the frame of the settle; the raise felt as room | Transitions; C7 |
 | #4 UI Requirements | The running line: occupant or Resting with the rest glyph; bar and countdowns; held breath with ×2 | C5; AC-13-15 |
@@ -1303,7 +1336,7 @@ covers it.
 | #4 Visual/Audio, Game Feel | Rest glyph only in the slot; ×2 never by colour alone; no effect on a stop; no urgency cues | C5; Transitions; Accessibility |
 | #4 S9.3 | The shell calls `advance` on its own cadence and on visibility changes, before painting | Data Requirements |
 | #4 Open Question 2 (with #3 Open Question 4) | What the return offers | Concept reworded (amendment below); the away block |
-| #5 UI Requirements 1, 3 | A route fight shows its exact result before a choice; fight numbers open the four-stat breakdown | C11 figures; C16 Fights block |
+| #5 UI Requirements 1, 3 | A route fight shows its exact result before a choice; fight numbers open the four-stat breakdown | C11 figures; C16 Fights block, where #14's breakdown sits under the result |
 | #6 UI Requirements, G13.3, G13.4 | The Foundation's persistent display; doors' flavour after the forge | C1; AC-13-05 |
 | #6 G8.3 | A `ModifierError` is reported as a bug (#13's error report) | C6 Internal error |
 | #6 Visual/Audio | Affinities by name and glyph, naming their stat; tiers by word and glyph | C1, the Foundation card |
@@ -1312,11 +1345,11 @@ covers it.
 | #7 Visual/Audio, Game Feel | The commit as one moment; the tint moves through the interface | Transitions; AC-13-08 |
 | #7 Y2, W9 | The redo line's duration format | Formats; C3; C17 New run |
 | #8 UI Requirements 1 | Every source's whole bill in the one tooltip schema, by tap | C16 |
-| #8 UI Requirements 2, Open Question 5 | The whole road readable from the run start; group by line or by phase | C10; designer chose by line; #1 A7; AC-13-11 |
+| #8 UI Requirements 2, Open Question 5 | The whole road readable from the run start; group by line or by phase | C10; designer chose by line; #1 A8; AC-13-11 |
 | #8 UI Requirements 3 | A held ingredient's recipe reads "{ingredient} is in hand" | C11 row state In hand |
 | #8 UI Requirements 5, Visual/Audio 2 | The ladder beats logged through the one channel, with flavour and what opened | Events Fired; AC-13-21 |
 | #8 UI Requirements 6 | Names fit 390 px | Localization; AC-13-07 |
-| #8 L9 | A source opening is shown and logged | #1 A8 `opened`; Events Fired |
+| #8 L9 | A source opening is shown and logged | #1 A9 `opened`; Events Fired |
 | #9 UI Requirements 1, 2 | The route row's figures; state before action with distinct glyphs; Start only in Ready | C11; AC-13-09 |
 | #9 UI Requirements 3, Visual/Audio | The Still Deep as one block with a rail; one closed row under Ember Breath | C12; AC-13-11 |
 | #9 UI Requirements 5, Visual/Audio | A won unit changes the row in place; one log line on arrival; away completions as one line per return | Transitions; Events Fired |
@@ -1348,7 +1381,11 @@ independent reviewer against the GDDs rather than this table):
 - GDD requirements: all covered. One conflict sits inside #9 itself (the decider's place), and this
   spec takes one side of it (Open Questions 9).
 - New patterns to add to the library: eight (Open Questions 4).
-- Navigation mismatches: none. No related spec exists yet; #14 and #15 must match the seams above.
+- Navigation mismatches: none. #14 (`design/ux/method-marks.md`, written in parallel on its own
+  branch) reached the container through the record, not the number. This spec was aligned with it
+  the same day: records open the container, a drill-down stack with a back line, 44 px part
+  lines, #14's glyphs on the method chip and heap toggle, and one 400 ms bound on the commit's
+  decoration (C16, C3, C11a, Transitions, AC-13-19). #15 must still match the seams above.
 - Accessibility gaps: the tier is undefined (Open Questions 2). The floor is met.
 - Missing empty states: none (States & Variants, "Empty and edge states").
 
@@ -1356,8 +1393,8 @@ independent reviewer against the GDDs rather than this table):
 
 | Document | Change |
 |---|---|
-| #1 Content records and schema, **A7** | Adds the R4 row `source.group` (text, 1–24 code points, required, display only) with note 11. A group text carried by one source alone is a load error at R8.3 step 6. Interactions row 13, Cross-References, AC-R4-16 |
-| #1, **A8** | The rules core emits `opened {sources}` when a settle or the forge moves sources into Actionable (F7). Not at the commit, on load or at run start. Merged per `advance` |
+| #1 Content records and schema, **A8** | Adds the R4 row `source.group` (text, 1–24 code points, required, display only) with note 11. A group text carried by one source alone is a load error at R8.3 step 6. Interactions row 13, Cross-References, AC-R4-16 |
+| #1, **A9** | The rules core emits `opened {sources}` when a settle or the forge moves sources into Actionable (F7). Not at the commit, on load or at run start. Merged per `advance` |
 | #8 Crafting route, **A1** | L9's events line names #1's `opened`. L2 gains the group values. Open Question 5 answered: by line |
 | #9 Fight and dungeon routes, **A2** | N1 gains the group values. Open Question 8's display half answered by C13 |
 | #11 Save and run lifecycle, **A1** | D10.2: the game never asks the browser to keep storage by itself. The menu item "Keep my save in this browser" asks once per choice. Action `requestPersistence()` added to D12; UI Requirements 6 and AC-D10-2 follow; Open Questions 2 and 6 answered |
@@ -1372,7 +1409,7 @@ independent reviewer against the GDDs rather than this table):
 |---|---|---|---|
 | 1 | **No player journey map.** Arrival contexts here are reasoned from the concept and the GDDs. Author `design/player-journey.md` from `.claude/docs/templates/player-journey.md`, then check Player Context on Arrival against it | Designer | Before `/ux-review` of #13–#15 |
 | 2 | **No accessibility tier.** This spec meets the systems index's floor and takes WCAG 2.2 AA as the working baseline. Run `/gate-check` to see whether the missing tier blocks a phase gate | Designer, with `accessibility-specialist` (#18) | Before the Pre-Production gate |
-| 3 | **No art bible.** Needed from it: the glyph set (rest, the eight row states, slots, seals, door tiers, depth, full, in hand, menu), the stone palette and the method tint tokens with their contrast, the channel lines, and the commit sweep. The concept asks for a one-page interface style sheet | `art-director` | Before the shell's UI stories |
+| 3 | **No art bible.** Needed from it: the glyph set (rest, the eight row states, slots, seals, door tiers, depth, full, in hand, menu, and the neutral "no method" glyph), the stone palette and the method tint tokens with their contrast, the channel lines, and the commit sweep. The method glyphs and the neutral closed, heap and limit glyphs are #14's (its glyph sheet), so they are not in this list. Every glyph here must differ in silhouette from all of them (AC-13-34). The concept asks for a one-page interface style sheet | `art-director` | Before the shell's UI stories |
 | 4 | **No interaction pattern library.** New patterns introduced here: Goal line, Running line, Notice strip, Store chip, Source row, Ladder block, Event log, Detail card. Flagged for `/ux-design patterns` | `ux-designer` | With #14 and #15, before epics |
 | 5 | **Stale platform note.** `.claude/docs/technical-preferences.md` still describes the archived attempt: "mouse with hover tooltips", "Touch: Partial (ⓘ pins tooltips)", a phone layout at ≤ 650 px, Bun. This spec follows the concept and the systems index instead (tap, no hover-only, 390 px design width). Update the file at `/create-architecture` | Technical Director | Architecture |
 | 6 | **One wording for a held cap-1 store.** #8 UI Requirements 3 asks for "{ingredient} is in hand", #9's States table says "{ingredient} is already held", and #1's shortfall form would print "{name} is full". The rules core's reason text must give one wording. This spec displays "{name} is in hand" for any store of base cap 1, key items included | Events and text ADR, with #4, #8 and #9 | Architecture |

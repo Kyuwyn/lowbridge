@@ -6,7 +6,7 @@
 > **Last Verified**: 2026-11-20
 > **Implements Pillar**: 2 (Methods matter), 4 (No dead ends, no attention tax)
 > **Creative Director Review (CD-GDD-ALIGN)**: APPROVED 2026-11-20 (no blocker; its one watch item, whether the descent reads as its own way to gather, is already Open Question 5 for the first MVP playtest)
-> **Amendments**: A1 2026-11-21 — Open Question 3 marked resolved by Tending (#10, `tending.md` D1, J3): routes are not tendable, and U3 holds under every tending set (status edit only, no rule change; designer-approved). Touches Open Questions row 3 · A2 2026-11-21 — N1 gains the road-group values for #1 A7's `source.group` ("Hunts", "The Still Deep"); Open Question 8's display half answered by the Interface shell (#13, C13) (requested by #13; approved by the designer). Touches N1, Open Questions row 8
+> **Amendments**: A1 2026-11-21 — Open Question 3 marked resolved by Tending (#10, `tending.md` D1, J3): routes are not tendable, and U3 holds under every tending set (status edit only, no rule change; designer-approved). Touches Open Questions row 3 · A2 2026-11-21 — N1 gains the road-group values for #1 A8's `source.group` ("Hunts", "The Still Deep"); Open Question 8's display half answered by the Interface shell (#13, C13) (requested by #13; approved by the designer). Touches N1, Open Questions row 8
 
 ## Summary
 
@@ -154,7 +154,7 @@ Nine `source` records. Names and ids are provisional, and names fit #1's 24 code
   #6 B9 and #7 H5.
 - This is W5's plan exactly. EJ, IH and GM each have one shared hunt. EM, CL and TP each have an
   Ember Breath hunt and a Still Water floor. That makes 9 of the 23 sources in #7 Y3's budget.
-- **Road groups** (#1 A7's `source.group`, a display heading; A2 to this GDD). The six hunts carry
+- **Road groups** (#1 A8's `source.group`, a display heading; A2 to this GDD). The six hunts carry
   "Hunts", and the three floors "The Still Deep". The Interface shell (#13) draws a group as the
   ladder of UI Requirements 3 when every source in it has `fights` and every source after the first
   has a `need`, and as one closed row when all of them are closed (`design/ux/interface-shell.md`,

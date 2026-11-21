@@ -3,7 +3,7 @@
 > **Status**: Approved 2026-11-20 (lean re-review after the fifth full review; no pillar-level or design blocker. Recommended follow-ups are in the review log and move to implementation: ADR 2/3, the schema module and its tests)
 > **Author**: Will + agents
 > **Last Updated**: 2026-11-21
-> **Amendments**: A1 2026-11-20 — ops-table entries gain `operandRange`, checked at R8.3 step 7 (requested by Modifier pipeline #2 for `scale_bp`; approved by the designer). Touches R6.1, R8.3 step 7, AC-R8-2a, AC-R6-10, ADR 4 · A2 2026-11-20 — the stat-name list is closed as `might`, `guard`, `vigor`, `speed` (requested by Combat resolver #5; approved by the designer). Touches R4 note 4, R8.2, Cross-References · A3 2026-11-20 — `resource.cap` keeps `sealInput: yes` (Open Question 1 settled by Resources and caps #3, K8), and the affinity records are named by Forge and proving (#6), not #3 (designer-approved). Touches R4 note 1, Interactions rows 3 and 6, Open Questions row 1 · A4 2026-11-20 — adds the R4 row `affinity.widens` (note 10), sets the affinity count to 4, and narrows `door.thresholds` to 10,000–20,000 each (requested by Forge and proving #6; approved by the designer). Touches R1 table, R4 rows and notes 6 and 10, Interactions row 6, Cross-References, Open Questions rows 2, 9 and 12 · A5 2026-11-20 — `method.redoCost` is milliseconds of slot time (note 8); with `redoCost` absent the redo line reads "Redo: only by starting a new run"; the commit dialog also carries Methods' gives-up lines; R1's source target becomes ~23 (requested by Methods #7; approved by the designer). Touches R1 table, R4 row `method.redoCost` and note 8, R7.2, Edge Cases "Method patches", Cross-References, AC-R7-4, Open Questions rows 10 and 11 · A6 2026-11-21 — a door or affinity id retired without an alias is a validator error, as an ingredient, realm or method already was; Open Question 4 resolved (saves may be wiped until the first public build) (requested by Save and run lifecycle #11; approved by the designer). Touches Edge Cases "Saves across content versions", Cross-References, Open Questions row 4 · A7 2026-11-21 — adds the R4 row `source.group` (note 11), a display-only road-group heading; a group text that only one source carries is a load error at step 6 (requested by Interface shell #13; approved by the designer). Touches R4 rows and note 11, Interactions row 13, Dependencies row 13, Cross-References, AC-R4-16 · A8 2026-11-21 — the rules core emits `opened {sources}` when a settle or the forge turns sources Actionable (F7); not at the commit, on load or at run start (requested by Interface shell #13; approved by the designer). Touches States and Transitions, Interactions row 13, Dependencies row 13, Cross-References, AC-S-3
+> **Amendments**: A1 2026-11-20 — ops-table entries gain `operandRange`, checked at R8.3 step 7 (requested by Modifier pipeline #2 for `scale_bp`; approved by the designer). Touches R6.1, R8.3 step 7, AC-R8-2a, AC-R6-10, ADR 4 · A2 2026-11-20 — the stat-name list is closed as `might`, `guard`, `vigor`, `speed` (requested by Combat resolver #5; approved by the designer). Touches R4 note 4, R8.2, Cross-References · A3 2026-11-20 — `resource.cap` keeps `sealInput: yes` (Open Question 1 settled by Resources and caps #3, K8), and the affinity records are named by Forge and proving (#6), not #3 (designer-approved). Touches R4 note 1, Interactions rows 3 and 6, Open Questions row 1 · A4 2026-11-20 — adds the R4 row `affinity.widens` (note 10), sets the affinity count to 4, and narrows `door.thresholds` to 10,000–20,000 each (requested by Forge and proving #6; approved by the designer). Touches R1 table, R4 rows and notes 6 and 10, Interactions row 6, Cross-References, Open Questions rows 2, 9 and 12 · A5 2026-11-20 — `method.redoCost` is milliseconds of slot time (note 8); with `redoCost` absent the redo line reads "Redo: only by starting a new run"; the commit dialog also carries Methods' gives-up lines; R1's source target becomes ~23 (requested by Methods #7; approved by the designer). Touches R1 table, R4 row `method.redoCost` and note 8, R7.2, Edge Cases "Method patches", Cross-References, AC-R7-4, Open Questions rows 10 and 11 · A6 2026-11-21 — a door or affinity id retired without an alias is a validator error, as an ingredient, realm or method already was; Open Question 4 resolved (saves may be wiped until the first public build) (requested by Save and run lifecycle #11; approved by the designer). Touches Edge Cases "Saves across content versions", Cross-References, Open Questions row 4 · A8 2026-11-21 — adds the R4 row `source.group` (note 11), a display-only road-group heading; a group text that only one source carries is a load error at step 6 (requested by Interface shell #13; approved by the designer). Touches R4 rows and note 11, Interactions row 13, Dependencies row 13, Cross-References, AC-R4-16 · A9 2026-11-21 — the rules core emits `opened {sources}` when a settle or the forge turns sources Actionable (F7); not at the commit, on load or at run start (requested by Interface shell #13; approved by the designer). Touches States and Transitions, Interactions row 13, Dependencies row 13, Cross-References, AC-S-3
 > **Last Verified**: 2026-11-20
 > **Implements Pillar**: 3 (The build is a problem) and 4 (No dead ends, no attention tax); supports 1 (The forge is the milestone) and 2 (Methods matter)
 > **Creative Director Review (CD-GDD-ALIGN)**: REVISED 2026-11-19. Six findings applied: `contrib` is a total map; each method must patch a contribution and a route; no ingredient only fills a slot; protected ids need an alias; the fantasy anchor no longer fixes the preview model; numerals as words in proper names are allowed
@@ -395,7 +395,7 @@ schema row stores as the integer n):
     affinity's effective value widens after the forge (`design/gdd/forge-and-proving.md` G11,
     S6). Not a seal input, because no seal reads a cap (#3 K8.2). #6's B12 rejects a key item
     (base cap 1) in the list.
-11. **Added 2026-11-21 by Interface shell (#13, A7), designer-approved.** The heading of the road
+11. **Added 2026-11-21 by Interface shell (#13, A8), designer-approved.** The heading of the road
     group the source is listed under (`design/ux/interface-shell.md`, C10). Sources with the same
     text form one group. Groups appear in the order of their first source, and rows in content
     order. It is display only: no rule, gate, modifier or validator check reads it, except two
@@ -790,7 +790,7 @@ ingredient, the committed method, and forged realms.
 
 Actionable and Withdrawn are terminal within one content version. A source whose `reveal` is `committed()` goes from Hidden to its final state at the commit in one step (F7).
 
-**The `opened` event** (A8, requested by Interface shell #13; designer-approved 2026-11-21). The
+**The `opened` event** (A9, requested by Interface shell #13; designer-approved 2026-11-21). The
 interface shows and logs a source that becomes usable (#8 L9, rule 99), and it only displays the
 typed events the rules core emits. So the rules core announces the transition itself:
 
@@ -823,7 +823,7 @@ fields in R4. None of them may add a field, type or gate atom without amending t
 | 10 | Tending | Registry rows open to `tending` | Targets only on rows that already allow tending and are not `sealInput` | This GDD enforces the rule (R4.1) |
 | 11 | Save and run lifecycle | Ids, the fingerprint | The alias map; storage of atom inputs | #11 |
 | 12 | Validator | Frozen sets, registry, gates | The state and enumeration checks of R8.4 | #12; structural checks stay here |
-| 13 | Interface shell | `name`, `desc`, `flavor`, `source.group`, gate atoms | Generated need text; rendering by field, not by type (rule 33); the `source.group` row (A7); the `opened` event (A8) | #13 renders; this GDD fixes the text rules and emits `opened` |
+| 13 | Interface shell | `name`, `desc`, `flavor`, `source.group`, gate atoms | Generated need text; rendering by field, not by type (rule 33); the `source.group` row (A8); the `opened` event (A9) | #13 renders; this GDD fixes the text rules and emits `opened` |
 | 14 | Method marks and breakdowns | The listable patched set (R6.4) | — | #14 |
 | 15 | Forge screen | `realm`, `ingredient`, `door` records | — | #15 |
 | 16 | Reforge (VS) | `forged`, `committed` | Must keep atoms monotone or amend R5 | #16 |
@@ -1256,7 +1256,7 @@ systems can load, run or be validated without the vocabulary.
 | 10 | Tending | Hard | Registry rows open to tending; R4.1 |
 | 11 | Save and run lifecycle | Hard | Stable ids (R2), alias map, fingerprint (R8.5), atom inputs |
 | 12 | Content validator | Hard | The runtime schema value; frozen sets; the R8.3/R8.4 split |
-| 13 | Interface shell | Hard | Text fields and limits; generated need text (R5.5); `source.group` (A7); the `opened` event (A8) |
+| 13 | Interface shell | Hard | Text fields and limits; generated need text (R5.5); `source.group` (A8); the `opened` event (A9) |
 | 14 | Method marks and breakdowns | Hard | The listable patched set (R6.4) |
 | 15 | Forge screen | Hard | `realm`, `ingredient`, `door` records |
 | 16 | Reforge (VS) | Hard | `forged`, `committed` atoms; must preserve monotonicity or amend R5 |
@@ -1362,7 +1362,7 @@ This system has no screen, but it fixes rules every screen must follow:
 | Save and run lifecycle (#11) | R2.3, R8.5, Edge Cases on saves | Alias map, retired-id list, fingerprint handling | Designed 2026-11-21 (`save-and-run-lifecycle.md` D3, D5, D11); amended this GDD (A6) |
 | Content validator (#12) | R8.4; every "validator error" edge case | State and enumeration checks | Not yet designed |
 | Method marks (#14), Forge screen (#15) | UI Requirements; F8 | Marking exactly the change set; generated need text | Not yet designed |
-| Interface shell (#13) | UI Requirements; R4 row `source.group`; States and Transitions | Rendering by field; generated need text; the group heading; the `opened` event | Designed 2026-11-21 (`design/ux/interface-shell.md`); amended this GDD (A7, A8) |
+| Interface shell (#13) | UI Requirements; R4 row `source.group`; States and Transitions | Rendering by field; generated need text; the group heading; the `opened` event | Designed 2026-11-21 (`design/ux/interface-shell.md`); amended this GDD (A8, A9) |
 | `research/arcanum-reference/03-data-model.md`, `12-design-rules.md` | Overview, R1–R7 | Rules 1, 2, 3, 4, 9, 33, 52, 54, 58, 67, 70, 74, 97 | Reference |
 | `research/hundred-days-reference/03-data-model-and-content.md` §4, §7 | Overview, R2, R5 | Rules 51, 53, 57; 191 dangling gates; 97 % simple expressions | Reference (P0.3.9c) |
 | `research/magic-research-2-reference/03-engine-and-content-model.md` §3, §11 | Overview | Rule 95 (content as code can't be validated); rule 96 narrowed | Reference (v1.5.5 src) |
@@ -1599,7 +1599,7 @@ names a step asserts the `step` field too.
 - **AC-R4-15** [unit] **GIVEN**, one at a time, `gate_ward.stats` with a key outside the stat-name
   list (`stat_c`), with `stat_b` missing, or with `stat_a` set to `"3"`, **WHEN** loaded, **THEN**
   load error naming `gate_ward` and `stats` (steps 3 and 2).
-- **AC-R4-16** [unit] (A7) **GIVEN**, one at a time, a source with no `group`, a `group` of 25 code
+- **AC-R4-16** [unit] (A8) **GIVEN**, one at a time, a source with no `group`, a `group` of 25 code
   points, and a `group` text that no other source carries, **WHEN** loaded, **THEN** load error
   naming that source and `group` (steps 2, 9 and 6). **GIVEN** the shipped content, **THEN** every
   source has a `group`, and every group has at least two sources.
@@ -1838,7 +1838,7 @@ names a step asserts the `step` field too.
   - **GIVEN** `still_water` committed and `smelt_ore` with reveal and need both met, **THEN** it
     is withdrawn, not actionable.
   - **GIVEN** no commit and `need` met, **THEN** it is waiting.
-- **AC-S-3** [unit] (A8) **GIVEN** a method committed and two waiting sources whose `need` is
+- **AC-S-3** [unit] (A9) **GIVEN** a method committed and two waiting sources whose `need` is
   `reached(lamp, 1)`, **WHEN** an `advance` settles the unit that first brings `lamp` to 1, **THEN**
   it emits one `opened` naming both sources in content order. **WHEN** the commit, a load or a run
   start turns sources actionable, **THEN** no `opened` is emitted.

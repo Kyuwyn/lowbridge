@@ -4,7 +4,7 @@
 > **Author**: designer + Claude (`/design-system`)
 > **Last Updated**: 2026-11-21
 > **Last Verified**: 2026-11-21
-> **Amendments**: A1 2026-11-21 — L2 gains the road-group values for #1 A7's `source.group`; L9 names #1 A8's `opened` event as how a source opening reaches the shell; Open Question 5 answered: by line (requested by Interface shell #13; approved by the designer). Touches L2, L9, Open Questions row 5
+> **Amendments**: A1 2026-11-21 — L2 gains the road-group values for #1 A8's `source.group`; L9 names #1 A9's `opened` event as how a source opening reaches the shell; Open Question 5 answered: by line (requested by Interface shell #13; approved by the designer). Touches L2, L9, Open Questions row 5
 > **Implements Pillar**: 4 (No dead ends, no attention tax); supports 3 (The build is a problem) and 1 (The forge is the milestone)
 > **Creative Director Review (CD-GDD-ALIGN)**: APPROVED 2026-11-21, re-run on the re-tune to #9's premium (no blocker; advisories applied: Player Fantasy's third lesser-road bullet, kept progress for long makings in L4.5 and Game Feel, choice density added to Open Question 4)
 
@@ -200,7 +200,7 @@ from a run start.
 - **One refining unit pays a route's bill.** #9's hunts and floors each spend half a store:
   Rendered Oil 6, Seasoned Plank 5 or Jade Blank 4 (#9 N2.3). Each is exactly one unit of its
   refining source, so the three bills cost 60,000, 70,000 and 70,000 ms (L6.2).
-- **Road groups** (#1 A7's `source.group`, a display heading; A1 to this GDD). Fuel: Skim the
+- **Road groups** (#1 A8's `source.group`, a display heading; A1 to this GDD). Fuel: Skim the
   Ash Pits, Render Tallow, Kindle the Hearth Lamp. Timber: Fell Ironbark, Season Planks. Stone:
   Quarry the Jade Seam, Carve Jade Blanks, Tune the Chisel. Recipes: the six recipes. The Interface
   shell (#13) lists the road by these groups (`design/ux/interface-shell.md`, C10).
@@ -419,7 +419,7 @@ none of them.
 - **Non-derived state owned:** none. Held amounts and marks are #3's and #4's. The slot is #4's.
 - **Actions accepted:** none. Start and Stop are #4's (S3).
 - **Events emitted:** none of its own. A making completes as #4's `unitsCompleted`, and a source
-  opening is #1's `opened` event (#1 A8), which the Interface shell (#13) shows and logs.
+  opening is #1's `opened` event (#1 A9), which the Interface shell (#13) shows and logs.
 
 *Specialists consulted: `economy-designer` (primary) proposed the fourteen sources, the pacing
 scale and the fightless checks. `game-designer` (loops) proposed the ladder, `need`-only gates and
@@ -987,7 +987,7 @@ recomputed every number and fixture above on its calculator; `qa-lead`'s script 
 | 2 | If later content gates a source that runs many units, #6 S8 over-charges the gate (L7.1). Amend S8 to price each atom once per chain first; the draft A1 rule is the starting point (L7.3) | Forge and proving (#6), Validator (#12) | Before any such content (Vertical Slice) |
 | 3 | `qa-lead` suggests X6 cover every cap-1 output, so key-item makes too. No key item here has a by-product; is the wider rule worth a check? | Validator (#12), with Activity slot (#4) | #12 GDD |
 | 4 | Recipes are slower than routes by design (1.25–2×), and three run 9–13 minutes; in a hearth-only best four they are 53–58% of the run. Does the hearth still read as a road of its own, do the long makings read as weight, not waiting, and is the choice density enough (Player Fantasy, the lesser-road risk; L4.5; Game Feel)? If not, the levers are the Tone and the ladder beats, since the prices are bound by #9's premium | Designer | Wave A checkpoint: a hearth-only run and a mixed run in one session |
-| 5 | Does the shell group the fourteen sources by line (fuel, timber, stone, recipes) or by phase (before the lamp, after it, after the chisel)? Resolved 2026-11-21 by #13 (`design/ux/interface-shell.md`, C10): by line, through #1 A7's `source.group`, with the values in L2 | Interface shell (#13) | Done |
+| 5 | Does the shell group the fourteen sources by line (fuel, timber, stone, recipes) or by phase (before the lamp, after it, after the chisel)? Resolved 2026-11-21 by #13 (`design/ux/interface-shell.md`, C10): by line, through #1 A8's `source.group`, with the values in L2 | Interface shell (#13) | Done |
 
 **ADRs required** (representation this GDD leaves out):
 
