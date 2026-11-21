@@ -2,8 +2,8 @@
 
 > **Status**: Approved 2026-11-20 (lean review; recommended follow-ups in `design/gdd/reviews/methods-review-log.md`)
 > **Author**: designer + Claude (`/design-system`)
-> **Last Updated**: 2026-11-20
-> **Amendments**: A1 2026-11-20 — Open Question 2 marked resolved (U1, an error on every fight source) and Open Question 3's route half resolved (H5 passes on #9's routes, within X3's bill limits) (from Fight and dungeon routes #9; approved by the designer). Touches Open Questions rows 2 and 3
+> **Last Updated**: 2026-11-21
+> **Amendments**: A1 2026-11-20 — Open Question 2 marked resolved (U1, an error on every fight source) and Open Question 3's route half resolved (H5 passes on #9's routes, within X3's bill limits) (from Fight and dungeon routes #9; approved by the designer). Touches Open Questions rows 2 and 3 · A2 2026-11-21 — before the commit, a saved resource's `held` and mark are reset to their run-start values instead of refusing the save; refusal stays for kept progress, a source in the slot, a forge snapshot, or an ingredient held or marked (requested by Save and run lifecycle #11, D3.8 and D4.2; approved by the designer). Touches Edge Cases "Saves (owned by #11)"
 > **Last Verified**: 2026-11-20
 > **Implements Pillar**: 2 (Methods matter); supports 3 (The build is a problem) and 4 (No dead ends, no attention tax)
 > **Creative Director Review (CD-GDD-ALIGN)**: APPROVED 2026-11-20 (no blocker; three advisories, each already an Open Question: keep the Wave A two-method play, Open Question 1; H5 under real route times, 3; the dialog's review-only checks depend on #14 and #15, 7)
@@ -663,8 +663,11 @@ another GDD's check, named), a **runtime rule** of this GDD, or **another GDD**,
   the save by name and offers a new run. It must never reset `committed` to none, because the
   held ingredients and marks would then load into Choosing and a different method could be
   committed on top of them.
-- **If a save holds no committed method but some held amount, mark above start, kept progress or
-  forge snapshot**: #11 refuses it as corrupt. Gathering cannot happen before the commit.
+- **If a save holds no committed method but some kept progress, a source in the slot, a forge
+  snapshot, or an ingredient held or marked above 0**: #11 refuses it as corrupt. Gathering
+  cannot happen before the commit. A resource's `held` and mark that differ from their run-start
+  values are reset to them instead (#11 D3.8, D4.2): nothing moves them before the commit, and a
+  content update may have changed `start`. *(Amended 2026-11-21, A2.)*
 - **If a saved forge snapshot's method differs from `committed`**: #11 refuses it as corrupt
   (#6 Edge Cases).
 - **If the player starts a new run**: #11 sets `committed` to none in the same write as
