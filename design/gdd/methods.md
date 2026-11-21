@@ -1,6 +1,6 @@
 # Methods
 
-> **Status**: Designed 2026-11-20 (pending `/design-review`)
+> **Status**: Approved 2026-11-20 (lean review; recommended follow-ups in `design/gdd/reviews/methods-review-log.md`)
 > **Author**: designer + Claude (`/design-system`)
 > **Last Updated**: 2026-11-20
 > **Last Verified**: 2026-11-20

@@ -236,7 +236,7 @@ rules.
 | 4 | Activity slot, rest and away time | Core | MVP | Approved | design/gdd/activity-slot-rest-and-away-time.md | Content records and schema, Modifier pipeline, Resources and caps, Combat resolver |
 | 5 | Combat resolver (inferred) | Gameplay | MVP | Approved | design/gdd/combat-resolver.md | Content records and schema |
 | 6 | Forge and proving | Progression | MVP | Approved | design/gdd/forge-and-proving.md | Content records and schema, Resources and caps, Modifier pipeline, Combat resolver (contract owned by the Forge) |
-| 7 | Methods | Progression | MVP | Designed | design/gdd/methods.md | Content records and schema, Forge and proving, Modifier pipeline |
+| 7 | Methods | Progression | MVP | Approved | design/gdd/methods.md | Content records and schema, Forge and proving, Modifier pipeline |
 | 8 | Crafting route | Economy | MVP | Not Started | — | Resources and caps, Activity slot, Forge and proving, Methods |
 | 9 | Fight and dungeon routes | Gameplay | MVP | Not Started | — | Activity slot, Combat resolver, Forge and proving, Methods |
 | 10 | Tending | Gameplay | MVP | Not Started | — | Activity slot, Modifier pipeline, Content records and schema (field registry) |
@@ -485,8 +485,8 @@ session. Wave B starts after the checkpoint, and its order can change on what th
 |--------|-------|
 | Total systems identified | 20 |
 | Design docs started | 7 |
-| Design docs reviewed | 6 |
-| Design docs approved | 6 |
+| Design docs reviewed | 7 |
+| Design docs approved | 7 |
 | MVP systems designed | 7/15 |
 | Vertical Slice systems designed | 0/3 |
 
