@@ -1,6 +1,6 @@
 # Forge and Proving
 
-> **Status**: Designed (pending `/design-review`)
+> **Status**: Approved 2026-11-20 (lean review; recommended follow-ups in `design/gdd/reviews/forge-and-proving-review-log.md`)
 > **Author**: designer + Claude (`/design-system`)
 > **Last Updated**: 2026-11-20
 > **Last Verified**: 2026-11-20
@@ -421,7 +421,7 @@ frozen set. Each is an error.
 | B9 | **Over-gathering price** (S7), per method: T_all ≥ 1.35 × T_best, T_all − T_best ≥ 360,000 ms, and T_all ≤ 3,600,000 ms. *[blocked: #8, #9]* until real sources exist; the Wave A checkpoint runs it on stub sources | G9 |
 | B10 | **Fightless ceiling** (S8, G12). This is #1 R8.4 check 3, which is no longer blocked | Pillar 4 |
 | B11 | **Speed.** Every Foundation (all 30 cases) and every door opponent has `speed` ≤ `SPEED_BASE` (100), so one side strikes at most twice as often | #5 "Degenerate builds" |
-| B12 | **Affinity set.** Exactly one affinity per stat name, each with its stat name as id (G3). No affinity's `widens` names a key item (a store whose base cap is 1), which S6 would silently skip | G3; #3 K7 |
+| B12 | **Affinity set.** Exactly one affinity per stat name, each with its stat name as id (G3). No affinity's `widens` names a key item (a store whose base cap is 1), which S6 would silently skip. In every case, each widened store's S6 product D × C is at most 2⁵³ − 1 | G3; #3 K7; S6 |
 | B13 | **Ingredients are spent only by the forge.** No source lists an ingredient in its `inputs`, in the checked content or in either frozen set | G9.5; designer 2026-11-20 |
 
 ### States and Transitions
@@ -600,8 +600,10 @@ each line above 0 is the entry `{target: r, field: cap, op: add, operand: line_i
 - E(r) is b, or lo(b) to hi(b) inclusive, so V4 holds by construction.
 - The lines telescope, so they sum to D exactly. Each is 0 or more, as K7 requires.
 - When w(r) > 0, some ingredient has a positive `contrib` on a listed affinity, so C > 0.
-- The products (hi − lo) × WIDEN_FULL and D × P_i are at most 7.5 × 10⁸ × 10⁶ and 7.5 × 10⁸ ×
-  1.1 × 10⁷, both below 9 × 10¹⁵.
+- (hi − lo) × WIDEN_FULL is at most 7.5 × 10⁸ × 10⁶, below 2⁵³ − 1. D × P_i is at most D × C.
+  With one affinity widening r, C ≤ 1.1 × 10⁷ and the product stays below 2⁵³ − 1, but the
+  schema lets all four affinities widen one store, so C can reach 4.4 × 10⁷ and the product
+  3.3 × 10¹⁶. B12 therefore requires D × C ≤ 2⁵³ − 1 for every store in all 30 cases.
 - At most N lines per store, within #2 P3.3's 16.
 
 **Example:** Ash Tallow, b 40, w = Cinder 115: lo 48, hi 70, so E = 48 + div_floor(22 × 115,
@@ -887,7 +889,7 @@ compute-first forge in G8).*
 | 2 | Modifier pipeline | Hard | `set_m`'s effective `contrib` (method stage); the Foundation stage that applies `F` (P4); `effective` for the forge's compute-first step (P9) | Approved |
 | 3 | Resources and caps | Hard | `held` (K2); `settle` for consumption (K3); lo and hi (Q5); the re-clamp and `capChanged` (K5) | Approved |
 | 5 | Combat resolver | Hard | One fight per door, F7's score (C10) | Approved |
-| 4 | Activity slot | Soft | Time is settled before the forge, and the forge ends an `advance` segment (P9.4) | In design (parallel session) |
+| 4 | Activity slot | Soft | Time is settled before the forge, and the forge ends an `advance` segment (P9.4) | Approved |
 
 **Downstream (they depend on this system):**
 
@@ -1167,6 +1169,9 @@ SW is Still Water. Abbreviations follow S9: EJ, IH, EM, CL, GM, TP.
   fails.
 - **AC-B12-1** A missing affinity, a duplicate, one whose id is not a stat name, and one whose
   `widens` lists the Hearth Lamp (base cap 1): each fails B12.
+- **AC-B12-2** A case table in which a store of base cap 10⁹ is raised to 1.75 × 10⁹
+  (D = 7.5 × 10⁸): C = 1.2 × 10⁷ passes B12 (D × C = 9.0 × 10¹⁵), and C = 2.2 × 10⁷ fails it
+  (1.65 × 10¹⁶).
 - **AC-B13-1** A source with GM in its `inputs`, in content or through a method patch: B13 fails.
 
 ### Performance

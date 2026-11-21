@@ -1,6 +1,6 @@
 # Activity Slot, Rest and Away Time
 
-> **Status**: Designed 2026-11-20 (pending `/design-review` in a fresh session)
+> **Status**: Approved 2026-11-20 (lean review; recommended follow-ups in `design/gdd/reviews/activity-slot-rest-and-away-time-review-log.md`)
 > **Author**: designer + agents
 > **Last Updated**: 2026-11-20
 > **Last Verified**: 2026-11-20
@@ -756,8 +756,8 @@ trigger (S6.3).*
 - **#1, #2 and #3** each name Activity slot (#4) in their Dependencies.
 - **#5** names #4, and its Open Question 6 asks the systems index to list the Combat resolver
   in row #4's Depends On. This GDD's systems-index update does that.
-- **#6–#13 are undesigned.** Each must list "depends on: Activity slot, rest and away time" in
-  its own Dependencies.
+- **#6** lists this system in its Dependencies. **#7–#13 are undesigned.** Each must list
+  "depends on: Activity slot, rest and away time" in its own Dependencies.
 
 ## Tuning Knobs
 
