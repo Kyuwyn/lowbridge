@@ -116,7 +116,7 @@ formulas:
     expression: "largest integer q with q * d <= a; d >= 1"
     variables: [a, d]
     output: "exact integer, rounds toward minus infinity; d <= 0 throws"
-    referenced_by: []
+    referenced_by: [design/gdd/forge-and-proving.md]
   - name: bp_of
     status: active
     source: design/gdd/content-records-and-schema.md
@@ -277,6 +277,62 @@ formulas:
     variables: [b, start, out, duration, FIRST_CAP_MS]
     output: "bool; forms no units-times-duration product"
     referenced_by: []
+  - name: affinity_total
+    status: active
+    source: design/gdd/forge-and-proving.md
+    expression: "T_a = sum over makeup ingredients i of contrib_m[i][a]"
+    variables: [contrib_m, a]
+    output: "-4,000,000 to 4,000,000 per affinity (N = 4)"
+    referenced_by: []
+  - name: effective_affinity
+    status: active
+    source: design/gdd/forge-and-proving.md
+    expression: "e_a = max(0, max(0, T_a) - div_floor(max(0, T_opp(a)) * CLASH_BP, 10000)); opposed pairs might-vigor (Cinder-Bark), guard-speed (Jade-Gale)"
+    variables: [T_a, T_opp, CLASH_BP]
+    output: "0 to T_a positive part"
+    referenced_by: []
+  - name: foundation_stat
+    status: active
+    source: design/gdd/forge-and-proving.md
+    expression: "stat_a = min(1000000, FOUNDATION_BASE_a + e_a)"
+    variables: [FOUNDATION_BASE_a, e_a]
+    output: "0 to 1,000,000; speed capped at SPEED_BASE by B11"
+    referenced_by: []
+  - name: door_tier
+    status: active
+    source: design/gdd/forge-and-proving.md
+    expression: "tier = [score >= t1] + [score >= t2]"
+    variables: [score, t1, t2]
+    output: "0, 1 or 2; a lost fight is always 0"
+    referenced_by: []
+  - name: seals
+    status: active
+    source: design/gdd/forge-and-proving.md
+    expression: "seals(makeup, m) = sum over doors of tier_d; bestSeals(m) = max over makeups of seals"
+    variables: [tier_d, doors]
+    output: "0 to 2 x doors (0-6 in the MVP); B6 makes the maximum unreachable"
+    referenced_by: []
+  - name: foundation_cap_raise
+    status: active
+    source: design/gdd/forge-and-proving.md
+    expression: "w(r) = sum of e_a over affinities listing r; E = b if w = 0, else lo(b) + div_floor((hi(b) - lo(b)) * min(w, WIDEN_FULL), WIDEN_FULL); D = E - b split per ingredient by cumulative rounding of positive contrib in id order"
+    variables: [e_a, b, lo, hi, WIDEN_FULL, contrib_m]
+    output: "E = b or lo(b) to hi(b); lines sum to D, each >= 0, at most N per store"
+    referenced_by: []
+  - name: gather_time
+    status: active
+    source: design/gdd/forge-and-proving.md
+    expression: "T(X, m) = sum over sources s used by the chains of X of ceil_div(D_s(X), out_s) * d_s; shared inputs made once; no by-product credit"
+    variables: [X, D_s, out_s, d_s]
+    output: "0 ms upward; B9 needs T_all >= 1.35 x T_best, +6 min, <= 60 min"
+    referenced_by: []
+  - name: source_price
+    status: active
+    source: design/gdd/forge-and-proving.md
+    expression: "price(s) = d_s + sum over inputs r of ceil_div(in_s[r], out_r) * price(src(r)) + sum of reached-atom prices; ceiling(i) = max(div_floor(p_i * FIGHTLESS_CEILING_BP, 10000), p_i + FIGHTLESS_SLACK_MS)"
+    variables: [d_s, in_s, out_r, p_i, FIGHTLESS_CEILING_BP, FIGHTLESS_SLACK_MS]
+    output: "1 ms upward; B10 passes when the cheapest fightless price <= ceiling"
+    referenced_by: []
 
 constants:
   - name: id_max_length
@@ -356,13 +412,13 @@ constants:
     source: design/gdd/content-records-and-schema.md
     value: 1
     unit: ingredients
-    referenced_by: []
+    referenced_by: [design/gdd/forge-and-proving.md]
   - name: thresholds_count
     status: active
     source: design/gdd/content-records-and-schema.md
     value: 2
     unit: thresholds per door
-    referenced_by: []
+    referenced_by: [design/gdd/forge-and-proving.md]
   - name: safe_integer_max
     status: active
     source: design/gdd/content-records-and-schema.md
@@ -386,7 +442,7 @@ constants:
     source: design/gdd/modifier-pipeline-and-recompute.md
     value: 16
     unit: add entries per value per stage
-    referenced_by: []
+    referenced_by: [design/gdd/forge-and-proving.md]
   - name: recompute_time_ceiling_provisional
     status: active
     source: design/gdd/modifier-pipeline-and-recompute.md
@@ -397,19 +453,19 @@ constants:
     source: design/gdd/combat-resolver.md
     value: 100
     unit: strike rate at speed 0 (safe range 10 to 10000)
-    referenced_by: []
+    referenced_by: [design/gdd/forge-and-proving.md]
   - name: combat_score_win_floor
     status: active
     source: design/gdd/combat-resolver.md
     value: 10000
     unit: proving points (every win scores at least this, every loss below it)
-    referenced_by: []
+    referenced_by: [design/gdd/forge-and-proving.md]
   - name: combat_score_max
     status: active
     source: design/gdd/combat-resolver.md
     value: 20000
     unit: proving points
-    referenced_by: []
+    referenced_by: [design/gdd/forge-and-proving.md]
   - name: combat_stat_count
     status: active
     source: design/gdd/combat-resolver.md
@@ -433,16 +489,94 @@ constants:
     source: design/gdd/resources-and-caps.md
     value: 12000
     unit: basis points of the base cap (smallest Foundation raise)
-    referenced_by: []
+    referenced_by: [design/gdd/forge-and-proving.md]
   - name: raise_max_bp
     status: active
     source: design/gdd/resources-and-caps.md
     value: 17500
     unit: basis points of the base cap (largest Foundation raise)
-    referenced_by: []
+    referenced_by: [design/gdd/forge-and-proving.md]
   - name: first_cap_ms
     status: active
     source: design/gdd/resources-and-caps.md
     value: 45000
     unit: ms after the commit (V7)
+    referenced_by: []
+  - name: clash_bp
+    status: active
+    source: design/gdd/forge-and-proving.md
+    value: 5000
+    unit: basis points of the opposed total taken off (safe 2500 to 7500)
+    referenced_by: []
+  - name: foundation_base_might
+    status: active
+    source: design/gdd/forge-and-proving.md
+    value: 20
+    unit: might points (safe 0 to 50)
+    referenced_by: []
+  - name: foundation_base_guard
+    status: active
+    source: design/gdd/forge-and-proving.md
+    value: 10
+    unit: guard points (safe 0 to 50)
+    referenced_by: []
+  - name: foundation_base_vigor
+    status: active
+    source: design/gdd/forge-and-proving.md
+    value: 100
+    unit: vigor points (safe 50 to 200)
+    referenced_by: []
+  - name: foundation_base_speed
+    status: active
+    source: design/gdd/forge-and-proving.md
+    value: 0
+    unit: speed points (safe 0 to 20)
+    referenced_by: []
+  - name: widen_full
+    status: active
+    source: design/gdd/forge-and-proving.md
+    value: 200
+    unit: widening at which a store reaches hi(b)
+    referenced_by: []
+  - name: overgather_ratio_bp
+    status: active
+    source: design/gdd/forge-and-proving.md
+    value: 13500
+    unit: basis points of the best makeup gathering time (B9; safe 12500 to 15000)
+    referenced_by: []
+  - name: overgather_min_ms
+    status: active
+    source: design/gdd/forge-and-proving.md
+    value: 360000
+    unit: ms more than the best makeup (B9)
+    referenced_by: []
+  - name: overgather_max_ms
+    status: active
+    source: design/gdd/forge-and-proving.md
+    value: 3600000
+    unit: ms to gather all ingredients at most (B9)
+    referenced_by: []
+  - name: fightless_ceiling_bp
+    status: active
+    source: design/gdd/forge-and-proving.md
+    value: 20000
+    unit: basis points of the cheapest other source price (B10; safe 15000 to 25000)
+    referenced_by: []
+  - name: fightless_slack_ms
+    status: active
+    source: design/gdd/forge-and-proving.md
+    value: 60000
+    unit: ms of absolute slack (B10)
+    referenced_by: []
+  - name: door_threshold_min
+    status: active
+    source: design/gdd/forge-and-proving.md
+    value: 10000
+    unit: proving points (each door threshold; equals combat_score_win_floor)
+    referenced_by: []
+  - name: door_threshold_max
+    status: active
+    source: design/gdd/forge-and-proving.md
+    value: 20000
+    unit: proving points (each door threshold; equals combat_score_max)
     referenced_by: []

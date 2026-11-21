@@ -681,7 +681,7 @@ rewrites their input. Review manually before production.*
 |---|---|---|---|
 | 1 | Resolved 2026-11-20: amendment A1 applied to #1 (ops entries `{fn, noOpCheck, operandRange}`; step 7 checks the operand; `scale_bp` 0–100,000) | Designer | Done |
 | 2 | Resolved 2026-11-20 (A1): yes, `resource.cap` stays a seal input. A seal reads the cap from before the forge's own entries (#3 K8) | #3 with #6 | Done; #6 confirms |
-| 3 | Which `source` does a Foundation entry carry: the ingredient, the realm, or both as two entries? | #6 | #6 GDD |
+| 3 | Resolved 2026-11-20 by #6 (G11.3, S6): each Foundation entry's `source` is its ingredient, one `add` line per ingredient, at most N per value | #6 | Done |
 | 4 | Does a tending choice survive the activity stopping (rest filling the slot, live or away)? It decides where #4 splits `advance` | #10 with #4 | #10 GDD |
 | 5 | Is 16 `add` entries per value enough for the realm ladder, when several realms' Foundations may stack? | #19 | Alpha |
 | 6 | Should breakdowns show a direction for method `set` steps (up or down), as #1 R7.2 recommends? | #14 | #14 UX spec |
