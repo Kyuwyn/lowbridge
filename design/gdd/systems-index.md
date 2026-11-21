@@ -244,8 +244,8 @@ rules.
 | 7 | Methods | Progression | MVP | Approved | design/gdd/methods.md | Content records and schema, Forge and proving, Modifier pipeline |
 | 8 | Crafting route | Economy | MVP | Approved | design/gdd/crafting-route.md | Content records and schema, Resources and caps, Activity slot, Forge and proving, Methods |
 | 9 | Fight and dungeon routes | Gameplay | MVP | Approved | design/gdd/fight-and-dungeon-routes.md | Content records and schema, Resources and caps, Activity slot, Combat resolver, Forge and proving, Methods |
-| 10 | Tending | Gameplay | MVP | Designed | design/gdd/tending.md | Activity slot, Modifier pipeline, Content records and schema (field registry), Resources and caps, Crafting route |
-| 11 | Save and run lifecycle | Persistence | MVP | Designed | design/gdd/save-and-run-lifecycle.md | Content records and schema, Modifier pipeline, Resources and caps, Activity slot, Forge and proving, Methods, Tending |
+| 10 | Tending | Gameplay | MVP | Approved | design/gdd/tending.md | Activity slot, Modifier pipeline, Content records and schema (field registry), Resources and caps, Crafting route |
+| 11 | Save and run lifecycle | Persistence | MVP | Approved | design/gdd/save-and-run-lifecycle.md | Content records and schema, Modifier pipeline, Resources and caps, Activity slot, Forge and proving, Methods, Tending |
 | 12 | Content validator and balance enumeration | Meta | MVP | Not Started | — | Content records and schema, Modifier pipeline, Resources and caps, Forge and proving, Methods, Crafting route, Fight and dungeon routes, Tending, Save and run lifecycle |
 | 13 | Interface shell and goal line (inferred) | UI | MVP | Not Started | — | Resources and caps, Activity slot, Forge and proving, Methods, Tending, Save and run lifecycle |
 | 14 | Method marks and number breakdowns | UI | MVP | Not Started | — | Modifier pipeline, Methods |
@@ -430,7 +430,7 @@ session. Wave B starts after the checkpoint, and its order can change on what th
 |--------|-----------|-----------------|------------|
 | Forge and proving | Design | "No makeup is co-optimal under both methods" has no demonstrated mechanism without a budget. The build problem may be a delayed lookup once all six ingredients are held. The balance table is stale (gate concerns 2, 3) | Regenerate the balance table first. Name the replacement pressure before tuning (CD-SYSTEMS). The GDD enumerates all 30 cases and names the interaction that separates each method's best makeup |
 | Methods | Design | Pillar 2 and the second half of the hook have no play evidence; the second method has never been played. Each method's best makeup resembled the other's theme (CD-PLAYTEST concerns 1, 3) | Play both methods in one session as the first MVP smoke test. Ask a tester which makeup they expected to be best |
-| Tending | Design | Undesigned and untested, yet in the 30-second loop and pillar 4. Capped yield may still favour the present player | The concept's two constraints are written into the GDD as acceptance criteria. Validator enumeration proves seal invariance |
+| Tending | Design | Designed (#10, Approved 2026-11-21) but untested, yet in the 30-second loop and pillar 4. Capped yield may still favour the present player | The concept's two constraints are written into the GDD as acceptance criteria. Validator enumeration proves seal invariance |
 | Modifier pipeline and recompute | Technical | Bottleneck for method, Foundation, tending, breakdowns and validation. The previous attempt's recompute was a fixed-point cycle | One ordered pass, closed targets, no modifier of a modifier. Order of operations fixed by ADR before code |
 | Activity slot, rest and away time | Technical | Away-time edge cases (cap, clock skew, an input running out mid-gap) | One `advance(state, dt)` for live and away time. Backwards clocks clamped. Time-accounting tests |
 | Content validator and balance enumeration | Scope | Validator cost grows with methods × reforge × realms | Static checks on patched data plus monotone reachability from commit states. Revisit at the vertical slice when reforge adds states |
@@ -490,8 +490,8 @@ session. Wave B starts after the checkpoint, and its order can change on what th
 |--------|-------|
 | Total systems identified | 20 |
 | Design docs started | 11 |
-| Design docs reviewed | 9 |
-| Design docs approved | 9 |
+| Design docs reviewed | 11 |
+| Design docs approved | 11 |
 | MVP systems designed | 11/15 |
 | Vertical Slice systems designed | 0/3 |
 

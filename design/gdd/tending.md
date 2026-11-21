@@ -1,6 +1,6 @@
 # Tending
 
-> **Status**: Designed 2026-11-21 (pending `/design-review` in a fresh session)
+> **Status**: Approved 2026-11-21 (lean review; findings in `design/gdd/reviews/tending-review-log.md`)
 > **Creative Director Review (CD-GDD-ALIGN)**: APPROVED 2026-11-21 — one watch-item, not a blocker: D4.5's bounded mid-fill reward (≤ 3.75 s per fill) is a soft tension with pillar 4's "picks the one that waits", guarded by the stated cut rule (Open Question 2)
 > **Amends**: #4 Activity slot A2 2026-11-21 (S6.3, F2 min rule; Open Question 4 answered), designer-approved; status-only amendments marking Open Questions resolved: #2 A2 (row 4), #3 A1 (row 7), #9 A1 (row 3), designer-approved
 > **Author**: designer + agents
@@ -646,7 +646,7 @@ corrected "always heap" counts and the duration-entry no-op condition.*
 
 | # | System | Nature | What they get | Status |
 |---|---|---|---|---|
-| 11 | Save and run lifecycle | Hard | The `heaped` slice: saved, empty at run start, invalid ids dropped on load (D9) | In design (parallel session) |
+| 11 | Save and run lifecycle | Hard | The `heaped` slice: saved, empty at run start, invalid ids dropped on load (D9) | Approved 2026-11-21 (`save-and-run-lifecycle.md` D1.3, D3.8, D3.13) |
 | 12 | Content validator and balance enumeration | Hard | J1–J3, and the tending sets for #2 P10, #3 V3 and #4 T1 (D8) | Not started |
 | 13 | Interface shell and goal line | Hard | A heap toggle per gatherer, its refusals, the heaped values and `heapChanged` (UI Requirements) | Not started |
 | 14 | Method marks and breakdowns | Soft | The tending step's "Heaped" label with the source as cause (D3.3) | Not started |
@@ -779,7 +779,7 @@ and should be reviewed in the #13 UX spec.*
 | J3 | #6 B9, B10; #7 H5; #8 X3; #9 U3 | Run under every tending set | Approved |
 | J3, AC-J3-2 | #9 Open Question 3 | A tended route keeps the premium | Answered here |
 | D7.4 | #3 V7; #8 X1, X2; #9 U5 | Pacing checks read untended values | Approved |
-| D9 | #11 | The `heaped` slice | In design (parallel session) |
+| D9 | #11 | The `heaped` slice | Approved 2026-11-21 |
 | D8 | #12 | Runs J1–J3 and the tending sets | Not started |
 | UI Requirements, Visual/Audio | #13, #14; concept Visual Identity Anchor | The toggle, the breakdown step, no hue | Not started |
 | Overview | Concept, mechanic 4 and Core Loop; systems index #10 and the cut order | Stated readings; first in the cut order | Approved |
@@ -978,8 +978,8 @@ table requires:
 **Answered here** (other GDDs' questions): #2 Open Question 4 and #4 Open Question 4 (D5: the
 choice survives a stop), #3 Open Question 7 (J1(b): a third of a store), and #9 Open Question 3
 (J3: a tended route keeps the premium). #4's row is marked resolved under its amendment A2.
-Marking #2's, #3's and #9's rows resolved is a status edit to approved GDDs, so it waits for the
-designer's approval.
+#2's, #3's and #9's rows are marked resolved by status-only amendments the designer approved (#2
+A2, #3 A1, #9 A1).
 
 **ADRs required** (representation this GDD leaves out):
 

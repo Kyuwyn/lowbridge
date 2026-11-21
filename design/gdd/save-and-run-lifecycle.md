@@ -1,6 +1,6 @@
 # Save and Run Lifecycle
 
-> **Status**: Designed 2026-11-21 (pending `/design-review` in a fresh session)
+> **Status**: Approved 2026-11-21 (lean review; findings in `design/gdd/reviews/save-and-run-lifecycle-review-log.md`)
 > **Author**: designer + agents
 > **Last Updated**: 2026-11-21
 > **Last Verified**: 2026-11-21
@@ -143,7 +143,7 @@ Rules are numbered D1–D12 and formulas J1–J5, letters no other GDD uses.
    | Slot | #4 S12 | The occupant (rest or a source id); the last stop reason; kept progress (non-zero entries only, S6.2); `t`; the bank `b`; a high-water mark per resource and ingredient | Rest; none; empty; 0; 0; marks equal to `held` (#4 S1.3, #1 F1) |
    | Method | #7 W12 | `committed`: a method id or none | None |
    | Forge | #6 G10 | One snapshot per forged realm, keyed by realm, with its entry list `F` | None |
-   | Tending | #10 | #10's fields (Open Question 1) | #10's |
+   | Tending | #10 D9 | `heaped`: a sparse set of source ids, an absent id meaning unheaped | Empty |
 
 4. **Explicit, not delta.** `held` and the marks are written for every id the content had at
    write time, even when they equal the run-start value. Only kept progress is sparse, and its
@@ -216,8 +216,11 @@ The order is fixed, and each step reads only the output of earlier steps.
      store that is now a key item (#2 Edge Cases, #6 Edge Cases).
    - With no method committed, reset every resource's `held` and mark to their run-start values
      (#7 Edge Cases, amended A2).
-9. Recompute: `effective(set_m, F, T)` from `committed`, the snapshot's `F` and #10's choice
-   (#2 P9). Before the commit, this is the base content.
+   - Drop each `heaped` id that does not name a tendable source of the committed frozen set
+     (#10 D9). Before the commit no source is tendable, so `heaped` empties. A save is never
+     refused for a `heaped` id.
+9. Recompute: `effective(set_m, F, T)` from `committed`, the snapshot's `F` and the `T` that #10
+   D3 builds from `heaped` (#2 P9). Before the commit, this is the base content.
 10. New content: each resource or ingredient the save lacks takes its run-start value under the
     effective cap (#3).
 11. Re-clamp `held` to the effective caps (#3 K5). Emit `overflow` with cause `cap` once per id
@@ -231,8 +234,9 @@ The order is fixed, and each step reads only the output of earlier steps.
     - a bank above `BANK_CAP` becomes `BANK_CAP`;
     - `t` is kept as saved.
 13. Gap. `advance` the state by J1's gap, then set `lastSeen` to now.
-    - If a segment boundary falls inside the gap (a change #10 makes by itself), the gap runs as
-      consecutive segments with a recompute between them until it is spent (#4 S9.5).
+    - The gap is one segment: no player acts during it, and `heaped` changes only by an
+      accepted `setHeap` (#10 D5). If a later system adds a boundary inside the gap, the gap runs
+      as consecutive segments with a recompute between them until it is spent (#4 S9.5).
     - The gap's events are the away summary (#13).
 14. Notice. If the fingerprint differs, show the line "The game was updated". Then show:
     - the lines from steps 3, 6, 8, 10, 11 and 12;
@@ -341,7 +345,11 @@ The order is fixed, and each step reads only the output of earlier steps.
      writes are failing.
    - On a refusal or storage screen, it copies the stored record unchanged.
 2. **Load save** takes pasted text up to `IMPORT_MAX_BYTES`.
-   - It runs D3.4–D3.12 as a dry run. A refusal shows the reason and changes nothing.
+   - Text that does not parse as a record is refused as "This is not a save" and changes
+     nothing. No integrity check runs on pasted text: the checksum guards storage (D3.3), and
+     only D4 catches hand edits (D9.3).
+   - A record that parses runs D3.4–D3.12 as a dry run. A refusal shows the reason and changes
+     nothing.
    - A loadable record shows a confirm that names what it replaces.
    - On confirm, D3.13–D3.15 run. The imported run's gap since its own `lastSeen` is played as
      away time. The record is written, and the old `current` rotates to `backup` (D2.3).
@@ -445,7 +453,7 @@ The order is fixed, and each step reads only the output of earlier steps.
 | 6 | Forge and proving | The snapshot (G10) | Its storage; `F` drops; the refusal rules; its clearing on a new run; the `lastRun` copy | #6 owns the snapshot's content |
 | 7 | Methods | `committed` (W12) | Its storage; its reset to none in the new-run write; the refusals; amendment A2 | #7 |
 | 8, 9 | Crafting route; Fight and dungeon routes | Nothing saved (#8 L9; #9) | A new run returns the road to Choosing | — |
-| 10 | Tending | The tending slice (Open Question 1) | Its storage and run-start value; the segment loop if a choice changes by itself mid-gap | #10 owns its fields |
+| 10 | Tending | The `heaped` slice (#10 D9) | Its storage; its emptying at run start; dropping ids that are no longer tendable on load, with the notice line (D3.8) | #10 owns the set and the rule that only `setHeap` changes it |
 | 12 | Validator | — | D11.5's alias check; the retired-id list's baseline; the migration fixtures | #12 runs the checks; this GDD defines them |
 | 13, 15 | Interface shell; Forge screen | — | The away summary, notices, refusal screen, new-run dialog, `lastRun`, Copy save and Load save, and the storage and tab screens; the D12 events | They own the display |
 | 16, 19 | Reforge (VS); Realm ladder (Alpha) | A replaced snapshot; more realms | D4.2's rule that a snapshot's method equals `committed`, which a post-commit switch must amend; snapshots keyed by realm | They amend D4.2 and D7 |
@@ -704,7 +712,7 @@ extra snapshot fields, and corrected the backup-loss case.*
 | Activity slot, rest and away time (#4) | Hard | The slot slice (S12); run start (S1.3); `advance`, its composition law, its segment-start check and `advance(s, 0)` (S9); `DT_MAX` and `BANK_CAP` |
 | Forge and proving (#6) | Hard | The forge snapshot and its fields (G10) |
 | Methods (#7) | Hard | `committed` (W12) and its save cases (Edge Cases, amended A2) |
-| Tending (#10) | Hard, once designed | Its slice, its run-start value, and whether a choice can change by itself mid-gap (Open Question 1) |
+| Tending (#10) | Hard | The `heaped` slice, empty at run start (D9); the rule that only an accepted `setHeap` changes it (D5) |
 | Crafting route (#8); Fight and dungeon routes (#9) | Soft | Nothing saved (#8 L9, #9); the road's Choosing state after a new run |
 
 **Downstream (depend on this system):**
@@ -723,8 +731,9 @@ extra snapshot fields, and corrected the backup-loss case.*
 - **#1, #2, #3, #4, #6, #7, #8 and #9** each already list Save and run lifecycle (#11) in their
   Dependencies.
 - **#5** saves nothing, so it is not a dependency (Interactions row 5).
-- **#10, #12, #13, #15, #16 and #19** are undesigned or in design. Each must list "depends on:
-  Save and run lifecycle" in its own Dependencies.
+- **#10** lists Save and run lifecycle in its Dependencies (`tending.md` Dependencies, row 11).
+- **#12, #13, #15, #16 and #19** are undesigned. Each must list "depends on: Save and run
+  lifecycle" in its own Dependencies.
 - **Systems index.** Row #11's Depends On gains Modifier pipeline and Tending. Rows #12, #13 and
   #15 gain Save and run lifecycle. This GDD's index update makes these edits.
 
@@ -806,7 +815,7 @@ content and rules.
 | Forge and proving (#6) | D1.3, D4.2, D5, D7 | G7, G10, Edge Cases, AC-G10-1, AC-G13-2 | Approved |
 | Methods (#7) | D1.3, D4.2, D6 | W7.8, W9, W12, Edge Cases "Saves (owned by #11)" | Approved; amended by this GDD (A2) |
 | Crafting route (#8); Fight and dungeon routes (#9) | D1.5, D6.1 | Nothing saved | Approved |
-| Tending (#10) | D1.3, D3.9, D3.13 | The tending slice | In design (parallel session) |
+| Tending (#10) | D1.3, D3.8, D3.9, D3.13 | D5, D9: the `heaped` slice | Approved 2026-11-21 |
 | Rule 9, *copy* (`research/arcanum-reference/12-design-rules.md`) | D1 | **Kept:** a save keyed by stable ids, with everything derivable recomputed. **Diverged:** `held` and the marks are written explicitly, not as a delta against content defaults, because a delta changes saved amounts when `start` moves (D1.4) | Reference |
 | Rule 54 (`research/hundred-days-reference/06-design-rules.md`) | D6.2 | The redo is stated before it is taken | Reference |
 | Rule 26, *copy if a prestige layer is ever in scope* | D6.3 | Not in scope. The fast new game is the concept's stated test affordance, not prestige | Reference |
@@ -872,13 +881,15 @@ content and rules.
     one line.
 - **AC-D3-4** [integration] **GIVEN** a save holding a committed method and an `F`, **WHEN** it
   is saved and loaded, **THEN** the effective set and every trail deep-equal those before saving.
-  The tending half is *[blocked: #10]*.
+  **AND GIVEN** `heaped` holding `fell_ironbark`, the same holds, and `heaped` is unchanged.
 - **AC-D3-5** [browser] **GIVEN** a production bundle built from content with a load error, and
   a save in storage, **WHEN** the game starts, **THEN** no `advance` is called, nothing is
   written, and the stored bytes are unchanged.
-- **AC-D3-6** [integration, Fx] *[blocked: #10]* **GIVEN** a tending choice that changes by
-  itself inside the gap, **WHEN** loaded, **THEN** the gap runs as consecutive segments with a
-  recompute between them, and the state equals that of the same play live.
+- **AC-D3-6** [integration, Fx] **GIVEN** a committed run saved with `fell_ironbark` heaped and
+  running, **WHEN** it is loaded after a gap below `DT_MAX`, **THEN** the gap runs as one segment,
+  `heaped` is unchanged, and the state equals that of the same gap played live with no action.
+  **GIVEN** a save whose `heaped` holds an id that is not a tendable source, **THEN** the load
+  succeeds, the id is dropped, and the notice gains one line for it.
 
 ### Rules
 
@@ -900,7 +911,8 @@ content and rules.
     `backup`.
   - **GIVEN** one write in flight and three more requested, **THEN** exactly two land: the one in
     flight and the last requested.
-  - A tending change writing is *[blocked: #10]*.
+  - **GIVEN** an accepted `setHeap`, **THEN** a write is requested. **GIVEN** a `setHeap` refused
+    before the commit (#10 D2), **THEN** nothing is written.
 - **AC-D4-1** [unit]
   - **GIVEN** one fixture per D4.1 failure (`held` −1, `format` "3", an extra snapshot field) and
     per D4.2 case (an unknown `committed`; no commit with kept progress, a source in the slot, a
@@ -953,6 +965,8 @@ content and rules.
 - **AC-D9-2** [integration, FS]
   - **GIVEN** pasted text that would be refused, **WHEN** loaded, **THEN** nothing changes and
     no `advance` runs.
+  - **GIVEN** pasted text that does not parse, **WHEN** loaded, **THEN** it is refused as "This
+    is not a save", and nothing changes.
   - **GIVEN** a loadable record, **WHEN** it is confirmed, **THEN** the gap since its own
     `lastSeen` is played, one write is made, and the old `current` rotates to `backup`. **WHEN**
     that write fails, **THEN** the current run stays.
@@ -1022,7 +1036,8 @@ content and rules.
     unit.
   - **GIVEN** *p* 1,000 and *D′* 3,000, **THEN** *p′* stays 1,000 and is not rescaled.
   - **GIVEN** *b* 2,000,000, **THEN** *b′* is 1,800,000.
-  - A tended *D′* is *[blocked: #10]*.
+  - **GIVEN** `skim_ash_pits` saved heaped with *p* 6,000 (*D* 6,250), and content that gives it
+    an input (so it is no longer tendable) and keeps its 5,000 ms, **THEN** the id is dropped, *D′* is 5,000 and *p′* is 4,999.
 - **AC-J5-1** [integration, FS]
   - **GIVEN** three Starts whose writes fail, **THEN** "Not saving" shows on the third.
   - **GIVEN** a commit or a forge whose write fails, **THEN** it shows at once.
@@ -1062,7 +1077,7 @@ Open Questions 4 and 5.*
 
 | # | Question | Owner | Resolve by |
 |---|---|---|---|
-| 1 | The tending slice: its fields, its run-start value, and whether a choice survives a stop or can change by itself mid-gap (#2 Open Question 4). If it always survives, the gap is one segment; if not, D3.13's segment loop applies | Tending (#10) | #10 GDD |
+| 1 | Resolved 2026-11-21 by #10 (`tending.md` D5, D9): the slice is `heaped`, a sparse set of source ids, empty at run start. A choice survives a stop and never changes by itself, so the gap is one segment (D3.13) | Tending (#10) | Done |
 | 2 | Is the log saved? Not in the MVP (D1.5). #13 may propose a capped display slice, which would raise `format` (D11.1) | Interface shell (#13) | #13 UX spec |
 | 3 | Who declares `F_pub`, and when the retired-id list starts (D11.3, D11.5) | Designer, release manager | Before the first public build |
 | 4 | The two-slot write order and the take-over fence (D2.3, D8.3). Tests assume that `backup` is put before `current`, with a store-side epoch | Technical Director | Storage ADR |
