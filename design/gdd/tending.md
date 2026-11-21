@@ -3,6 +3,7 @@
 > **Status**: Approved 2026-11-21 (lean review; findings in `design/gdd/reviews/tending-review-log.md`)
 > **Creative Director Review (CD-GDD-ALIGN)**: APPROVED 2026-11-21 — one watch-item, not a blocker: D4.5's bounded mid-fill reward (≤ 3.75 s per fill) is a soft tension with pillar 4's "picks the one that waits", guarded by the stated cut rule (Open Question 2)
 > **Amends**: #4 Activity slot A2 2026-11-21 (S6.3, F2 min rule; Open Question 4 answered), designer-approved; status-only amendments marking Open Questions resolved: #2 A2 (row 4), #3 A1 (row 7), #9 A1 (row 3), designer-approved
+> **Amendments**: A1 2026-11-21 — Open Questions 1 (the concept reworded by the designer) and 5 (the Interface shell #13 keeps the toggle on the row only) marked resolved (status edit only, no rule change; designer-approved). Touches Open Questions rows 1 and 5
 > **Author**: designer + agents
 > **Last Updated**: 2026-11-21
 > **Last Verified**: 2026-11-21
@@ -969,11 +970,11 @@ table requires:
 
 | # | Question | Owner | Resolve by |
 |---|---|---|---|
-| 1 | **Concept wording.** Should mechanic 4 and the Core Loop read "chooses whether to heap whatever gatherer is running", with speed read as output per minute (Overview, stated readings)? | Designer (concept owner) | Before the Interface shell (#13) UX spec |
+| 1 | **Concept wording.** Should mechanic 4 and the Core Loop read "chooses whether to heap whatever gatherer is running", with speed read as output per minute (Overview, stated readings)? Resolved 2026-11-21: yes, the designer applied both readings to the concept's mechanic 4 and Core Loop | Designer (concept owner) | Done |
 | 2 | **Is heaping fun as an input, or only a speed button**, and do players chase mid-fill flips (D4.5)? If either reading is the playtest's, tending moves to the Vertical Slice whole (cut order; AC-PX-1) | Designer, playtest | Wave A checkpoint / first MVP playtest |
 | 3 | J3's B9, H5 and X3 under tending are estimated (D8), not computed. Do they hold with their margins of minutes? | Validator (#12) | #12 implementation |
 | 4 | Enumeration is 2^k tending sets, and J2 loops over rooms. Later realms with more than about 10 gatherers, or caps above 10⁶, need per-source decomposition and a closed form for J2's loss half | Validator (#12), Realm ladder (#19) | Alpha |
-| 5 | Should the running-activity panel repeat the heap toggle of the gatherer it runs, or only the row (UI Requirements 1)? | Interface shell (#13) | #13 UX spec |
+| 5 | Should the running-activity panel repeat the heap toggle of the gatherer it runs, or only the row (UI Requirements 1)? Resolved 2026-11-21 by #13 (`design/ux/interface-shell.md`, C5): only the row. The running line shows "Heaped" as a word and carries no toggle, so each gatherer has one control | Interface shell (#13) | Done |
 
 **Answered here** (other GDDs' questions): #2 Open Question 4 and #4 Open Question 4 (D5: the
 choice survives a stop), #3 Open Question 7 (J1(b): a third of a store), and #9 Open Question 3

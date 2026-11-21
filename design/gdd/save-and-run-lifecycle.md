@@ -4,6 +4,7 @@
 > **Author**: designer + agents
 > **Last Updated**: 2026-11-21
 > **Last Verified**: 2026-11-21
+> **Amendments**: A1 2026-11-21 — D10.2: the persistent-storage request is never automatic; the menu item "Keep my save in this browser" makes it, once per choice; `requestPersistence()` joins D12's actions; Open Questions 2 (the log is not saved) and 6 answered (requested by Interface shell #13; approved by the designer). Touches D10.2, D12, UI Requirements 6, AC-D10-1, Open Questions rows 2 and 6
 > **Implements Pillar**: 4 (No dead ends, no attention tax); supports 2 (Methods matter) and 1 (The forge is the milestone)
 > **Creative Director Review (CD-GDD-ALIGN)**: APPROVED 2026-11-21. Three non-blocking advisories, each carried into the GDD: frame `lastRun` as a comparison under the other method, never as a best to beat (UI Requirements 5); revisit the accepted save-scumming case if #16 or #19 add hidden information or chance (Open Question 8); prefer putting the persistent-storage request behind a settings action, so the first post-commit write is never interrupted (Open Question 6)
 
@@ -363,8 +364,12 @@ The order is fixed, and each step reads only the output of earlier steps.
 1. At boot, after the lock, the game checks that storage can hold a record. If it cannot
    (storage is blocked, or the window is private and keeps storage for the session only), play
    goes on. A persistent notice reads "This browser is not keeping your save", with Copy save.
-2. After the first write that follows the commit, the game asks the browser once to keep its
-   storage. A refusal changes nothing but one log line pointing to Copy save.
+2. The game never asks the browser to keep its storage by itself (amended 2026-11-21, A1: a
+   permission prompt must never interrupt play, least of all the first write after the commit).
+   The menu offers "Keep my save in this browser" (`requestPersistence()`), which asks once each
+   time the player chooses it. The item is offered only while storage can hold a record and
+   persistence is not yet granted. A grant reads "This browser keeps your save". A refusal changes
+   nothing but one log line pointing to Copy save.
 
 #### D11. Versioning and migration
 
@@ -394,7 +399,8 @@ The order is fixed, and each step reads only the output of earlier steps.
 - **Non-derived state owned:** the envelope (`format`, `fingerprint`, `lastSeen`, `lastRun`).
   Save composes every other slice and owns none of their fields.
 - **Actions accepted:** `newRun()` and `importSave(text)`, each confirmed; `copySave()`;
-  `useHere()`.
+  `useHere()`; `requestPersistence()` (D10.2, A1), which writes nothing and returns the browser's
+  answer.
 - **Events emitted** (payloads go to an ADR with #13's channel):
   - `saveLoaded {notice, recovered}`. The away summary is the load `advance`'s own #4 events;
   - `saveRefused {reason, found}`;
@@ -791,7 +797,7 @@ content and rules.
    (CD-GDD-ALIGN).
 6. **Copy save and Load save.** They are in the menu, on the refusal screens and on both banners.
    Load save uses a text area, shows a size error over `IMPORT_MAX_BYTES`, and its confirm names
-   the run it replaces.
+   the run it replaces. The menu also holds "Keep my save in this browser" (D10.2, A1).
 7. **Persistent banners.** "Not saving" and "This browser is not keeping your save", each with
    Copy save.
 8. **Accessibility.** All of these are text with status or alert roles, are used by tap with no
@@ -974,8 +980,9 @@ content and rules.
     are counted: 1,024 bytes load, and 1,025 are refused.
 - **AC-D10-1** [integration, FS] **GIVEN** a storage probe that throws, **WHEN** the game starts,
   **THEN** play continues with "This browser is not keeping your save". **GIVEN** a spy on the
-  persistent-storage request, **THEN** it is called once, after the first write that follows the
-  commit.
+  persistent-storage request, **WHEN** a run is committed and played with no menu choice, **THEN**
+  it is never called. **WHEN** the player chooses "Keep my save in this browser" twice, **THEN** it
+  is called twice, and a refusal adds one log line (A1).
 - **AC-D11-1** [integration] **GIVEN** `SAVE_FORMAT` 3 before the first public build, **WHEN**
   records of format 2 and 4 load, **THEN** each is Refused by name, offering New run, Copy save
   and Load save, with the stored bytes unchanged. **WHEN** a new run is then confirmed over the
@@ -1078,11 +1085,11 @@ Open Questions 4 and 5.*
 | # | Question | Owner | Resolve by |
 |---|---|---|---|
 | 1 | Resolved 2026-11-21 by #10 (`tending.md` D5, D9): the slice is `heaped`, a sparse set of source ids, empty at run start. A choice survives a stop and never changes by itself, so the gap is one segment (D3.13) | Tending (#10) | Done |
-| 2 | Is the log saved? Not in the MVP (D1.5). #13 may propose a capped display slice, which would raise `format` (D11.1) | Interface shell (#13) | #13 UX spec |
+| 2 | Is the log saved? Not in the MVP (D1.5). #13 may propose a capped display slice, which would raise `format` (D11.1). Resolved 2026-11-21 by #13 (`design/ux/interface-shell.md`, Data Requirements): no slice; the log is interface state, and a load opens it with the away summary | Interface shell (#13) | Done |
 | 3 | Who declares `F_pub`, and when the retired-id list starts (D11.3, D11.5) | Designer, release manager | Before the first public build |
 | 4 | The two-slot write order and the take-over fence (D2.3, D8.3). Tests assume that `backup` is put before `current`, with a store-side epoch | Technical Director | Storage ADR |
 | 5 | The boot (250 ms) and write (2 ms) budgets, and `SAVE_MAX_BYTES`, are provisional. Measure them on the largest fixture save | Technical Director | Performance ADR |
-| 6 | Some browsers show a permission prompt for a persistent-storage request, which interrupts the player. Keep D10.2, or move the request behind a settings action? CD-GDD-ALIGN prefers the settings action, so the first post-commit write is never interrupted | Interface shell (#13) with the Technical Director | Architecture |
+| 6 | Some browsers show a permission prompt for a persistent-storage request, which interrupts the player. Keep D10.2, or move the request behind a settings action? CD-GDD-ALIGN prefers the settings action, so the first post-commit write is never interrupted. Resolved 2026-11-21 by the designer with #13: a menu action only (D10.2, A1). The storage ADR still fixes the call and its result | Interface shell (#13) with the Technical Director | Done; mechanism in ADR 2 |
 | 7 | The Wave A checkpoint needs two methods in one session, but this system is in Wave B. Should D6's run start and new run, without persistence, be built into the checkpoint? | Producer | Before the checkpoint build |
 | 8 | How `lastRun` behaves under a reforge (#16) and across realms (#19). Also, whether the accepted save-scumming case (Edge Cases, "Degenerate strategies") still holds if either adds hidden information or chance, since it rests on #6 G7's full preview and #5's deterministic fights | Reforge (#16), Realm ladder (#19) | Vertical Slice; Alpha |
 

@@ -6,7 +6,7 @@
 > **Last Verified**: 2026-11-20
 > **Implements Pillar**: 2 (Methods matter), 4 (No dead ends, no attention tax)
 > **Creative Director Review (CD-GDD-ALIGN)**: APPROVED 2026-11-20 (no blocker; its one watch item, whether the descent reads as its own way to gather, is already Open Question 5 for the first MVP playtest)
-> **Amendments**: A1 2026-11-21 — Open Question 3 marked resolved by Tending (#10, `tending.md` D1, J3): routes are not tendable, and U3 holds under every tending set (status edit only, no rule change; designer-approved). Touches Open Questions row 3
+> **Amendments**: A1 2026-11-21 — Open Question 3 marked resolved by Tending (#10, `tending.md` D1, J3): routes are not tendable, and U3 holds under every tending set (status edit only, no rule change; designer-approved). Touches Open Questions row 3 · A2 2026-11-21 — N1 gains the road-group values for #1 A7's `source.group` ("Hunts", "The Still Deep"); Open Question 8's display half answered by the Interface shell (#13, C13) (requested by #13; approved by the designer). Touches N1, Open Questions row 8
 
 ## Summary
 
@@ -154,6 +154,11 @@ Nine `source` records. Names and ids are provisional, and names fit #1's 24 code
   #6 B9 and #7 H5.
 - This is W5's plan exactly. EJ, IH and GM each have one shared hunt. EM, CL and TP each have an
   Ember Breath hunt and a Still Water floor. That makes 9 of the 23 sources in #7 Y3's budget.
+- **Road groups** (#1 A7's `source.group`, a display heading; A2 to this GDD). The six hunts carry
+  "Hunts", and the three floors "The Still Deep". The Interface shell (#13) draws a group as the
+  ladder of UI Requirements 3 when every source in it has `fights` and every source after the first
+  has a `need`, and as one closed row when all of them are closed (`design/ux/interface-shell.md`,
+  C12).
 
 #### N2. The shape of a fight route
 
@@ -1115,7 +1120,7 @@ unchecked content facts.*
 | 5 | Route fights cannot be lost, so the descent's difference from the hunts is its order, its prices and its thinner margins. Does it read as a different way to gather (rule 73), or as recipes in costume (`game-designer`'s risk)? | Designer | First MVP playtest |
 | 6 | The producer's candidate cut order reduces the dungeon to one floor. That would remove the pearl's descent, which carries Still Water's H5 margin (N6.5), and would change W5. If that cut is ever taken, re-run H5 and B9 first | Designer, with Methods (#7) | Only if the cut is taken |
 | 7 | A boss floor at the vertical slice could use a chain of fights (#5 C5), which U2 forbids today. Does it reset (rule 27), and how does U1 read it? | Designer | Vertical Slice |
-| 8 | After the forge, routes pay ingredients this realm can no longer use (#6 G13.5). Should a forged realm's routes say so, or close? | Interface shell (#13); Reforge (#16) | #13 UX spec |
+| 8 | After the forge, routes pay ingredients this realm can no longer use (#6 G13.5). Should a forged realm's routes say so, or close? Display half resolved 2026-11-21 by #13 (`design/ux/interface-shell.md`, C13): the road says so in one line, and the routes keep running. Whether they should close is Reforge's | Interface shell (#13); Reforge (#16) | #13 done; #16 for closing |
 
 **ADRs required** (representation this GDD leaves out):
 
