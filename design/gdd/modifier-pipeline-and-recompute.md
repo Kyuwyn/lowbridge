@@ -2,7 +2,7 @@
 
 > **Status**: Approved 2026-11-20 (lean review; recommended follow-ups in `design/gdd/reviews/modifier-pipeline-and-recompute-review-log.md`)
 > **Creative Director Review (CD-GDD-ALIGN)**: NOT ASSESSED 2026-11-20 — auto mode could not check Agent calls in this session (a hook rewrites their input); run the gate or `/design-review` with agents allowed
-> **Amendments**: A1 2026-11-20 — Open Question 2 and the "Seals and marks" cap case settled by Resources and caps (#3, K8): `resource.cap` stays `sealInput: yes`, and a seal reads the cap from before the forge's own entries (designer-approved). Touches Edge Cases "Seals and marks", Open Questions row 2. A2 2026-11-21 — Open Question 4 marked resolved by Tending (#10, `tending.md` D5): a heap choice survives a stop, so a stop splits no segment for tending (status edit only, no rule change; designer-approved). Touches Open Questions row 4
+> **Amendments**: A1 2026-11-20 — Open Question 2 and the "Seals and marks" cap case settled by Resources and caps (#3, K8): `resource.cap` stays `sealInput: yes`, and a seal reads the cap from before the forge's own entries (designer-approved). Touches Edge Cases "Seals and marks", Open Questions row 2. A2 2026-11-21 — Open Question 4 marked resolved by Tending (#10, `tending.md` D5): a heap choice survives a stop, so a stop splits no segment for tending (status edit only, no rule change; designer-approved). Touches Open Questions row 4 · A3 2026-11-21 — Open Question 6 marked resolved by Method marks (#14, `design/ux/method-marks.md` MK3): set steps show a direction as a verb notch and a signed change (status edit only, no rule change; designer-approved). Touches Open Questions row 6
 > **Author**: Will + agents
 > **Last Updated**: 2026-11-20
 > **Last Verified**: 2026-11-20
@@ -684,7 +684,7 @@ rewrites their input. Review manually before production.*
 | 3 | Resolved 2026-11-20 by #6 (G11.3, S6): each Foundation entry's `source` is its ingredient, one `add` line per ingredient, at most N per value | #6 | Done |
 | 4 | Does a tending choice survive the activity stopping (rest filling the slot, live or away)? It decides where #4 splits `advance`. Resolved 2026-11-21 by #10 (`tending.md` D5): yes. The heap bit is held per source and survives a stop, a switch, rest, time away and the forge; only the player's own accepted `setHeap` changes it, so `T` changes only on that action and a stop splits no segment | #10 with #4 | Done |
 | 5 | Is 16 `add` entries per value enough for the realm ladder, when several realms' Foundations may stack? | #19 | Alpha |
-| 6 | Should breakdowns show a direction for method `set` steps (up or down), as #1 R7.2 recommends? | #14 | #14 UX spec |
+| 6 | Should breakdowns show a direction for method `set` steps (up or down), as #1 R7.2 recommends? Resolved 2026-11-21 by Method marks (#14, `design/ux/method-marks.md` MK3, BD3, BD4): yes. Every method step's mark carries a verb notch (raise, quench, or a reserved lower), and every breakdown line shows its signed change, the step's `result` minus the previous result, so a quench reads "−n". The notch is withheld only while an ingredient's base is hidden (MK7) | #14 | Done |
 
 **ADRs required** (representation decisions this GDD leaves out):
 

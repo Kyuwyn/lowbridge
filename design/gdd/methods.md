@@ -3,7 +3,7 @@
 > **Status**: Approved 2026-11-20 (lean review; recommended follow-ups in `design/gdd/reviews/methods-review-log.md`)
 > **Author**: designer + Claude (`/design-system`)
 > **Last Updated**: 2026-11-21
-> **Amendments**: A1 2026-11-20 — Open Question 2 marked resolved (U1, an error on every fight source) and Open Question 3's route half resolved (H5 passes on #9's routes, within X3's bill limits) (from Fight and dungeon routes #9; approved by the designer). Touches Open Questions rows 2 and 3 · A2 2026-11-21 — before the commit, a saved resource's `held` and mark are reset to their run-start values instead of refusing the save; refusal stays for kept progress, a source in the slot, a forge snapshot, or an ingredient held or marked (requested by Save and run lifecycle #11, D3.8 and D4.2; approved by the designer). Touches Edge Cases "Saves (owned by #11)"
+> **Amendments**: A1 2026-11-20 — Open Question 2 marked resolved (U1, an error on every fight source) and Open Question 3's route half resolved (H5 passes on #9's routes, within X3's bill limits) (from Fight and dungeon routes #9; approved by the designer). Touches Open Questions rows 2 and 3 · A2 2026-11-21 — before the commit, a saved resource's `held` and mark are reset to their run-start values instead of refusing the save; refusal stays for kept progress, a source in the slot, a forge snapshot, or an ingredient held or marked (requested by Save and run lifecycle #11, D3.8 and D4.2; approved by the designer). Touches Edge Cases "Saves (owned by #11)" · A3 2026-11-21 — the commit dialog names the verbs: `closesLines` gives "Feeds: {label}" for a feed and "Quenches: {label}" for a quench, by #1's amendment A10; Open Question 7 resolved (requested by Method marks #14, `design/ux/method-marks.md` D5; approved by the designer). Touches W1, Edge Cases "If a name is long", Visual/Audio Requirements, AC-W7-2, Open Questions row 7
 > **Last Verified**: 2026-11-20
 > **Implements Pillar**: 2 (Methods matter); supports 3 (The build is a problem) and 4 (No dead ends, no attention tax)
 > **Creative Director Review (CD-GDD-ALIGN)**: APPROVED 2026-11-20 (no blocker; three advisories, each already an Open Question: keep the Wave A two-method play, Open Question 1; H5 under real route times, 3; the dialog's review-only checks depend on #14 and #15, 7)
@@ -170,7 +170,7 @@ the commit itself call the same functions (TD finding 1).
 
 | Function | Returns | Rule, formula |
 |---|---|---|
-| `closesLines(m, checked)` | #1's: one line per triple of `changed(m)`, "Opens: {source}" or "Changes: {label}" | #1 R7.2 |
+| `closesLines(m, checked)` | #1's: one line per triple of `changed(m)`: "Opens: {source}", "Feeds: {label}" or "Quenches: {label}" (A3; "Changes: {label}" for any other triple) | #1 R7.2 |
 | `givesUpLines(m, checked)` | what committing to m closes: each other method, then each source only another method opens | W7.3; Y1 |
 | `redoLine(m)` | the redo line, from `m.redoCost` | W9; Y2 |
 | `commitDialog(m, checked)` | m's name, `commitText`, then the three lists above in that order | W7.3 |
@@ -650,7 +650,7 @@ another GDD's check, named), a **runtime rule** of this GDD, or **another GDD**,
 - **If the commit dialog's opens or closes list is empty**: the interface omits that block. The
   redo line is always present (Y2).
 - **If a name is long**: names are at most 24 code points (#1 R4), so the longest line,
-  "Changes: {ingredient}: {affinity}", is under 60. The interface wraps lines and never
+  "Quenches: {ingredient}: {affinity}" (A3), is at most 60. The interface wraps lines and never
   truncates them or writes "and N more" (#15, and #17 at 390 px).
 
 ### Saves (owned by #11)
@@ -760,9 +760,12 @@ shell (#13) and the Forge screen (#15):
   3).
 - **A mark per verb.** A fed value, a quenched value and an opened route each wear the method's
   mark, and a mark shows which verb it is. Exactly the values in `changed(m)` are marked
-  (principle 2; AC-W6-2). How a mark shows direction is #14's open art question.
+  (principle 2; AC-W6-2). How a mark shows direction is answered by #14: a verb notch on the
+  method glyph (`design/ux/method-marks.md` MK3).
 - **A closed route as a visible absence.** A route the other method opens is shown by name as
-  closed, never just left out (#14's second art question; #1 F7's withdrawn state).
+  closed, never just left out (#1 F7's withdrawn state). #14 answers how: a neutral closed glyph,
+  then "Opens under" with the opening method's hollow glyph, at full contrast
+  (`design/ux/method-marks.md` MK5).
 - **The commit as one moment.** The tint moves through the interface when the commit lands, read
   from the `committed` event (the concept's Sensation aesthetic: "the method's tint moving through
   the interface").
@@ -908,8 +911,8 @@ follow #6 S9.
   saved state and is not an input.
 - **AC-W7-2** [unit, S] (the dialog) **WHEN** `commitDialog(EB, checked)` is built, **THEN** it
   reads, in order: "Begin circulating Ember Breath"; Ember Breath's `commitText`; "Opens:" for
-  each of its three hunts, and "Changes: Ember Marrow: Cinder" and "Changes: Ironbark Heartwood:
-  Jade", in triple order (#1 R7.2); "Closes: Still Water"; one "Closes:" line for each of the
+  each of its three hunts, and "Feeds: Ember Marrow: Cinder" and "Quenches: Ironbark Heartwood:
+  Jade", in triple order (#1 R7.2, A10); "Closes: Still Water"; one "Closes:" line for each of the
   three floors in id order; "Redo: only by starting a new run". **AND** Still Water's dialog
   mirrors it, with "Closes: Ember Breath" and the three Ember Breath hunts. **AND** no line holds
   a digit except through a field. **AND** Cancel changes nothing.
@@ -1004,7 +1007,7 @@ of 0 (#16).*
 | 4 | Should a method re-price sources once breakdowns can show a direction (the declined third lever, W3.2)? | Designer, with Method marks (#14) | Vertical Slice |
 | 5 | How is `redoCost` paid, what does 0 mean, and how does a switch keep `committed()` monotone (#1 Open Question 6)? | Reforge (#16) | Before the Vertical Slice |
 | 6 | A third method: does Y1 subtract shared opens, does `METHOD_PATCH_MAX` still fit the dialog, and where do its routes fit a record budget already at 54–60? | Designer, Reforge (#16) | Vertical Slice |
-| 7 | Should the dialog's "Changes:" lines carry a direction word (#1 R7.2's recommended addition; #2 Open Question 6)? | Method marks (#14), Forge screen (#15) | #14 and #15 UX specs |
+| 7 | Should the dialog's "Changes:" lines carry a direction word (#1 R7.2's recommended addition; #2 Open Question 6)? Resolved 2026-11-21 by Method marks (#14, `design/ux/method-marks.md` D5): yes, as the verb. A feed reads "Feeds:" and a quench "Quenches:" (#1 A10, this GDD's A3), and each line carries its notched mark (MK3) | Method marks (#14), Forge screen (#15) | Done |
 
 *Open Question 3, crafting half: resolved 2026-11-21 by Crafting route (#8), `crafting-route.md` L6.4. On #9's routes with #8's real bills (60, 70 and 70 s), H5 passes by 120,000 ms under Ember Breath and 280,000 under Still Water. X4 holds for the hearth alone.*
 
