@@ -3,6 +3,7 @@
 > **Status**: Approved 2026-11-21 (lean review; recommended follow-ups in `design/gdd/reviews/crafting-route-review-log.md`)
 > **Author**: designer + Claude (`/design-system`)
 > **Last Updated**: 2026-11-21
+> **Amendments**: A1 2026-11-21 — Open Question 3 marked resolved by Content validator (#12, VC12): a key-item make, and any ingredient source that X6 and #9 U2 do not cover, holds no other output (status edit only, no rule change here; designer-approved). Touches Open Questions row 3
 > **Last Verified**: 2026-11-21
 > **Implements Pillar**: 4 (No dead ends, no attention tax); supports 3 (The build is a problem) and 1 (The forge is the milestone)
 > **Creative Director Review (CD-GDD-ALIGN)**: APPROVED 2026-11-21, re-run on the re-tune to #9's premium (no blocker; advisories applied: Player Fantasy's third lesser-road bullet, kept progress for long makings in L4.5 and Game Feel, choice density added to Open Question 4)
@@ -980,7 +981,7 @@ recomputed every number and fixture above on its calculator; `qa-lead`'s script 
 |---|---|---|---|
 | 1 | Do #6 B9 and #7 H5 still pass on #9's final routes? They pass on its provisional N1, priced on L2's bills (L6.4; AC-J-1) | Fight and dungeon routes (#9), Validator (#12) | #9's approval |
 | 2 | If later content gates a source that runs many units, #6 S8 over-charges the gate (L7.1). Amend S8 to price each atom once per chain first; the draft A1 rule is the starting point (L7.3) | Forge and proving (#6), Validator (#12) | Before any such content (Vertical Slice) |
-| 3 | `qa-lead` suggests X6 cover every cap-1 output, so key-item makes too. No key item here has a by-product; is the wider rule worth a check? | Validator (#12), with Activity slot (#4) | #12 GDD |
+| 3 | `qa-lead` suggests X6 cover every cap-1 output, so key-item makes too. No key item here has a by-product; is the wider rule worth a check? Resolved 2026-11-21 by #12 (`content-validator-and-balance-enumeration.md` VC12, designer's choice): yes, as #12's own error check. X6 is unchanged, and VC12 prints "covered by X6" on the hearth road | Validator (#12), with Activity slot (#4) | Done |
 | 4 | Recipes are slower than routes by design (1.25–2×), and three run 9–13 minutes; in a hearth-only best four they are 53–58% of the run. Does the hearth still read as a road of its own, do the long makings read as weight, not waiting, and is the choice density enough (Player Fantasy, the lesser-road risk; L4.5; Game Feel)? If not, the levers are the Tone and the ladder beats, since the prices are bound by #9's premium | Designer | Wave A checkpoint: a hearth-only run and a mixed run in one session |
 | 5 | Does the shell group the fourteen sources by line (fuel, timber, stone, recipes) or by phase (before the lamp, after it, after the chisel)? | Interface shell (#13) | #13 UX spec |
 

@@ -204,7 +204,7 @@ formulas:
     expression: "largest integer q with q * d <= a; d >= 1"
     variables: [a, d]
     output: "exact integer, rounds toward minus infinity; d <= 0 throws"
-    referenced_by: [design/gdd/forge-and-proving.md]
+    referenced_by: [design/gdd/forge-and-proving.md, design/gdd/content-validator-and-balance-enumeration.md]
   - name: bp_of
     status: active
     source: design/gdd/content-records-and-schema.md
@@ -253,7 +253,7 @@ formulas:
     expression: "clamp_T(stage_apply(clamp_F(stage_apply(v_method, F)), T)); method, then Foundation, then tending; pure in (frozen set, F, T)"
     variables: [v_method, F, T]
     output: "the row's range; for a sealInput row tended equals untended"
-    referenced_by: [design/gdd/tending.md]
+    referenced_by: [design/gdd/tending.md, design/gdd/content-validator-and-balance-enumeration.md]
   - name: trail_replay
     status: active
     source: design/gdd/modifier-pipeline-and-recompute.md
@@ -399,7 +399,7 @@ formulas:
     expression: "eta(r, b) = r <= 2b ? ceil(r / 2) : r - b"
     variables: [r, b]
     output: "0 to r real ms; pacing ceilings read b = 0, floors b = BANK_CAP"
-    referenced_by: []
+    referenced_by: [design/gdd/content-validator-and-balance-enumeration.md]
   - name: affinity_total
     status: active
     source: design/gdd/forge-and-proving.md
@@ -434,7 +434,7 @@ formulas:
     expression: "seals(makeup, m) = sum over doors of tier_d; bestSeals(m) = max over makeups of seals"
     variables: [tier_d, doors]
     output: "0 to 2 x doors (0-6 in the MVP); B6 makes the maximum unreachable"
-    referenced_by: []
+    referenced_by: [design/gdd/content-validator-and-balance-enumeration.md]
   - name: foundation_cap_raise
     status: active
     source: design/gdd/forge-and-proving.md
@@ -448,14 +448,14 @@ formulas:
     expression: "T(X, m) = sum over sources s used by the chains of X of ceil_div(D_s(X), out_s) * d_s; shared inputs made once; for one id, D = max(consumed demand, largest n of its reached atoms) (A2); no by-product credit"
     variables: [X, D_s, out_s, d_s]
     output: "0 ms upward; B9 needs T_all >= 1.35 x T_best, +6 min, <= 60 min"
-    referenced_by: [design/gdd/methods.md, design/gdd/crafting-route.md, design/gdd/fight-and-dungeon-routes.md]
+    referenced_by: [design/gdd/methods.md, design/gdd/crafting-route.md, design/gdd/fight-and-dungeon-routes.md, design/gdd/content-validator-and-balance-enumeration.md]
   - name: source_price
     status: active
     source: design/gdd/forge-and-proving.md
     expression: "price(s) = d_s + sum over inputs r of ceil_div(in_s[r], out_r) * price(src(r)) + sum of reached-atom prices; ceiling(i) = max(div_floor(p_i * FIGHTLESS_CEILING_BP, 10000), p_i + FIGHTLESS_SLACK_MS)"
     variables: [d_s, in_s, out_r, p_i, FIGHTLESS_CEILING_BP, FIGHTLESS_SLACK_MS]
     output: "1 ms upward; B10 passes when the cheapest fightless price <= ceiling"
-    referenced_by: [design/gdd/methods.md, design/gdd/crafting-route.md, design/gdd/fight-and-dungeon-routes.md]
+    referenced_by: [design/gdd/methods.md, design/gdd/crafting-route.md, design/gdd/fight-and-dungeon-routes.md, design/gdd/content-validator-and-balance-enumeration.md]
   - name: gives_up
     status: active
     source: design/gdd/methods.md
@@ -582,6 +582,48 @@ formulas:
     variables: [n, WRITE_FAIL_PROMPT]
     output: "notice shown or not; n not saved; replaced or fenced writes are not attempts; new run and import commit before switching"
     referenced_by: []
+  - name: case_count
+    status: active
+    source: design/gdd/content-validator-and-balance-enumeration.md
+    expression: "cases = sum over methods m and realms r of C(M_r, N_r); door_fights = sum of C(M_r, N_r) * D_r"
+    variables: [m, M_r, N_r, D_r]
+    output: "MVP 2 x C(6,4) = 30 cases, 90 door fights; bounded by CASES_MAX (VF6)"
+    referenced_by: []
+  - name: tending_pairs
+    status: active
+    source: design/gdd/content-validator-and-balance-enumeration.md
+    expression: "pairs = sum over m of 2^k_m (k_m <= TENDING_K_MAX); seal_comparisons = sum over m of C(M, N) * 2^k_m"
+    variables: [k_m, TENDING_K_MAX, M, N]
+    output: "MVP k = 3 per method: 16 pairs, 240 seal comparisons (VC6); J3 runs on the non-empty sets only"
+    referenced_by: []
+  - name: b1_margin
+    status: active
+    source: design/gdd/content-validator-and-balance-enumeration.md
+    expression: "margin_ok(m) = for every (door d, stat s, delta = +-B1_MARGIN_STEP) with v_ds + delta in the combatant.stats row and speed <= SPEED_BASE: the argmax over makeups of seals is unique; perturbations(m) <= D x 4 x 2; resolver_calls(m) = perturbations(m) x C(M, N)"
+    variables: [d, s, delta, v_ds, B1_MARGIN_STEP, SPEED_BASE]
+    output: "true or false per method, false is a VC11 warning; MVP <= 24 perturbations and 360 resolver calls per method; S9's doors fail it (Furnace Gate vigor 191 -> 190)"
+    referenced_by: []
+  - name: run_verdict
+    status: active
+    source: design/gdd/content-validator-and-balance-enumeration.md
+    expression: "verdict = load_failed or E > 0 ? FAIL : (NE > 0 ? INCOMPLETE : PASS); exit = load_failed ? 1 : tool_fault ? 2 : verdict = PASS ? 0 : (verdict = INCOMPLETE and U = 0 and not release ? 0 : 1)"
+    variables: [load_failed, E, NE, U, release, tool_fault]
+    output: "verdict PASS, INCOMPLETE or FAIL; exit 0, 1 or 2; warnings change neither; U counts not-evaluated roots with no pending entry"
+    referenced_by: []
+  - name: price_bound
+    status: active
+    source: design/gdd/content-validator-and-balance-enumeration.md
+    expression: "PRICE_MAX = div_floor(2^53 - 1, FIGHTLESS_CEILING_BP); VC15 passes when price(s) <= PRICE_MAX"
+    variables: [price(s), FIGHTLESS_CEILING_BP]
+    output: "450,359,962,737 ms at 20,000 (shipped); 300,239,975,158 ms at 30,000; 900,719,925,474 ms at 10,000"
+    referenced_by: []
+  - name: enumeration_bounds
+    status: active
+    source: design/gdd/content-validator-and-balance-enumeration.md
+    expression: "case_ok = cases <= CASES_MAX; tending_ok(m) = k_m <= TENDING_K_MAX; rooms_ok(r) = base_cap(r) <= ROOMS_MAX"
+    variables: [cases, CASES_MAX, k_m, TENDING_K_MAX, base_cap(r), ROOMS_MAX]
+    output: "true or false; false makes the affected instances one * instance, not evaluated OVER_BOUND; MVP 30 <= 2000, 3 <= 10, cap 40 <= 1e6"
+    referenced_by: []
 
 constants:
   - name: id_max_length
@@ -625,7 +667,7 @@ constants:
     source: design/gdd/content-records-and-schema.md
     value: 86400000
     unit: ms per unit
-    referenced_by: [design/gdd/tending.md]
+    referenced_by: [design/gdd/tending.md, design/gdd/content-validator-and-balance-enumeration.md]
   - name: max_fights_per_source
     status: active
     source: design/gdd/content-records-and-schema.md
@@ -637,13 +679,13 @@ constants:
     source: design/gdd/content-records-and-schema.md
     value: 6
     unit: doors
-    referenced_by: []
+    referenced_by: [design/gdd/content-validator-and-balance-enumeration.md]
   - name: resource_cap_max
     status: active
     source: design/gdd/content-records-and-schema.md
     value: 1000000000
     unit: units
-    referenced_by: []
+    referenced_by: [design/gdd/content-validator-and-balance-enumeration.md]
   - name: contrib_abs_max
     status: active
     source: design/gdd/content-records-and-schema.md
@@ -702,7 +744,7 @@ constants:
     source: design/gdd/combat-resolver.md
     value: 100
     unit: strike rate at speed 0 (safe range 10 to 10000)
-    referenced_by: [design/gdd/forge-and-proving.md, design/gdd/fight-and-dungeon-routes.md]
+    referenced_by: [design/gdd/forge-and-proving.md, design/gdd/fight-and-dungeon-routes.md, design/gdd/content-validator-and-balance-enumeration.md]
   - name: combat_score_win_floor
     status: active
     source: design/gdd/combat-resolver.md
@@ -756,7 +798,7 @@ constants:
     source: design/gdd/activity-slot-rest-and-away-time.md
     value: 1800000
     unit: ms of held breath (rest bank cap, 30 min)
-    referenced_by: [design/gdd/methods.md, design/gdd/save-and-run-lifecycle.md]
+    referenced_by: [design/gdd/methods.md, design/gdd/save-and-run-lifecycle.md, design/gdd/content-validator-and-balance-enumeration.md]
   - name: rest_speed
     status: active
     source: design/gdd/activity-slot-rest-and-away-time.md
@@ -774,7 +816,7 @@ constants:
     source: design/gdd/activity-slot-rest-and-away-time.md
     value: 1000
     unit: ms (shortest effective source duration, T1)
-    referenced_by: [design/gdd/crafting-route.md, design/gdd/tending.md, design/gdd/save-and-run-lifecycle.md]
+    referenced_by: [design/gdd/crafting-route.md, design/gdd/tending.md, design/gdd/save-and-run-lifecycle.md, design/gdd/content-validator-and-balance-enumeration.md]
   - name: units_max
     status: active
     source: design/gdd/activity-slot-rest-and-away-time.md
@@ -846,7 +888,7 @@ constants:
     source: design/gdd/forge-and-proving.md
     value: 20000
     unit: basis points of the cheapest other source price (B10; safe 15000 to 25000)
-    referenced_by: [design/gdd/methods.md, design/gdd/crafting-route.md, design/gdd/fight-and-dungeon-routes.md]
+    referenced_by: [design/gdd/methods.md, design/gdd/crafting-route.md, design/gdd/fight-and-dungeon-routes.md, design/gdd/content-validator-and-balance-enumeration.md]
   - name: fightless_slack_ms
     status: active
     source: design/gdd/forge-and-proving.md
@@ -888,7 +930,7 @@ constants:
     source: design/gdd/crafting-route.md
     value: 30000
     unit: ms, the shortest uninterrupted hearth run (X1; safe 20,000 to 30,000 on #8's L2)
-    referenced_by: []
+    referenced_by: [design/gdd/content-validator-and-balance-enumeration.md]
   - name: premium_max_bp
     status: active
     source: design/gdd/fight-and-dungeon-routes.md
@@ -948,4 +990,34 @@ constants:
     source: design/gdd/save-and-run-lifecycle.md
     value: 65536
     unit: bytes of the largest record a build may write (provisional; safe 16384 to 262144; must stay <= import_max_bytes)
+    referenced_by: []
+  - name: cases_max
+    status: active
+    source: design/gdd/content-validator-and-balance-enumeration.md
+    value: 2000
+    unit: case-table rows enumerated before case checks report OVER_BOUND (safe 500 to 20000)
+    referenced_by: []
+  - name: tending_k_max
+    status: active
+    source: design/gdd/content-validator-and-balance-enumeration.md
+    value: 10
+    unit: tendable sources per method whose 2^k sets are enumerated (safe 6 to 12)
+    referenced_by: []
+  - name: rooms_max
+    status: active
+    source: design/gdd/content-validator-and-balance-enumeration.md
+    value: 1000000
+    unit: largest base cap J2 loops over (safe 1e4 to 1e7)
+    referenced_by: []
+  - name: b1_margin_step
+    status: active
+    source: design/gdd/content-validator-and-balance-enumeration.md
+    value: 1
+    unit: door opponent stat points moved per VC11 perturbation (safe 1 to 5)
+    referenced_by: []
+  - name: validate_time_ceiling_ms
+    status: active
+    source: design/gdd/content-validator-and-balance-enumeration.md
+    value: 2000
+    unit: ms, median wall time of 5 cold bun run validate runs on shipped content (provisional; safe 1000 to 10000)
     referenced_by: []

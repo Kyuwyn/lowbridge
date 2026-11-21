@@ -3,7 +3,7 @@
 > **Status**: Approved 2026-11-20 (lean review; recommended follow-ups in `design/gdd/reviews/forge-and-proving-review-log.md`)
 > **Author**: designer + Claude (`/design-system`)
 > **Last Updated**: 2026-11-21
-> **Amendments**: A1 2026-11-20 — S9's "Stub minutes" column is superseded for B9 and #7 H5 by #9's route table (X3), seals unchanged; Open Question 1's route half resolved (B9 and B13 pass on #9's routes; B10 waits on #8) (from Fight and dungeon routes #9; approved by the designer). Touches S9, Open Questions row 1; A2 2026-11-21 — S7: a `reached(id, n)` atom's demand combines with the rest of that id's demand by the larger, not the sum, so a floor's gate ingredient is made once (from the lean review of #8 and #9; approved by the designer). Touches S7, AC-S7-1, Open Questions row 1 note
+> **Amendments**: A1 2026-11-20 — S9's "Stub minutes" column is superseded for B9 and #7 H5 by #9's route table (X3), seals unchanged; Open Question 1's route half resolved (B9 and B13 pass on #9's routes; B10 waits on #8) (from Fight and dungeon routes #9; approved by the designer). Touches S9, Open Questions row 1; A2 2026-11-21 — S7: a `reached(id, n)` atom's demand combines with the rest of that id's demand by the larger, not the sum, so a floor's gate ingredient is made once (from the lean review of #8 and #9; approved by the designer). Touches S7, AC-S7-1, Open Questions row 1 note; A3 2026-11-21 — G14's cascade adds B9, which reads T_best. Open Question 2 is resolved by Content validator #12's VC11, a ±1 door-stat margin on B1 reported as a warning (requested by #12; approved by the designer). Touches G14, Open Questions row 2
 > **Last Verified**: 2026-11-20
 > **Implements Pillar**: 1 (The forge is the milestone) and 3 (The build is a problem); supports 4 (No dead ends, no attention tax)
 > **Creative Director Review (CD-GDD-ALIGN)**: APPROVED 2026-11-20 (two advisories applied: Player Fantasy promise 2 worded to what B2 guarantees; UI Requirements item 8 on player-facing words)
@@ -403,9 +403,10 @@ The MVP has no second realm, so this is what the forge leaves the player with (C
 The Validator (#12) runs these over the 30 cases (15 makeups × 2 methods), on each method's
 frozen set. Each is an error.
 
-- When B1 fails for either method, B2 is not evaluated for both methods, and B3 and B4 are not
+- When B1 fails for either method, B2 is not evaluated for both methods, and B3, B4 and B9 are not
   evaluated for the failing method. The report names each check that was not evaluated, because
-  they need one best makeup.
+  they need one best makeup (B9 reads T_best). *(Amended 2026-11-21, A3: B9 added, as #10 J3
+  and #12 VR3.2 already read it.)*
 - Each check reads the **case table**: each makeup's effective values, door tiers and seals under
   each method, built by G1's functions. A test may pass a case table directly.
 
@@ -1210,7 +1211,7 @@ scope when B1 fails; the tie orders; and the forge's error path and event order.
 | # | Question | Owner | Resolve by |
 |---|---|---|---|
 | 1 | S9's content is provisional. Do Methods' real patches and the routes' real durations still pass B1–B13, and does each method's best makeup stay at 4 seals? Methods' half resolved 2026-11-20 by #7 (W6): S9's patches are the real ones, unchanged, so B1–B8, B11 and B12 pass as S9 shows and each best stays at 4. The routes' half resolved 2026-11-20 by #9 (`fight-and-dungeon-routes.md` X3, U2): B13 passes, since every route bill is a refined resource; B9 passes on #9's route table under both methods (2.07× with 1,498 s over; 1.45× with 554 s over), with every bill priced on a stub chain. B10 and B9 on the real chain wait on #8, whose recipes must fall in X2's bands | Methods (#7), Crafting route (#8), Fight and dungeon routes (#9) | Checked again at #8 |
-| 2 | S9's table is sensitive: the Gate's vigor at 190 instead of 191 breaks B1 under Still Water. Should B1 also require a margin, for example that the best makeup stays unique when any one door stat moves by 1? | Forge and proving (#6), Validator (#12) | #12 GDD |
+| 2 | S9's table is sensitive: the Gate's vigor at 190 instead of 191 breaks B1 under Still Water. Should B1 also require a margin, for example that the best makeup stays unique when any one door stat moves by 1? Resolved 2026-11-21 by #12 (`content-validator-and-balance-enumeration.md` VC11, VF3): yes, as a warning, with ±`B1_MARGIN_STEP` (1) on one door opponent stat at a time. S9's doors trip it. Retuning them is #12's Open Question 3 | Forge and proving (#6), Validator (#12) | Done |
 | 3 | Does the theme fit as players read it? B4 is a proxy; the playtest named in "Checked by review" is the real test (CD-PLAYTEST concern 3) | Designer | First playtest of the Wave A build |
 | 4 | What form does the headroom signal take, and does it help the player find better makeups without naming them (CD-PLAYTEST concern 2)? | Forge screen (#15) | #15 UX spec |
 | 5 | A door's beyond is text in the MVP (G13.4). A real source behind a door needs a door-tier gate atom | Realm ladder (#19), #1 Open Question 7 | Before Alpha |
