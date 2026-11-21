@@ -348,8 +348,12 @@ gives these gathering times (E1), the same under both methods, since no method t
    | B9 | ratio 2.04, +1,550,000: passes | ratio 1.53, +860,000: passes |
    | H5 | best is 2nd of 15, +120,000 over EJ · EM · GM · IH: passes | best is 4th of 15, +280,000 over CL · EJ · EM · IH: passes |
 
-   #12 re-runs both whenever either GDD's numbers change. The hearth road's own versions (X3, X4)
-   hold for a run that never fights.
+   These read #6 S7 literally: a floor's gate ingredient is made once for the makeup and once more
+   for the next floor's `reached` atom. #9's X3 counts the larger of the two demands instead, and
+   then Still Water's T(best) is 1,350,000 and T(all six) 1,930,000: B9 ratio 1.43, +580,000, and
+   H5 still +280,000. Ember Breath and the hearth road are the same under both readings. #12
+   chooses (#9 Open Question 4d). #12 re-runs both checks whenever either GDD's numbers change.
+   The hearth road's own versions (X3, X4) hold for a run that never fights.
 5. **B13 (#6)** passes: no source here has an ingredient in `inputs`.
 
 #### L7. Price: #6 S8 used unchanged
@@ -927,8 +931,9 @@ L5.3's fill-then-spend player.
 - **AC-C-2** [validator, S] No method patch reaches a hearth source (#7 H1). An `open` on one is a
   load error (#7 W4, #1 F8).
 - **AC-J-1** [validator, S with #9's N1] #6 B9 and #7 H5 pass under both methods with L6.4's
-  values: B9 ratios 2.04 and 1.53; H5 margins 120,000 and 280,000. *Re-run when #9's routes are
-  final.*
+  values: B9 ratios 2.04 and 1.53; H5 margins 120,000 and 280,000. Under #9's count of a gate
+  ingredient's demand, Still Water's B9 is 1.43, +580,000 (L6.4). *Re-pin when #12 picks the
+  reading and #9's routes are final.*
 - **AC-J-2** [validator, S with #9's N1] For all 12 pairs, each fight route is priced at or above
   its E3 floor and each recipe sits inside #9's band, so #6 B10, #9 U3 and #9 U5 pass. The three
   route bills cost 60,000, 70,000 and 70,000 ms, inside #9's limits (L6.2).
