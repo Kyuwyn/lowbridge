@@ -241,8 +241,8 @@ rules.
 | 5 | Combat resolver (inferred) | Gameplay | MVP | Approved | design/gdd/combat-resolver.md | Content records and schema |
 | 6 | Forge and proving | Progression | MVP | Approved | design/gdd/forge-and-proving.md | Content records and schema, Resources and caps, Modifier pipeline, Combat resolver (contract owned by the Forge) |
 | 7 | Methods | Progression | MVP | Approved | design/gdd/methods.md | Content records and schema, Forge and proving, Modifier pipeline |
-| 8 | Crafting route | Economy | MVP | Designed | design/gdd/crafting-route.md | Content records and schema, Resources and caps, Activity slot, Forge and proving, Methods |
-| 9 | Fight and dungeon routes | Gameplay | MVP | Designed | design/gdd/fight-and-dungeon-routes.md | Content records and schema, Resources and caps, Activity slot, Combat resolver, Forge and proving, Methods |
+| 8 | Crafting route | Economy | MVP | Approved | design/gdd/crafting-route.md | Content records and schema, Resources and caps, Activity slot, Forge and proving, Methods |
+| 9 | Fight and dungeon routes | Gameplay | MVP | Approved | design/gdd/fight-and-dungeon-routes.md | Content records and schema, Resources and caps, Activity slot, Combat resolver, Forge and proving, Methods |
 | 10 | Tending | Gameplay | MVP | Not Started | — | Activity slot, Modifier pipeline, Content records and schema (field registry) |
 | 11 | Save and run lifecycle | Persistence | MVP | Not Started | — | Content records and schema, Resources and caps, Activity slot, Forge and proving, Methods |
 | 12 | Content validator and balance enumeration | Meta | MVP | Not Started | — | Content records and schema, Modifier pipeline, Resources and caps, Forge and proving, Methods, Crafting route, Fight and dungeon routes, Tending |
@@ -489,8 +489,8 @@ session. Wave B starts after the checkpoint, and its order can change on what th
 |--------|-------|
 | Total systems identified | 20 |
 | Design docs started | 9 |
-| Design docs reviewed | 7 |
-| Design docs approved | 7 |
+| Design docs reviewed | 9 |
+| Design docs approved | 9 |
 | MVP systems designed | 9/15 |
 | Vertical Slice systems designed | 0/3 |
 

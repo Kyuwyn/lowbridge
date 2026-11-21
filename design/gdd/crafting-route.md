@@ -1,6 +1,6 @@
 # Crafting Route
 
-> **Status**: Designed (pending `/design-review` in a fresh session)
+> **Status**: Approved 2026-11-21 (lean review; recommended follow-ups in `design/gdd/reviews/crafting-route-review-log.md`)
 > **Author**: designer + Claude (`/design-system`)
 > **Last Updated**: 2026-11-21
 > **Last Verified**: 2026-11-21
@@ -343,16 +343,16 @@ gives these gathering times (E1), the same under both methods, since no method t
 
    | | Ember Breath | Still Water |
    |---|---|---|
-   | T(best) | 1,490,000 (24.8 min) | 1,620,000 (27.0 min) |
-   | T(all six) | 3,040,000 (50.7 min) | 2,480,000 (41.3 min) |
-   | B9 | ratio 2.04, +1,550,000: passes | ratio 1.53, +860,000: passes |
+   | T(best) | 1,490,000 (24.8 min) | 1,350,000 (22.5 min) |
+   | T(all six) | 3,040,000 (50.7 min) | 1,930,000 (32.2 min) |
+   | B9 | ratio 2.04, +1,550,000: passes | ratio 1.43, +580,000: passes |
    | H5 | best is 2nd of 15, +120,000 over EJ · EM · GM · IH: passes | best is 4th of 15, +280,000 over CL · EJ · EM · IH: passes |
 
-   These read #6 S7 literally: a floor's gate ingredient is made once for the makeup and once more
-   for the next floor's `reached` atom. #9's X3 counts the larger of the two demands instead, and
-   then Still Water's T(best) is 1,350,000 and T(all six) 1,930,000: B9 ratio 1.43, +580,000, and
-   H5 still +280,000. Ember Breath and the hearth road are the same under both readings. #12
-   chooses (#9 Open Question 4d). #12 re-runs both checks whenever either GDD's numbers change.
+   #6 S7 (A2) makes a floor's gate ingredient once: one unit fills the makeup and meets the next
+   floor's `reached` atom, which reads the high-water mark. Summing the two demands instead would
+   give Still Water T(best) 1,620,000 and T(all six) 2,480,000: B9 ratio 1.53, +860,000, and H5
+   the same +280,000, so both pass either way. Ember Breath and the hearth road are the same under
+   both counts. #12 re-runs both checks whenever either GDD's numbers change.
    The hearth road's own versions (X3, X4) hold for a run that never fights.
 5. **B13 (#6)** passes: no source here has an ingredient in `inputs`.
 
@@ -688,7 +688,7 @@ Each case says who catches it: the **rules core** at runtime (#4's slot, #3's se
   (X5). The best four take 27.3 or 31.3 minutes and all six take 55.5, inside the session
   (concept).
 - **If the player takes every route a method opens**: each ingredient comes cheaper by its route
-  (U3). The best four take 24.8 or 27.0 minutes (L6.4), so fighting saves 2.5–4.3 minutes over
+  (U3). The best four take 24.8 or 22.5 minutes (L6.4), so fighting saves 2.5–8.8 minutes over
   the hearth alone. That is the premium, paid in time.
 
 *Specialist: `systems-designer` consulted in the same pass as Formulas. Its cases on gates
@@ -849,7 +849,7 @@ only applies rules that #13 and #14 own.
 | Gathering time, price, ceiling, checks | Forge and proving (#6) | S7, S8, G9, G12, G13, G14, B9, B10, B13, S9 | E1; prices; the fight floor; the best makeups |
 | The route plan, surface and price leak | Methods (#7) | W3, W4, W5, Y3, H1, H5, Open Question 3 | Fourteen shared, unpatched sources; X4 |
 | A lost route fight pays nothing | Combat resolver (#5) | C8 | Why the hearth road is the floor |
-| Fights, hunts, floors and the premium | Fight and dungeon routes (#9; Designed, on its own branch) | N1, N2, N8, N9, X1, X2, U1–U5, Open Questions 1, 2 and 4 | Route prices on L2's bills; the bands; the bill limits; the joint B9 and H5 |
+| Fights, hunts, floors and the premium | Fight and dungeon routes (#9; Approved) | N1, N2, N8, N9, X1, X2, U1–U5, Open Questions 1, 2 and 4 | Route prices on L2's bills; the bands; the bill limits; the joint B9 and H5 |
 
 ## Acceptance Criteria
 
@@ -931,9 +931,8 @@ L5.3's fill-then-spend player.
 - **AC-C-2** [validator, S] No method patch reaches a hearth source (#7 H1). An `open` on one is a
   load error (#7 W4, #1 F8).
 - **AC-J-1** [validator, S with #9's N1] #6 B9 and #7 H5 pass under both methods with L6.4's
-  values: B9 ratios 2.04 and 1.53; H5 margins 120,000 and 280,000. Under #9's count of a gate
-  ingredient's demand, Still Water's B9 is 1.43, +580,000 (L6.4). *Re-pin when #12 picks the
-  reading and #9's routes are final.*
+  values: B9 ratios 2.04 (+1,550,000) and 1.43 (+580,000), with #6 S7 counting a floor's gate
+  ingredient once (A2); H5 margins 120,000 and 280,000. *Re-pin when #9's routes are final.*
 - **AC-J-2** [validator, S with #9's N1] For all 12 pairs, each fight route is priced at or above
   its E3 floor and each recipe sits inside #9's band, so #6 B10, #9 U3 and #9 U5 pass. The three
   route bills cost 60,000, 70,000 and 70,000 ms, inside #9's limits (L6.2).

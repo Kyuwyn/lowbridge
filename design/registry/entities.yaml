@@ -445,7 +445,7 @@ formulas:
   - name: gather_time
     status: active
     source: design/gdd/forge-and-proving.md
-    expression: "T(X, m) = sum over sources s used by the chains of X of ceil_div(D_s(X), out_s) * d_s; shared inputs made once; no by-product credit"
+    expression: "T(X, m) = sum over sources s used by the chains of X of ceil_div(D_s(X), out_s) * d_s; shared inputs made once; for one id, D = max(consumed demand, largest n of its reached atoms) (A2); no by-product credit"
     variables: [X, D_s, out_s, d_s]
     output: "0 ms upward; B9 needs T_all >= 1.35 x T_best, +6 min, <= 60 min"
     referenced_by: [design/gdd/methods.md, design/gdd/crafting-route.md, design/gdd/fight-and-dungeon-routes.md]

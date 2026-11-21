@@ -2,8 +2,8 @@
 
 > **Status**: Approved 2026-11-20 (lean review; recommended follow-ups in `design/gdd/reviews/forge-and-proving-review-log.md`)
 > **Author**: designer + Claude (`/design-system`)
-> **Last Updated**: 2026-11-20
-> **Amendments**: A1 2026-11-20 — S9's "Stub minutes" column is superseded for B9 and #7 H5 by #9's route table (X3), seals unchanged; Open Question 1's route half resolved (B9 and B13 pass on #9's routes; B10 waits on #8) (from Fight and dungeon routes #9; approved by the designer). Touches S9, Open Questions row 1
+> **Last Updated**: 2026-11-21
+> **Amendments**: A1 2026-11-20 — S9's "Stub minutes" column is superseded for B9 and #7 H5 by #9's route table (X3), seals unchanged; Open Question 1's route half resolved (B9 and B13 pass on #9's routes; B10 waits on #8) (from Fight and dungeon routes #9; approved by the designer). Touches S9, Open Questions row 1; A2 2026-11-21 — S7: a `reached(id, n)` atom's demand combines with the rest of that id's demand by the larger, not the sum, so a floor's gate ingredient is made once (from the lean review of #8 and #9; approved by the designer). Touches S7, AC-S7-1, Open Questions row 1 note
 > **Last Verified**: 2026-11-20
 > **Implements Pillar**: 1 (The forge is the milestone) and 3 (The build is a problem); supports 4 (No dead ends, no attention tax)
 > **Creative Director Review (CD-GDD-ALIGN)**: APPROVED 2026-11-20 (two advisories applied: Player Fantasy promise 2 worded to what B2 guarantees; UI Requirements item 8 on player-facing words)
@@ -625,6 +625,10 @@ The gather_time formula is defined as:
 - D_s(X) is the total amount of s's output id that the chains of every ingredient in X demand,
   counting each `reached(id, n)` atom of a used source's `reveal` and `need` once. An ingredient
   demands 1. Shared inputs and key items are therefore made once.
+- A `reached(id, n)` atom reads the most of id ever held (#1 R5), so it does not add to the rest
+  of id's demand. D_s(X) for id is the larger of the consumed demand (inputs, plus 1 for an
+  ingredient in X) and the largest n among id's `reached` atoms. One unit of a floor's gate
+  ingredient therefore fills the makeup and meets the next floor's gate (A2).
 - A by-product is never credited.
 - `ceil_div(a, d)` is #3's, −div_floor(−a, d).
 
@@ -1147,7 +1151,8 @@ SW is Still Water. Abbreviations follow S9: EJ, IH, EM, CL, GM, TP.
 - **AC-S7-1** [unit, Fx] **GIVEN** EB's stub times, **THEN** T(all six) is 46 minutes and
   T(EJ, IH, EM, CL) is 28. **AND GIVEN** two ingredients that each need 3 Rendered Oil from one
   source (3 out, 6 s), **THEN** that source runs 2 units (12 s), not 1 per ingredient, because
-  shared inputs are made once.
+  shared inputs are made once. **AND GIVEN** an ingredient in X that is also a used source's
+  `reached(id, 1)` atom, **THEN** its demand is 1, not 2 (A2).
 - **AC-S9-1** [validator, S] **WHEN** the table generator runs on the shipped content, **THEN**
   it reproduces S9's two tables row for row, or this GDD is updated in the same change.
 
@@ -1211,7 +1216,7 @@ scope when B1 fails; the tie orders; and the forge's error path and event order.
 | 5 | A door's beyond is text in the MVP (G13.4). A real source behind a door needs a door-tier gate atom | Realm ladder (#19), #1 Open Question 7 | Before Alpha |
 | 6 | How does a later realm's Foundation stack with an earlier one, for caps and for the challenger? #3 K7's envelope must be amended first (G10.4) | Realm ladder (#19) | #19 GDD |
 
-*Open Question 1, crafting half: resolved 2026-11-21 by Crafting route (#8), `crafting-route.md` L6. B13 passes. B10 passes for all 12 pairs on #9's routes priced on #8's bills, and B9 passes jointly (ratios 2.04 and 1.53). S8 is used unchanged: #8 gates only sources made once (its L7), so S8 needs no amendment.*
+*Open Question 1, crafting half: resolved 2026-11-21 by Crafting route (#8), `crafting-route.md` L6. B13 passes. B10 passes for all 12 pairs on #9's routes priced on #8's bills, and B9 passes jointly (ratios 2.04 and 1.43, with S7 counting a floor's gate ingredient once, A2). S8 is used unchanged: #8 gates only sources made once (its L7), so S8 needs no amendment.*
 
 **ADRs required** (representation this GDD leaves out):
 
