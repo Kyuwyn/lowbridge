@@ -3,6 +3,7 @@
 > **Status**: Approved 2026-11-20 (lean review; recommended follow-ups in `design/gdd/reviews/forge-and-proving-review-log.md`)
 > **Author**: designer + Claude (`/design-system`)
 > **Last Updated**: 2026-11-20
+> **Amendments**: A1 2026-11-20 — S9's "Stub minutes" column is superseded for B9 and #7 H5 by #9's route table (X3), seals unchanged; Open Question 1's route half resolved (B9 and B13 pass on #9's routes; B10 waits on #8) (from Fight and dungeon routes #9; approved by the designer). Touches S9, Open Questions row 1
 > **Last Verified**: 2026-11-20
 > **Implements Pillar**: 1 (The forge is the milestone) and 3 (The build is a problem); supports 4 (No dead ends, no attention tax)
 > **Creative Director Review (CD-GDD-ALIGN)**: APPROVED 2026-11-20 (two advisories applied: Player Fantasy promise 2 worded to what B2 guarantees; UI Requirements item 8 on player-facing words)
@@ -683,6 +684,11 @@ placeholders (Ember Breath, Still Water) until Methods (#7) replaces them. Names
 The gather times are **stubs**, one cheapest-source time per ingredient, until #8 and #9 author
 real sources. B9 and B10 are therefore demonstrated here, not passed.
 
+*Amendment A1 (2026-11-20, from #9):* for B9 and #7 H5, the "Stub minutes" column is superseded
+by #9's route table (`fight-and-dungeon-routes.md` X3). The stubs gave Echo Jade, Ironbark
+Heartwood and Ghost Moss different minutes under each method, which shared hunts cannot do (#9
+N10). The seals, patches and doors below are untouched.
+
 **Content (base `contrib`, as Cinder / Jade / Bark / Gale):**
 
 | Ingredient | Abbr. | Base | Ember Breath patch | Still Water patch | Stub minutes (EB / SW) |
@@ -1198,7 +1204,7 @@ scope when B1 fails; the tie orders; and the forge's error path and event order.
 
 | # | Question | Owner | Resolve by |
 |---|---|---|---|
-| 1 | S9's content is provisional. Do Methods' real patches and the routes' real durations still pass B1–B13, and does each method's best makeup stay at 4 seals? Methods' half resolved 2026-11-20 by #7 (W6): S9's patches are the real ones, unchanged, so B1–B8, B11 and B12 pass as S9 shows and each best stays at 4. B9, B10 and B13 wait on #8 and #9 | Methods (#7), Crafting route (#8), Fight and dungeon routes (#9) | Checked again at #8 and #9 |
+| 1 | S9's content is provisional. Do Methods' real patches and the routes' real durations still pass B1–B13, and does each method's best makeup stay at 4 seals? Methods' half resolved 2026-11-20 by #7 (W6): S9's patches are the real ones, unchanged, so B1–B8, B11 and B12 pass as S9 shows and each best stays at 4. The routes' half resolved 2026-11-20 by #9 (`fight-and-dungeon-routes.md` X3, U2): B13 passes, since every route bill is a refined resource; B9 passes on #9's route table under both methods (2.07× with 1,498 s over; 1.45× with 554 s over), with every bill priced on a stub chain. B10 and B9 on the real chain wait on #8, whose recipes must fall in X2's bands | Methods (#7), Crafting route (#8), Fight and dungeon routes (#9) | Checked again at #8 |
 | 2 | S9's table is sensitive: the Gate's vigor at 190 instead of 191 breaks B1 under Still Water. Should B1 also require a margin, for example that the best makeup stays unique when any one door stat moves by 1? | Forge and proving (#6), Validator (#12) | #12 GDD |
 | 3 | Does the theme fit as players read it? B4 is a proxy; the playtest named in "Checked by review" is the real test (CD-PLAYTEST concern 3) | Designer | First playtest of the Wave A build |
 | 4 | What form does the headroom signal take, and does it help the player find better makeups without naming them (CD-PLAYTEST concern 2)? | Forge screen (#15) | #15 UX spec |

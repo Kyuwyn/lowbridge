@@ -3,6 +3,7 @@
 > **Status**: Approved 2026-11-20 (lean review; recommended follow-ups in `design/gdd/reviews/activity-slot-rest-and-away-time-review-log.md`)
 > **Author**: designer + agents
 > **Last Updated**: 2026-11-20
+> **Amendments**: A1 2026-11-20 — Open Question 5 marked resolved (route fights use the unforged cultivator, #6 G13.2, #9 N3) and Open Question 6's route half resolved (no fight route has a by-product, #9 U2) (from Fight and dungeon routes #9; approved by the designer). Touches Open Questions rows 5 and 6
 > **Last Verified**: 2026-11-20
 > **Implements Pillar**: 4 (No dead ends, no attention tax); supports 3 (The build is a problem)
 > **Creative Director Review (CD-GDD-ALIGN)**: APPROVED 2026-11-20. #3's carried pillar-4 item (the switch count of the opening chain) is answered: S8 removes the latency cost of a switch, and Open Question 1 hands the switch frequency to Crafting route (#8). Non-blocking: track whether #8's recipe shape keeps switch frequency within pillar 4, and use the Player Fantasy's "coming back" scene in Open Question 2's rewording
@@ -1041,8 +1042,8 @@ there is one resolver call per unit, and the chain stops at its first loss (S4.2
 | 2 | **#3 Open Question 4.** Away progress is one store's fill by design, so no slot rule makes "what the last activity produced while away" (concept, Session-Level and Retention Hooks) a draw. Proposed rewording: "the stores the last run filled, and the breath held for the next" | Designer (concept owner) | Before the Interface shell (#13) UX spec |
 | 3 | What is `AWAY_CAP`'s final value? 24 h is provisional (S7.3) | Technical Director | Architecture (ADR) |
 | 4 | Does a tending choice survive a stop? The slot splits segments either way (#2 Open Question 4) | Tending (#10) | #10 GDD |
-| 5 | Do route fights read the Foundation after the forge? Each unit uses its own segment's challenger (#5 Open Question 3) | Forge and proving (#6), Fight and dungeon routes (#9) | #6 GDD |
-| 6 | Should a source with an ingredient output and a by-product be an error rather than T2's warning? | Crafting route (#8), Fight and dungeon routes (#9) | #8 GDD |
+| 5 | Resolved 2026-11-20 by #6 (G13.2) and #9 (N3): no. Every route fight, before and after the forge, uses #9's unforged cultivator, a fixed `combatant` equal to `FOUNDATION_BASE`, so no segment's challenger differs | Forge and proving (#6), Fight and dungeon routes (#9) | Done |
+| 6 | Should a source with an ingredient output and a by-product be an error rather than T2's warning? #9's half resolved 2026-11-20 (`fight-and-dungeon-routes.md` N2.2, U2): no fight route has a by-product, an error under U2, so T2 never fires on a route. #9 recommends T2 become an error for recipes too | Crafting route (#8), Fight and dungeon routes (#9) | #8 GDD |
 | 7 | Rest before the commit fills the bank (S8.6). Should the bank start at the commit instead? Decided for now: no. It is simpler, and conservation holds from run start. Revisit if #12's pacing floors bind | Designer, with Validator (#12) | #12 GDD |
 | 8 | A rest speed other than 2 needs a remainder in state (S8.2). Change it only if a playtest finds bursts too fast | Designer | MVP playtest |
 

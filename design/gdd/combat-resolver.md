@@ -4,6 +4,7 @@
 > **Creative Director Review (CD-GDD-ALIGN)**: NOT ASSESSED 2026-11-20 — the gate's agent spawn was blocked in the authoring session (auto mode cannot review an Agent call a hook rewrites); run it with `/design-review`
 > **Author**: designer + Claude (`/design-system`)
 > **Last Updated**: 2026-11-20
+> **Amendments**: A1 2026-11-20 — Open Questions 2 and 4 marked resolved: U1 makes an unwinnable fight source a validator error, and a lost unit costs time only (#4 S4.2, #9 N7.3) (from Fight and dungeon routes #9; approved by the designer). Touches Open Questions rows 2 and 4
 > **Last Verified**: 2026-11-20
 > **Implements Pillar**: 3 (The build is a problem), 4 (No dead ends, no attention tax)
 
@@ -633,9 +634,9 @@ vigor 180, speed 50} from F8; SPEED_BASE is 100.
 | # | Question | Owner | Resolve by |
 |---|---|---|---|
 | 1 | Resolved 2026-11-20 by #6 (G5, G6, S3, S9; #1 amendment A4): the Foundation's stats come from its affinities after clashes; the doors' opponents are S9's; `door.thresholds` narrows to 10,000–20,000, so a lost fight is always tier 0 | Forge and proving (#6) | Done |
-| 2 | Is a fight source that its challenger cannot win, under some method, a validator error? Before the forge every route outcome is a content fact (C9), so such a source can never pay | Fight and dungeon routes (#9), Validator (#12) | #9 GDD |
+| 2 | Resolved 2026-11-20 by #9 (`fight-and-dungeon-routes.md` U1, N12): yes, an error. U1 runs on `checked` for every fight source, enabled or not, because each is open under some method; the challenger is #9's unforged cultivator (N3), equal to `FOUNDATION_BASE` | Fight and dungeon routes (#9), Validator (#12) | Done |
 | 3 | Resolved 2026-11-20 by #6 (G13.2): route fights keep the baseline in the MVP; the locked source is each door's `flavor` text (G13.4) | Forge and proving (#6), Fight and dungeon routes (#9) | Done |
-| 4 | Does a lost unit consume its inputs, or only its time? Rule 27 says time only; #4 and #9 decide what "time" includes | Activity slot (#4), Fight and dungeon routes (#9) | #4 GDD |
+| 4 | Resolved 2026-11-20 by #4 (S4.2) and confirmed by #9 (N7.3): only its time. Nothing is paid, the bill stays held and progress is zeroed; #9's U1 means no shipped route fight can be lost | Activity slot (#4), Fight and dungeon routes (#9) | Done |
 | 5 | Resolved 2026-11-20 by #6 (B11, S9): `SPEED_BASE` 100 stays; B11 holds every Foundation's and door's speed at or below it | Forge and proving (#6) with this GDD | Done |
 | 6 | Row #4 of the systems index should list the Combat resolver among its dependencies (Dependencies, bidirectionality) | Systems index owner (`/map-systems`) | Next systems index update |
 

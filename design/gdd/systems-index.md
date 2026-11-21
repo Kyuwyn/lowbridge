@@ -138,10 +138,12 @@ route (#9's premium). Every ingredient's
 fightless source lives here or in a fightless input chain to it. Crafted items can open the next
 source (the short-term loop).
 
-**9. Fight and dungeon routes.** Single-fight sources and one dungeon of three chained floors,
-on the resolver from system 5. Leaving keeps progress (rule 27). Methods add and remove these
-routes, and these routes pay a premium over crafting. A method that removes an ingredient's
-fight or dungeon route gives that ingredient another source, so it keeps two (pillar 4).
+**9. Fight and dungeon routes.** Six single-fight hunts and one dungeon of three gated floors,
+on the resolver from system 5, each fought by a fixed unforged cultivator and guaranteed
+winnable. Leaving keeps progress (rule 27). Methods only open these routes (`methods.md` W3):
+Ember Breath hunts, Still Water descends. Each route spends half a cap of one refined good and
+costs at most 80% of its ingredient's recipe, so it pays a premium over crafting while every
+ingredient keeps its fightless recipe (pillar 4).
 
 **10. Tending.** An optional, discrete choice on the running activity, with no repeated, held or
 timed input. It raises speed and yield up to stated ceilings, gives something up, and never
@@ -240,7 +242,7 @@ rules.
 | 6 | Forge and proving | Progression | MVP | Approved | design/gdd/forge-and-proving.md | Content records and schema, Resources and caps, Modifier pipeline, Combat resolver (contract owned by the Forge) |
 | 7 | Methods | Progression | MVP | Approved | design/gdd/methods.md | Content records and schema, Forge and proving, Modifier pipeline |
 | 8 | Crafting route | Economy | MVP | Designed | design/gdd/crafting-route.md | Content records and schema, Resources and caps, Activity slot, Forge and proving, Methods |
-| 9 | Fight and dungeon routes | Gameplay | MVP | Not Started | — | Activity slot, Combat resolver, Forge and proving, Methods |
+| 9 | Fight and dungeon routes | Gameplay | MVP | Designed | design/gdd/fight-and-dungeon-routes.md | Content records and schema, Resources and caps, Activity slot, Combat resolver, Forge and proving, Methods |
 | 10 | Tending | Gameplay | MVP | Not Started | — | Activity slot, Modifier pipeline, Content records and schema (field registry) |
 | 11 | Save and run lifecycle | Persistence | MVP | Not Started | — | Content records and schema, Resources and caps, Activity slot, Forge and proving, Methods |
 | 12 | Content validator and balance enumeration | Meta | MVP | Not Started | — | Content records and schema, Modifier pipeline, Resources and caps, Forge and proving, Methods, Crafting route, Fight and dungeon routes, Tending |
@@ -324,7 +326,7 @@ access to the pipeline. Its door-test contract is owned by the Forge.
 1. Forge and proving — depends on: Resources and caps, Modifier pipeline, Combat resolver
 2. Methods — depends on: Forge and proving, Modifier pipeline
 3. Crafting route — depends on: Content records and schema, Resources and caps, Activity slot, Forge and proving, Methods
-4. Fight and dungeon routes — depends on: Activity slot, Combat resolver, Forge and proving, Methods
+4. Fight and dungeon routes — depends on: Content records and schema, Resources and caps, Activity slot, Combat resolver, Forge and proving, Methods
 5. Tending — depends on: Activity slot, Modifier pipeline, Content records and schema (the field registry's `sealInput` tags constrain it)
 6. Save and run lifecycle — depends on: Content records and schema, Resources and caps, Activity slot, Forge and proving, Methods
 7. Reforge and post-commit method switch (VS) — depends on: Forge and proving, Methods, Resources and caps, Save and run lifecycle
@@ -486,10 +488,10 @@ session. Wave B starts after the checkpoint, and its order can change on what th
 | Metric | Count |
 |--------|-------|
 | Total systems identified | 20 |
-| Design docs started | 8 |
+| Design docs started | 9 |
 | Design docs reviewed | 7 |
 | Design docs approved | 7 |
-| MVP systems designed | 8/15 |
+| MVP systems designed | 9/15 |
 | Vertical Slice systems designed | 0/3 |
 
 ---
