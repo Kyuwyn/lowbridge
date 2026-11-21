@@ -1037,7 +1037,7 @@ there is one resolver call per unit, and the chain stops at its first loss (S4.2
 
 | # | Question | Owner | Resolve by |
 |---|---|---|---|
-| 1 | **The click half of #3 Open Question 3.** Held breath makes a late switch free (S8.6), but the K1 chain still asks for about ten switches with an obvious answer in the first two minutes. Should Crafting route (#8) size opening units so that the median uninterrupted run is at least 30 s at single speed? K1's 6 s render fails that test. A one-entry "then" choice was considered and declined (designer, 2026-11-20). Revisit it only if a playtest shows ping-pong | Crafting route (#8), with Resources and caps (#3) | #8 GDD; MVP playtest |
+| 1 | **The click half of #3 Open Question 3.** Held breath makes a late switch free (S8.6), but the K1 chain still asks for about ten switches with an obvious answer in the first two minutes. Should Crafting route (#8) size opening units so that the median uninterrupted run is at least 30 s at single speed? K1's 6 s render fails that test. A one-entry "then" choice was considered and declined (designer, 2026-11-20). Revisit it only if a playtest shows ping-pong. Resolved 2026-11-21 by #8 (`crafting-route.md` L5.3, X1): yes. Every uninterrupted hearth run lasts at least 30 s, and a best four takes 28 runs with a median of 30 s | Crafting route (#8), with Resources and caps (#3) | Done; MVP playtest |
 | 2 | **#3 Open Question 4.** Away progress is one store's fill by design, so no slot rule makes "what the last activity produced while away" (concept, Session-Level and Retention Hooks) a draw. Proposed rewording: "the stores the last run filled, and the breath held for the next" | Designer (concept owner) | Before the Interface shell (#13) UX spec |
 | 3 | What is `AWAY_CAP`'s final value? 24 h is provisional (S7.3) | Technical Director | Architecture (ADR) |
 | 4 | Does a tending choice survive a stop? The slot splits segments either way (#2 Open Question 4) | Tending (#10) | #10 GDD |
@@ -1045,6 +1045,8 @@ there is one resolver call per unit, and the chain stops at its first loss (S4.2
 | 6 | Should a source with an ingredient output and a by-product be an error rather than T2's warning? | Crafting route (#8), Fight and dungeon routes (#9) | #8 GDD |
 | 7 | Rest before the commit fills the bank (S8.6). Should the bank start at the commit instead? Decided for now: no. It is simpler, and conservation holds from run start. Revisit if #12's pacing floors bind | Designer, with Validator (#12) | #12 GDD |
 | 8 | A rest speed other than 2 needs a remainder in state (S8.2). Change it only if a playtest finds bursts too fast | Designer | MVP playtest |
+
+*Open Question 6, recipe half: resolved 2026-11-21 by Crafting route (#8), `crafting-route.md` X6. A hearth recipe with a by-product is an error. With #9's U2 on the routes, that covers every ingredient source in the MVP. T2 stays a warning for every other source, so this GDD's rules are unchanged.*
 
 **ADRs required** (representation this GDD leaves out, per TD finding 8):
 

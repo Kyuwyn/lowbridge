@@ -131,8 +131,10 @@ has no play evidence yet, since the second method has never been played (CD-PLAY
 The patch surface targets source records, whose type the Schema owns. That lets the Wave A
 checkpoint exercise route changes before the route GDDs exist.
 
-**8. Crafting route.** The fightless floor of pillar 4: gather raw inputs, refine them, craft at
-one station. A method may re-price a recipe but never remove one. Every ingredient's
+**8. Crafting route.** The fightless floor of pillar 4: gather raw inputs, refine them at the
+hearth, and make each ingredient from its one recipe. No method patches, opens or closes a
+crafting source (`methods.md` W3, W5), and each recipe costs 1.25× to 2× its ingredient's fight
+route (#9's premium). Every ingredient's
 fightless source lives here or in a fightless input chain to it. Crafted items can open the next
 source (the short-term loop).
 
@@ -237,7 +239,7 @@ rules.
 | 5 | Combat resolver (inferred) | Gameplay | MVP | Approved | design/gdd/combat-resolver.md | Content records and schema |
 | 6 | Forge and proving | Progression | MVP | Approved | design/gdd/forge-and-proving.md | Content records and schema, Resources and caps, Modifier pipeline, Combat resolver (contract owned by the Forge) |
 | 7 | Methods | Progression | MVP | Approved | design/gdd/methods.md | Content records and schema, Forge and proving, Modifier pipeline |
-| 8 | Crafting route | Economy | MVP | Not Started | — | Resources and caps, Activity slot, Forge and proving, Methods |
+| 8 | Crafting route | Economy | MVP | Designed | design/gdd/crafting-route.md | Content records and schema, Resources and caps, Activity slot, Forge and proving, Methods |
 | 9 | Fight and dungeon routes | Gameplay | MVP | Not Started | — | Activity slot, Combat resolver, Forge and proving, Methods |
 | 10 | Tending | Gameplay | MVP | Not Started | — | Activity slot, Modifier pipeline, Content records and schema (field registry) |
 | 11 | Save and run lifecycle | Persistence | MVP | Not Started | — | Content records and schema, Resources and caps, Activity slot, Forge and proving, Methods |
@@ -321,7 +323,7 @@ access to the pipeline. Its door-test contract is owned by the Forge.
 
 1. Forge and proving — depends on: Resources and caps, Modifier pipeline, Combat resolver
 2. Methods — depends on: Forge and proving, Modifier pipeline
-3. Crafting route — depends on: Resources and caps, Activity slot, Forge and proving, Methods
+3. Crafting route — depends on: Content records and schema, Resources and caps, Activity slot, Forge and proving, Methods
 4. Fight and dungeon routes — depends on: Activity slot, Combat resolver, Forge and proving, Methods
 5. Tending — depends on: Activity slot, Modifier pipeline, Content records and schema (the field registry's `sealInput` tags constrain it)
 6. Save and run lifecycle — depends on: Content records and schema, Resources and caps, Activity slot, Forge and proving, Methods
@@ -484,10 +486,10 @@ session. Wave B starts after the checkpoint, and its order can change on what th
 | Metric | Count |
 |--------|-------|
 | Total systems identified | 20 |
-| Design docs started | 7 |
+| Design docs started | 8 |
 | Design docs reviewed | 7 |
 | Design docs approved | 7 |
-| MVP systems designed | 7/15 |
+| MVP systems designed | 8/15 |
 | Vertical Slice systems designed | 0/3 |
 
 ---

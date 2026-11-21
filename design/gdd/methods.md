@@ -1002,6 +1002,8 @@ of 0 (#16).*
 | 6 | A third method: does Y1 subtract shared opens, does `METHOD_PATCH_MAX` still fit the dialog, and where do its routes fit a record budget already at 54–60? | Designer, Reforge (#16) | Vertical Slice |
 | 7 | Should the dialog's "Changes:" lines carry a direction word (#1 R7.2's recommended addition; #2 Open Question 6)? | Method marks (#14), Forge screen (#15) | #14 and #15 UX specs |
 
+*Open Question 3, crafting half: resolved 2026-11-21 by Crafting route (#8), `crafting-route.md` L6.4. On #9's routes with #8's real bills (60, 70 and 70 s), H5 passes by 120,000 ms under Ember Breath and 280,000 under Still Water. X4 holds for the hearth alone.*
+
 **ADRs required** (representation this GDD leaves out):
 
 1. The W1 functions' signatures and result types, the `commit` action, and the `committed`

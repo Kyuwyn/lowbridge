@@ -1205,6 +1205,8 @@ scope when B1 fails; the tie orders; and the forge's error path and event order.
 | 5 | A door's beyond is text in the MVP (G13.4). A real source behind a door needs a door-tier gate atom | Realm ladder (#19), #1 Open Question 7 | Before Alpha |
 | 6 | How does a later realm's Foundation stack with an earlier one, for caps and for the challenger? #3 K7's envelope must be amended first (G10.4) | Realm ladder (#19) | #19 GDD |
 
+*Open Question 1, crafting half: resolved 2026-11-21 by Crafting route (#8), `crafting-route.md` L6. B13 passes. B10 passes for all 12 pairs on #9's routes priced on #8's bills, and B9 passes jointly (ratios 2.04 and 1.53). S8 is used unchanged: #8 gates only sources made once (its L7), so S8 needs no amendment.*
+
 **ADRs required** (representation this GDD leaves out):
 
 1. The forge snapshot's encoding and its save slice, with Save and run lifecycle (#11) and the

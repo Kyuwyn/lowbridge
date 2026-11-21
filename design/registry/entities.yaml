@@ -16,7 +16,7 @@ items:
     base_cap: 40
     start: 0
     note: "provisional until Crafting route (#8) and Fight and dungeon routes (#9) approve (K1.3)"
-    referenced_by: []
+    referenced_by: [design/gdd/crafting-route.md]
   - name: ironbark_log
     status: active
     source: design/gdd/resources-and-caps.md
@@ -25,7 +25,7 @@ items:
     base_cap: 30
     start: 0
     note: provisional (K1.3)
-    referenced_by: []
+    referenced_by: [design/gdd/crafting-route.md]
   - name: rough_jade
     status: active
     source: design/gdd/resources-and-caps.md
@@ -34,7 +34,7 @@ items:
     base_cap: 20
     start: 0
     note: provisional (K1.3)
-    referenced_by: []
+    referenced_by: [design/gdd/crafting-route.md]
   - name: rendered_oil
     status: active
     source: design/gdd/resources-and-caps.md
@@ -43,7 +43,7 @@ items:
     base_cap: 12
     start: 0
     note: provisional (K1.3)
-    referenced_by: []
+    referenced_by: [design/gdd/crafting-route.md]
   - name: seasoned_plank
     status: active
     source: design/gdd/resources-and-caps.md
@@ -52,7 +52,7 @@ items:
     base_cap: 10
     start: 0
     note: provisional (K1.3)
-    referenced_by: []
+    referenced_by: [design/gdd/crafting-route.md]
   - name: jade_blank
     status: active
     source: design/gdd/resources-and-caps.md
@@ -61,7 +61,7 @@ items:
     base_cap: 8
     start: 0
     note: provisional (K1.3)
-    referenced_by: []
+    referenced_by: [design/gdd/crafting-route.md]
   - name: hearth_lamp
     status: active
     source: design/gdd/resources-and-caps.md
@@ -70,7 +70,7 @@ items:
     base_cap: 1
     start: 0
     note: provisional (K1.3)
-    referenced_by: []
+    referenced_by: [design/gdd/crafting-route.md]
   - name: tuning_chisel
     status: active
     source: design/gdd/resources-and-caps.md
@@ -79,7 +79,7 @@ items:
     base_cap: 1
     start: 0
     note: provisional (K1.3)
-    referenced_by: []
+    referenced_by: [design/gdd/crafting-route.md]
   - name: ember_breath
     status: active
     source: design/gdd/methods.md
@@ -380,14 +380,14 @@ formulas:
     expression: "T(X, m) = sum over sources s used by the chains of X of ceil_div(D_s(X), out_s) * d_s; shared inputs made once; no by-product credit"
     variables: [X, D_s, out_s, d_s]
     output: "0 ms upward; B9 needs T_all >= 1.35 x T_best, +6 min, <= 60 min"
-    referenced_by: [design/gdd/methods.md]
+    referenced_by: [design/gdd/methods.md, design/gdd/crafting-route.md]
   - name: source_price
     status: active
     source: design/gdd/forge-and-proving.md
     expression: "price(s) = d_s + sum over inputs r of ceil_div(in_s[r], out_r) * price(src(r)) + sum of reached-atom prices; ceiling(i) = max(div_floor(p_i * FIGHTLESS_CEILING_BP, 10000), p_i + FIGHTLESS_SLACK_MS)"
     variables: [d_s, in_s, out_r, p_i, FIGHTLESS_CEILING_BP, FIGHTLESS_SLACK_MS]
     output: "1 ms upward; B10 passes when the cheapest fightless price <= ceiling"
-    referenced_by: [design/gdd/methods.md]
+    referenced_by: [design/gdd/methods.md, design/gdd/crafting-route.md]
   - name: gives_up
     status: active
     source: design/gdd/methods.md
@@ -415,6 +415,27 @@ formulas:
     expression: "leak(m) = [T(best_m, m) <= min over makeups X of T(X, m)]; H5 fails when 1"
     variables: [T, best_m]
     output: "0 or 1; not evaluated when B1 fails"
+    referenced_by: [design/gdd/crafting-route.md]
+  - name: hearth_gather_time
+    status: active
+    source: design/gdd/crafting-route.md
+    expression: "T_fl(X, m) = #6 S7's gather_time restricted to the hearth road: enabled sources with no fights whose inputs and reached atoms all have producers on the road"
+    variables: [X, m, d_s, out_s, in_c, n_star]
+    output: "0 to 4.5e11 ms, or undefined when an ingredient of X has no hearth producer; 290,000 (Ember Marrow) to 3,330,000 (all six) on #8's L2"
+    referenced_by: []
+  - name: run_floor
+    status: active
+    source: design/gdd/crafting-route.md
+    expression: "floor_ok(s) = d_s >= RUN_FLOOR_MS if s has inputs; else, for each output store r with a hearth sink, ceil_div(B(r), out_s[r]) >= ceil_div(RUN_FLOOR_MS, d_s), where B(r) is the smallest net draw on r"
+    variables: [d_s, out_s, B, RUN_FLOOR_MS]
+    output: "true or false; X1 fails on false"
+    referenced_by: []
+  - name: fight_floor
+    status: active
+    source: design/gdd/crafting-route.md
+    expression: "p_min(f) = max(1, min(ceil_div(f x 10000, FIGHTLESS_CEILING_BP), f - FIGHTLESS_SLACK_MS)); B10 passes for i exactly when p_i >= p_min(f_i)"
+    variables: [f, p, FIGHTLESS_CEILING_BP, FIGHTLESS_SLACK_MS]
+    output: "1 to f; ceil_div(f, 2) when f > 120,000 ms"
     referenced_by: []
 
 constants:
@@ -566,7 +587,7 @@ constants:
     source: design/gdd/resources-and-caps.md
     value: 7000
     unit: basis points of the base cap (V2 floor for the largest bill)
-    referenced_by: []
+    referenced_by: [design/gdd/crafting-route.md]
   - name: raise_min_bp
     status: active
     source: design/gdd/resources-and-caps.md
@@ -584,7 +605,7 @@ constants:
     source: design/gdd/resources-and-caps.md
     value: 45000
     unit: ms after the commit (V7)
-    referenced_by: [design/gdd/methods.md]
+    referenced_by: [design/gdd/methods.md, design/gdd/crafting-route.md]
   - name: bank_cap_ms
     status: active
     source: design/gdd/activity-slot-rest-and-away-time.md
@@ -608,7 +629,7 @@ constants:
     source: design/gdd/activity-slot-rest-and-away-time.md
     value: 1000
     unit: ms (shortest effective source duration, T1)
-    referenced_by: []
+    referenced_by: [design/gdd/crafting-route.md]
   - name: units_max
     status: active
     source: design/gdd/activity-slot-rest-and-away-time.md
@@ -662,31 +683,31 @@ constants:
     source: design/gdd/forge-and-proving.md
     value: 13500
     unit: basis points of the best makeup gathering time (B9; safe 12500 to 15000)
-    referenced_by: [design/gdd/methods.md]
+    referenced_by: [design/gdd/methods.md, design/gdd/crafting-route.md]
   - name: overgather_min_ms
     status: active
     source: design/gdd/forge-and-proving.md
     value: 360000
     unit: ms more than the best makeup (B9)
-    referenced_by: [design/gdd/methods.md]
+    referenced_by: [design/gdd/methods.md, design/gdd/crafting-route.md]
   - name: overgather_max_ms
     status: active
     source: design/gdd/forge-and-proving.md
     value: 3600000
     unit: ms to gather all ingredients at most (B9)
-    referenced_by: [design/gdd/methods.md]
+    referenced_by: [design/gdd/methods.md, design/gdd/crafting-route.md]
   - name: fightless_ceiling_bp
     status: active
     source: design/gdd/forge-and-proving.md
     value: 20000
     unit: basis points of the cheapest other source price (B10; safe 15000 to 25000)
-    referenced_by: [design/gdd/methods.md]
+    referenced_by: [design/gdd/methods.md, design/gdd/crafting-route.md]
   - name: fightless_slack_ms
     status: active
     source: design/gdd/forge-and-proving.md
     value: 60000
     unit: ms of absolute slack (B10)
-    referenced_by: [design/gdd/methods.md]
+    referenced_by: [design/gdd/methods.md, design/gdd/crafting-route.md]
   - name: door_threshold_min
     status: active
     source: design/gdd/forge-and-proving.md
@@ -717,3 +738,9 @@ constants:
     value: 23
     unit: source records in the MVP, 20 enabled under each method (a content target, not a check; Y3)
     referenced_by: [design/gdd/content-records-and-schema.md]
+  - name: run_floor_ms
+    status: active
+    source: design/gdd/crafting-route.md
+    value: 30000
+    unit: ms, the shortest uninterrupted hearth run (X1; safe 20,000 to 30,000 on #8's L2)
+    referenced_by: []
