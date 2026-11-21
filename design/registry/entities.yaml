@@ -176,7 +176,7 @@ formulas:
     expression: "high_water[id] = max(high_water_prev[id], held[id]), once per unit completion (deduct inputs, add outputs, clamp, then update); high_water_prev starts at min(start, effective cap)"
     variables: [high_water_prev, held]
     output: "0 to 10^9; never decreases within a run; starts at min(start[id], effective cap); held never exceeds it; an ingredient is held 0 or 1 (clamped by #3)"
-    referenced_by: []
+    referenced_by: [design/gdd/save-and-run-lifecycle.md]
   - name: atom_met
     status: active
     source: design/gdd/content-records-and-schema.md
@@ -329,14 +329,14 @@ formulas:
     expression: "throws unless in <= held (checked before netting); raw = held - in + out; held' = min(raw, cap); lost = raw - held'"
     variables: [held, in, out, cap]
     output: "held' 0 to cap; lost 0 to out for a unit, 0 to held - cap for a re-clamp; marks update once after the call"
-    referenced_by: []
+    referenced_by: [design/gdd/save-and-run-lifecycle.md]
   - name: start_held
     status: active
     source: design/gdd/resources-and-caps.md
     expression: "held0 = min(start, cap) for a resource; 0 for an ingredient"
     variables: [start, cap]
     output: "0 to cap; marks start at held0"
-    referenced_by: []
+    referenced_by: [design/gdd/save-and-run-lifecycle.md]
   - name: room
     status: active
     source: design/gdd/resources-and-caps.md
@@ -547,6 +547,41 @@ formulas:
     variables: [out, out_t, d, d_t, cap, YIELD_CEIL_BP, RATE_CEIL_BP, DURATION_CEILING]
     output: "bool; speed ratios skim 1.12, fell 1.067, quarry 1.20; quarry yield at the ceiling exactly"
     referenced_by: []
+  - name: load_gap
+    status: active
+    source: design/gdd/save-and-run-lifecycle.md
+    expression: "gap = min(max(0, now - lastSeen), DT_MAX); then lastSeen := now; now sampled once per load, floored"
+    variables: [now, lastSeen, DT_MAX]
+    output: "0 to DT_MAX ms; state saturates past AWAY_CAP + longest unit + BANK_CAP (about 49 h); gap 0 still calls advance(s, 0)"
+    referenced_by: []
+  - name: format_action
+    status: active
+    source: design/gdd/save-and-run-lifecycle.md
+    expression: "load if v = SAVE_FORMAT; migrate(SAVE_FORMAT - v) if F_pub != none and F_pub <= v < SAVE_FORMAT; refuseOlder if v < SAVE_FORMAT otherwise; refuseNewer if v > SAVE_FORMAT"
+    variables: [v, SAVE_FORMAT, F_pub]
+    output: "one of load, migrate(1 to SAVE_FORMAT - F_pub), refuseOlder, refuseNewer; F_pub is none before the first public build"
+    referenced_by: []
+  - name: run_start_state
+    status: active
+    source: design/gdd/save-and-run-lifecycle.md
+    expression: "held0 per start_held; mark0 = held0; occupant rest, no stop reason, no kept progress, t 0, b 0, committed none, no snapshot; cap is the base cap at run start and at the pre-commit reset (D3.8), the effective cap for new content (D3.10)"
+    variables: [start, cap]
+    output: "every slice at its run-start value; shared by the first game, every new run and a refusal resolved by New run"
+    referenced_by: []
+  - name: load_clamp
+    status: active
+    source: design/gdd/save-and-run-lifecycle.md
+    expression: "p' = min(p, D' - 1); b' = min(b, BANK_CAP); held' = min(held, cap_eff), spill = held - held'; mark' = max(mark, held')"
+    variables: [p, D', b, BANK_CAP, held, cap_eff, mark]
+    output: "p' 1 to D' - 1 (D' >= UNIT_FLOOR_MS); b' 0 to BANK_CAP; held' 0 to cap_eff, one overflow cause cap per spilling id; mark' >= held'"
+    referenced_by: []
+  - name: write_fail
+    status: active
+    source: design/gdd/save-and-run-lifecycle.md
+    expression: "n := n + 1 on a failed write attempt, n := 0 on a committed write; 'Not saving' shows when n >= WRITE_FAIL_PROMPT, or at once after a failed commit or forge write"
+    variables: [n, WRITE_FAIL_PROMPT]
+    output: "notice shown or not; n not saved; replaced or fenced writes are not attempts; new run and import commit before switching"
+    referenced_by: []
 
 constants:
   - name: id_max_length
@@ -721,7 +756,7 @@ constants:
     source: design/gdd/activity-slot-rest-and-away-time.md
     value: 1800000
     unit: ms of held breath (rest bank cap, 30 min)
-    referenced_by: [design/gdd/methods.md]
+    referenced_by: [design/gdd/methods.md, design/gdd/save-and-run-lifecycle.md]
   - name: rest_speed
     status: active
     source: design/gdd/activity-slot-rest-and-away-time.md
@@ -733,13 +768,13 @@ constants:
     source: design/gdd/activity-slot-rest-and-away-time.md
     value: 86400000
     unit: activity ms since the last input (provisional; architecture pins the value)
-    referenced_by: []
+    referenced_by: [design/gdd/save-and-run-lifecycle.md]
   - name: unit_floor_ms
     status: active
     source: design/gdd/activity-slot-rest-and-away-time.md
     value: 1000
     unit: ms (shortest effective source duration, T1)
-    referenced_by: [design/gdd/crafting-route.md, design/gdd/tending.md]
+    referenced_by: [design/gdd/crafting-route.md, design/gdd/tending.md, design/gdd/save-and-run-lifecycle.md]
   - name: units_max
     status: active
     source: design/gdd/activity-slot-rest-and-away-time.md
@@ -751,7 +786,7 @@ constants:
     source: design/gdd/activity-slot-rest-and-away-time.md
     value: 1125899906842624
     unit: real ms (2^50; a larger dt is clamped, exactly)
-    referenced_by: []
+    referenced_by: [design/gdd/save-and-run-lifecycle.md]
   - name: clash_bp
     status: active
     source: design/gdd/forge-and-proving.md
@@ -896,3 +931,21 @@ constants:
     value: 3
     unit: a heaped unit is at most base cap divided by this (J1(b); answers #3 Open Question 7)
     referenced_by: [design/gdd/resources-and-caps.md]
+  - name: write_fail_prompt
+    status: active
+    source: design/gdd/save-and-run-lifecycle.md
+    value: 3
+    unit: consecutive failed write attempts before the Not saving notice (J5; safe 1 to 10)
+    referenced_by: []
+  - name: import_max_bytes
+    status: active
+    source: design/gdd/save-and-run-lifecycle.md
+    value: 1048576
+    unit: UTF-8 bytes of trimmed pasted text Load save accepts (D9.2; safe save_max_bytes to 5242880)
+    referenced_by: []
+  - name: save_max_bytes
+    status: active
+    source: design/gdd/save-and-run-lifecycle.md
+    value: 65536
+    unit: bytes of the largest record a build may write (provisional; safe 16384 to 262144; must stay <= import_max_bytes)
+    referenced_by: []

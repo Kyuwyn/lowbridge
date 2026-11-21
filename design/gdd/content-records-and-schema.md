@@ -2,8 +2,8 @@
 
 > **Status**: Approved 2026-11-20 (lean re-review after the fifth full review; no pillar-level or design blocker. Recommended follow-ups are in the review log and move to implementation: ADR 2/3, the schema module and its tests)
 > **Author**: Will + agents
-> **Last Updated**: 2026-11-20
-> **Amendments**: A1 2026-11-20 — ops-table entries gain `operandRange`, checked at R8.3 step 7 (requested by Modifier pipeline #2 for `scale_bp`; approved by the designer). Touches R6.1, R8.3 step 7, AC-R8-2a, AC-R6-10, ADR 4 · A2 2026-11-20 — the stat-name list is closed as `might`, `guard`, `vigor`, `speed` (requested by Combat resolver #5; approved by the designer). Touches R4 note 4, R8.2, Cross-References · A3 2026-11-20 — `resource.cap` keeps `sealInput: yes` (Open Question 1 settled by Resources and caps #3, K8), and the affinity records are named by Forge and proving (#6), not #3 (designer-approved). Touches R4 note 1, Interactions rows 3 and 6, Open Questions row 1 · A4 2026-11-20 — adds the R4 row `affinity.widens` (note 10), sets the affinity count to 4, and narrows `door.thresholds` to 10,000–20,000 each (requested by Forge and proving #6; approved by the designer). Touches R1 table, R4 rows and notes 6 and 10, Interactions row 6, Cross-References, Open Questions rows 2, 9 and 12 · A5 2026-11-20 — `method.redoCost` is milliseconds of slot time (note 8); with `redoCost` absent the redo line reads "Redo: only by starting a new run"; the commit dialog also carries Methods' gives-up lines; R1's source target becomes ~23 (requested by Methods #7; approved by the designer). Touches R1 table, R4 row `method.redoCost` and note 8, R7.2, Edge Cases "Method patches", Cross-References, AC-R7-4, Open Questions rows 10 and 11
+> **Last Updated**: 2026-11-21
+> **Amendments**: A1 2026-11-20 — ops-table entries gain `operandRange`, checked at R8.3 step 7 (requested by Modifier pipeline #2 for `scale_bp`; approved by the designer). Touches R6.1, R8.3 step 7, AC-R8-2a, AC-R6-10, ADR 4 · A2 2026-11-20 — the stat-name list is closed as `might`, `guard`, `vigor`, `speed` (requested by Combat resolver #5; approved by the designer). Touches R4 note 4, R8.2, Cross-References · A3 2026-11-20 — `resource.cap` keeps `sealInput: yes` (Open Question 1 settled by Resources and caps #3, K8), and the affinity records are named by Forge and proving (#6), not #3 (designer-approved). Touches R4 note 1, Interactions rows 3 and 6, Open Questions row 1 · A4 2026-11-20 — adds the R4 row `affinity.widens` (note 10), sets the affinity count to 4, and narrows `door.thresholds` to 10,000–20,000 each (requested by Forge and proving #6; approved by the designer). Touches R1 table, R4 rows and notes 6 and 10, Interactions row 6, Cross-References, Open Questions rows 2, 9 and 12 · A5 2026-11-20 — `method.redoCost` is milliseconds of slot time (note 8); with `redoCost` absent the redo line reads "Redo: only by starting a new run"; the commit dialog also carries Methods' gives-up lines; R1's source target becomes ~23 (requested by Methods #7; approved by the designer). Touches R1 table, R4 row `method.redoCost` and note 8, R7.2, Edge Cases "Method patches", Cross-References, AC-R7-4, Open Questions rows 10 and 11 · A6 2026-11-21 — a door or affinity id retired without an alias is a validator error, as an ingredient, realm or method already was; Open Question 4 resolved (saves may be wiped until the first public build) (requested by Save and run lifecycle #11; approved by the designer). Touches Edge Cases "Saves across content versions", Cross-References, Open Questions row 4
 > **Last Verified**: 2026-11-20
 > **Implements Pillar**: 3 (The build is a problem) and 4 (No dead ends, no attention tax); supports 1 (The forge is the milestone) and 2 (Methods matter)
 > **Creative Director Review (CD-GDD-ALIGN)**: REVISED 2026-11-19. Six findings applied: `contrib` is a total map; each method must patch a contribution and a route; no ingredient only fills a slot; protected ids need an alias; the fantasy anchor no longer fixes the preview model; numerals as words in proper names are allowed
@@ -1185,9 +1185,10 @@ Each case says **who catches it**:
 
 - **If a saved id was retired and has an alias**: #11 maps it to the alias target.
 - **If a saved id was retired and has no alias**: #11 drops it and logs that it did.
-- **If an ingredient, realm or method id is retired without an alias**: validator error. Those
-  ids make up a forged Foundation, the thing the player can point at (pillar 1), so dropping one
-  would silently change it.
+- **If an ingredient, realm, method, door or affinity id is retired without an alias**: validator
+  error. Those ids make up a forged Foundation and its snapshot (#6 G10), the thing the player can
+  point at (pillar 1), so dropping one would silently change it. *(Amended 2026-11-21, A6: door
+  and affinity added, so no shipped content can make #11 refuse a forged save, #11 D4.2.)*
 - **If the alias map has a chain, a cycle, a target that is missing or of a different type,
   or an alias source that is a live id**: load error.
 - **If a retired id is reused**: validator error, checked against a retired-id list kept in
@@ -1334,7 +1335,7 @@ This system has no screen, but it fixes rules every screen must follow:
 | Combat resolver (#5) | `combatant.stats` | Closed stat names | Designed 2026-11-20; list closed in R4 note 4 |
 | Forge and proving (#6) | R4 rows `ingredient.*`, `affinity.*`, `door.*`, `realm.*`; R5.3 ingredient counts | Seal function; `forged` state; affinity-only `contrib` keys | Designed 2026-11-20; amended this GDD (A4) |
 | Methods (#7) | R6; `method.*`, `source.enabled` | Committed state; which patches exist; the closed surface (feed, quench, open) | Designed 2026-11-20; amended this GDD (A5) |
-| Save and run lifecycle (#11) | R2.3, R8.5, Edge Cases on saves | Alias map, retired-id list, fingerprint handling | Not yet designed |
+| Save and run lifecycle (#11) | R2.3, R8.5, Edge Cases on saves | Alias map, retired-id list, fingerprint handling | Designed 2026-11-21 (`save-and-run-lifecycle.md` D3, D5, D11); amended this GDD (A6) |
 | Content validator (#12) | R8.4; every "validator error" edge case | State and enumeration checks | Not yet designed |
 | Method marks (#14), Forge screen (#15), Interface shell (#13) | UI Requirements; F8 | Marking exactly the change set; generated need text | Not yet designed |
 | `research/arcanum-reference/03-data-model.md`, `12-design-rules.md` | Overview, R1–R7 | Rules 1, 2, 3, 4, 9, 33, 52, 54, 58, 67, 70, 74, 97 | Reference |
@@ -1908,7 +1909,7 @@ splits of multi-bullet ACs (R1-2, R1-3, R4-4, R4-9, R5-6, F1) are still recommen
 | 1 | Resolved 2026-11-20 (A3): `resource.cap` stays a seal input. A seal reads the cap from before that forge's own entries, and Reforge (#16) states which cap a reforge's seals read (Resources and caps #3, K8) | Resources and caps (#3) with Forge and proving (#6) | Done; #6 confirms K8.2 |
 | 2 | Resolved 2026-11-20 by #6 (G2): ingredients are held 0/1, with no counts, so `INGREDIENT_HELD_MAX` stays 1 | Forge and proving (#6) | Done |
 | 3 | Is rest a `source` record, and if so how is it exempt from "does nothing"? | Activity slot (#4) | #4 GDD |
-| 4 | May pre-release saves be wiped? Until decided, renames are free and the alias map is empty | Designer | Before the save format ADR |
+| 4 | Resolved 2026-11-21 by the designer in #11 (D11.2): saves may be wiped until the first public build. Until then a record of another format is refused by name with a new run offered, renames stay free and the alias map stays empty; from the first public build on, ids freeze and format changes migrate | Designer | Done |
 | 5 | Decided 2026-11-20: the method-choice view shows both methods' projected added/removed sources by name, ignoring `reveal` for sources the change sets touch (Edge Cases, "Before the commit"). Open: its layout and how it marks removed routes | Forge screen (#15), Method marks (#14) | Their UX specs |
 | 6 | How does a post-commit method switch keep `committed()` monotone? | Reforge (#16) | Before the Vertical Slice |
 | 7 | Does the realm ladder need a door-tier atom? | Realm ladder (#19) | Alpha |
