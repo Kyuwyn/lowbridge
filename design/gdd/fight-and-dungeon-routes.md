@@ -2,7 +2,7 @@
 
 > **Status**: Designed 2026-11-20 (pending `/design-review`)
 > **Author**: designer + Claude (`/design-system`)
-> **Last Updated**: 2026-11-20
+> **Last Updated**: 2026-11-21
 > **Last Verified**: 2026-11-20
 > **Implements Pillar**: 2 (Methods matter), 4 (No dead ends, no attention tax)
 > **Creative Director Review (CD-GDD-ALIGN)**: APPROVED 2026-11-20 (no blocker; its one watch item, whether the descent reads as its own way to gather, is already Open Question 5 for the first MVP playtest)
@@ -541,7 +541,10 @@ until #8's chain exists.
 | Still Water | 224 | 254 | 254 (floor I) | 508 (floor II) | 554 | 762 (floor III) |
 
 **Gathering times (#6 S7, in s).** A floor's gate pulls in the floors above it, and each is made
-once.
+once. One unit of Ember Marrow both fills the makeup and meets floor II's `reached(ember_marrow,
+1)`. Read literally, #6 S7 adds the atom's demand to the ingredient's and makes it twice. That
+reading gives Still Water 1,494 / 2,302 s (1.54, 808 s) and the same H5 margin, and both
+readings pass at every bill price inside the limits below (Open Question 4d).
 
 | | Best makeup | T_best | Cheapest makeup | T_min | T_all | B9: T_all / T_best, T_all − T_best | H5: T_best − T_min |
 |---|---|---|---|---|---|---|---|
@@ -567,6 +570,19 @@ once.
 | 280–448 | 317.5–508 | 317.5–508 | 842.5–1,016 | 692.5–1,108 | 1,180–1,524 |
 
 Each band is at least 168 s wide, so #8 has room to round.
+
+**On #8's real bills** (`crafting-route.md` on its branch, commit 7f498bc: Rendered Oil ×6 at 60 s,
+Seasoned Plank ×5 and Jade Blank ×4 at 70 s each; checked 2026-11-21 with the X3 generator):
+
+| | EJ | IH | EM | CL | GM | TP |
+|---|---|---|---|---|---|---|
+| Band (s) | 300–480 | 350–560 | 337.5–540 | 875–1,100 | 725–1,160 | 1,212.5–1,660 |
+| #8's recipe (s) | 380 | 410 | 350 | 900 | 800 | 1,300 |
+
+- Every recipe is inside its band, so U3 and #6 B10 pass for all 12 pairs.
+- B9 is 2.04 with 1,550 s over (EB) and 1.43 with 580 s over (SW). Read literally, S7 gives SW
+  1.53 with 860 s over, which are #8's figures.
+- H5 margins are 120 s and 280 s, and U5's first ingredient is the Pangolin Hunt at 240 s.
 
 **Bill sensitivity.**
 - U5, B9 and H5 hold, and every band stays non-empty, whenever each refined bill's price is at
@@ -712,7 +728,7 @@ matters.*
 | 5 | Combat resolver | Hard | F1–F7 and the chain result (C4, C5); C7 monotonicity (N3.4); C9, which this GDD fills | Approved |
 | 6 | Forge and proving | Hard | `FOUNDATION_BASE` (S3, U4); S7 and S8; B9, B10, B13; G13.2 (the baseline after the forge) | Approved |
 | 7 | Methods | Hard | The route plan (W5) and the opens (W3, W4); H2, H5 | Approved |
-| 8 | Crafting route | Soft for the rules, hard for U3 | Each ingredient's recipe, and the refining chain behind the bills. U3, B10 and the real prices for B9 and H5 wait on it | In design (parallel) |
+| 8 | Crafting route | Soft for the rules, hard for U3 | Each ingredient's recipe, and the refining chain behind the bills. U3, B10 and the real prices for B9 and H5 wait on it | Designed 2026-11-21, on its own branch (commit 7f498bc) |
 
 **Downstream (they depend on this system):**
 
@@ -891,7 +907,7 @@ shell (#13). Requirements on the screens that show them:
 | Combat resolver (#5) | C2, C4, C5, C7, C9, F1–F7; UI Requirements 1; Open Questions 2 and 4 | The fight and its exact result; the baseline this GDD names | Approved; Open Questions 2 and 4 marked resolved (amendment A1) |
 | Forge and proving (#6) | S3 `FOUNDATION_BASE`; S7; S8; S9; B9, B10, B11, B13; G13.2, G13.5; Open Question 1 | Prices and gathering time; the over-gathering and fightless checks; the baseline after the forge | Approved; Open Question 1's route half answered and S9's stub column superseded (amendment A1) |
 | Methods (#7) | W3, W4, W5, W6, W7.3, Y1, Y3, Y4, H2, H5; Open Questions 2 and 3 | The route plan and opens; route counts; H5's test | Approved; Open Questions 2 and 3 answered (amendment A1) |
-| Crafting route (#8) | Recipes and the refining chain | Recipe prices inside X2's bands; bill prices inside X3's limits | In design (parallel); constraints handed over 2026-11-20 |
+| Crafting route (#8) | Recipes and the refining chain | Recipe prices inside X2's bands; bill prices inside X3's limits | Designed 2026-11-21, on its own branch; recipes and bills checked against X2 and X3 |
 | Design rules | 2, 17, 18, 27, 49, 51, 70, 71, 73, 74 (`research/arcanum-reference/12-design-rules.md`, `research/hundred-days-reference/06-design-rules.md`) | Visibility ≠ actionability (2); first ingredient density (17); bills against caps (18); floors and kept progress (27); N-of-M lets a build skip the dungeon (49); reachability must be checked (51, U1); flavour on the mechanic (70); identity where the numbers live (71); a closing fork differs inside its stage (73); no slot that content cannot fill (74, U1) | Reference |
 
 **Divergences from *copy* rules, stated:**
@@ -1083,18 +1099,18 @@ unchecked content facts.*
 | #7 Open Question 2: make "the baseline loses a fight of an enabled source" a validator error | Yes, and wider: U1 covers disabled sources too, because each is open under the other method | Resolved by this GDD |
 | #5 Open Question 4 (with #4): does a lost unit consume its inputs, or only its time? | Only its time. #4 S4.2 decided it: nothing is paid, the bill stays held, progress is zeroed. N7.3 confirms it for routes. U1 makes it moot in shipped content | Resolved (#4, confirmed here) |
 | #4 Open Question 5 (with #6): do route fights read the Foundation after the forge? | No. #6 G13.2 decided it, and N3 names the challenger: the unforged cultivator, before and after the forge | Resolved (#6, confirmed here) |
-| #4 Open Question 6 (with #8): an ingredient output with a by-product, error or warning? | #9's half: no fight route has a by-product (U2, an error), so T2 never fires on a route. #9 recommends T2 become an error for recipes too, since S7 and S8 credit no by-product and S5.3 lets one pay only once | #9's half resolved; recipe half open for #8 |
-| #6 Open Question 1, the route half: do real routes pass B9, B10 and B13? | B13 passes: every bill is a refined resource (U2). B9 passes on X3's table under both methods (2.07 with 1,498 s; 1.45 with 554 s). B10 is #8's: X2's bands are what each recipe must hit | Route half resolved on the stub chain; B10 and the real chain wait on #8 |
-| #7 Open Question 3 (with #8): does H5 pass on real times? | Yes on this GDD's routes. Under U3, S7 times only fight routes, and X3 shows margins of 120 s (EB) and 254 s (SW). It stays true for any real chain whose bills cost at most 120 s each and within 80 s of each other | #9's half resolved; #8 confirms its chain is inside the limits |
+| #4 Open Question 6 (with #8): an ingredient output with a by-product, error or warning? | #9's half: no fight route has a by-product (U2, an error), so T2 never fires on a route. #9 recommends T2 become an error for recipes too, since S7 and S8 credit no by-product and S5.3 lets one pay only once. #8's X6 makes a recipe with a by-product an error | Resolved (#8's X6, on its branch) |
+| #6 Open Question 1, the route half: do real routes pass B9, B10 and B13? | B13 passes: every bill is a refined resource (U2). B9 passes on X3's table under both methods (2.07 with 1,498 s; 1.45 with 554 s). On #8's real bills and recipes, B9 and B10 pass too (X3, "On #8's real bills") | Resolved with #8 (on its branch) |
+| #7 Open Question 3 (with #8): does H5 pass on real times? | Yes on this GDD's routes. Under U3, S7 times only fight routes, and X3 shows margins of 120 s (EB) and 254 s (SW). It stays true for any real chain whose bills cost at most 120 s each and within 80 s of each other. #8's chain (60, 70 and 70 s) gives 120 s and 280 s | Resolved with #8 (on its branch) |
 
 **This GDD's open questions:**
 
 | # | Question | Owner | Resolve by |
 |---|---|---|---|
-| 1 | Do #8's recipes fall inside X2's bands, and do its refining chains price the three bills inside X3's limits (each at most 120 s, within 80 s of each other)? If not, re-run the X3 generator and retune N1's durations, not the recipes alone | Crafting route (#8), with this GDD | #8 GDD |
-| 2 | Should #4's T2 become an error for every source (the recipe half of #4 Open Question 6)? | Crafting route (#8) | #8 GDD |
+| 1 | Resolved 2026-11-21 by #8 (commit 7f498bc on its branch): bills at 60, 70 and 70 s are inside X3's limits, and every recipe is inside its band on those bills (X3, "On #8's real bills"). A later change to either GDD re-runs the X3 generator | Crafting route (#8), with this GDD | Done (on merge) |
+| 2 | Resolved 2026-11-21 by #8's X6: a recipe with a by-product is an error, so T2 never fires on an ingredient source | Crafting route (#8) | Done (on merge) |
 | 3 | Tending changes `outputs` and `duration`. Does a tended fight route keep U3's premium over a tended recipe, and are tended route durations still at least 1,000 ms (T1)? Tending's ceilings should be set against N1's durations | Tending (#10) | #10 GDD |
-| 4 | Validator: (a) what exit status does "not evaluated" give, so that a blocked U3 neither breaks the build before #8 nor reads as a pass? (b) The archived attempt's validator capped every timed action at 180 s. That rule does not bind this game, and eight of N1's nine routes exceed it, so #12 must not inherit it. (c) Should the unchecked content facts (bill families, creature speed, N4.1's +3 margin) become a check? | Validator (#12) | #12 GDD |
+| 4 | Validator: (a) what exit status does "not evaluated" give, so that a blocked U3 neither breaks the build before #8 nor reads as a pass? (b) The archived attempt's validator capped every timed action at 180 s. That rule does not bind this game, and eight of N1's nine routes exceed it, so #12 must not inherit it. (c) Should the unchecked content facts (bill families, creature speed, N4.1's +3 margin) become a check? (d) #6 S7 sums a `reached(id, n)` atom's demand with the demand for that ingredient in the makeup, so a floor's gate ingredient is made twice. One unit meets both, because `reached` reads the high-water mark. #8 used the literal reading and X3 used one make. Both pass B9 and H5 everywhere inside the bill limits, but #12 must implement one. #9 recommends taking the larger of the two demands, which would need a one-line clarification of #6 S7 | Validator (#12), with Forge and proving (#6) | #12 GDD |
 | 5 | Route fights cannot be lost, so the descent's difference from the hunts is its order, its prices and its thinner margins. Does it read as a different way to gather (rule 73), or as recipes in costume (`game-designer`'s risk)? | Designer | First MVP playtest |
 | 6 | The producer's candidate cut order reduces the dungeon to one floor. That would remove the pearl's descent, which carries Still Water's H5 margin (N6.5), and would change W5. If that cut is ever taken, re-run H5 and B9 first | Designer, with Methods (#7) | Only if the cut is taken |
 | 7 | A boss floor at the vertical slice could use a chain of fights (#5 C5), which U2 forbids today. Does it reset (rule 27), and how does U1 read it? | Designer | Vertical Slice |
