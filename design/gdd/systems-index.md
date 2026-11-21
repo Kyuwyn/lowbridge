@@ -243,7 +243,7 @@ rules.
 | 7 | Methods | Progression | MVP | Approved | design/gdd/methods.md | Content records and schema, Forge and proving, Modifier pipeline |
 | 8 | Crafting route | Economy | MVP | Approved | design/gdd/crafting-route.md | Content records and schema, Resources and caps, Activity slot, Forge and proving, Methods |
 | 9 | Fight and dungeon routes | Gameplay | MVP | Approved | design/gdd/fight-and-dungeon-routes.md | Content records and schema, Resources and caps, Activity slot, Combat resolver, Forge and proving, Methods |
-| 10 | Tending | Gameplay | MVP | Not Started | — | Activity slot, Modifier pipeline, Content records and schema (field registry) |
+| 10 | Tending | Gameplay | MVP | Designed | design/gdd/tending.md | Activity slot, Modifier pipeline, Content records and schema (field registry), Resources and caps, Crafting route |
 | 11 | Save and run lifecycle | Persistence | MVP | Not Started | — | Content records and schema, Resources and caps, Activity slot, Forge and proving, Methods |
 | 12 | Content validator and balance enumeration | Meta | MVP | Not Started | — | Content records and schema, Modifier pipeline, Resources and caps, Forge and proving, Methods, Crafting route, Fight and dungeon routes, Tending |
 | 13 | Interface shell and goal line (inferred) | UI | MVP | Not Started | — | Resources and caps, Activity slot, Forge and proving, Methods, Tending |
@@ -327,7 +327,7 @@ access to the pipeline. Its door-test contract is owned by the Forge.
 2. Methods — depends on: Forge and proving, Modifier pipeline
 3. Crafting route — depends on: Content records and schema, Resources and caps, Activity slot, Forge and proving, Methods
 4. Fight and dungeon routes — depends on: Content records and schema, Resources and caps, Activity slot, Combat resolver, Forge and proving, Methods
-5. Tending — depends on: Activity slot, Modifier pipeline, Content records and schema (the field registry's `sealInput` tags constrain it)
+5. Tending — depends on: Activity slot, Modifier pipeline, Content records and schema (the field registry's `sealInput` tags constrain it), Resources and caps, Crafting route (its three gatherers are the only tendable sources)
 6. Save and run lifecycle — depends on: Content records and schema, Resources and caps, Activity slot, Forge and proving, Methods
 7. Reforge and post-commit method switch (VS) — depends on: Forge and proving, Methods, Resources and caps, Save and run lifecycle
 8. Realm ladder (Alpha) — depends on: Forge and proving, Resources and caps, Reforge, Save and run lifecycle
@@ -488,10 +488,10 @@ session. Wave B starts after the checkpoint, and its order can change on what th
 | Metric | Count |
 |--------|-------|
 | Total systems identified | 20 |
-| Design docs started | 9 |
+| Design docs started | 10 |
 | Design docs reviewed | 9 |
 | Design docs approved | 9 |
-| MVP systems designed | 9/15 |
+| MVP systems designed | 10/15 |
 | Vertical Slice systems designed | 0/3 |
 
 ---

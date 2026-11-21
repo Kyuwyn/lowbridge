@@ -3,7 +3,7 @@
 > **Status**: Approved 2026-11-20 (lean review; recommended follow-ups in `design/gdd/reviews/activity-slot-rest-and-away-time-review-log.md`)
 > **Author**: designer + agents
 > **Last Updated**: 2026-11-20
-> **Amendments**: A1 2026-11-20 — Open Question 5 marked resolved (route fights use the unforged cultivator, #6 G13.2, #9 N3) and Open Question 6's route half resolved (no fight route has a by-product, #9 U2) (from Fight and dungeon routes #9; approved by the designer). Touches Open Questions rows 5 and 6
+> **Amendments**: A1 2026-11-20 — Open Question 5 marked resolved (route fights use the unforged cultivator, #6 G13.2, #9 N3) and Open Question 6's route half resolved (no fight route has a by-product, #9 U2) (from Fight and dungeon routes #9; approved by the designer). Touches Open Questions rows 5 and 6. A2 2026-11-21 — S6.3 and F2 use min(*p*, ⌊*p* × *D′* / *D*⌋): a lengthened unit keeps its milliseconds, not its fraction, so heaping a gatherer mid-unit cannot pay untended time at the heaped yield. Open Question 4 is answered: the choice survives a stop (from Tending #10, `tending.md` D5, D6; designer-approved). Touches S6.3, F2, F3's "why no unit is shorter", Edge Cases "Progress and durations", AC-F2-1 and Open Questions row 4
 > **Last Verified**: 2026-11-20
 > **Implements Pillar**: 4 (No dead ends, no attention tax); supports 3 (The build is a problem)
 > **Creative Director Review (CD-GDD-ALIGN)**: APPROVED 2026-11-20. #3's carried pillar-4 item (the switch count of the opening chain) is answered: S8 removes the latency cost of a switch, and Open Question 1 hands the switch frequency to Crafting route (#8). Non-blocking: track whether #8's recipe shape keeps switch frequency within pillar 4, and use the Player Fantasy's "coming back" scene in Open Question 2's rewording
@@ -237,8 +237,10 @@ T2 warns about such sources (S11).
 2. **Normal form.** After every `advance`, 0 ≤ *p* < *D* for every source. A source with *p* = 0
    is simply absent from the kept map, and #11 saves only the non-zero entries.
 3. **When a duration changes.** If a source's effective duration changes from *D* to *D′* in a
-   recompute during play, its progress becomes ⌊*p* × *D′* / *D*⌋ (F2). This applies to every
-   source with kept progress, running or not.
+   recompute during play, its progress becomes min(*p*, ⌊*p* × *D′* / *D*⌋) (F2). A shortened
+   unit keeps its fraction, rounded down. A lengthened unit keeps its milliseconds, so kept
+   progress never grows on a rescale (amendment A2). This applies to every source with kept
+   progress, running or not.
    - During play only tending changes a duration (#2 P1.5).
      - Method patches to `duration` are applied at load, and the commit that selects them comes
        before any progress exists (S3.5).
@@ -248,6 +250,13 @@ T2 warns about such sources (S11).
      itself never completes a unit.
    - Without this, time spent under one duration would be paid out in units of another: tending
      could be switched on to cash in untended progress.
+   - **Why a lengthened unit keeps milliseconds, not its fraction** (A2). Tending changes a
+     gatherer's yield with its duration (`tending.md` D3). Keeping the fraction on a lengthening
+     would let a player run a unit untended to 80%, heap it, and collect the heaped yield for a
+     quarter of a heaped unit's time: 7 Ash Tallow per 5,250 ms, against 7 per 6,250 heaped or 5
+     per 5,000 untended. Under the min rule, every unit completed in a duration regime has used
+     that regime's full *D* of real progress. So no toggling pattern earns more than the best
+     regime's own rate.
 
 #### S7. The away cap
 
@@ -511,7 +520,7 @@ The rest_bank formula is defined as:
 
 The progress_rescale formula is defined as:
 
-`p′ = div_floor(p × D′, D)`
+`p′ = min(p, div_floor(p × D′, D))` (amendment A2; it was `div_floor(p × D′, D)`)
 
 **Variables:**
 | Variable | Type | Range | Source | Description |
@@ -522,15 +531,26 @@ The progress_rescale formula is defined as:
 
 **Output Range:**
 
-- 0 ≤ *p′* < *D′*, and *p′* × *D* ≤ *p* × *D′*. A rescale never gains time.
-- A round trip *D* → *D′* → *D* loses less than ⌈*D* / *D′*⌉ ms to rounding.
+- 0 ≤ *p′* < *D′*, *p′* ≤ *p*, and *p′* × *D* ≤ *p* × *D′*. A rescale never gains time, and
+  kept progress never grows.
+  - A shortening (*D′* < *D*) keeps the fraction, rounded down.
+  - A lengthening (*D′* > *D*) keeps *p*, which is below *D* < *D′*, so the normal form holds.
+- A round trip *D* → *D′* → *D* never gains. It keeps *p* to within rounding only when the
+  lengthening comes first. Shortening first loses the fraction the lengthening does not restore:
+  less than *p* × |*D* − *D′*| / max(*D*, *D′*) + 1 ms, and so less than one unit.
+- **Why min** (A2): once a unit's yield can change with its duration, a fraction kept on a
+  lengthening would pay time earned at one yield at another (S6.3). Under the min rule, no
+  pattern of changes beats the better duration's own rate.
 - The product is at most 86,400,000² ≈ 7.46 × 10¹⁵ ≤ 2⁵³ − 1. That is the declared pair
   (`source.duration`, `source.duration`) of S10.3.
 - It runs only on a recompute during play, never on load (S6.3).
 
 **Example:** A 6,000 ms render is 4,000 ms in, and tending shortens it to 4,500 ms:
-*p′* = div_floor(18,000,000,000, 6,000) = 3,000, two-thirds of the way through either way.
-Untending it gives div_floor(3,000 × 6,000, 4,500) = 4,000.
+*p′* = min(4,000, div_floor(18,000,000,000, 6,000)) = 3,000, two-thirds of the way through either
+way. Untending it lengthens the unit back to 6,000 ms and keeps the 3,000 ms (half way), because
+min(3,000, div_floor(3,000 × 6,000, 4,500)) = min(3,000, 4,000) = 3,000. The round trip costs 1,000
+ms. A heaped skim (`tending.md` D3) is the lengthening case: 5,000 → 6,250 keeps *p* 4,999 at
+4,999.
 
 ### F3. Run bound
 
@@ -549,8 +569,8 @@ The run_unit_bound formula is defined as:
 - **The worst case.** A run starts at *t* = 0 with kept progress *D* − 1, so its first unit
   completes after 1 ms. Every later unit takes at least `UNIT_FLOOR_MS`, and a new unit may
   start only while *t* < `AWAY_CAP`.
-- **Why no unit is shorter.** A rescale keeps the fraction of the unit done (F2), so no unit
-  after the first can take less than the floor.
+- **Why no unit is shorter.** A rescale keeps at most the fraction of the unit done (F2, A2),
+  so no unit after the first can take less than the floor.
 - **Why the ceiling.** ⌊`AWAY_CAP` / `UNIT_FLOOR_MS`⌋ + 1 undercounts by one when the floor
   does not divide the cap. A check with `AWAY_CAP` = 98 and a floor of 3 runs 34 units, while
   that form gives 33.
@@ -687,8 +707,10 @@ Save (#11) on load.
   continues from the same fraction.
 - **If a duration changes while the slot rests**: every kept entry is rescaled (F2). The bank
   and *t* are untouched.
-- **If tending is switched on and off repeatedly**: each switch rescales and can lose a few ms
-  to rounding, never gain any (F2). Untended progress cannot be cashed in at tended speed.
+- **If tending is switched on and off repeatedly**: each switch rescales and can lose progress,
+  never gain any (F2, A2). A lengthening keeps the milliseconds, and a shortening keeps the
+  fraction. Untended progress cannot be cashed in at a tended speed or a tended yield, and no
+  rhythm of switches beats leaving the choice alone.
 - **If a source is switched away from and back**: its kept progress resumes. Two sources
   alternated keep two partial units, and nothing is gained or lost.
 
@@ -970,7 +992,10 @@ GDD.
     is 500 and *b′* is 600,500.
   - With *b* 300, *dt* 1,000 and no stop, used is 1,300 and *b′* is 0.
 - **AC-F2-1** [unit]
-  - 6,000 → 4,500 maps *p* 4,000 to 3,000, and the reverse maps it back to 4,000.
+  - 6,000 → 4,500 maps *p* 4,000 to 3,000, and the reverse keeps it at 3,000 (A2).
+  - 5,000 → 6,250 keeps *p* 4,999 at 4,999 (A2: a lengthening keeps milliseconds).
+  - Over 10,000 random sequences of changes on one source, the progress after the sequence is
+    never above the progress before it (A2).
   - *D′* 1,000 from *D* 6,000 maps *p* 5,999 to 999.
   - Over 10,000 random triples up to 86,400,000, checked BigInt-exact: *p′* × *D* ≤ *p* × *D′*
     and *p′* < *D′*.
@@ -1041,7 +1066,7 @@ there is one resolver call per unit, and the chain stops at its first loss (S4.2
 | 1 | **The click half of #3 Open Question 3.** Held breath makes a late switch free (S8.6), but the K1 chain still asks for about ten switches with an obvious answer in the first two minutes. Should Crafting route (#8) size opening units so that the median uninterrupted run is at least 30 s at single speed? K1's 6 s render fails that test. A one-entry "then" choice was considered and declined (designer, 2026-11-20). Revisit it only if a playtest shows ping-pong. Resolved 2026-11-21 by #8 (`crafting-route.md` L5.3, X1): yes. Every uninterrupted hearth run lasts at least 30 s, and a best four takes 28 runs with a median of 30 s | Crafting route (#8), with Resources and caps (#3) | Done; MVP playtest |
 | 2 | **#3 Open Question 4.** Away progress is one store's fill by design, so no slot rule makes "what the last activity produced while away" (concept, Session-Level and Retention Hooks) a draw. Proposed rewording: "the stores the last run filled, and the breath held for the next" | Designer (concept owner) | Before the Interface shell (#13) UX spec |
 | 3 | What is `AWAY_CAP`'s final value? 24 h is provisional (S7.3) | Technical Director | Architecture (ADR) |
-| 4 | Does a tending choice survive a stop? The slot splits segments either way (#2 Open Question 4) | Tending (#10) | #10 GDD |
+| 4 | Resolved 2026-11-21 by #10 (`tending.md` D5; A2): yes. The heap bit is held per source and survives stops, switches, time away and the forge. Only the player's own accepted `setHeap` changes it, so a stop never splits a segment for tending | Tending (#10) | Done |
 | 5 | Resolved 2026-11-20 by #6 (G13.2) and #9 (N3): no. Every route fight, before and after the forge, uses #9's unforged cultivator, a fixed `combatant` equal to `FOUNDATION_BASE`, so no segment's challenger differs | Forge and proving (#6), Fight and dungeon routes (#9) | Done |
 | 6 | Should a source with an ingredient output and a by-product be an error rather than T2's warning? #9's half resolved 2026-11-20 (`fight-and-dungeon-routes.md` N2.2, U2): no fight route has a by-product, an error under U2, so T2 never fires on a route. #9 recommends T2 become an error for recipes too | Crafting route (#8), Fight and dungeon routes (#9) | #8 GDD |
 | 7 | Rest before the commit fills the bank (S8.6). Should the bank start at the commit instead? Decided for now: no. It is simpler, and conservation holds from run start. Revisit if #12's pacing floors bind | Designer, with Validator (#12) | #12 GDD |
