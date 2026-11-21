@@ -3,6 +3,7 @@
 > **Status**: Approved 2026-11-20 (lean review; recommended follow-ups in `design/gdd/reviews/methods-review-log.md`)
 > **Author**: designer + Claude (`/design-system`)
 > **Last Updated**: 2026-11-20
+> **Amendments**: A1 2026-11-20 — Open Question 2 marked resolved (U1, an error on every fight source) and Open Question 3's route half resolved (H5 passes on #9's routes, within X3's bill limits) (from Fight and dungeon routes #9; approved by the designer). Touches Open Questions rows 2 and 3
 > **Last Verified**: 2026-11-20
 > **Implements Pillar**: 2 (Methods matter); supports 3 (The build is a problem) and 4 (No dead ends, no attention tax)
 > **Creative Director Review (CD-GDD-ALIGN)**: APPROVED 2026-11-20 (no blocker; three advisories, each already an Open Question: keep the Wave A two-method play, Open Question 1; H5 under real route times, 3; the dialog's review-only checks depend on #14 and #15, 7)
@@ -995,8 +996,8 @@ of 0 (#16).*
 | # | Question | Owner | Resolve by |
 |---|---|---|---|
 | 1 | The two bests share three ingredients and swap one (CL for TP), and the routes carry the rest of pillar 2 (W6). Does the second method feel like a different problem in play? If not, the reserve is a feed of IH Gale +30 under Ember Breath, the only theme-coherent set the generator found whose bests share two (`creative-director`), which would amend #6 S9 | Designer | Wave A checkpoint: both methods played in one session |
-| 2 | Every hunt and floor must be one the baseline wins (W5.5). Make "the baseline loses a fight of an enabled source" a validator error, so `routes(i, m)` and #6 S7 count only routes that pay (#5 C9) | Fight and dungeon routes (#9), Validator (#12) | #9 GDD |
-| 3 | H5 fails Still Water on S9's stub times. Do #8's and #9's real times make at least one of Still Water's best four dearer than the cheapest makeup? | Crafting route (#8), Fight and dungeon routes (#9) | #8 and #9 GDDs |
+| 2 | Resolved 2026-11-20 by #9 (`fight-and-dungeon-routes.md` U1, N12): yes, an error, and wider than asked. U1 covers disabled sources too, because each is open under the other method, so `routes(i, m)` and #6 S7 count only routes that pay | Fight and dungeon routes (#9), Validator (#12) | Done |
+| 3 | H5 fails Still Water on S9's stub times. Do #8's and #9's real times make at least one of Still Water's best four dearer than the cheapest makeup? #9's half resolved 2026-11-20 (`fight-and-dungeon-routes.md` X3): on #9's routes H5 passes by 120 s under Ember Breath and 254 s under Still Water, and stays passing while each refined bill costs at most 120 s and the three bills are within 80 s of each other. #8 confirms its chain is inside those limits | Crafting route (#8), Fight and dungeon routes (#9) | #8 GDD |
 | 4 | Should a method re-price sources once breakdowns can show a direction (the declined third lever, W3.2)? | Designer, with Method marks (#14) | Vertical Slice |
 | 5 | How is `redoCost` paid, what does 0 mean, and how does a switch keep `committed()` monotone (#1 Open Question 6)? | Reforge (#16) | Before the Vertical Slice |
 | 6 | A third method: does Y1 subtract shared opens, does `METHOD_PATCH_MAX` still fit the dialog, and where do its routes fit a record budget already at 54–60? | Designer, Reforge (#16) | Vertical Slice |

@@ -5,7 +5,75 @@
 #   "  - name: <name>"; fields sit at column 4; a value holding ": " is quoted.
 # Append-only: deprecate an entry, never delete or rename it.
 
-entities: []
+entities:
+  - name: unforged
+    status: active
+    source: design/gdd/fight-and-dungeon-routes.md
+    type: combatant
+    display_name: Unforged Cultivator
+    stats: "might 20, guard 10, vigor 100, speed 0"
+    note: "the challenger of every route fight, before and after the forge (N3); equals FOUNDATION_BASE stat for stat, checked by U4"
+    referenced_by: []
+  - name: pangolin
+    status: active
+    source: design/gdd/fight-and-dungeon-routes.md
+    type: combatant
+    display_name: Jade-Echo Pangolin
+    stats: "might 10, guard 30, vigor 50, speed 20"
+    fought_on: "hunt_pangolin (both methods, 180000 ms, rendered_oil x6, pays echo_jade)"
+    unforged_keeps: 60
+    note: "provisional (N1, N4); tuned with the X3 generator, never by hand"
+    referenced_by: []
+  - name: heartwood_bear
+    status: active
+    source: design/gdd/fight-and-dungeon-routes.md
+    type: combatant
+    display_name: Heartwood Bear
+    stats: "might 12, guard 10, vigor 110, speed 0"
+    fought_on: "hunt_bear (both methods, 210000 ms, seasoned_plank x5, pays ironbark_heartwood)"
+    unforged_keeps: 52
+    note: "provisional (N1, N4); tuned with the X3 generator, never by hand"
+    referenced_by: []
+  - name: ghost_fox
+    status: active
+    source: design/gdd/fight-and-dungeon-routes.md
+    type: combatant
+    display_name: Ghost Fox
+    stats: "might 20, guard 0, vigor 40, speed 80"
+    fought_on: "hunt_fox (both methods, 510000 ms, jade_blank x4, pays ghost_moss)"
+    unforged_keeps: 61
+    note: "provisional (N1, N4); tuned with the X3 generator, never by hand"
+    referenced_by: []
+  - name: salamander
+    status: active
+    source: design/gdd/fight-and-dungeon-routes.md
+    type: combatant
+    display_name: Marrow Salamander
+    stats: "might 40, guard 0, vigor 40, speed 0"
+    fought_on: "hunt_salamander (Ember Breath, 210000 ms) and deep_floor_1 (Still Water, 210000 ms); each rendered_oil x6, pays ember_marrow"
+    unforged_keeps: 68
+    note: "provisional (N1, N4); tuned with the X3 generator, never by hand"
+    referenced_by: []
+  - name: heron
+    status: active
+    source: design/gdd/fight-and-dungeon-routes.md
+    type: combatant
+    display_name: Lotus Heron
+    stats: "might 15, guard 10, vigor 50, speed 60"
+    fought_on: "hunt_heron (Ember Breath, 630000 ms) and deep_floor_2 (Still Water, 210000 ms, gate reached(ember_marrow, 1)); each seasoned_plank x5, pays cloud_lotus"
+    unforged_keeps: 46
+    note: "provisional (N1, N4); tuned with the X3 generator, never by hand"
+    referenced_by: []
+  - name: tide_crab
+    status: active
+    source: design/gdd/fight-and-dungeon-routes.md
+    type: combatant
+    display_name: Tide Crab
+    stats: "might 15, guard 30, vigor 60, speed 20"
+    fought_on: "hunt_crab (Ember Breath, 900000 ms) and deep_floor_3 (Still Water, 210000 ms, gate reached(cloud_lotus, 1)); each jade_blank x4, pays tidewater_pearl"
+    unforged_keeps: 19
+    note: "provisional (N1, N4); tuned with the X3 generator, never by hand"
+    referenced_by: []
 
 items:
   - name: ash_tallow
@@ -43,7 +111,7 @@ items:
     base_cap: 12
     start: 0
     note: provisional (K1.3)
-    referenced_by: []
+    referenced_by: [design/gdd/fight-and-dungeon-routes.md]
   - name: seasoned_plank
     status: active
     source: design/gdd/resources-and-caps.md
@@ -52,7 +120,7 @@ items:
     base_cap: 10
     start: 0
     note: provisional (K1.3)
-    referenced_by: []
+    referenced_by: [design/gdd/fight-and-dungeon-routes.md]
   - name: jade_blank
     status: active
     source: design/gdd/resources-and-caps.md
@@ -61,7 +129,7 @@ items:
     base_cap: 8
     start: 0
     note: provisional (K1.3)
-    referenced_by: []
+    referenced_by: [design/gdd/fight-and-dungeon-routes.md]
   - name: hearth_lamp
     status: active
     source: design/gdd/resources-and-caps.md
@@ -89,7 +157,7 @@ items:
     opens: "three hunts, paying ember_marrow, cloud_lotus, tidewater_pearl (#9 authors)"
     redo_cost: absent
     note: "patches are #6 S9's, kept unchanged (W6); best makeup echo_jade, ironbark_heartwood, ember_marrow, cloud_lotus at 4 seals"
-    referenced_by: [design/gdd/forge-and-proving.md]
+    referenced_by: [design/gdd/forge-and-proving.md, design/gdd/fight-and-dungeon-routes.md]
   - name: still_water
     status: active
     source: design/gdd/methods.md
@@ -99,7 +167,7 @@ items:
     opens: "the dungeon's three floors, paying ember_marrow, cloud_lotus, tidewater_pearl (#9 authors)"
     redo_cost: absent
     note: "patches are #6 S9's, kept unchanged (W6); best makeup echo_jade, ironbark_heartwood, ember_marrow, tidewater_pearl at 4 seals"
-    referenced_by: [design/gdd/forge-and-proving.md]
+    referenced_by: [design/gdd/forge-and-proving.md, design/gdd/fight-and-dungeon-routes.md]
 
 formulas:
   - name: high_water
@@ -380,14 +448,14 @@ formulas:
     expression: "T(X, m) = sum over sources s used by the chains of X of ceil_div(D_s(X), out_s) * d_s; shared inputs made once; no by-product credit"
     variables: [X, D_s, out_s, d_s]
     output: "0 ms upward; B9 needs T_all >= 1.35 x T_best, +6 min, <= 60 min"
-    referenced_by: [design/gdd/methods.md]
+    referenced_by: [design/gdd/methods.md, design/gdd/fight-and-dungeon-routes.md]
   - name: source_price
     status: active
     source: design/gdd/forge-and-proving.md
     expression: "price(s) = d_s + sum over inputs r of ceil_div(in_s[r], out_r) * price(src(r)) + sum of reached-atom prices; ceiling(i) = max(div_floor(p_i * FIGHTLESS_CEILING_BP, 10000), p_i + FIGHTLESS_SLACK_MS)"
     variables: [d_s, in_s, out_r, p_i, FIGHTLESS_CEILING_BP, FIGHTLESS_SLACK_MS]
     output: "1 ms upward; B10 passes when the cheapest fightless price <= ceiling"
-    referenced_by: [design/gdd/methods.md]
+    referenced_by: [design/gdd/methods.md, design/gdd/fight-and-dungeon-routes.md]
   - name: gives_up
     status: active
     source: design/gdd/methods.md
@@ -408,13 +476,27 @@ formulas:
     expression: "routes(i, m) = number of enabled sources in set_m whose outputs hold ingredient i"
     variables: [i, m, enabled, outputs]
     output: "0 upward; #1 R8.4 needs >= 2; exactly 2 for all 12 pairs under the route plan"
-    referenced_by: []
+    referenced_by: [design/gdd/fight-and-dungeon-routes.md]
   - name: price_leak
     status: active
     source: design/gdd/methods.md
     expression: "leak(m) = [T(best_m, m) <= min over makeups X of T(X, m)]; H5 fails when 1"
     variables: [T, best_m]
     output: "0 or 1; not evaluated when B1 fails"
+    referenced_by: [design/gdd/fight-and-dungeon-routes.md]
+  - name: route_price
+    status: active
+    source: design/gdd/fight-and-dungeon-routes.md
+    expression: "price(f) = d_f + ceil_div(b_f, out_r) * price(src(r)) + [f is floor k >= 2] * price_1(g_(k-1)); #6 S8 on one refined bill and at most one reached gate"
+    variables: [d_f, b_f, out_r, price_1]
+    output: "d_f upward; 224 s to 944 s on the provisional content with every bill at 44 s"
+    referenced_by: []
+  - name: premium_ok
+    status: active
+    source: design/gdd/fight-and-dungeon-routes.md
+    expression: "premium_ok(i, m) = [price(f_im) * 10000 <= PREMIUM_MAX_BP * price(r_im)]; band(i) = [ceil_div(max over m of price(f_im) * 10000, PREMIUM_MAX_BP), min over m of ceiling_m(i)] with ceiling_m from source_price"
+    variables: [f_im, r_im, PREMIUM_MAX_BP, FIGHTLESS_CEILING_BP, FIGHTLESS_SLACK_MS]
+    output: "0 or 1, U3 fails when 0; recipe bands in s: EJ 280-448, IH 317.5-508, EM 317.5-508, CL 842.5-1016, GM 692.5-1108, TP 1180-1524"
     referenced_by: []
 
 constants:
@@ -536,7 +618,7 @@ constants:
     source: design/gdd/combat-resolver.md
     value: 100
     unit: strike rate at speed 0 (safe range 10 to 10000)
-    referenced_by: [design/gdd/forge-and-proving.md]
+    referenced_by: [design/gdd/forge-and-proving.md, design/gdd/fight-and-dungeon-routes.md]
   - name: combat_score_win_floor
     status: active
     source: design/gdd/combat-resolver.md
@@ -632,25 +714,25 @@ constants:
     source: design/gdd/forge-and-proving.md
     value: 20
     unit: might points (safe 0 to 50)
-    referenced_by: []
+    referenced_by: [design/gdd/fight-and-dungeon-routes.md]
   - name: foundation_base_guard
     status: active
     source: design/gdd/forge-and-proving.md
     value: 10
     unit: guard points (safe 0 to 50)
-    referenced_by: []
+    referenced_by: [design/gdd/fight-and-dungeon-routes.md]
   - name: foundation_base_vigor
     status: active
     source: design/gdd/forge-and-proving.md
     value: 100
     unit: vigor points (safe 50 to 200)
-    referenced_by: []
+    referenced_by: [design/gdd/fight-and-dungeon-routes.md]
   - name: foundation_base_speed
     status: active
     source: design/gdd/forge-and-proving.md
     value: 0
     unit: speed points (safe 0 to 20)
-    referenced_by: []
+    referenced_by: [design/gdd/fight-and-dungeon-routes.md]
   - name: widen_full
     status: active
     source: design/gdd/forge-and-proving.md
@@ -662,31 +744,31 @@ constants:
     source: design/gdd/forge-and-proving.md
     value: 13500
     unit: basis points of the best makeup gathering time (B9; safe 12500 to 15000)
-    referenced_by: [design/gdd/methods.md]
+    referenced_by: [design/gdd/methods.md, design/gdd/fight-and-dungeon-routes.md]
   - name: overgather_min_ms
     status: active
     source: design/gdd/forge-and-proving.md
     value: 360000
     unit: ms more than the best makeup (B9)
-    referenced_by: [design/gdd/methods.md]
+    referenced_by: [design/gdd/methods.md, design/gdd/fight-and-dungeon-routes.md]
   - name: overgather_max_ms
     status: active
     source: design/gdd/forge-and-proving.md
     value: 3600000
     unit: ms to gather all ingredients at most (B9)
-    referenced_by: [design/gdd/methods.md]
+    referenced_by: [design/gdd/methods.md, design/gdd/fight-and-dungeon-routes.md]
   - name: fightless_ceiling_bp
     status: active
     source: design/gdd/forge-and-proving.md
     value: 20000
     unit: basis points of the cheapest other source price (B10; safe 15000 to 25000)
-    referenced_by: [design/gdd/methods.md]
+    referenced_by: [design/gdd/methods.md, design/gdd/fight-and-dungeon-routes.md]
   - name: fightless_slack_ms
     status: active
     source: design/gdd/forge-and-proving.md
     value: 60000
     unit: ms of absolute slack (B10)
-    referenced_by: [design/gdd/methods.md]
+    referenced_by: [design/gdd/methods.md, design/gdd/fight-and-dungeon-routes.md]
   - name: door_threshold_min
     status: active
     source: design/gdd/forge-and-proving.md
@@ -717,3 +799,15 @@ constants:
     value: 23
     unit: source records in the MVP, 20 enabled under each method (a content target, not a check; Y3)
     referenced_by: [design/gdd/content-records-and-schema.md]
+  - name: premium_max_bp
+    status: active
+    source: design/gdd/fight-and-dungeon-routes.md
+    value: 8000
+    unit: basis points of the recipe price a fight route may cost at most (U3; safe 7000 to 9000)
+    referenced_by: []
+  - name: first_ingredient_ms
+    status: active
+    source: design/gdd/fight-and-dungeon-routes.md
+    value: 300000
+    unit: ms for some ingredient's cheapest source under each method (U5, rule 17; safe 180000 to 420000)
+    referenced_by: []
