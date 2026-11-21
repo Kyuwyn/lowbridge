@@ -730,8 +730,8 @@ only targets this spec adds are part lines and back lines. Opening and closing t
   Part and back lines may show #13's hover style as a pointer affordance, but never content that
   a tap would not show.
 
-**Navigation to other specs:** opening and closing go to #13's container (`design/ux/` spec for
-#13, in progress). The forge screen's hosts are #15's (not yet written). There are no other
+**Navigation to other specs:** opening and closing go to #13's container
+(`design/ux/interface-shell.md` C16, aligned with this spec at commit 1eca986). The forge screen's hosts are #15's (not yet written). There are no other
 targets.
 
 ---
@@ -842,10 +842,11 @@ lines and back lines (C8, C9). The container around them is #13's.
   the container's tab order (Interaction Map).
 - [x] Tab order follows reading order: the back line first, then part lines in block order (BD6).
 - [x] Every mouse action can be done by keyboard: Enter or Space activates, and Esc closes.
-- [ ] Focus is visible at all times. This is #13's container focus style; this spec adds no style
-  of its own (Open Questions 5).
-- [ ] Focus stays inside the container while it is open. This is #13's container behaviour (Open
-  Questions 5).
+- [x] Focus is visible at all times: #13's 2 px focus ring, which is never removed
+  (`design/ux/interface-shell.md` Accessibility, commit 1eca986). This spec adds no style of its
+  own.
+- [x] Focus stays inside the container while it is open, as a narrow bottom sheet, and goes back
+  to the opening record on close (#13 C16, Interaction Map).
 - [x] Esc closes the container at any depth and does not quit anything (Interaction Map).
 
 **Mouse**
@@ -860,8 +861,9 @@ lines and back lines (C8, C9). The container around them is #13's.
   44 px tall.
 - [x] Swipe gestures do not conflict with the system: only #13's vertical scroll is used, and no
   custom swipe.
-- [ ] Every action works with one hand in portrait. That depends on where #13 places the
-  container and its back line on a phone (top or bottom sheet) (Open Questions 6).
+- [ ] Every action works with one hand in portrait. #13 places the container as a bottom sheet on
+  narrow widths, but the back line sits at the sheet's top. Whether that is in thumb reach on a
+  tall sheet is left to #17 (Open Questions 6).
 - [x] Long-press is not used.
 
 ---
@@ -932,9 +934,9 @@ the identity once the tint is gone (States & Variants).
 - One set of verbs (feeds, quenches, opens), one word for a clamp ("Limit") and one for a heap
   ("Heaped").
 - The back line always names where it returns to.
-- No timing, and no state that changes while a breakdown is being read (#2 P9.4: values are
-  constant within a segment, and recompute happens only on the commit, the forge or a heap
-  change).
+- No timing. A trail breakdown changes only on the commit, the forge or a heap change (#2 P9.3,
+  P9.4). #13 repaints an open card live, so a state number beside it (held, room) may move while
+  it is being read, but its lines never reorder.
 
 ---
 
@@ -1086,15 +1088,15 @@ browser harness exists)
 | 2 | **No art bible.** The glyph drawings, the final tint values and the stone base are provisional. The art bible must keep MK2's silhouette classes, solid and hollow forms, MK3's notches and the contrast minimums under Accessibility | Art bible (`/art-bible`), art-director | Before the vertical slice's visual pass |
 | 3 | **No accessibility tier.** This spec assumes WCAG 2.2 AA. Run `/gate-check` to see whether the missing `design/accessibility-requirements.md` blocks a gate | Accessibility and settings (#18), designer | #18, vertical slice |
 | 4 | **Stale input preferences.** `.claude/docs/technical-preferences.md` says "mouse with hover tooltips" and "ⓘ pins tooltips". Both are from the archived attempt and conflict with MVP required item 8 (nothing hover-only, tap-opened container) | Designer, with #13 | Next `/setup-engine` or settings edit |
-| 5 | **#13's container must host the drill stack** (BD6): a back line first in focus order, focus restored on back, Esc to close all, visible focus, focus kept inside while open, 44 px lines, no horizontal scroll. A seam note is in the shared notes folder for the #13 session | Interface shell (#13) | #13 UX spec |
-| 6 | **One-handed reach on a phone.** Where does #13 place the container and its back line on a phone (top or bottom sheet)? This decides the unticked one-hand touch item | #13, Phone layout (#17) | #13 spec; #17 at the vertical slice |
-| 7 | **The glyph sheet across specs.** #13's and #9's state glyphs (sealed, short, held, full, depth, verdict) must stay distinct in silhouette from MK2's method, closed, heap and limit glyphs. #13's heap toggle should reuse MK2's heap shape | #13 | #13 UX spec |
+| 5 | **#13's container must host the drill stack** (BD6). *Resolved 2026-11-21 by #13 (`design/ux/interface-shell.md`, commit 1eca986 on `claude/ux-interface-shell-b57ec9`):* records open the container and numbers never do; the back line comes first and takes focus; Back restores focus to the line that was opened; Esc closes the stack; lines are at least 44 px; no horizontal scroll at 390 or 320 px. #13 also drills into a record named in a card | Interface shell (#13) | Done, once both branches merge |
+| 6 | **One-handed reach on a phone.** #13 uses a bottom sheet on narrow widths. Whether the back line at a tall sheet's top is in thumb reach is still open | Phone layout (#17) | Vertical slice |
+| 7 | **The glyph sheet across specs.** *Resolved 2026-11-21 by #13 (commit 1eca986):* its state glyphs must differ in silhouette from every MK2 glyph, the method chip uses MK2's solid glyph, and the heap toggle uses MK2's heap shape. #9's depth glyph and #15's tier and affinity glyphs keep the same constraint (Open Questions 12) | #13 | Done, once both branches merge |
 | 8 | **Line kinds in the dialog's result type.** `closesLines` and `givesUpLines` must return each line's kind (feed, quench, open, change, close) with its text, so the notch is never chosen by parsing words | Methods (#7) ADR 1, with #1 | Before epics |
 | 9 | **The clash amount and stat limit cuts in `foundationStats`.** Its result must carry each affinity's clash taken and any `STAT_MAX` cut, because `max(0, …)` makes them impossible to derive from the shown numbers (BD5) | Forge and proving (#6), result-type ADR | Before epics |
 | 10 | **Addressing a trail.** How the interface gets the trail of a shown value | Modifier pipeline (#2) ADR 2 | Before epics |
 | 11 | **The hidden base after consumption.** BD7 reads the ingredient's high-water mark (#1 F1), so a base stays shown after the forge consumes the ingredient. #6 to confirm that this matches "never shown before the ingredient is in hand" | Forge and proving (#6), Content records (#1) | `/ux-review` of this spec |
 | 12 | **What #15 still owes.** The accent before the commit: whether hollow glyphs in the method-choice view and the dialog take a colour. The view's and the dialog's layout. The words for composed numbers (BD5). The affinity and door-tier glyphs, in ink, distinct from MK2's glyphs and never gate-shaped (MK2) | Forge screen (#15) | #15 UX spec |
-| 13 | **The commit moment split.** #14 animates marks and underlines; #13 changes the shell's tint and persistent identity; #15 closes the dialog. All run on `committed`, and none waits for another | #13, #15 | Their UX specs |
+| 13 | **The commit moment split.** #14 animates marks and underlines; #13 changes the shell's tint and persistent identity; #15 closes the dialog. All run on `committed`, and none waits for another. *#13's half resolved 2026-11-21 (commit 1eca986): its sweep ends within 400 ms on the same event.* #15's half is open | #15 | #15 UX spec |
 | 14 | **BD1's reading of "every number".** State numbers (held, progress, the rest bank, log amounts) have no breakdown, because they have no base and no modifiers | `/ux-review` | `/ux-review` of this spec |
 | 15 | **No interaction pattern library.** New patterns to add when it is authored: Method glyph, Method mark, Closed mark, Number breakdown (trail and composed), Drill-down line | UX (`/ux-design patterns`) | Before #15's spec, if possible |
 | 16 | **Later methods and re-pricing.** The *lower* notch is reserved for re-pricing (#7 Open Question 4). A third method takes an unused silhouette class (falling, coiling, branching, rippling), up to the concept's cap of six | Designer, Reforge (#16) | Vertical slice |
@@ -1106,6 +1108,6 @@ browser harness exists)
 |---|---|
 | GDD requirement coverage | **All covered.** Every hand-off to #14 found by grepping `design/gdd/*.md` for `#14`, "Method marks" and "breakdown" maps to a rule here: #1 R6.4, R7.2, F7, F8, "Before the commit", AC-U-1 and the UX flag (MK1, MK5, MK7, BD7, D5); #2 P8, P8.2.3, P8.3, P8.4, Visual/Audio, UI Requirements and Open Question 6 (BD3, BD4, MK3); #3's cap breakdown and unmarked cap lines (W3, MK1.3); #5 UI Requirement 3 and tier display (BD5, MK2); #6 G7, the clash, tiers and UI Requirement 7 (BD5, MK2); #7 Visual/Audio, UI Requirements 3, 4 and 6, the UX flag and Open Questions 4 and 7 (MK1–MK9, D5); #8 Visual/Audio 1 (MK1.3); #9's Closed state, Still Deep row and glyph distinctness (MK5, MK2); #10 D3.3 and Visual/Audio (BD4, MK8, W5); #11 UI Requirement 5 (MK4); systems index paragraph 14 (all four requirements). Closed during the check: R5.5's citation, AC-U-1's non-zero `set` (MK7), #6 G7's preview bound (BD5), and the tier and affinity glyph seam (MK2) |
 | New patterns for the library | Method glyph, Method mark, Closed mark, Number breakdown (trail and composed), Drill-down line. No library exists, so they are flagged as a gap (Open Questions 15) |
-| Navigation mismatches | **Not assessed.** #13's and #15's specs are not written yet, so their entry and exit points cannot be compared. The seam is recorded in Open Questions 5, 6, 12 and 13, and in a note in the shared notes folder |
-| Accessibility gaps | No tier is committed. This spec assumes WCAG 2.2 AA (Open Questions 3). Three checklist items wait on #13 (Open Questions 5, 6) |
+| Navigation mismatches | **#13: none.** Checked against `design/ux/interface-shell.md` at commit 1eca986 (another branch). Records open the container, numbers never do, the drill stack and back line match BD6, and Esc and close return focus to the record. **#15: not assessed**, because its spec is not written. The open seams are Open Questions 12 and 13 |
+| Accessibility gaps | No tier is committed. This spec assumes WCAG 2.2 AA (Open Questions 3). One checklist item, one-handed reach, waits on #17 (Open Questions 6) |
 | Missing empty states | None. Marks (Choosing), breakdowns (base-only, no numbers), closed rows (Choosing), the drill stack (depth 0) and composed numbers with no parts each have a defined empty form (States & Variants) |
