@@ -2,7 +2,7 @@
 
 > **Status**: Approved
 > **Created**: 2026-11-19
-> **Last Updated**: 2026-11-20
+> **Last Updated**: 2026-11-21
 > **Source Concept**: design/gdd/game-concept.md
 
 Rule numbers ("rule 23") refer to `research/arcanum-reference/12-design-rules.md` (1–38, 70–74),
@@ -32,7 +32,7 @@ The MVP documents are written in two waves with a build between them (PR-SCOPE, 
 specs (systems 1–7, 14, 15). It ends at a **forge-and-methods checkpoint**: a playable build with
 both methods played in one session. That is the first play evidence for pillar 2. The
 checkpoint's sources are stubbed in behaviour (a timed button), but they are real source records
-that the Methods patch surface adds, removes and re-prices. So the build tests "which routes
+that the Methods patch surface opens or leaves shut (`methods.md` W3). So the build tests "which routes
 work", not just what ingredients contribute. The checkpoint's forge screen carries the goal line
 and the first-screen instruction, so the prototype's lost first run is not repeated (CD-SYSTEMS). **Wave B** covers the routes, tending, save, validator and shell (systems 8–13). At
 the designer's stated 12 hours a week, the 15 MVP documents take 46–56 sessions, about 8–9.5
@@ -72,8 +72,9 @@ output, and the save stores that snapshot.
 to most of a cap (rule 18) and the first cap hit within a minute (rule 17). Caps are what the
 Foundation's makeup sets, so the forge's effect on the next realm is defined here. Caps limit
 the resources activities consume and produce, never which ingredients are held. The concept
-states this, so no makeup is ruled out by storage. The GDD names the caps and affinities, which
-are currently unnamed (concept, Open Questions).
+states this, so no makeup is ruled out by storage. The GDD names the resources and their caps.
+The affinities are named by Forge and proving (#6) instead (designer, 2026-11-20; #1 amendment
+A3).
 
 **4. Activity slot, rest and away time.** One slot for the whole game (anti-pillar; diverges from
 rule 24). An activity runs until it cannot continue (an input runs out, its output is at cap) or
@@ -96,7 +97,7 @@ before any Foundation exists.
 
 **6. Forge and proving.** The heart of pillars 1 and 3 and the hook. A Foundation is exactly
 four distinct ingredients of six (rules 12, 49). The concept diverges from rule 12: no bill and
-no lock. The GDD owns the ingredient records, the Foundation stats, the interactions that make a
+no lock. The GDD owns the ingredient records, the affinity records and their names, the Foundation stats, the interactions that make a
 makeup a trade-off (affinity clashes, caps), the three doors and their door tests, the 0–6 seal
 measure, and the preview rule: seals show only for makeups whose every ingredient is in hand.
 It must show how "no makeup is co-optimal under both methods" holds from interactions alone,
@@ -121,8 +122,8 @@ Three further instructions come from CD-SYSTEMS on 2026-11-19:
   delivers the concept's "Foundation you can point at" and "one visible locked source" hooks.
 
 **7. Methods.** Pillar 2. Two methods, visible side by side from the first screen. Each changes
-what each ingredient contributes at the forge and which routes work, and re-prices crafting
-without removing it. The method is chosen freely until an explicit commit ("Begin circulating
+what each ingredient contributes at the forge and which routes work. In the MVP it neither
+re-prices nor removes a route: it feeds, quenches or opens (`methods.md` W3). The method is chosen freely until an explicit commit ("Begin circulating
 [method]") that names what it closes and how to redo it (rule 54). Gathering starts only after
 the commit. Identity lives where the numbers live (rule 71). Late content patches earlier
 content (rule 4), narrowed to a closed patch surface. This GDD owns that patch surface. Pillar 2
@@ -130,15 +131,19 @@ has no play evidence yet, since the second method has never been played (CD-PLAY
 The patch surface targets source records, whose type the Schema owns. That lets the Wave A
 checkpoint exercise route changes before the route GDDs exist.
 
-**8. Crafting route.** The fightless floor of pillar 4: gather raw inputs, refine them, craft at
-one station. A method may re-price a recipe but never remove one. Every ingredient's
+**8. Crafting route.** The fightless floor of pillar 4: gather raw inputs, refine them at the
+hearth, and make each ingredient from its one recipe. No method patches, opens or closes a
+crafting source (`methods.md` W3, W5), and each recipe costs 1.25× to 2× its ingredient's fight
+route (#9's premium). Every ingredient's
 fightless source lives here or in a fightless input chain to it. Crafted items can open the next
 source (the short-term loop).
 
-**9. Fight and dungeon routes.** Single-fight sources and one dungeon of three chained floors,
-on the resolver from system 5. Leaving keeps progress (rule 27). Methods add and remove these
-routes, and these routes pay a premium over crafting. A method that removes an ingredient's
-fight or dungeon route gives that ingredient another source, so it keeps two (pillar 4).
+**9. Fight and dungeon routes.** Six single-fight hunts and one dungeon of three gated floors,
+on the resolver from system 5, each fought by a fixed unforged cultivator and guaranteed
+winnable. Leaving keeps progress (rule 27). Methods only open these routes (`methods.md` W3):
+Ember Breath hunts, Still Water descends. Each route spends half a cap of one refined good and
+costs at most 80% of its ingredient's recipe, so it pays a premium over crafting while every
+ingredient keeps its fightless recipe (pillar 4).
 
 **10. Tending.** An optional, discrete choice on the running activity, with no repeated, held or
 timed input. It raises speed and yield up to stated ceilings, gives something up, and never
@@ -157,7 +162,8 @@ fast new game so the other method can be tried. The fast new game is a test affo
 reset loop (anti-pillar). It depends on every state owner, so it follows them. Each gameplay
 GDD declares the non-derived state it owns. Save composes those declared slices and owns only
 versioning, migration and the fast new game. How the slices compose is an ADR. The designer
-still has to decide whether saves may be wiped before the first public build.
+decided on 2026-11-21 that saves may be wiped until the first public build, refused by name and
+never deleted silently (`save-and-run-lifecycle.md` D11.2).
 
 **12. Content validator and balance enumeration.** MVP required item 5. It runs schema
 checks, then the pillar 4 static checks on patched data: two sources per ingredient under each
@@ -229,21 +235,21 @@ rules.
 
 | # | System Name | Category | Priority | Status | Design Doc | Depends On |
 |---|-------------|----------|----------|--------|------------|------------|
-| 1 | Content records and schema (inferred) | Core | MVP | Designed | design/gdd/content-records-and-schema.md | — |
-| 2 | Modifier pipeline and recompute (inferred) | Core | MVP | Not Started | — | Content records and schema |
-| 3 | Resources and caps | Economy | MVP | Not Started | — | Content records and schema, Modifier pipeline |
-| 4 | Activity slot, rest and away time | Core | MVP | Not Started | — | Content records and schema, Modifier pipeline, Resources and caps |
-| 5 | Combat resolver (inferred) | Gameplay | MVP | Not Started | — | Content records and schema |
-| 6 | Forge and proving | Progression | MVP | Not Started | — | Resources and caps, Modifier pipeline, Combat resolver (contract owned by the Forge) |
-| 7 | Methods | Progression | MVP | Not Started | — | Forge and proving, Modifier pipeline |
-| 8 | Crafting route | Economy | MVP | Not Started | — | Resources and caps, Activity slot, Forge and proving, Methods |
-| 9 | Fight and dungeon routes | Gameplay | MVP | Not Started | — | Activity slot, Combat resolver, Forge and proving, Methods |
-| 10 | Tending | Gameplay | MVP | Not Started | — | Activity slot, Modifier pipeline, Content records and schema (field registry) |
-| 11 | Save and run lifecycle | Persistence | MVP | Not Started | — | Content records and schema, Resources and caps, Activity slot, Forge and proving, Methods |
-| 12 | Content validator and balance enumeration | Meta | MVP | Not Started | — | Content records and schema, Modifier pipeline, Forge and proving, Methods, Crafting route, Fight and dungeon routes, Tending |
-| 13 | Interface shell and goal line (inferred) | UI | MVP | Not Started | — | Resources and caps, Activity slot, Forge and proving, Methods, Tending |
-| 14 | Method marks and number breakdowns | UI | MVP | Not Started | — | Modifier pipeline, Methods |
-| 15 | Forge screen (inferred) | UI | MVP | Not Started | — | Forge and proving, Methods, Method marks and number breakdowns |
+| 1 | Content records and schema (inferred) | Core | MVP | Approved | design/gdd/content-records-and-schema.md | — |
+| 2 | Modifier pipeline and recompute (inferred) | Core | MVP | Approved | design/gdd/modifier-pipeline-and-recompute.md | Content records and schema |
+| 3 | Resources and caps | Economy | MVP | Approved | design/gdd/resources-and-caps.md | Content records and schema, Modifier pipeline |
+| 4 | Activity slot, rest and away time | Core | MVP | Approved | design/gdd/activity-slot-rest-and-away-time.md | Content records and schema, Modifier pipeline, Resources and caps, Combat resolver |
+| 5 | Combat resolver (inferred) | Gameplay | MVP | Approved | design/gdd/combat-resolver.md | Content records and schema |
+| 6 | Forge and proving | Progression | MVP | Approved | design/gdd/forge-and-proving.md | Content records and schema, Resources and caps, Modifier pipeline, Combat resolver (contract owned by the Forge) |
+| 7 | Methods | Progression | MVP | Approved | design/gdd/methods.md | Content records and schema, Forge and proving, Modifier pipeline |
+| 8 | Crafting route | Economy | MVP | Approved | design/gdd/crafting-route.md | Content records and schema, Resources and caps, Activity slot, Forge and proving, Methods |
+| 9 | Fight and dungeon routes | Gameplay | MVP | Approved | design/gdd/fight-and-dungeon-routes.md | Content records and schema, Resources and caps, Activity slot, Combat resolver, Forge and proving, Methods |
+| 10 | Tending | Gameplay | MVP | Approved | design/gdd/tending.md | Activity slot, Modifier pipeline, Content records and schema (field registry), Resources and caps, Crafting route |
+| 11 | Save and run lifecycle | Persistence | MVP | Approved | design/gdd/save-and-run-lifecycle.md | Content records and schema, Modifier pipeline, Resources and caps, Activity slot, Forge and proving, Methods, Tending |
+| 12 | Content validator and balance enumeration | Meta | MVP | Approved | design/gdd/content-validator-and-balance-enumeration.md | Content records and schema, Modifier pipeline, Resources and caps, Activity slot, Combat resolver, Forge and proving, Methods, Crafting route, Fight and dungeon routes, Tending, Save and run lifecycle |
+| 13 | Interface shell and goal line (inferred) | UI | MVP | Approved | design/ux/interface-shell.md | Content records and schema, Modifier pipeline, Resources and caps, Activity slot, Combat resolver, Forge and proving, Methods, Crafting route, Fight and dungeon routes, Tending, Save and run lifecycle |
+| 14 | Method marks and number breakdowns | UI | MVP | Approved | design/ux/method-marks.md | Modifier pipeline, Methods |
+| 15 | Forge screen (inferred) | UI | MVP | Approved | design/ux/forge-screen.md | Forge and proving, Methods, Method marks and number breakdowns, Save and run lifecycle |
 | 16 | Reforge and post-commit method switch | Progression | Vertical Slice | Not Started | — | Forge and proving, Methods, Resources and caps, Save and run lifecycle |
 | 17 | Phone layout | UI | Vertical Slice | Not Started | — | Interface shell and goal line, Forge screen |
 | 18 | Accessibility and settings (inferred) | Meta | Vertical Slice | Not Started | — | Interface shell and goal line, Method marks and number breakdowns |
@@ -309,7 +315,7 @@ the reforge, the phone layout, accessibility, further realms and the codex wait.
 
 1. Modifier pipeline and recompute — depends on: Content records and schema
 2. Resources and caps — depends on: Content records and schema, Modifier pipeline
-3. Activity slot, rest and away time — depends on: Content records and schema, Modifier pipeline, Resources and caps
+3. Activity slot, rest and away time — depends on: Content records and schema, Modifier pipeline, Resources and caps, Combat resolver (for sources with fights; Combat resolver Open Question 6)
 4. Combat resolver — depends on: Content records and schema
 
 These four are rule machinery, not content. The resolver sits here, not in Feature, because
@@ -320,10 +326,10 @@ access to the pipeline. Its door-test contract is owned by the Forge.
 
 1. Forge and proving — depends on: Resources and caps, Modifier pipeline, Combat resolver
 2. Methods — depends on: Forge and proving, Modifier pipeline
-3. Crafting route — depends on: Resources and caps, Activity slot, Forge and proving, Methods
-4. Fight and dungeon routes — depends on: Activity slot, Combat resolver, Forge and proving, Methods
-5. Tending — depends on: Activity slot, Modifier pipeline, Content records and schema (the field registry's `sealInput` tags constrain it)
-6. Save and run lifecycle — depends on: Content records and schema, Resources and caps, Activity slot, Forge and proving, Methods
+3. Crafting route — depends on: Content records and schema, Resources and caps, Activity slot, Forge and proving, Methods
+4. Fight and dungeon routes — depends on: Content records and schema, Resources and caps, Activity slot, Combat resolver, Forge and proving, Methods
+5. Tending — depends on: Activity slot, Modifier pipeline, Content records and schema (the field registry's `sealInput` tags constrain it), Resources and caps, Crafting route (its three gatherers are the only tendable sources)
+6. Save and run lifecycle — depends on: Content records and schema, Modifier pipeline, Resources and caps, Activity slot, Forge and proving, Methods, Tending (its slice)
 7. Reforge and post-commit method switch (VS) — depends on: Forge and proving, Methods, Resources and caps, Save and run lifecycle
 8. Realm ladder (Alpha) — depends on: Forge and proving, Resources and caps, Reforge, Save and run lifecycle
 
@@ -332,16 +338,16 @@ after the routes.
 
 ### Presentation Layer (depends on features)
 
-1. Interface shell and goal line — depends on: Resources and caps, Activity slot, Forge and proving, Methods, Tending
+1. Interface shell and goal line — depends on: Content records and schema, Modifier pipeline, Resources and caps, Activity slot, Combat resolver, Forge and proving, Methods, Crafting route, Fight and dungeon routes, Tending, Save and run lifecycle (each lists #13 as a dependent)
 2. Method marks and number breakdowns — depends on: Modifier pipeline, Methods
-3. Forge screen — depends on: Forge and proving, Methods, Method marks and number breakdowns
+3. Forge screen — depends on: Forge and proving, Methods, Method marks and number breakdowns, Save and run lifecycle (the last-run line)
 4. Phone layout (VS) — depends on: Interface shell and goal line, Forge screen
 
 None of these hold game rules. They read state and the modifier breakdowns.
 
 ### Polish Layer (depends on everything)
 
-1. Content validator and balance enumeration — depends on: Content records and schema, Modifier pipeline, Forge and proving, Methods, Crafting route, Fight and dungeon routes, Tending. MVP tier despite its layer.
+1. Content validator and balance enumeration — depends on: Content records and schema, Modifier pipeline, Resources and caps, Activity slot, Combat resolver, Forge and proving, Methods, Crafting route, Fight and dungeon routes, Tending, Save and run lifecycle (the alias rule and migration fixtures). MVP tier despite its layer.
 2. Accessibility and settings (VS) — depends on: Interface shell and goal line, Method marks and number breakdowns
 3. In-game codex (Full Vision) — depends on: Content records and schema
 
@@ -408,7 +414,8 @@ session. Wave B starts after the checkpoint, and its order can change on what th
   resolver GDD must produce exactly that function. The validator checks this by enumeration.
 - **Methods ↔ Crafting route / Fight and dungeon routes.** A method adds, removes and re-prices
   routes, and routes are what a method patches. Resolution: the Methods GDD owns the closed
-  patch surface (contribution, source yield and price, route availability). Route GDDs author
+  patch surface: in the MVP, contribution and route availability only; source yield, price and
+  duration are closed (`methods.md` W3). Route GDDs author
   base values only. Per-method values live in content and the balance table.
 - **Forge and proving ↔ Methods** (soft). "No makeup is co-optimal under both methods" cannot be
   tuned without methods, and methods patch the forge. Resolution: the Forge GDD tunes against
@@ -423,7 +430,7 @@ session. Wave B starts after the checkpoint, and its order can change on what th
 |--------|-----------|-----------------|------------|
 | Forge and proving | Design | "No makeup is co-optimal under both methods" has no demonstrated mechanism without a budget. The build problem may be a delayed lookup once all six ingredients are held. The balance table is stale (gate concerns 2, 3) | Regenerate the balance table first. Name the replacement pressure before tuning (CD-SYSTEMS). The GDD enumerates all 30 cases and names the interaction that separates each method's best makeup |
 | Methods | Design | Pillar 2 and the second half of the hook have no play evidence; the second method has never been played. Each method's best makeup resembled the other's theme (CD-PLAYTEST concerns 1, 3) | Play both methods in one session as the first MVP smoke test. Ask a tester which makeup they expected to be best |
-| Tending | Design | Undesigned and untested, yet in the 30-second loop and pillar 4. Capped yield may still favour the present player | The concept's two constraints are written into the GDD as acceptance criteria. Validator enumeration proves seal invariance |
+| Tending | Design | Designed (#10, Approved 2026-11-21) but untested, yet in the 30-second loop and pillar 4. Capped yield may still favour the present player | The concept's two constraints are written into the GDD as acceptance criteria. Validator enumeration proves seal invariance |
 | Modifier pipeline and recompute | Technical | Bottleneck for method, Foundation, tending, breakdowns and validation. The previous attempt's recompute was a fixed-point cycle | One ordered pass, closed targets, no modifier of a modifier. Order of operations fixed by ADR before code |
 | Activity slot, rest and away time | Technical | Away-time edge cases (cap, clock skew, an input running out mid-gap) | One `advance(state, dt)` for live and away time. Backwards clocks clamped. Time-accounting tests |
 | Content validator and balance enumeration | Scope | Validator cost grows with methods × reforge × realms | Static checks on patched data plus monotone reachability from commit states. Revisit at the vertical slice when reforge adds states |
@@ -482,17 +489,17 @@ session. Wave B starts after the checkpoint, and its order can change on what th
 | Metric | Count |
 |--------|-------|
 | Total systems identified | 20 |
-| Design docs started | 1 |
-| Design docs reviewed | 0 |
-| Design docs approved | 0 |
-| MVP systems designed | 1/15 |
+| Design docs started | 15 |
+| Design docs reviewed | 15 |
+| Design docs approved | 15 |
+| MVP systems designed | 15/15 |
 | Vertical Slice systems designed | 0/3 |
 
 ---
 
 ## Next Steps
 
-- [ ] Regenerate the forge prototype's balance table under the current rules
+- [x] Regenerate the forge prototype's balance table under the current rules (done 2026-11-20 in Forge and proving, S9)
 - [ ] Update the concept's Scope Risks (timebox 4 → about 9 weeks) and its MVP timeline row ("Design: 8–9.5 weeks at 12 h/week; build: re-estimated after `/create-architecture`")
 - [ ] Decide the rest of the producer's candidate cut order and the review budget (Producer Note)
 - [ ] Wave A checkpoint: playable forge and methods with real source records stubbed in behaviour, the goal line and instruction on the forge screen, and both methods played. Decide tending's tier from it

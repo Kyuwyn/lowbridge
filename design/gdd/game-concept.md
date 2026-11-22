@@ -1,7 +1,7 @@
 # Game Concept: The Furnace Road (working title)
 
 *Created: 2026-11-19*
-*Status: Under Review — revised three times on 2026-11-19 after `/design-review`; the third revision awaits re-review*
+*Status: Under Review — revised four times after `/design-review` (three on 2026-11-19, one on 2026-11-20); the fourth revision awaits re-review*
 *Repository: `lowbridge` (restarted from scratch on 2026-11-19; the previous attempt is in `archive/2026-11-19/` and is not binding)*
 
 Rule numbers in this document ("rule 12") refer to the numbered design rules in
@@ -76,20 +76,21 @@ method is what makes forging it twice worthwhile.
 
 - Players plan a forge backwards: pick the Foundation they want, then work out which routes supply it under their method.
 - Players compare makeups and discover that an ingredient that is weak under one method is strong under another.
-- Players switch between tending actively for speed and leaving the game to accrue, depending on the time they have.
-- Players replay the first forge under the other method to see what changes.
+- Players choose whether to tend the running activity (faster, gives something up) or leave it at its base rate, and leave the game to accrue when time is short. Tending persists while they are away.
+- Players replay the first forge under the other method to see what changes (in the MVP by the fast new game; in the full game by a route designed with reforge, see Open Questions).
 
 ### Core Mechanics (Systems we build)
 
 1. **The forge.** A realm breakthrough ("Foundation") assembled from exactly N distinct ingredients out of M (2 ≤ N < M). Its makeup sets resource caps and affinities.
    - *Measure.* A Foundation is measured in **seals**. Each door of the next realm is tested by one proving fight, and the fight's result is that door's tier (shut 0, open 1, wide open 2). A Foundation's quality is its seal total.
-   - *Proving.* Proving fights are deterministic (rule 83) and read only the Foundation and the method (no carried items or consumables). They run as one step at forge time, outside the activity slot.
-   - *Preview.* The forge preview shows a makeup's seals only when every ingredient in it is in hand; until then it shows what each held ingredient contributes under the method. Comparing makeups therefore costs gathering time: the player chooses which ingredients to gather first, and gathering all M takes longer than gathering the N a plan needs.
+   - *Proving.* Proving fights are deterministic (no randomness gates content, so rule 83's pity does not apply) and read only the Foundation and the method (no carried items or consumables). They run as one step at forge time, outside the activity slot.
+   - *Consumption.* Forging uses up the N chosen ingredients; the other held ingredients stay in hand. An ingredient gathered only to preview a makeup that is not forged is work this forge does not repay, so over-gathering has a price. Time alone is not scarce here (no clock, away progress), so the price must be shown, not assumed: the forge design document states what one extra ingredient costs against the time a plan saves, and the balance table shows that gathering all M is not the dominant route. If it is, the preview rule is revisited (pillar 3).
+   - *Preview.* The forge preview shows a makeup's seals only when every ingredient in it is in hand; until then it shows what each held ingredient contributes under the method. The method-choice view before the commit may list what each method changes, `contrib` changes included as deltas and never as absolute values (amended 2026-11-20), so the Preview rule limits only the forge screen's seal display. Comparing makeups therefore costs gathering time: the player chooses which ingredients to gather first, and gathering all M takes longer than gathering the N a plan needs.
    - *Trade-off.* The trade-off lives inside the forge and in the order of gathering, never in a scarce budget. Sourcing costs time only, and any number of distinct ingredients can be held at once, so no makeup is ruled out by storage; the caps of mechanic 5 limit the resources activities consume and produce, not which ingredients are held. The choice comes from how ingredients interact (affinity clashes, caps). No makeup is co-optimal under both methods.
    - *Supply.* No source runs out, so tending yield never enlarges a finite supply.
-2. **Methods.** One equipped cultivation method. It changes what each ingredient contributes at the forge, and what other systems pay: which routes work and which sources yield which ingredient. A method re-prices crafting recipes but never removes one. The method is chosen freely until the player commits to it with an explicit step ("Begin circulating [method]") that names what the commit closes and how to redo it (rule 54). Gathering starts after the commit, so the lock never fires on its own or while the player is away. After the commit the method is fixed for the run in the MVP. The price of switching later is designed together with reforge.
+2. **Methods.** One equipped cultivation method. It changes what each ingredient contributes at the forge, and what other systems pay: which routes work and which sources yield which ingredient. A method may re-price a route or switch it off, a crafting recipe included (amended 2026-11-20, third design review of Content records and schema); pillar 4's guarantee, checked by the validator, is the only limit on switching routes off: under every method each ingredient keeps two sources, one with no fight anywhere in its input chain, and that fightless source stays within the price ceiling (fourth design review of Content records and schema, 2026-11-20). In the MVP no method re-prices: a method only feeds or quenches an ingredient's contribution and opens sources, and re-pricing is reconsidered for the Vertical Slice (`methods.md` W3, designer 2026-11-20). The method is chosen freely until the player commits to it with an explicit step ("Begin circulating [method]") that names what the commit closes and how to redo it (rule 54). Gathering starts after the commit, so the lock never fires on its own or while the player is away. After the commit the method is fixed for the run in the MVP. The price of switching later is designed together with reforge.
 3. **Three gathering routes.** Crafting, an auto-resolved fight and a dungeon of chained fights, each a source of forge ingredients.
-4. **One activity slot with tending.** One thing runs at a time. An activity runs until it cannot continue (an input runs out or its output is at cap) or the away-time cap is reached, counted from the player's last input; then rest fills the slot (rule 23). The same rule applies live and away. Tending is an optional, discrete choice on the running activity, with no repeated, held or timed input. It raises speed and yield, each up to a stated ceiling; untended, the activity runs at its base rate. What tending gives up, and how it behaves while away, are set in the tending design document under two constraints: tending gives something up, and it never lapses merely because the player leaves.
+4. **One activity slot with tending.** One thing runs at a time. An activity runs until it cannot continue (an input runs out or its output is at cap) or the away-time cap is reached, counted from the player's last input; then rest fills the slot (rule 23). The same rule applies live and away. Tending is an optional, discrete choice on a gatherer, whether to heap it, with no repeated, held or timed input. It raises speed (read as output per minute) and yield, each up to a stated ceiling; untended, the activity runs at its base rate. What tending gives up, and how it behaves while away, are set in the tending design document under two constraints: tending gives something up, and it never lapses merely because the player leaves.
 5. **Capped resources.** Everything starts small and capped, and bills are sized to most of a cap (rule 18).
 
 ---
@@ -118,7 +119,7 @@ player.
 
 ### Flow State Design
 
-- **Onboarding curve**: The goal is visible from the first screen as one line (rule 99): the empty forge slots, the three doors and the seals they can earn. Text supplements this; it does not carry it. The prototype's one tester lost a whole run to not understanding the task, so this is a requirement. The first cap is hit within a minute and the first ingredient is in hand within five (rule 17). Both methods are visible from the start, with what each changes shown side by side, and the choice stays open until the player commits to one.
+- **Onboarding curve**: The goal is visible from the first screen as one line (rule 99): the empty forge slots, the three doors and the seals they can earn. Text supplements this; it does not carry it. The prototype's one tester lost a whole run to not understanding the task, so this is a requirement. The first cap is hit within a minute and the first ingredient is in hand within five (rule 17). Both methods are visible from the start, with the routes and prices each changes and which ingredients' contributions each changes shown side by side. Before the commit, a method that adds to a contribution shows its delta on the affected ingredient and affinity, and a method that sets one shows only that it changes it. Absolute contribution values appear only once an ingredient is in hand, so the build cannot be solved on paper before gathering. The choice stays open until the player commits to one.
 - **Difficulty scaling**: Each realm's forge asks for more ingredients from more routes; the challenge is planning, not reflexes.
 - **Feedback clarity**: Bars against caps, a log, and a forge screen that shows the chosen ingredients, what each contributes and, once every ingredient in the makeup is in hand, the seals it would earn. Every value a method changes is marked, and every number can show its breakdown (rule 97).
 - **Recovery from failure**: A lost fight costs time only (rule 27). A weak forge can be redone: by a fast new game in the MVP, and by reforging from the vertical slice on. The fast new game is a test affordance for the MVP, not a reset loop; the full game never asks the player to start over.
@@ -130,12 +131,12 @@ player.
 ### Moment-to-Moment (30 seconds)
 
 The player chooses the next action for the one activity slot (gather, refine, fight a
-floor), nudges whatever is running, and spends a resource before its cap stops the activity that fills it. It is
+floor), chooses whether to heap whatever gatherer is running, and spends a resource before its cap stops the activity that fills it. It is
 satisfying because caps start small and fill fast, so there is always something to spend
 (rule 18). When the running activity can no longer continue, rest fills the slot by itself
 (rule 23); stopping tending only returns the activity to its base rate.
 
-Tending raises speed and yield, each up to a stated ceiling. It never raises the quality
+Tending raises speed (output per minute) and yield, each up to a stated ceiling. It never raises the quality
 ceiling of a forge: every makeup earns the same seals whether or not the player tended.
 Tending is a discrete choice that gives something up and never lapses because the player leaves; what that choice is, concretely, is still to be designed.
 
@@ -149,7 +150,8 @@ which route supplies an ingredient under the method already chosen.
 
 One forge and its proving. The natural stopping point is a finished Foundation, measured
 in seals, or later a reforge. The reasons to come back are the new
-realm's caps, one visible locked source, and what the last activity produced while away.
+realm's caps, one visible locked source, and the stores the last run filled, with the breath
+held for the next.
 
 ### Long-Term Progression
 
@@ -201,7 +203,7 @@ some methods, this pillar picks the second.
 
 ### Pillar 4: No dead ends, no attention tax
 
-- Every ingredient keeps at least two sources under every method, one of them needing no fight anywhere in its input chain. Where this conflicts with pillar 2, pillar 4 wins: a method may re-price a source but never take away an ingredient's last fightless source.
+- Every ingredient keeps at least two sources under every method, one of them needing no fight anywhere in its input chain. Where this conflicts with pillar 2, pillar 4 wins: a method may re-price a source but never take away an ingredient's last fightless source, and the re-priced fightless source stays within a stated price ceiling of the ingredient's other sources (set in the forge design document, checked by the validator), so the guarantee is not nominal.
 - Tending is optional and discrete, and buys speed and yield, each up to a stated ceiling, never a higher quality ceiling: a makeup's seals are identical tended or untended. The ceilings are set in the tending design document.
 - Any forge can be redone for a stated price, and a reforge never drops a realm.
 
@@ -257,7 +259,7 @@ with soft joins.
 | Hundred Days (筑基) | Cultivation vocabulary on Arcanum's spine; evidence for strict content validation (rules 46, 51, 52) | No spendable lifespan; a tree with load-bearing edges | The nearest existing game, and a record of what goes wrong without a validator |
 
 **Rules this concept follows:** 2, 6, 17, 18, 23, 26, 27, 49, 70, 71, 72, 74; from
-Hundred Days 46, 51, 52, 54; from Magic Research 2 83, 97, 99.
+Hundred Days 46, 51, 52, 54; from Magic Research 2 97, 99.
 
 **Stated divergences from *copy* rules**
 
@@ -308,7 +310,7 @@ concept. Mitigations adopted as constraints for the architecture stage:
 - The "tending never raises the quality ceiling" rule is enforced two ways: by the schema (no tending modifier can target a field that a seal is computed from) and by enumeration (for all makeup-and-method cases, seals with tending equal seals untended). No simulation bot is needed.
 - One deterministic `advance(state, dt)` serves live and away time: an activity runs until it cannot continue or the away-time cap, then rest. Backwards clocks are clamped.
 - The save holds only non-derived state and is versioned from the first build.
-- The validator splits into static checks on patched data (two sources per method, one with no fight in its input chain; every ingredient changes at least one seal under at least one method) and reachability by enumeration. Obtainability is monotone after the method commit. The commit is the only action that closes anything (the other method's choice and what it would have opened), and gathering starts only after it. After the commit no action closes a source or consumes a one-time unlock, so checks run from each method's commit state cover every reachable state.
+- The validator splits into static checks on patched data (two sources per method, one with no fight in its input chain and within the price ceiling; every ingredient changes at least one seal under at least one method) and reachability by enumeration. Obtainability is monotone after the method commit. The commit is the only action that closes anything (the other method's choice and what it would have opened), and gathering starts only after it. After the commit no action closes a source or consumes a one-time unlock (forging uses up held ingredients, never a source), so checks run from each method's commit state cover every reachable state.
 - One architecture document and a short must/never list exist before any code; changes to the rules core need an ADR.
 
 ---
@@ -360,6 +362,9 @@ For the system design documents, from the forge prototype and the design review 
 - Are a Foundation's stats fixed at forge time, or recomputed under the current method?
 - Do Foundations stack across realms, or does only the latest count?
 - What does switching method cost after the commit? Designed with reforge.
+- How does a player of the full game try the other method before reforge exists? The MVP uses a fast new game, which the concept calls a test affordance, not a feature.
+- What do gathering fights read, since no Foundation exists yet when they run (proving fights read the Foundation and the method)? How does a fight's result map to a door tier (shut 0, open 1, wide open 2)?
+- Does gathering all M ingredients dominate once forging consumes the chosen N? The balance table answers (see Consumption under Core Mechanics 1).
 - What are the tending ceilings for speed and for yield, and what does tending give up?
 - How does the player see that a better Foundation exists? The prototype's tester forged a 3 when a 4 existed and did not look for it.
 - How does the tint show the direction of a change, and a recipe that a method removes?
@@ -381,7 +386,7 @@ verdict, not the tester's impression.
 | ---- | ---- |
 | States the goal | Within two minutes of starting, the tester can say what they are trying to do |
 | Forges unaided | A Foundation is forged within 60 minutes with no help from outside the game |
-| Compares before forging | At least three full makeups are previewed before the first forge |
+| Compares before forging | At least three full makeups are previewed before the first forge, and the makeup forged is one of them |
 | Comes back for the other method | A run under the other method is started in the same session, unprompted |
 | Solves it differently | The second method's Foundation uses a different makeup from the first |
 
@@ -395,7 +400,7 @@ neither this concept nor the balance table; the design review's QA lead asked fo
 **Required for MVP**:
 1. One realm ending in one forge, built from exactly four distinct of six ingredients.
 2. Two methods that change what ingredients contribute at the forge and how they are sourced. The method is free to change until the player commits to it.
-3. Each ingredient with two sources, one needing no fight: one crafting station, one auto-resolved fight, and a dungeon of three chained fights on the same resolver. Crafting is the fightless floor: a method may re-price a crafting recipe but never remove one; methods add and remove fight and dungeon routes, which pay a premium over crafting. A method that removes an ingredient's fight or dungeon route gives that ingredient another source, so it keeps two (pillar 4).
+3. Each ingredient with two sources, one needing no fight: one crafting station, one auto-resolved fight, and a dungeon of three chained fights on the same resolver. Crafting is the usual fightless floor: a method may re-price a crafting recipe or switch it off only while that ingredient keeps another fightless source within the price ceiling (mechanic 2, amended 2026-11-20); methods add and remove fight and dungeon routes, which pay a premium over crafting. A method that removes an ingredient's fight or dungeon route gives that ingredient another source, so it keeps two (pillar 4).
 4. One activity slot with tending and auto-filling rest; about eight capped resources.
 5. The content validator (schema, the pillar 4 static checks, reachability).
 6. A save, away progress (the activity continues until it cannot or the away-time cap, then rest), and a fast new game so the other method can be tried.
@@ -403,7 +408,7 @@ neither this concept nor the balance table; the design review's QA lead asked fo
 8. No hover-only interaction. The phone layout itself waits for the vertical slice.
 
 All 30 makeup-and-method cases (15 makeups × 2 methods) are enumerated in a balance table
-for the MVP; the tending and reachability checks run over them by enumeration; no simulation bot.
+for the MVP (the prototype's table predates the forge rules and is regenerated first, see Next Steps); the tending and reachability checks run over them by enumeration; no simulation bot.
 
 **Explicitly NOT in MVP** (defer to later):
 - Reforge (vertical slice).
@@ -441,6 +446,8 @@ Stopping at the MVP is a graceful fallback: one realm ending in a forge is a com
 | Design review (full) | 2026-11-19 | NEEDS REVISION | Six concept-level decisions made and applied the same day |
 | Design review (full, re-review) | 2026-11-19 | NEEDS REVISION | Three decisions applied the same day: the trade-off lives inside the forge; the measure is seals 0–6, one proving fight per door; the designer's run is a smoke test (UNTESTED). Method lock made an explicit commit. Awaiting a targeted re-check, not a full panel |
 | Design review (lean, re-review) | 2026-11-19 | NEEDS REVISION | The prior four blockers closed. Two fixes applied the same day: the preview shows seals only for makeups whose ingredients are in hand; validator monotonicity holds from each method's commit state. Also: pillar 2 says routes, not recipes; tending gives something up and never lapses on leaving; a removed route is replaced |
+| Design review (lean, re-review 2) | 2026-11-20 | NEEDS REVISION | Prior blockers closed; one new: over-gathering was free. Applied the same day: forging consumes the chosen ingredients and the forge document must show gathering all M is not dominant; side-by-side view hides contribution values; fightless source held to a price ceiling; stale tending wording and the rule 83 citation fixed; three open questions added |
+| Wording amendments (with the Interface shell spec, #13) | 2026-11-21 | Designer-approved | Mechanic 4 and the Core Loop read "heap whatever gatherer is running", with speed read as output per minute (`tending.md` Open Question 1). Session-Level reads "the stores the last run filled, with the breath held for the next" (`activity-slot-rest-and-away-time.md` Open Question 2) |
 
 Recorded designer decisions against reviewer advice:
 
@@ -456,7 +463,8 @@ The core mechanic is unproven, so the path is prototype-first.
 - [x] Configure the engine and platform targets (`/setup-engine`): done 2026-11-19, web stack
 - [x] **Prototype the forge** (`/prototype forge`): done 2026-11-19, PROCEED with noted concerns
 - [x] Review this concept (`/design-review`): done three times on 2026-11-19 (two full, one lean), NEEDS REVISION each time, revised the same day
-- [ ] Re-review the third revision (`/design-review design/gdd/game-concept.md --review lean`)
+- [x] Re-review the third revision: done 2026-11-20 (lean), NEEDS REVISION, revised the same day
+- [ ] Re-review the fourth revision (`/design-review design/gdd/game-concept.md --review lean`)
 - [ ] Regenerate the forge prototype's balance table under the current rules (no day budget; seals previewed only with ingredients in hand) before the forge design document
 - [ ] Producer re-estimate of the tiers after the proving fights were added
 - [ ] Write the one-page interface style sheet (`/art-bible`)
