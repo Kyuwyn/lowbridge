@@ -231,12 +231,13 @@ commit, which turns marks solid, is #7's action in #15's dialog, not an exit of 
 - Neutral glyphs are drawn in ink and never take the tint. Their silhouettes must stay distinct
   from both method classes and from #13's and #9's state glyphs (sealed, short, held, full,
   depth, verdict). #13's glyph sheet checks this against this table.
-- **Glyphs other specs draw**, under the same constraint: the four affinity glyphs (Cinder, Jade,
-  Bark, Gale; #6 Visual/Audio) and the door-tier glyphs (shut, open, wide open; #5 and #6 put
-  them on #14 and #15 together). Both are #15's to draw, in ink and never tinted. A door tier
-  must not use a gate shape. The open notch and the closed glyph are gates, and "open" names
-  both a method's verb and a door's tier, so a shared shape would make a score read as a
-  method's act (Open Questions 12).
+- **Glyphs other specs draw**, under the same constraint: the four affinity glyphs (Cinder ▲,
+  Bark ▼, Jade ■, Gale ◆, filled solids with opposed pairs inverted; #6 Visual/Audio, #15 FS11)
+  and the door-tier glyphs (shut ○○, open ●○, wide open ●●; #5 and #6 put them on #14 and #15
+  together; #13 C1) and the withheld glyph (– –; #15 FS11). All are #15's to draw, in ink and
+  never tinted. A door tier must not use a gate shape. The open notch and the closed glyph are
+  gates, and "open" names both a method's verb and a door's tier, so a shared shape would make a
+  score read as a method's act (Open Questions 12).
 
 **MK3. Verb notches show the direction.** A notch is a 0.45 em mark at the glyph's inline-end
 baseline corner, in the same colour and form (solid or hollow) as its glyph. The notches are
@@ -265,8 +266,7 @@ shared by every method, so a new method adds one glyph and no notch.
   commit (the method-choice view and the commit dialog), the other method after the commit
   (closed marks, MK5), and the last-run line's method (#11 UI Requirement 5), which describes a
   past run even when it is the same method.
-- Before the commit, whether a hollow glyph takes a colour is the Forge screen's (#15 owns the
-  accent before the commit; systems index paragraph 15). This spec requires only that the
+- A hollow glyph takes no colour before the commit (#15 FS12). This spec requires only that the
   hollow form is drawn, so the view reads in greyscale.
 - In greyscale, solid versus hollow tells the circulating method apart from any other glyph on
   screen.
@@ -290,7 +290,8 @@ shared by every method, so a new method adds one glyph and no notch.
   `reveal` (#9), so all nine routes are visible from the first screen.
 
 **MK6. One accent.** After the commit the only hue on screen is the circulating method's tint
-(concept principle 1). It is used on solid glyphs, notches, channel underlines and #13's
+(concept principle 1). It is used on solid glyphs, notches, channel underlines, the forge-moment
+channel lines (FS15; decorative, at most 400 ms, removed under reduced motion) and #13's
 persistent identity, and on nothing else. A hollow glyph never takes a tint after the commit.
 Heap state, spill, full stores, verdicts, tiers and seals use no hue (#3, #6, #9, #10).
 
@@ -330,7 +331,11 @@ amounts in the log. No modifier can act on them and they have no base, so they h
 breakdown. Their container shows the rule-derived number that bounds them, with its breakdown:
 the cap beside held, the duration beside progress. This reads the index's "every number opens a
 breakdown of base and modifiers" as every number that *has* a base and modifiers. It is
-recorded here as an interpretation, for `/ux-review` to check.
+recorded here as an interpretation, which `/ux-review` confirmed (Open Questions 14).
+
+**Stored copies** also show bare. A past run's tiers and seals, kept in #11's `lastRun` and shown
+by #15's last-run line (FC4), are a stored copy with no parts, and no rule reads them (#11 D7.2).
+They are not rule-derived on this screen, so they carry no breakdown (designer, 2026-11-22).
 
 **BD2. Reach: inside the record (D3).**
 
@@ -387,12 +392,12 @@ breakdown never shows what the owner withholds. On the forge screen it reads onl
 `preview` returns (#6 G7), so a plan that is not previewable has no seal, score, tier or cap
 breakdown, and its held part shows totals, affinities after clash and stats only.
 
-| Composed number (words provisional; #15 names them, #6 UI Requirement 8) | Owner | Parts and operation lines, in the owner's order |
+| Composed number (words: #15 FS10, #6 UI Requirement 8) | Owner | Parts and operation lines, in the owner's order |
 |---|---|---|
-| An affinity total | #6 S1, `foundationStats` | Each ingredient's contribution (a trail; marked where it is in `changed(m)`) › |
-| An affinity after its clash | #6 S2 | The total ›; "Clash with {opposite} {opposite's total}" and the amount taken off, which the owner returns (#6 Visual/Audio: "a clash is never shown only as a lower number"). The words never state the share ("half"), because `CLASH_BP` is a tuning knob |
+| {affinity} gathered | #6 S1, `foundationStats` | Each ingredient's contribution (a trail; marked where it is in `changed(m)`) › |
+| {affinity} after clash | #6 S2 | The total ›; "Clash with {opposite} {opposite's total}" and the amount taken off, which the owner returns (#6 Visual/Audio: "a clash is never shown only as a lower number"). The words never state the share ("half"), because `CLASH_BP` is a tuning knob |
 | A Foundation stat (might, guard, vigor, speed) | #6 S3 | "Body" (`FOUNDATION_BASE`); the affinity after its clash ›; a limit line if `STAT_MAX` cuts it |
-| A door's proving score and tier | #6 S4, #5 F7 | The Foundation's four stats (each ›) against the door opponent's four; the decider in stat terms (#5); the two thresholds and the tier word |
+| proof and tier | #6 S4, #5 F7 | The Foundation's four stats (each ›) against the door opponent's four; the decider in stat terms (#5); the two thresholds and the tier word |
 | Seals | #6 S5 | Each door's tier ›, then the sum |
 | A route's projection (verdict, Life kept) | #5, #9 | The baseline combatant's four stats against the creature's four; the decider; Life kept with its base ("keeps 19 of 100 Life"). The verdict carries no hue (#9) |
 | A cap in the forge preview | #6 `foundationEntries` | Laid out as a trail: the base cap, a "Foundation" label, one line per entry by ingredient |
@@ -516,16 +521,16 @@ Ember Breath, #6 S6 example). No line carries a method mark (MK1.3).
 ┌──────────────────────────────────────────┐
 │ ‹ Might 135                              │
 │ Cinder after clash                 115   │
-│    Cinder total                130   ›   │
+│    Cinder gathered             130   ›   │
 │    Clash with Bark 30              −15   │
 │    ──────────────────────────────────    │
 │    Total                           115   │
 └──────────────────────────────────────────┘
-              │ activate "Cinder total"
+              │ activate "Cinder gathered"
               ▼
 ┌──────────────────────────────────────────┐
 │ ‹ Cinder after clash 115                 │
-│ Cinder total                       130   │
+│ Cinder gathered                    130   │
 │    Cloud Lotus                  25   ›   │
 │    Echo Jade                    40   ›   │
 │    Ember Marrow           35 [EB↑]   ›   │
@@ -730,7 +735,7 @@ only targets this spec adds are part lines and back lines. Opening and closing t
   a tap would not show.
 
 **Navigation to other specs:** opening and closing go to #13's container
-(`design/ux/interface-shell.md` C16, aligned with this spec at commit 1eca986). The forge screen's hosts are #15's (not yet written). There are no other
+(`design/ux/interface-shell.md` C16, aligned with this spec at commit 1eca986). The forge screen's hosts are #15's (FC5, FC8f, FC9a, FC12). There are no other
 targets.
 
 ---
@@ -760,7 +765,7 @@ below is read. The drill stack is #13's interface state and is never saved.
 | The heap choice `T` | Tending #10 | Read | Heap lines (W5) |
 | Room in a store | #3 | Read | BD5 row |
 | The mark table: glyph path, silhouette class and tint tokens per method id | **This spec** (MK10), an interface constant | Read | Not content (#7 W2). Checked by AC-14-15 |
-| Words: "Base", "Total", "Foundation", "{method} feeds", "{method} quenches", "{method} changes", "Opened by {method}", "Opens under {method}", "Heaped · {source}", "Limit (highest allowed)", "Limit (lowest allowed)", "Base shown once {ingredient} is in hand", "Clash with {opposite} {total}", "Body" | **This spec**, keyed interface strings | Read | Localization. "Opens under {method}" is #9's text, reused |
+| Words: "Base", "Total", "Foundation", "{method} feeds", "{method} quenches", "{method} changes", "Opened by {method}", "Opens under {method}", "Heaped · {source}", "Limit (highest allowed)", "Limit (lowest allowed)", "Base shown once {ingredient} is in hand", "Clash with {opposite} {total}", "Body", "{affinity} gathered", "{affinity} after clash", "proof" | **This spec**, keyed interface strings | Read | Localization. "Opens under {method}" is #9's text, reused. "{affinity} gathered", "{affinity} after clash" and "proof" are #15 FS10 |
 | Number format (grouping, signs, durations) | Interface shell #13 | Read | BD4 |
 
 **Architecture flags.** None of this needs the interface to own state. Three needs go to ADRs
@@ -1033,7 +1038,7 @@ a human tester with the build. Tests use the MVP's provisional content (#6 S9, #
 **Navigation**
 - [ ] **AC-14-12** [manual] On the forge screen, with Echo Jade, Ironbark Heartwood, Ember Marrow
   and Cloud Lotus held under Ember Breath:
-  - open the plan's Might 135, then drill into "Cinder after clash 115", then "Cinder total
+  - open the plan's Might 135, then drill into "Cinder after clash 115", then "Cinder gathered
     130", then "Ember Marrow 35". That shows Base 25, "Ember Breath feeds +10" and Total 35;
   - three back activations return to Might 135, and each time focus is on the line that was
     opened;
@@ -1093,9 +1098,9 @@ browser harness exists)
 | 9 | **The clash amount and stat limit cuts in `foundationStats`.** Its result must carry each affinity's clash taken and any `STAT_MAX` cut, because `max(0, …)` makes them impossible to derive from the shown numbers (BD5) | Forge and proving (#6), result-type ADR | Before epics |
 | 10 | **Addressing a trail.** How the interface gets the trail of a shown value | Modifier pipeline (#2) ADR 2 | Before epics |
 | 11 | **The hidden base after consumption.** BD7 reads the ingredient's high-water mark (#1 F1), so a base stays shown after the forge consumes the ingredient. #6 to confirm that this matches "never shown before the ingredient is in hand" | Forge and proving (#6), Content records (#1) | `/ux-review` of this spec |
-| 12 | **What #15 still owes.** The accent before the commit: whether hollow glyphs in the method-choice view and the dialog take a colour. The view's and the dialog's layout. The words for composed numbers (BD5). The affinity and door-tier glyphs, in ink, distinct from MK2's glyphs and never gate-shaped (MK2) | Forge screen (#15) | #15 UX spec |
-| 13 | **The commit moment split.** #14 animates marks and underlines; #13 changes the shell's tint and persistent identity; #15 closes the dialog. All run on `committed`, and none waits for another. *#13's half resolved 2026-11-21 (commit 1eca986): its sweep ends within 400 ms on the same event.* #15's half is open | #15 | #15 UX spec |
-| 14 | **BD1's reading of "every number".** State numbers (held, progress, the rest bank, log amounts) have no breakdown, because they have no base and no modifiers | `/ux-review` | `/ux-review` of this spec |
+| 12 | **What #15 still owes.** *Resolved 2026-11-22 by #15 (`design/ux/forge-screen.md`, FS10–FS12, FC5, FC12):* Hollow glyphs take no colour before the commit (FS12); words for composed numbers are "gathered", "after clash", "proof" (FS10); the affinity glyphs are Cinder ▲, Bark ▼, Jade ■, Gale ◆, and the withheld glyph is "– –" (FS11); the view's layout is FC5 and the commit dialog is FC12. | Forge screen (#15) | #15 UX spec |
+| 13 | **The commit moment split.** #14 animates marks and underlines; #13 changes the shell's tint and persistent identity; #15 closes the dialog. All run on `committed`, and none waits for another. *#13's half resolved 2026-11-21 (commit 1eca986): its sweep ends within 400 ms on the same event.* *#15's half resolved 2026-11-22 by #15 (`design/ux/forge-screen.md`, Transitions & Animations):* the dialog closes in the confirm's frame and the forge moment plays within 400 ms on the same event. | #15 | #15 UX spec |
+| 14 | **BD1's reading of "every number".** *Resolved 2026-11-22 by `/ux-review` of #15 and the designer:* state numbers (held, progress, the rest bank, log amounts) have no breakdown, and nor does a stored copy such as #11's `lastRun` (BD1, Stored copies) | `/ux-review` | `/ux-review` of this spec |
 | 15 | **No interaction pattern library.** *Resolved 2026-11-21 by `design/ux/interaction-patterns.md`:* All five patterns are named there: Method glyph (IP8), Method mark (IP9), Closed mark (IP10), Number breakdown (IP6, IP7), Drill-down line (IP2). | UX (`/ux-design patterns`) | Before #15's spec, if possible |
 | 16 | **Later methods and re-pricing.** The *lower* notch is reserved for re-pricing (#7 Open Question 4). A third method takes an unused silhouette class (falling, coiling, branching, rippling), up to the concept's cap of six | Designer, Reforge (#16) | Vertical slice |
 | 17 | **Phone layout.** Marks and breakdowns already meet 390 px. #17 re-checks them in #13's narrow layout (pinned header, bottom tabs, bottom sheet; no drawer) | Phone layout (#17) | Vertical slice |
@@ -1106,6 +1111,6 @@ browser harness exists)
 |---|---|
 | GDD requirement coverage | **All covered.** Every hand-off to #14 found by grepping `design/gdd/*.md` for `#14`, "Method marks" and "breakdown" maps to a rule here: #1 R6.4, R7.2, F7, F8, "Before the commit", AC-U-1 and the UX flag (MK1, MK5, MK7, BD7, D5); #2 P8, P8.2.3, P8.3, P8.4, Visual/Audio, UI Requirements and Open Question 6 (BD3, BD4, MK3); #3's cap breakdown and unmarked cap lines (W3, MK1.3); #5 UI Requirement 3 and tier display (BD5, MK2); #6 G7, the clash, tiers and UI Requirement 7 (BD5, MK2); #7 Visual/Audio, UI Requirements 3, 4 and 6, the UX flag and Open Questions 4 and 7 (MK1–MK9, D5); #8 Visual/Audio 1 (MK1.3); #9's Closed state, Still Deep row and glyph distinctness (MK5, MK2); #10 D3.3 and Visual/Audio (BD4, MK8, W5); #11 UI Requirement 5 (MK4); systems index paragraph 14 (all four requirements). Closed during the check: R5.5's citation, AC-U-1's non-zero `set` (MK7), #6 G7's preview bound (BD5), and the tier and affinity glyph seam (MK2) |
 | New patterns for the library | Method glyph, Method mark, Closed mark, Number breakdown (trail and composed), Drill-down line. Named in `design/ux/interaction-patterns.md` (2026-11-21) |
-| Navigation mismatches | **#13: none.** Checked against `design/ux/interface-shell.md` at commit 1eca986 (another branch). Records open the container, numbers never do, the drill stack and back line match BD6, and Esc and close return focus to the record. **#15: not assessed**, because its spec is not written. The open seams are Open Questions 12 and 13 |
+| Navigation mismatches | **#13: none.** Checked against `design/ux/interface-shell.md` at commit 1eca986 (another branch). Records open the container, numbers never do, the drill stack and back line match BD6, and Esc and close return focus to the record. **#15: none.** Assessed against `design/ux/forge-screen.md`; no navigation mismatches. The open seams (Open Questions 12 and 13) are resolved above |
 | Accessibility gaps | The tier is Comprehensive, WCAG 2.2 AA. One checklist item, one-handed reach, waits on #17 (Open Questions 6) |
 | Missing empty states | None. Marks (Choosing), breakdowns (base-only, no numbers), closed rows (Choosing), the drill stack (depth 0) and composed numbers with no parts each have a defined empty form (States & Variants) |

@@ -249,7 +249,7 @@ rules.
 | 12 | Content validator and balance enumeration | Meta | MVP | Approved | design/gdd/content-validator-and-balance-enumeration.md | Content records and schema, Modifier pipeline, Resources and caps, Activity slot, Combat resolver, Forge and proving, Methods, Crafting route, Fight and dungeon routes, Tending, Save and run lifecycle |
 | 13 | Interface shell and goal line (inferred) | UI | MVP | Approved | design/ux/interface-shell.md | Content records and schema, Modifier pipeline, Resources and caps, Activity slot, Combat resolver, Forge and proving, Methods, Crafting route, Fight and dungeon routes, Tending, Save and run lifecycle |
 | 14 | Method marks and number breakdowns | UI | MVP | Approved | design/ux/method-marks.md | Modifier pipeline, Methods |
-| 15 | Forge screen (inferred) | UI | MVP | Designed | design/ux/forge-screen.md | Forge and proving, Methods, Method marks and number breakdowns, Save and run lifecycle |
+| 15 | Forge screen (inferred) | UI | MVP | Approved | design/ux/forge-screen.md | Forge and proving, Methods, Method marks and number breakdowns, Save and run lifecycle |
 | 16 | Reforge and post-commit method switch | Progression | Vertical Slice | Not Started | — | Forge and proving, Methods, Resources and caps, Save and run lifecycle |
 | 17 | Phone layout | UI | Vertical Slice | Not Started | — | Interface shell and goal line, Forge screen |
 | 18 | Accessibility and settings (inferred) | Meta | Vertical Slice | Not Started | — | Interface shell and goal line, Method marks and number breakdowns |
@@ -490,8 +490,8 @@ session. Wave B starts after the checkpoint, and its order can change on what th
 |--------|-------|
 | Total systems identified | 20 |
 | Design docs started | 15 |
-| Design docs reviewed | 14 |
-| Design docs approved | 14 |
+| Design docs reviewed | 15 |
+| Design docs approved | 15 |
 | MVP systems designed | 15/15 |
 | Vertical Slice systems designed | 0/3 |
 

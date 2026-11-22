@@ -1,6 +1,6 @@
 # UX Spec: Forge Screen
 
-> **Status**: Designed 2026-11-22, pending `/ux-review`
+> **Status**: Approved 2026-11-22 (lean `/ux-review`; findings in `design/ux/reviews/forge-screen-review-log.md`)
 > **Author**: designer + Claude (`/ux-design forge-screen`)
 > **Last Updated**: 2026-11-22
 > **System**: #15 in `design/gdd/systems-index.md` (MVP, UI, Wave A)
@@ -303,23 +303,23 @@ existing specs, P1). The library assigns the final numbers.
 | FC2 | Wave A goal line | F1 | Composite display | #13 C1, unchanged | Tap: Goal card | #13 single-use (C1) |
 | FC3 | Wave A instruction lines | F1 | Text | #13 C2, unchanged | No | #13 single-use (C2) |
 | FC4 | Last-run line | F2 | Text with glyphs | The last forged run's method, makeup, tiers and seals | No | #15 single-use |
-| FC5 | Method column | F3 | Grouped lines and a button | A method's hollow glyph and name, its feeds, quenches, opens and closes, then "Begin circulating {method}" | The button | **New: IP24 Method column**; lines use IP8, IP9, IP10; button IP15 |
-| FC6 | Headroom line | F4 | Text | "The best Foundation here holds {b} seals under {method}." and "Your best in hand: {h} seals." | No | **New: IP25 Realm-fact line** |
+| FC5 | Method column | F3 | Grouped lines and a button | A method's hollow glyph and name, its feeds, quenches, opens and closes, then "Begin circulating {method}" | The button | IP24; lines use IP8, IP9, IP10; button IP15 |
+| FC6 | Headroom line | F4 | Text | "The best Foundation here holds {b} seals under {method}." and "Your best in hand: {h} seals." | No | IP25 |
 | FC7 | Plan block | F5 | Group | "Plan · {k} of 4 chosen", the pick chips, the reason line or Forge | Chips; Forge | — |
-| FC7a | Pick chip | F5 | Native checkbox | An ingredient's name and "in hand" or "not yet"; checked when in the plan | Yes | **New: IP26 Pick chip** |
+| FC7a | Pick chip | F5 | Native checkbox | An ingredient's name and "in hand" or "not yet"; checked when in the plan | Yes | IP26 |
 | FC7b | Reason line | F5 | Text | Why the plan cannot be forged, in words | No | IP13's reason line |
 | FC7c | Forge button | F5 | Button | "Forge", only when the plan can be forged | Yes: opens FC11 | IP15 |
 | FC8 | Foundation preview | F6 | Composite display | The held part's affinities and stats; the withheld state, or each door's tier and proof, the seals and the widened stores | Its heading opens FC8f | — |
-| FC8a | Affinity line | F6, F9 | Text with glyph | "{glyph} {affinity} {gathered} − {clash} = {after clash} · {stat} {value}" | No | **New: IP27 Affinity line** |
-| FC8b | Withheld door rows | F6 | Text with glyph | The lead sentence; each door with "– –" and "not yet shown" | No | **New: IP28 Withheld preview** |
+| FC8a | Affinity line | F6, F9 | Text with glyph | "{glyph} {affinity} {gathered} − {clash} = {after clash} · {stat} {value}" | No | IP27 |
+| FC8b | Withheld door rows | F6 | Text with glyph | The lead sentence; each door with "– –" and "not yet shown" | No | IP28 |
 | FC8c | Door row | F6, F9 | Text with glyph | "{door} {tier glyph} {tier word} · proof {n} · {next threshold}"; in F9 also its `flavor` | No | IP11 |
 | FC8d | Seals line | F6, F9 | Text | "{s} of {2D} seals" | No | — |
 | FC8e | Widened stores | F6, F9 | Text lines | "Widens {store} {cap} → {new cap}" per store with an entry | No | — |
 | FC8f | Plan card | Overlay | #13's detail container | The plan's Foundation as #13's Goal card shows a forged one, every number with its breakdown | Part lines, named-record lines, close | IP1, IP2, IP6, IP7 |
 | FC9 | Affinity key | F7 | Text with glyphs | "▲ Cinder is might · ■ Jade is guard · ▼ Bark is vigor · ◆ Gale is speed" | No | — |
-| FC9a | Ingredient row | F7 | List row | Name, state words, the four contributions with marks, or the hidden-base line and the method's deltas | Name: Ingredient card | **New: IP29 Ingredient row**; marks IP9; hidden base #14 C10 |
+| FC9a | Ingredient row | F7 | List row | Name, state words, the four contributions with marks, or the hidden-base line and the method's deltas | Name: Ingredient card | IP29; marks IP9; hidden base #14 C10 |
 | FC9b | Route row | F7 | List row | One route paying a planned ingredient not in hand, led by its family word | Name: Source card; Start | IP13 |
-| FC10 | Makeup line | F8 | List row | "{s} of 6 seals · {four names}", each door's tier glyph, and "Plan this" or "In the plan" | "Plan this" | **New: IP30 Makeup line** |
+| FC10 | Makeup line | F8 | List row | "{s} of 6 seals · {four names}", each door's tier glyph, and "Plan this" or "In the plan" | "Plan this" | IP30 |
 | FC11 | Forge confirmation | Overlay | #13's dialog container | What the forge consumes, proves and widens; the headroom echo; the redo line | Cancel, Forge | IP3 |
 | FC12 | Commit dialog | Overlay | #13's dialog container | #7 W7.3's generated lines | Cancel, Begin circulating | IP3 |
 | FC13 | Forged view | F9 | Composite display | The Foundation from the snapshot | Its heading opens #13's Goal card | — |
@@ -339,7 +339,7 @@ existing specs, P1). The library assigns the final numbers.
   circulates the same method, the line is unchanged.
 - The method's glyph is **hollow and in ink**: it describes a past run (#14 MK4).
 - Read-only and not a record, because no rule reads `lastRun` (#11 D7.2). Its seals and tiers
-  are a stored copy with no parts, so they show bare (Open Questions, a reading of #14 BD1).
+  are a stored copy with no parts, so they show bare (#14 BD1, Stored copies).
 - It is shown whenever #11 holds `lastRun`, as the first block after the heading, in every phase.
   When #11 drops it on load (an unknown id, D7.3), the block is absent and nothing says so.
 
@@ -405,8 +405,8 @@ One column per method, in content order. Each column holds, in this order:
   1. "Needs a method committed": the rules core's refusal text (#6 G8.1, AC-G8-1);
   2. "Choose {n} more.", while fewer than four are chosen. This is the interface's own line,
      because the rules never see an incomplete plan (#6 G1, AC-G4-1);
-  3. "Needs {ingredient} in hand", one sentence for each chosen ingredient not held, in plan
-     order. The text is the rules core's (#6 G8.1); the result must name every missing
+  3. "Needs {ingredient} in hand", one sentence for each chosen ingredient not held, in
+     `realm.ingredients` order (FC4). The text is the rules core's (#6 G8.1); the result must name every missing
      ingredient, not the first (Data Requirements, architecture flags).
 - **FC7c Forge.** The button "Forge" (IP15) takes the reason line's place only when the plan is
   Forgeable (#6 States and Transitions: previewable, and the realm Open). It is **absent, not
@@ -1563,8 +1563,9 @@ specs for "#15", "forge screen" and "Forge screen" maps to a rule here.
 
 ## Changes needed in existing specs
 
-None of these is applied here. Each is for the owning document's next edit or the merge of this
-branch. **Line numbers are as of commit 359de97**, this branch's base.
+**Applied at merge on 2026-11-22**, with the designer's approval. Two differ from the rows below:
+P-1's patterns are catalogue rows that point here (library PD20), and 14-5's rename also reaches
+#14 line 524, AC-14-12 and the library's IP2 reference. **Line numbers are as of commit 359de97**, this branch's base.
 
 ### GDDs (G)
 
@@ -1572,7 +1573,7 @@ branch. **Line numbers are as of commit 359de97**, this branch's base.
 |---|---|---|---|
 | G-1 | `design/gdd/forge-and-proving.md` line 161 (G1 table, `preview`) and lines 996–999 (UI Requirements 2) | `preview`'s result for a previewable plan carries the Foundation entries, or each widened store's new cap. UI Requirements 2's "each widened store's new cap from `foundationEntries`" becomes "…, which `preview` returns" | Architecture flag 1: G7 stays a property of one pure function. #6's ADR 2 |
 | G-2 | Same file, line 156 (G1 table, `foundationStats`) | Its result carries each affinity's clash amount, beside the total and effective value | Architecture flag 2; #14 Open Questions 9. #6's ADR 2 |
-| G-3 | Same file, line 1111 (AC-G8-1) and G8.1 | A refused forge of a planned makeup names every ingredient not in hand, in plan order, not only the first | Architecture flag 3; FC7b. #6's ADR 2 |
+| G-3 | Same file, line 1111 (AC-G8-1) and G8.1 | A refused forge of a planned makeup names every ingredient not in hand, in `realm.ingredients` order, not only the first | Architecture flag 3; FC7b. #6's ADR 2 |
 | G-4 | Same file, line 229 (G4.2) | "the forge screen (#15) may keep it" becomes "the forge screen (#15) keeps it as interface state and never saves it (#15 FS13)" | FS13 |
 | G-5 | Same file, lines 874–876 (Edge Cases, a kept plan with an unknown id) | Note that it cannot arise while the plan is unsaved (#15 FS13). Keep the rule for a later saved plan | FS13 |
 | G-6 | Same file, line 1216 (Open Questions row 4, the headroom signal's form) | Resolved by #15 FS8 and FC6. The "does it help" half moves to #15 Open Questions 10 | FS8 |
@@ -1646,15 +1647,15 @@ this file) and lines 492 and 495 (Design docs started 15; MVP systems designed 1
 | 1 | **No player journey map.** The arrival contexts under Player Context on Arrival are reasoned from the concept and the GDDs. Author `design/player-journey.md` and check them | Designer | Before `/ux-review` of #13–#15 |
 | 2 | **No art bible.** The affinity and withheld glyphs are forms, not drawings. The forge's channel lines, their easing and the settle need drawing inside FS15's bounds and the silhouette rules (Accessibility, AR-V5) | Art bible (`/art-bible`), `art-director` | Before the vertical slice's visual pass |
 | 3 | **The Wave A tab wording.** If the checkpoint build has no view tabs, #13 C2's line "compare makeups on the Forge tab" points at nothing. Either the checkpoint has tabs, or its copy of C2 drops the tab words | Producer, with #13 | Before the Wave A build |
-| 4 | **BD1 and the last-run line.** Its tiers and seals show bare, because `lastRun` stores no parts (FC4). This reads #14 BD1 as covering live numbers only | `/ux-review`, with #14 Open Questions 14 | `/ux-review` of this spec |
-| 5 | **"Gathering times"** in #8 UI Requirements 4 is read as each route's duration as the road shows it (G-7) | #8's owner | At merge |
+| 4 | **BD1 and the last-run line.** *Resolved 2026-11-22 by the designer:* its tiers and seals show bare, because `lastRun` stores no parts and no rule reads it (#11 D7.2). #14 BD1 now states this exception (Stored copies) | `/ux-review`, with #14 Open Questions 14 | `/ux-review` of this spec |
+| 5 | **"Gathering times"** in #8 UI Requirements 4. *Resolved 2026-11-22 by #8 A3:* it reads "durations, as the road shows them" (G-7) | #8's owner | At merge |
 | 6 | **The architecture flags** (Data Requirements): `preview` returns the entries; `foundationStats` returns each clash; the forge's refusal names every missing ingredient; the method-choice view's lines carry their kind | #6's ADR 2; #7's ADR 1 | Before epics |
 | 7 | **One-handed reach.** The Plan card's back line sits at the top of a tall bottom sheet | Phone layout (#17) | Vertical slice |
-| 8 | **The MK6 amendment** (14-3). FS15 puts the tint on the forge's channel lines. If #14's owner refuses it, the lines draw in ink and FS15 is otherwise unchanged | #14's owner (designer) | At merge |
+| 8 | **The MK6 amendment** (14-3). *Resolved 2026-11-22:* the designer approved it, and #14 MK6 now lists the forge moment's channel lines among the tint's uses | #14's owner (designer) | At merge |
 | 9 | **The copy.** Every quoted string here is provisional (AC-15-39) | `writer` | Before the vertical slice |
 | 10 | **Does the headroom line help without steering?** Check, in the first MVP playtest, the signal "compares before forging" and whether players read "Your best in hand" as an instruction to keep looking or as pressure | Designer | First MVP playtest |
 | 11 | **Provisional constants.** `FORGE_SPLIT_MIN_PX` 600 (safe 520–720: below 520 each method column is under about 250 px and its change lines wrap to two or three lines; above 720, windows up to about 1224 px stack although both columns would fit). `FORGE_CHANNEL_MS` 240 and `FORGE_SETTLE_MS` 160, whose sum may not pass 400 (AR-V6) | Designer, with `art-director` | Vertical slice |
-| 12 | **"Pre-commit headroom signal"** (systems index, decision 4) is read as "before the forge", as ¶15 says, not "before the method commit" (FC6; Requirement Trace) | Designer | `/ux-review` of this spec |
+| 12 | **"Pre-commit headroom signal"** (systems index, decision 4). *Resolved 2026-11-22 by `/ux-review`:* the reading holds. It means before the forge, as ¶15 says, not before the method commit; before the commit both methods' bests are 4 and the line tells nothing (FC6; Requirement Trace) | Designer | `/ux-review` of this spec |
 
 ### Cross-reference check (`/ux-design` phase 5, 2026-11-22)
 

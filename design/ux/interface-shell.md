@@ -90,7 +90,7 @@ I choose a method" (AC-13-01).
 | With | This spec owns | The other spec owns |
 |---|---|---|
 | Method marks and number breakdowns (#14), written in parallel | The detail container: how it opens (tap, click or Enter on a record), where it sits, its drill-down stack and back line, how it closes, focus, line size. Which fields a card shows, and in what order. What opens it: records only (a source's name, a store, an ingredient, a door, the goal line, the method chip, the running line), never a number or a mark (#14 D3) | What a number breakdown shows inside the container, under each rule-derived number's own line: the base, each stage and its source, a clamp read as a limit (#2 P8), and a composed number's part lines (#14 BD1–BD9). What a method mark looks like on any value (in a row, a card or the goal line) and how it shows direction. The glyph sheet: each method's glyph, solid when circulating and hollow otherwise, and the neutral closed, heap and limit glyphs. **This spec designs none of #14's contents.** It reserves the space, hands the value to #14's renderer, and places #14's solid glyph on the method chip and its heap glyph on the heap toggle |
-| Forge screen (#15), later | The Forge view's place in the frame: a centre view beside the Road, with its own tab. The switch to the Road after the commit. The goal line and the instruction lines after the Wave A checkpoint. The dialog container. The persistent display of the Foundation (#6 UI flag) | Everything inside the Forge view: the method-choice view, the commit dialog's contents, plans, previews, the headroom signal, the forge confirmation, the forge's visual event, the `lastRun` line, and the accent before the commit |
+| Forge screen (#15, `design/ux/forge-screen.md`, Scope, Seams and Reference Rules) | The Forge view's place in the frame: a centre view beside the Road, with its own tab. The switch to the Road after the commit. The goal line and the instruction lines after the Wave A checkpoint. The dialog container. The persistent display of the Foundation (#6 UI flag) | Everything inside the Forge view: the method-choice view, the commit dialog's contents, plans, previews, the headroom signal, the forge confirmation, the forge's visual event, the `lastRun` line, and the accent before the commit |
 | Phone layout (#17), vertical slice | The narrow layout's zones, components and limits, which are a constraint from the MVP | Delivery and polish at the vertical slice. #17 may refine this layout. It may not take a rule 32 item off the narrow screen without amending this spec |
 | Accessibility and settings (#18), vertical slice | The accessibility floor stated under Accessibility | The tier, the settings (themes, text size), and everything beyond the floor |
 
@@ -211,7 +211,7 @@ Inside the shell:
 | Use here | #11 D8.3 | Loading, then the run, as on a page load |
 | A hidden tab shown again | `visibilitychange` or `pageshow` (#4 S9.3) | The run, advanced before the first paint, with an away summary if the gap was at least `AWAY_SUMMARY_MIN_MS` |
 | New run confirmed | The menu, or the Refused screen (#11 D6.2) | A fresh run in the Choosing phase. The log is cleared to "A new run begins.", and the Forge view opens |
-| Load save confirmed | The menu, or the Refused screen (#11 D9.2) | The imported run. Its gap since its own `lastSeen` plays as away time, with its away summary |
+| Load save confirmed | The menu, or the Refused screen (#11 D9.2) | The imported run, and the Forge view opens. Its gap since its own `lastSeen` plays as away time, with its away summary |
 
 | Exit destination | Trigger | Notes |
 |---|---|---|
@@ -336,6 +336,7 @@ The Pattern column names the pattern in `design/ux/interaction-patterns.md`.
     and glyph with their stats (#6 Visual/Audio: each also names its stat), each door's tier and
     `flavor` (#6 G13.4), and the seal total. Every number shows its breakdown under its own line,
     and the seals, each door's score and each stat drill down (#14 BD5, BD6).
+- #15's Plan card (FC8f) uses this layout, reading each number from `preview` instead of the forge snapshot.
 - The doors' `flavor` names what lies beyond each door. It appears in the Goal card only once the
   realm is forged (#6 G13.4).
 
@@ -498,7 +499,7 @@ Specified under Events Fired: the event-to-line table, merging, the away block a
 #### C16 Detail container (the one tooltip)
 
 - **Opening.** Tap, click, or Enter or Space on a focused record: a source's name, a store, an
-  ingredient, the goal line, the method chip or the running line. Numbers and marks are never
+  ingredient, the goal line, the method chip or the running line; in the Forge view, the "Foundation preview" heading (opens the Plan card, FC8f) and the "The Foundation" heading (opens the Goal card, FC13). Numbers and marks are never
   targets. Each rule-derived number in the card shows its #14 breakdown directly under its own
   line, already expanded, and a base-only number shows bare (#14 D3, BD2). **Hover opens
   nothing.** On a mouse, a record shows a pointer cursor and an ink underline on its name (rule 33,
@@ -1091,7 +1092,7 @@ returns it to the line that was opened (C16).
 | Log | `log` role, `aria-live="polite"`, `aria-relevant="additions"`, so a new entry is announced and an in-place merge is not |
 | Running line | Not live: it changes every frame. Its stop reasons reach the reader through the log. The progress bar is a `progressbar` whose value updates at each unit, not each frame |
 | Notice strip | "Not saving" and "This browser is not keeping your save" are `alert`. The load notice is `status` (#11 UI Requirements 8). The internal-error notice is `alert`. |
-| Messages | "Copied", "Working…", "Loading…", "This text is too long to be a save." and "This is not a save." are `status`; "Could not start a new run" and "Could not load this save" are `alert` |
+| Messages | "Copied", "Working…", "Loading…", "This text is too long to be a save." and "This is not a save." are `status`; "Could not start a new run" and "Could not load this save" are `alert`; in #15, a refused confirm's reason (FS14), the plan block's "{h} of 4 in hand" count, its reason lines and "Ready to forge." are `status` |
 | Heap toggle | A native switch, labelled "Heap {source}", with its checked state (#10 UI Requirements 5) |
 | Glyph-only marks | Every glyph has a text alternative, and every state word is visible text anyway |
 | Cards and dialogs | `dialog`, labelled by the card's title; the card, the sheet and every dialog are modal |
@@ -1297,7 +1298,8 @@ ingredients, four per makeup, three doors (Furnace Gate, Deep Well, Listening Ha
   pointer at least 32 × 32.
 - [ ] **AC-13-34** [visual] Under a greyscale filter, every row state, a full store, each door tier,
   the ×2 mark, the heap state and the method stay distinguishable by glyph and word, and no state
-  glyph shares a silhouette with a #14 glyph.
+  glyph shares a silhouette with a #14 glyph, one of #15's four affinity glyphs (▲ ▼ ■ ◆, FS11), the withheld
+  glyph (– –, FS11) or the pick chip's check glyph.
 - [ ] **AC-13-35** [visual] With reduced motion set, the commit shows no sweep and the sheet does not
   slide.
 
@@ -1384,8 +1386,8 @@ covers it.
 | #11 D12 | `saveLoaded`, `saveRefused`, `newRunStarted`, `saveFailing`, `tabSuperseded` | Events Fired |
 | #11 Open Question 2 | Is the log saved | No (Data Requirements) |
 | #11 Open Question 6 | The persistent-storage request | A menu action (#11 A1); AC-13-30 |
-| #11 UI Requirements 5 | The last-run line | #15 (not here) |
-| #6, #7, #15 seams | The method-choice view, the commit dialog, plans, previews, the headroom signal, the forge confirmation | #15 (not here; C17 hosts its dialogs) |
+| #11 UI Requirements 5 | The last-run line | #15 FC4 |
+| #6, #7, #15 seams | The method-choice view, the commit dialog, plans, previews, the headroom signal, the forge confirmation | #15 (`design/ux/forge-screen.md`, Seams) |
 
 **Coverage:** every item above is covered here or explicitly assigned to #14 or #15. No GDD
 requirement aimed at #13 is left out.
@@ -1400,7 +1402,7 @@ independent reviewer against the GDDs rather than this table):
   branch) reached the container through the record, not the number. This spec was aligned with it
   the same day: records open the container, a drill-down stack with a back line, 44 px part
   lines, #14's glyphs on the method chip and heap toggle, and one 400 ms bound on the commit's
-  decoration (C16, C3, C11a, Transitions, AC-13-19). #15 must still match the seams above.
+  decoration (C16, C3, C11a, Transitions, AC-13-19). #15 matches them (`design/ux/forge-screen.md`, Seams).
 - Accessibility gaps: none. The tier is Comprehensive (`design/accessibility-requirements.md`), and
   the changes it lists for this spec are applied, except S4, which pattern PD5 superseded (the wide
   card traps focus).
@@ -1426,7 +1428,7 @@ independent reviewer against the GDDs rather than this table):
 |---|---|---|---|
 | 1 | **No player journey map.** Arrival contexts here are reasoned from the concept and the GDDs. Author `design/player-journey.md` from `.claude/docs/templates/player-journey.md`, then check Player Context on Arrival against it | Designer | Before `/ux-review` of #13–#15 |
 | 2 | **No accessibility tier.** *Resolved 2026-11-21 by `design/accessibility-requirements.md`:* The tier is Comprehensive, WCAG 2.2 AA. | Designer, with `accessibility-specialist` (#18) | Before the Pre-Production gate |
-| 3 | **No art bible.** Needed from it: the glyph set (rest, the eight row states, slots, seals, door tiers, depth, full, in hand, menu, and the neutral "no method" glyph), the stone palette and the method tint tokens with their contrast, the channel lines, and the commit sweep. The method glyphs and the neutral closed, heap and limit glyphs are #14's (its glyph sheet), so they are not in this list. Every glyph here must differ in silhouette from all of them (AC-13-34). The concept asks for a one-page interface style sheet | `art-director` | Before the shell's UI stories |
+| 3 | **No art bible.** Needed from it: the glyph set (rest, the eight row states, slots, seals, door tiers, depth, full, in hand, menu, and the neutral "no method" glyph), the four affinity glyphs (Cinder ▲, Bark ▼, Jade ■, Gale ◆, #15 FS11) and the withheld glyph (– –, #15 FS11), the stone palette and the method tint tokens with their contrast, the channel lines and the forge's animated channel lines (#15 FS15), and the commit sweep. The method glyphs and the neutral closed, heap and limit glyphs are #14's (its glyph sheet), so they are not in this list. Every glyph here must differ in silhouette from all of them (AC-13-34). The concept asks for a one-page interface style sheet | `art-director` | Before the shell's UI stories |
 | 4 | **No interaction pattern library.** *Resolved 2026-11-21 by `design/ux/interaction-patterns.md`:* The library is written; patterns are named in the Component Inventory. | `ux-designer` | With #14 and #15, before epics |
 | 5 | **Stale platform note.** `.claude/docs/technical-preferences.md` still describes the archived attempt: "mouse with hover tooltips", "Touch: Partial (ⓘ pins tooltips)", a phone layout at ≤ 650 px, Bun. This spec follows the concept and the systems index instead (tap, no hover-only, 390 px design width). Update the file at `/create-architecture` | Technical Director | Architecture |
 | 6 | **One wording for a held cap-1 store.** #8 UI Requirements 3 asks for "{ingredient} is in hand", #9's States table says "{ingredient} is already held", and #1's shortfall form would print "{name} is full". The rules core's reason text must give one wording. This spec displays "{name} is in hand" for any store of base cap 1, key items included | Events and text ADR, with #4, #8 and #9 | Architecture |
@@ -1437,7 +1439,7 @@ independent reviewer against the GDDs rather than this table):
 | 11 | **One-handed reach.** Stop sits in the pinned header, out of thumb reach on a tall phone. A second Stop on the running row would fix it, but #4 places Stop on the running line | #17 | Vertical Slice |
 | 12 | **Short viewports.** *Resolved 2026-11-21 for the MVP by `design/accessibility-requirements.md` AR-V4.4 (designer):* a narrow viewport at least 640 px wide and 360–599 px tall folds the pinned zones (Layout Zones, Short viewports), with rule 32's divergence stated there. Below 360 px of height stays #17's. | #17 | Vertical Slice |
 | 13 | **Event payloads.** The events ADR fixes every payload above, including `opened`; whether a stop or refusal reason travels as text or as ids that a rules-core function renders; and how `saveLoaded` carries log-only lines | Technical Director | Events ADR (#3 ADR 2, #4 ADR 4, #11 ADR 8) |
-| 14 | **The Wave A build.** #15's spec must use C1 and C2 for the checkpoint and drop them when the shell lands | Forge screen (#15) | #15 UX spec |
+| 14 | **The Wave A build.** *Resolved 2026-11-22 by #15 (`design/ux/forge-screen.md`, F1, FC2, FC3):* C1 and C2 are used for the checkpoint; the checkpoint's tab wording stays open as #15 Open Questions 3. | Forge screen (#15) | #15 UX spec |
 | 15 | **Closing a forged realm's routes.** C13 says that nothing more can be forged. Whether those routes should close instead is a rules question | Reforge (#16) | Vertical Slice |
 
 **Provisional constants** (interface only; no rule reads them):

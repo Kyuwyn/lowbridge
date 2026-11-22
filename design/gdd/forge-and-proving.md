@@ -3,7 +3,7 @@
 > **Status**: Approved 2026-11-20 (lean review; recommended follow-ups in `design/gdd/reviews/forge-and-proving-review-log.md`)
 > **Author**: designer + Claude (`/design-system`)
 > **Last Updated**: 2026-11-21
-> **Amendments**: A1 2026-11-20 — S9's "Stub minutes" column is superseded for B9 and #7 H5 by #9's route table (X3), seals unchanged; Open Question 1's route half resolved (B9 and B13 pass on #9's routes; B10 waits on #8) (from Fight and dungeon routes #9; approved by the designer). Touches S9, Open Questions row 1; A2 2026-11-21 — S7: a `reached(id, n)` atom's demand combines with the rest of that id's demand by the larger, not the sum, so a floor's gate ingredient is made once (from the lean review of #8 and #9; approved by the designer). Touches S7, AC-S7-1, Open Questions row 1 note; A3 2026-11-21 — G14's cascade adds B9, which reads T_best. Open Question 2 is resolved by Content validator #12's VC11, a ±1 door-stat margin on B1 reported as a warning (requested by #12; approved by the designer). Touches G14, Open Questions row 2
+> **Amendments**: A1 2026-11-20 — S9's "Stub minutes" column is superseded for B9 and #7 H5 by #9's route table (X3), seals unchanged; Open Question 1's route half resolved (B9 and B13 pass on #9's routes; B10 waits on #8) (from Fight and dungeon routes #9; approved by the designer). Touches S9, Open Questions row 1; A2 2026-11-21 — S7: a `reached(id, n)` atom's demand combines with the rest of that id's demand by the larger, not the sum, so a floor's gate ingredient is made once (from the lean review of #8 and #9; approved by the designer). Touches S7, AC-S7-1, Open Questions row 1 note; A3 2026-11-21 — G14's cascade adds B9, which reads T_best. Open Question 2 is resolved by Content validator #12's VC11, a ±1 door-stat margin on B1 reported as a warning (requested by #12; approved by the designer). Touches G14, Open Questions row 2 · A4 2026-11-22 — G1 table: `preview` row gains the Foundation entries (each widened store's new cap) for a previewable plan; `foundationStats` row gains each affinity's clash amount in its result; G8.1 and AC-G8-1: a refused forge names every missing ingredient in `realm.ingredients` order (#15 FC4), since a makeup is a set (G4.1); G4.2: #15 keeps the plan as interface state and never saves it (#15 FS13); Edge Cases: a kept plan with an unknown id cannot arise while the plan is unsaved (#15 FS13); Open Question 4 resolved by #15 FS8 and FC6, "does it help" half moves to #15 Open Questions 10 (requested by Forge screen #15; approved by the designer). Touches G1 table, G4.2, G8.1, Edge Cases, UI Requirements 2, Acceptance Criteria, Open Questions row 4
 > **Last Verified**: 2026-11-20
 > **Implements Pillar**: 1 (The forge is the milestone) and 3 (The build is a problem); supports 4 (No dead ends, no attention tax)
 > **Creative Director Review (CD-GDD-ALIGN)**: APPROVED 2026-11-20 (two advisories applied: Player Fantasy promise 2 worded to what B2 guarantees; UI Requirements item 8 on player-facing words)
@@ -153,12 +153,12 @@ and the forge itself call the same functions, and none has a second implementati
 
 | Function | Returns | Rule, formula |
 |---|---|---|
-| `foundationStats(set, m)` | each affinity's total and effective value, and the four stats `might`, `guard`, `vigor`, `speed`, for a makeup or any part of one | G5; S1–S3 |
+| `foundationStats(set, m)` | each affinity's total, clash amount and effective value, and the four stats `might`, `guard`, `vigor`, `speed`, for a makeup or any part of one | G5; S1–S3 |
 | `foundationEntries(makeup, m)` | the Foundation entry list `F` that #2's Foundation stage applies | G11; S6 |
 | `doorTier(score, thresholds)` | 0 shut, 1 open, 2 wide open | G6; S4 |
 | `seals(makeup, m)` | each door's score and tier, and their total, 0–6 | G6; S5 |
 | `previewable(makeup, held)` | true when every ingredient of the makeup is held | G7 |
-| `preview(plan, held, m)` | everything the forge screen may show for a plan: the held part's `foundationStats`; for each unheld ingredient its name and the method's patch deltas only; and `seals` only when the plan is a previewable makeup | G7 |
+| `preview(plan, held, m)` | everything the forge screen may show for a plan: the held part's `foundationStats`; for each unheld ingredient its name and the method's patch deltas only; and `seals` and the Foundation entries (each widened store's new cap) only when the plan is a previewable makeup | G7 |
 | `bestSeals(m)` | the most seals any makeup of the realm earns under m | G7; S5 |
 
 - `foundationStats` takes 1 to N distinct ids of `realm.ingredients`, so the forge screen can
@@ -226,7 +226,7 @@ Set aside:
    MVP, so 15 makeups. Order never matters.
 2. On the forge screen the player builds a **plan**: a makeup that may include ingredients not
    yet held. A plan is for reasoning. The rules read it only through `previewable` and the forge
-   (G8). It is not rules state; the forge screen (#15) may keep it.
+   (G8). It is not rules state; the forge screen (#15) keeps it as interface state and never saves it (#15 FS13).
 
 #### G5. The Foundation
 
@@ -283,7 +283,7 @@ exactly "the Foundation and the method" (concept, mechanic 1).
 
 1. **Forge** is one explicit player action on a plan. It is legal only when a method is
    committed, the realm is not yet forged, and the plan is previewable. Otherwise it is refused
-   with the reason in words, for example "Needs Ember Marrow in hand".
+   with the reason in words; when ingredients of the plan are not held, every missing one is named in `realm.ingredients` order, for example "Needs Ember Marrow in hand".
 2. The confirmation names the four ingredients it consumes and shows the same seals the preview
    showed. It also says that the MVP offers no reforge, only a fast new game (rule 54).
 3. On confirm, time is settled first (#4: every action settles before it touches the rules), and
@@ -873,7 +873,8 @@ Each case says who catches it: a **load error** (#1 R8.3), a **validator error**
   as corrupt.
 - **If a plan the forge screen kept holds an id that content no longer has**: the screen drops
   the id before calling G1. The functions throw on unknown ids, and the rules never save a plan
-  (G4.2).
+  (G4.2). This cannot arise while the plan is unsaved (#15 FS13); the rule holds for a later
+  saved plan.
 - **If the player starts a fast new game**: `held` returns to 0 (#3 K4), and the snapshot and
   `forged` are cleared, so the realm is in Planning only. What else carries over is #11's.
 
@@ -995,7 +996,7 @@ The forge screen (#15) owns the layout. This system requires:
    not held. A plan that cannot be forged says why in words (G8.1).
 2. **Only what `preview` returns** (G7). For the held part of a plan, the screen shows its
    totals, effective values and clashes. For a previewable plan, it shows each door's score and
-   tier, the seals, and each widened store's new cap from `foundationEntries`. It shows no cap
+   tier, the seals, and each widened store's new cap, which `preview` returns. It shows no cap
    for a plan that is not previewable, because a cap would reveal hidden base contributions.
    This answers #3 Open Question 5: the caps feed the choice, under the same rule as the seals.
 3. **Comparing in hand.** The screen may list every previewable makeup with its seals, so the
@@ -1111,6 +1112,9 @@ SW is Still Water. Abbreviations follow S9: EJ, IH, EM, CL, GM, TP.
 - **AC-G8-1** [integration, #4 stub] **WHEN** the forge is tried with no method committed, with
   CL not held, or on a forged realm, **THEN** it is refused with "Needs a method committed",
   "Needs Cloud Lotus in hand" or "Already forged". Nothing changes, and no event is emitted.
+  **AND GIVEN** EJ and CL not held, **WHEN** a forge of EJ, IH, EM, CL is tried, **THEN** it is
+  refused naming every missing ingredient in `realm.ingredients` order: "Needs Echo Jade in hand", "Needs Cloud
+  Lotus in hand".
   **AND GIVEN** a stub settle that removes CL when called, **WHEN** a forge of EJ, IH, EM, CL is
   confirmed, **THEN** the settle runs before the legality check, and the forge is refused.
   **AND** a second confirm straight after a successful forge is refused.
@@ -1213,7 +1217,7 @@ scope when B1 fails; the tie orders; and the forge's error path and event order.
 | 1 | S9's content is provisional. Do Methods' real patches and the routes' real durations still pass B1–B13, and does each method's best makeup stay at 4 seals? Methods' half resolved 2026-11-20 by #7 (W6): S9's patches are the real ones, unchanged, so B1–B8, B11 and B12 pass as S9 shows and each best stays at 4. The routes' half resolved 2026-11-20 by #9 (`fight-and-dungeon-routes.md` X3, U2): B13 passes, since every route bill is a refined resource; B9 passes on #9's route table under both methods (2.07× with 1,498 s over; 1.45× with 554 s over), with every bill priced on a stub chain. B10 and B9 on the real chain wait on #8, whose recipes must fall in X2's bands | Methods (#7), Crafting route (#8), Fight and dungeon routes (#9) | Checked again at #8 |
 | 2 | S9's table is sensitive: the Gate's vigor at 190 instead of 191 breaks B1 under Still Water. Should B1 also require a margin, for example that the best makeup stays unique when any one door stat moves by 1? Resolved 2026-11-21 by #12 (`content-validator-and-balance-enumeration.md` VC11, VF3): yes, as a warning, with ±`B1_MARGIN_STEP` (1) on one door opponent stat at a time. S9's doors trip it. Retuning them is #12's Open Question 3 | Forge and proving (#6), Validator (#12) | Done |
 | 3 | Does the theme fit as players read it? B4 is a proxy; the playtest named in "Checked by review" is the real test (CD-PLAYTEST concern 3) | Designer | First playtest of the Wave A build |
-| 4 | What form does the headroom signal take, and does it help the player find better makeups without naming them (CD-PLAYTEST concern 2)? | Forge screen (#15) | #15 UX spec |
+| 4 | What form does the headroom signal take, and does it help the player find better makeups without naming them (CD-PLAYTEST concern 2)? Resolved by #15 FS8 and FC6 for the form; the "does it help" half moves to #15 Open Questions 10 | Forge screen (#15) | Done |
 | 5 | A door's beyond is text in the MVP (G13.4). A real source behind a door needs a door-tier gate atom | Realm ladder (#19), #1 Open Question 7 | Before Alpha |
 | 6 | How does a later realm's Foundation stack with an earlier one, for caps and for the challenger? #3 K7's envelope must be amended first (G10.4) | Realm ladder (#19) | #19 GDD |
 

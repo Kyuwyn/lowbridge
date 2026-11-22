@@ -97,6 +97,7 @@ keyboard and touch; no gamepad; nothing hover-only.
 | PD17 | Whether irreversible confirms get their own button look | No. They use the same button as everything else, with no hue. The label names the act, and the dialog's lines name what it clears | IP3, IP15 |
 | PD18 | #14 cites a "pressed state" that #13 never defines | No pressed style is required. The result in the frame of the input is the feedback | IP2, IP15 |
 | PD19 | What #15 Forge screen needs that neither spec defines | The twelve gaps under "Gaps & Patterns Needed" | Gaps |
+| PD20 | How the library holds #15's patterns | One catalogue row each, pointing at #15's section; #15 stays their single source, and a full entry is written when a second screen reuses one | IP24–IP30 |
 
 ---
 
@@ -106,7 +107,7 @@ keyboard and touch; no gamepad; nothing hover-only.
 
 | ID | Pattern | Category | Source rules | Used in | One line |
 |---|---|---|---|---|---|
-| IP1 | Detail container | Overlay | #13 C16; #14 D3, BD2, BD6; rule 33 | Every record on #13 and #15 | The one tooltip: a card (wide) or bottom sheet (narrow) holding a record's fields in one order, opened by tap, click, Enter or Space |
+| IP1 | Detail container | Overlay | #13 C16; #14 D3, BD2, BD6; #15 FC8f; rule 33 | Every record on #13 and #15, the Plan card (#15 FC8f) and the Forge view's two headings | The one tooltip: a card (wide) or bottom sheet (narrow) holding a record's fields in one order, opened by tap, click, Enter or Space |
 | IP2 | Drill-down line | Navigation | #14 C8, C9, BD6; #13 C16 | Inside IP1 | Full-width part, named-record and back lines that move one level down or up in the same container |
 | IP3 | Confirm dialog | Modal | #13 C17; #14 W7; #6 G8.2; rules 38, 54 | New run, Load save (#13); commit, forge (#15) | The one modal for irreversible acts: names what it clears, Cancel holds focus, no timer |
 | IP4 | View tabs | Navigation | #13 C9 | Centre (wide), bottom bar (narrow) | Road · Forge, plus Log on narrow; arrow keys, each view keeps its scroll |
@@ -129,6 +130,13 @@ keyboard and touch; no gamepad; nothing hover-only.
 | IP21 | Pointer and touch targets | Input | #13 Variants, Input checklist; #14 D3 | Every interactive element | 44 px with a coarse pointer, 32 px with a fine one; numbers are never targets; hover shows nothing |
 | IP22 | Phone-width layout | Layout | #13 Layout Zones; PD3 | The whole shell below 960 px | Pinned header, store chips, bottom tabs, bottom sheet, pinned log line, no sideways scroll |
 | IP23 | Scroll zone | Layout | #13 Layout Zones, Interaction Map | Every zone | The page never scrolls; each zone scrolls vertically inside itself |
+| IP24 | Method column | Layout | #15 F3, FC5 | #15 Forge view (method choice) | A method's hollow glyph and name, its feeds, quenches, opens and closes, then "Begin circulating {method}" |
+| IP25 | Realm-fact line | Data display | #15 F4, FC6 | #15 Forge view (plan panel) | "The best Foundation here holds {b} seals under {method}." and "Your best in hand: {h} seals." |
+| IP26 | Pick chip | Input | #15 F5, FC7a | #15 Forge view (ingredient picker) | An ingredient's name and "in hand" or "not yet"; checked when in the plan |
+| IP27 | Affinity line | Data display | #15 F6, F9, FC8a | #15 Forge view (plan panel) | "{glyph} {affinity} {gathered} − {clash} = {after clash} · {stat} {value}" |
+| IP28 | Withheld preview | Data display | #15 F6, FC8b | #15 Forge view (plan panel) | The lead sentence; each door with "– –" and "not yet shown" |
+| IP29 | Ingredient row | List item | #15 F7, FC9a | #15 Forge view (ingredient list) | Name, state words, the four contributions with marks, or the hidden-base line and the method's deltas |
+| IP30 | Makeup line | List item | #15 F8, FC10 | #15 Forge view (makeup list) | "{s} of 6 seals · {four names}", each door's tier glyph, and "Plan this" or "In the plan" |
 
 ### Single-use components (owned by #13, PD2)
 
@@ -148,6 +156,12 @@ with no pattern of their own (an extension of PD2, not a new decision).
 | C10 Group heading | #13 C10 | Text from `source.group` | Display only; a group of one source is a load error (#1 A8) |
 | C12 Ladder block | #13 C12 | IP13 rows, IP11 depth glyph, IP10 | A rail with floors in content order; a sealed floor breaks the rail; depth never fades; a fully closed group is one closed row |
 | C18 Session screens | #13 C18 | IP19, IP15 | One plain sentence and the way out, with no persistent context |
+
+### Single-use components (owned by #15, PD2)
+
+| #15 component | Section | Built from | Shared rule it follows |
+|---|---|---|---|
+| FC4 Last-run line | #15 FC4 | IP8 (the hollow method glyph), IP11 (door tier glyphs) | Names in `realm.ingredients` order; the method glyph is hollow and in ink; it never says best, beat or record |
 
 ### Standard controls not used in the MVP
 
@@ -176,7 +190,8 @@ AC-13-36).
 #### IP1 Detail container
 
 **Category**: Overlay · **Used In**: every record on #13 (a source's name, a store, an
-ingredient, a door, the goal line, the method chip, the running line) and on #15's Forge view
+ingredient, a door, the goal line, the method chip, the running line) and on #15's Forge view,
+the Plan card (#15 FC8f) and the Forge view's two headings
 (#14 Entry & Exit Points) · **Source**: #13 C16; #14 D3, BD2, BD6, Interaction Map; rules 33,
 97; PD4, PD5, PD14
 
@@ -316,7 +331,7 @@ because drill lines are read-only (#14 Data Requirements).
 **Implementation notes**: the stack is a list of frames in the container's interface state. Each
 frame repaints live, its back line's value included (#13 C16).
 
-**Reference**: #14 W4 (Might → Cinder after clash → Cinder total → Ember Marrow).
+**Reference**: #14 W4 (Might → Cinder after clash → Cinder gathered → Ember Marrow).
 
 #### IP3 Confirm dialog
 
@@ -341,7 +356,7 @@ closes, by name, and asks for one deliberate choice.
      - Load save: the run it replaces and the run it loads (#13 C17).
      - Commit: the "Feeds:", "Opens:", "Quenches:" and "Closes:" lines, each with its hollow
        notched mark, and each "Closes:" line led by the closed mark (#14 W7, MK5).
-     - Forge: the four ingredients and the seals, and that the MVP has no reforge (#6 UI
+     - Forge: the four ingredients and the seals, what stays in hand, the widened stores, the headroom echo when the plan earns fewer, and the redo line (#15 FC11), and that the MVP has no reforge (#6 UI
        Requirement 5).
   3. The redo line, "Redo: only by starting a new run", wherever the act is a run's choice (#7
      Y2; #13 C17; #14 W7).
@@ -396,7 +411,7 @@ confirmation (#4 S3.2; #13 C5, C11a). Also not for a notice (#13 C6) or for read
 (IP1).
 
 **Implementation notes**: where a refused act's reason shows inside a dialog (#7 UI Requirement 2:
-"A refused commit shows its reason") is not yet defined (Gap 10).
+"A refused commit shows its reason") is resolved by #15 FS14: the dialog closes; the reason is a `status` line at the opener; focus moves as #15's Interaction Map says.
 
 **Reference**: #14 W7 (Ember Breath's commit dialog lines).
 
@@ -1307,7 +1322,7 @@ row below comes from #13 or #14. Where a source sets no easing, the easing is th
 | The commit: #14's channel-underline draw-in | 240 ms per underline, starting 20 ms apart in reading order; the whole sweep ends within 400 ms | Ease-out | None: underlines appear complete in the commit frame | No; a container opened during it shows final content | #14 Transitions |
 | A new run | Every mark and closed row is gone in the first frame | — | Same | No | #14 Transitions |
 | The forge | The goal line becomes the Foundation in the `forged` frame; caps and stats change in that frame | — | Same | No | #13 Transitions; #14 Transitions |
-| The forge's visual event | #15's (Gap 9) | — | — | — | #13 Transitions; systems index ¶15 |
+| The forge's visual event | 240 ms channel lines, then a 160 ms settle; at most 400 ms total (FS15) | Art bible's | None | No | #15 FS15; #13 Transitions |
 
 **Rules for every animation**
 
@@ -1320,8 +1335,7 @@ row below comes from #13 or #14. Where a source sets no easing, the easing is th
   (#13 Transitions; #14 Transitions).
 - `prefers-reduced-motion: reduce` removes the sheet slide, the tint sweep and the underline
   draw-in. Progress bars keep moving (#13 Accessibility; #14 Accessibility).
-- #14 caps its own motion at 400 ms. Whether that cap binds every screen, #15's forge moment
-  included, is open (Gap 9).
+- Every animation is capped at 400 ms (AR-V6), extending #14's own cap to every screen, #15's forge moment included (Gap 9, resolved).
 
 ---
 
@@ -1354,18 +1368,18 @@ IP20–IP22 as they stand, and it builds the Wave A goal line and instruction fr
 
 | # | Gap | Already fixed by #13, #14 or the GDDs | #15 must decide |
 |---|---|---|---|
-| 1 | **Pick 4 of 6** (the plan of four) | #6 UI Requirement 1: four of the realm's ingredients, each held or not held; a plan that cannot be forged says why in words (#6 G8.1). The reason-in-words rule (IP13), state words (IP11), and records opening IP1 | The selection control (slots, a checked list or another form); what happens on a fifth pick; its keyboard model; where the "why it cannot forge" sentence sits; its fit at 390 px |
-| 2 | **Side-by-side method columns** (the method-choice view) | #7 UI Requirements 1–2: both methods side by side from the first screen, each with name and glyph, feeds as deltas, quenches as "quenched", opens and closes, and "Begin circulating [method]". Hollow marks only and no absolute contribution (#14 W6, MK4, MK7). The commit dialog (IP3) | How two columns fit at 390 px (stacked, or another arrangement with no swipe, IP21); the order of the methods; the tab order between and within columns |
-| 3 | **Withheld until in hand** (a plan that is not previewable) | #6 G7: no door score, tier, seal or cap until every ingredient of the makeup is held. #14 BD5: no seal, score, tier or cap breakdown for such a plan. #14 BD7's hidden-base line, at the ingredient level | What the seals, tiers and caps area shows instead, so the space never reads as zero or as blank (IP19), in the tone of BD7's line |
-| 4 | **Comparing held makeups** | #6 UI Requirement 3: the screen may list every previewable makeup with its seals (#6 G9.1). IP7 for each seal count. The MVP signal "three makeups previewed before the first forge" (#14 Player Context on Arrival) | The list's form; its order, given the no-steering rules (#6 G7.4; #13 C2: no line names a best makeup); how a listed makeup is chosen; its fit at 390 px |
-| 5 | **The headroom signal** as a realm-fact line | #6 G7.4, UI Requirement 4: `bestSeals(m)` as a fact about the realm that never names a makeup. #14 BD5: one sentence line, no parts, no Total. #13 C1: never shown in the goal line | Its form and place; when it shows (the systems index puts it before the commit, ¶15); whether it is a record that opens IP1 |
-| 6 | **The accent before the commit** | #14 MK4: hollow glyphs are drawn, and their colour before the commit is #15's. #13 C3: the shell sets no accent before the commit. #14 MK6: after the commit, one accent only | Whether hollow glyphs and "Begin circulating" take a colour before the commit; it must keep 3:1 and the glyph-before-hue rule (IP8, IP11) |
-| 7 | **Affinity and door-tier glyphs** | #14 MK2: #15 draws them in ink, never tinted, distinct from every method silhouette, and a tier is never gate-shaped. #6 Visual/Audio: each affinity also names its stat; tiers by word and glyph. #13 C1's tier glyphs in the goal line (shut ○○, open ●○, wide open ●●) | The four affinity glyphs and the tier glyphs, with the art bible, consistent with #13 C1's goal line |
-| 8 | **Words for composed numbers** | #14 BD5's provisional words. #6 UI Requirement 8: "total", "effective value" and "score" are designer terms, not copy. #13 Accessibility's list of words never shown | The player-facing names for an affinity total, an affinity after its clash, and a door's score |
-| 9 | **The forge's visual moment** and its time bound | #6 Visual/Audio: one moment read from `forged` and `capChanged`, with no fight playback; #6 Game Feel: instant, in the confirm's frame. Animation Standards: state final first, nothing flashes, decoration never blocks input. #13 C1: the goal line becomes the Foundation in the `forged` frame | The moment's look; its time bound (the commit's is 400 ms); its reduced-motion form; whether #14's 400 ms cap binds it |
-| 10 | **A refused act inside a dialog** | #7 UI Requirement 2: "A refused commit shows its reason". IP13: a refused Start changes nothing, and its row already shows why. IP16: Load save shows a refusal in words | Where a commit's or forge's refusal shows inside IP3; whether the dialog stays open; where focus goes |
-| 11 | **The ingredient contribution row** at 390 px | #14 W1's sketch; IP9's no-break mark unit; #14 MK7 for unheld ingredients; IP13's wrap rule; #13 C8's ingredient words; #7 UI Requirement 5: route families named wherever an ingredient's sources are listed | How four affinity values, their marks and their stat names fit at 390 px; whether the row also lists its routes |
-| 12 | **Whether a plan is saved** | #13 Data Requirements: interface state (the open card, the view, the log) is never saved. #11 lists what the save holds | With #11: whether the plan of four is interface state, lost on reload, or saved state, which would change #11's format |
+| 1 | **Pick 4 of 6** (the plan of four) | #6 UI Requirement 1: four of the realm's ingredients, each held or not held; a plan that cannot be forged says why in words (#6 G8.1). The reason-in-words rule (IP13), state words (IP11), and records opening IP1 | **Met** (FS2; FC7, FC7a, IP26) |
+| 2 | **Side-by-side method columns** (the method-choice view) | #7 UI Requirements 1–2: both methods side by side from the first screen, each with name and glyph, feeds as deltas, quenches as "quenched", opens and closes, and "Begin circulating [method]". Hollow marks only and no absolute contribution (#14 W6, MK4, MK7). The commit dialog (IP3) | **Met** (FS3; FC5, IP24) |
+| 3 | **Withheld until in hand** (a plan that is not previewable) | #6 G7: no door score, tier, seal or cap until every ingredient of the makeup is held. #14 BD5: no seal, score, tier or cap breakdown for such a plan. #14 BD7's hidden-base line, at the ingredient level | **Met** (FS5; FC8b, IP28) |
+| 4 | **Comparing held makeups** | #6 UI Requirement 3: the screen may list every previewable makeup with its seals (#6 G9.1). IP7 for each seal count. The MVP signal "three makeups previewed before the first forge" (#14 Player Context on Arrival) | **Met** (FS7; FC10, IP30) |
+| 5 | **The headroom signal** as a realm-fact line | #6 G7.4, UI Requirement 4: `bestSeals(m)` as a fact about the realm that never names a makeup. #14 BD5: one sentence line, no parts, no Total. #13 C1: never shown in the goal line | **Met** (FS8; FC6, IP25). Deferred: whether it helps without steering — a playtest, the designer (Open Questions 10) |
+| 6 | **The accent before the commit** | #14 MK4: hollow glyphs are drawn, and their colour before the commit is #15's. #13 C3: the shell sets no accent before the commit. #14 MK6: after the commit, one accent only | **Met** (FS12) |
+| 7 | **Affinity and door-tier glyphs** | #14 MK2: #15 draws them in ink, never tinted, distinct from every method silhouette, and a tier is never gate-shaped. #6 Visual/Audio: each affinity also names its stat; tiers by word and glyph. #13 C1's tier glyphs in the goal line (shut ○○, open ●○, wide open ●●) | **Met** for forms and rules (FS11; Accessibility, AR-V5). Deferred: the final drawings — the art bible, `art-director` (Open Questions 2) |
+| 8 | **Words for composed numbers** | #14 BD5's provisional words. #6 UI Requirement 8: "total", "effective value" and "score" are designer terms, not copy. #13 Accessibility's list of words never shown | **Met** (FS10). Deferred: the copy review — `writer` (Open Questions 9) |
+| 9 | **The forge's visual moment** and its time bound | #6 Visual/Audio: one moment read from `forged` and `capChanged`, with no fight playback; #6 Game Feel: instant, in the confirm's frame. Animation Standards: state final first, nothing flashes, decoration never blocks input. #13 C1: the goal line becomes the Foundation in the `forged` frame | **Met** for its form, bound and reduced-motion form (FS15; Transitions & Animations). Deferred: the drawing and easing — the art bible, `art-director`. The tint on its lines: #14 MK6's amendment, approved at merge (Open Questions 2, 8) |
+| 10 | **A refused act inside a dialog** | #7 UI Requirement 2: "A refused commit shows its reason". IP13: a refused Start changes nothing, and its row already shows why. IP16: Load save shows a refusal in words | **Met** (FS14; Interaction Map) |
+| 11 | **The ingredient contribution row** at 390 px | #14 W1's sketch; IP9's no-break mark unit; #14 MK7 for unheld ingredients; IP13's wrap rule; #13 C8's ingredient words; #7 UI Requirement 5: route families named wherever an ingredient's sources are listed | **Met** (FS4; FC9a, IP29, FC9b). Deferred: one-handed reach of cards — #17 (Open Questions 7) |
+| 12 | **Whether a plan is saved** | #13 Data Requirements: interface state (the open card, the view, the log) is never saved. #11 lists what the save holds | **Met** (FS13) |
 
 **Other gaps** (outside #15):
 
@@ -1442,7 +1456,7 @@ the designer's approval. Line numbers are those of `design/ux/interface-shell.md
 | 7 | **No art bible** (#13 Open Questions 3; #14 Open Questions 2). Glyph drawings, the palette, button weights and the focus ring's colour wait on it | `art-director` | Before the UI stories |
 | 8 | **No player journey map** (#13 Open Questions 1; #14 Open Questions 1) | Designer | Before `/ux-review` of #13–#15 |
 | 9 | **One-handed reach and short viewports** (#13 Open Questions 11, 12; #14 Open Questions 6). Stop and the back line sit at the top of a tall phone, and below 360 px of height the pinned header can exceed its budget. From 640 × 360 up, #13 folds it (AR-V4.4) | Phone layout (#17) | Vertical slice |
-| 10 | **A library-wide motion cap.** #14 caps its own motion at 400 ms. Whether that binds every screen, #15's forge moment included (Gap 9) | Forge screen (#15) | #15 UX spec |
+| 10 | **A library-wide motion cap.** *Resolved 2026-11-22 by AR-V6:* every animation is capped at 400 ms. | Forge screen (#15) | #15 UX spec |
 | 11 | **Stale platform note.** `.claude/docs/technical-preferences.md` still says "mouse with hover tooltips" (#13 Open Questions 5; #14 Open Questions 4). This library follows #13 | Technical Director | `/create-architecture` |
 
 ### Cross-reference check (`/ux-design` phase 5, 2026-11-21)

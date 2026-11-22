@@ -3,7 +3,7 @@
 > **Status**: Approved 2026-11-21 (lean review; recommended follow-ups in `design/gdd/reviews/crafting-route-review-log.md`)
 > **Author**: designer + Claude (`/design-system`)
 > **Last Updated**: 2026-11-21
-> **Amendments**: A1 2026-11-21 — Open Question 3 marked resolved by Content validator (#12, VC12): a key-item make, and any ingredient source that X6 and #9 U2 do not cover, holds no other output (status edit only, no rule change here; designer-approved). Touches Open Questions row 3 · A2 2026-11-21 — L2 gains the road-group values for #1 A8's `source.group`; L9 names #1 A9's `opened` event as how a source opening reaches the shell; Open Question 5 answered: by line (requested by Interface shell #13; approved by the designer). Touches L2, L9, Open Questions row 5
+> **Amendments**: A1 2026-11-21 — Open Question 3 marked resolved by Content validator (#12, VC12): a key-item make, and any ingredient source that X6 and #9 U2 do not cover, holds no other output (status edit only, no rule change here; designer-approved). Touches Open Questions row 3 · A2 2026-11-21 — L2 gains the road-group values for #1 A8's `source.group`; L9 names #1 A9's `opened` event as how a source opening reaches the shell; Open Question 5 answered: by line (requested by Interface shell #13; approved by the designer). Touches L2, L9, Open Questions row 5 · A3 2026-11-22 — UI Requirements 4: "gathering times" becomes "durations, as the road shows them" (requested by Forge screen #15; approved by the designer). Touches UI Requirements 4
 > **Last Verified**: 2026-11-21
 > **Implements Pillar**: 4 (No dead ends, no attention tax); supports 3 (The build is a problem) and 1 (The forge is the milestone)
 > **Creative Director Review (CD-GDD-ALIGN)**: APPROVED 2026-11-21, re-run on the re-tune to #9's premium (no blocker; advisories applied: Player Fantasy's third lesser-road bullet, kept progress for long makings in L4.5 and Game Feel, choice density added to Open Question 4)
@@ -832,7 +832,7 @@ only applies rules that #13 and #14 own.
    store of 1 is a rule fact, not something the player should read as a store (#4 S3.1's refusal
    text; #13).
 4. **From the forge screen to the hearth.** For each unheld ingredient of a plan, the forge
-   screen names its recipe, its fight route if the method has one, and their gathering times
+   screen names its recipe, its fight route if the method has one, and their durations, as the road shows them
    (#15). This is how the backward plan reaches the road.
 5. **The ladder beats are logged** as in Visual/Audio item 2, through the one event channel
    (#13).
