@@ -10,9 +10,10 @@
 
 ## Engine & Language
 
-- **Engine**: None — plain DOM, no game engine (CCGS engine skills do not apply; see CLAUDE.md)
-- **Language**: TypeScript 7.0 on Bun 1.4.3
-- **Rendering**: DOM and CSS (`src/ui.ts`, `src/style.css`)
+- **Engine**: None — web platform (browser DOM and CSS). CCGS engine specialists do not apply; see CLAUDE.md
+- **Language**: TypeScript 7.0.2
+- **Runtime / Build**: Node.js 26 LTS (tooling only); Vite 8.3.8
+- **Rendering**: DOM and CSS. Interface layer (plain DOM or a framework) undecided until `/create-architecture`
 - **Physics**: None
 
 ## Input & Platform
@@ -20,17 +21,17 @@
 <!-- Written by /setup-engine. Read by /ux-design, /ux-review, /test-setup, /team-ui, and /dev-story -->
 <!-- to scope interaction specs, test helpers, and implementation to the correct input methods. -->
 
-- **Target Platforms**: Web (desktop browser first; phone layout at ≤650 px)
+- **Target Platforms**: Web (desktop and phone browsers) first; mobile app (iOS / Android) later
 - **Input Methods**: Keyboard/Mouse, Touch
-- **Primary Input**: Mouse with hover tooltips; keyboard focus must reveal the same
+- **Primary Input**: Mouse and touch equally
 - **Gamepad Support**: None
-- **Touch Support**: Partial (ⓘ pins tooltips)
-- **Platform Notes**: One tab per profile (Web Locks); saves in IndexedDB with Export/Import
+- **Touch Support**: Full
+- **Platform Notes**: No hover-only interactions: every tooltip opens by tap and by keyboard focus as well. Text reflows to phone width. The phone layout is a constraint from the first UX spec and is built at the vertical slice.
 
 ## Naming Conventions
 
 - **Classes**: PascalCase
-- **Variables**: camelCase; content record ids snake_case
+- **Variables**: camelCase
 - **Signals/Events**: N/A
 - **Files**: kebab-case.ts
 - **Scenes/Prefabs**: N/A
@@ -38,16 +39,16 @@
 
 ## Performance Budgets
 
-- **Target Framerate**: N/A (text DOM, 1-second ticks); pacing budgets are enforced by `bun run validate` (ADR 0028)
-- **Frame Budget**: N/A
+- **Target Framerate**: [TO BE CONFIGURED — set at /create-architecture; frame budgets do not fit a text interface]
+- **Frame Budget**: [TO BE CONFIGURED]
 - **Draw Calls**: N/A
-- **Memory Ceiling**: N/A
+- **Memory Ceiling**: [TO BE CONFIGURED]
 
 ## Testing
 
-- **Framework**: `bun test`, plus `bun run validate` (content, pacing, reachability) and `bun run smoke` (Playwright)
+- **Framework**: Vitest 5.1.1 (`npm test`); type checking with `npm run typecheck`
 - **Minimum Coverage**: [TO BE CONFIGURED]
-- **Required Tests**: Balance formulas, gameplay systems, networking (if applicable)
+- **Required Tests**: Balance formulas, gameplay systems, the content validator
 
 ## Forbidden Patterns
 
@@ -70,12 +71,12 @@
 <!-- Read by /code-review, /architecture-decision, /architecture-review, and team skills -->
 <!-- to know which specialist to spawn for engine-specific validation. -->
 
-- **Primary**: [TO BE CONFIGURED — run /setup-engine]
-- **Language/Code Specialist**: [TO BE CONFIGURED]
-- **Shader Specialist**: [TO BE CONFIGURED]
-- **UI Specialist**: [TO BE CONFIGURED]
-- **Additional Specialists**: [TO BE CONFIGURED]
-- **Routing Notes**: [TO BE CONFIGURED]
+- **Primary**: lead-programmer
+- **Language/Code Specialist**: gameplay-programmer (rules core), tools-programmer (validator and scripts)
+- **Shader Specialist**: N/A
+- **UI Specialist**: ui-programmer
+- **Additional Specialists**: accessibility-specialist
+- **Routing Notes**: The studio ships no specialist for a web stack, so the Godot, Unity and Unreal specialists are never spawned here. General agents review instead, and they must check `docs/engine-reference/web/` before relying on what they know of TypeScript, Vite or Vitest.
 
 ### File Extension Routing
 
@@ -84,9 +85,9 @@
 
 | File Extension / Type | Specialist to Spawn |
 |-----------------------|---------------------|
-| Game code (primary language) | [TO BE CONFIGURED] |
-| Shader / material files | [TO BE CONFIGURED] |
-| UI / screen files | [TO BE CONFIGURED] |
-| Scene / prefab / level files | [TO BE CONFIGURED] |
-| Native extension / plugin files | [TO BE CONFIGURED] |
-| General architecture review | Primary |
+| Game code (.ts files) | gameplay-programmer |
+| Shader / material files | N/A |
+| UI / screen files (.css, .html, interface .ts) | ui-programmer |
+| Scene / prefab / level files | N/A |
+| Native extension / plugin files | N/A |
+| General architecture review | lead-programmer |

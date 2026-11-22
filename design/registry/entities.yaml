@@ -1,0 +1,1023 @@
+# Entity registry: cross-system facts that one GDD owns and others must not contradict.
+# Created 2026-11-20 by /design-system content-records-and-schema (run by hand).
+# STATUS values: active | deprecated
+# LAYOUT: sections entities, items, formulas, constants at column 0; each entry starts
+#   "  - name: <name>"; fields sit at column 4; a value holding ": " is quoted.
+# Append-only: deprecate an entry, never delete or rename it.
+
+entities:
+  - name: unforged
+    status: active
+    source: design/gdd/fight-and-dungeon-routes.md
+    type: combatant
+    display_name: Unforged Cultivator
+    stats: "might 20, guard 10, vigor 100, speed 0"
+    note: "the challenger of every route fight, before and after the forge (N3); equals FOUNDATION_BASE stat for stat, checked by U4"
+    referenced_by: []
+  - name: pangolin
+    status: active
+    source: design/gdd/fight-and-dungeon-routes.md
+    type: combatant
+    display_name: Jade-Echo Pangolin
+    stats: "might 10, guard 30, vigor 50, speed 20"
+    fought_on: "hunt_pangolin (both methods, 180000 ms, rendered_oil x6, pays echo_jade)"
+    unforged_keeps: 60
+    note: "provisional (N1, N4); tuned with the X3 generator, never by hand"
+    referenced_by: []
+  - name: heartwood_bear
+    status: active
+    source: design/gdd/fight-and-dungeon-routes.md
+    type: combatant
+    display_name: Heartwood Bear
+    stats: "might 12, guard 10, vigor 110, speed 0"
+    fought_on: "hunt_bear (both methods, 210000 ms, seasoned_plank x5, pays ironbark_heartwood)"
+    unforged_keeps: 52
+    note: "provisional (N1, N4); tuned with the X3 generator, never by hand"
+    referenced_by: []
+  - name: ghost_fox
+    status: active
+    source: design/gdd/fight-and-dungeon-routes.md
+    type: combatant
+    display_name: Ghost Fox
+    stats: "might 20, guard 0, vigor 40, speed 80"
+    fought_on: "hunt_fox (both methods, 510000 ms, jade_blank x4, pays ghost_moss)"
+    unforged_keeps: 61
+    note: "provisional (N1, N4); tuned with the X3 generator, never by hand"
+    referenced_by: []
+  - name: salamander
+    status: active
+    source: design/gdd/fight-and-dungeon-routes.md
+    type: combatant
+    display_name: Marrow Salamander
+    stats: "might 40, guard 0, vigor 40, speed 0"
+    fought_on: "hunt_salamander (Ember Breath, 210000 ms) and deep_floor_1 (Still Water, 210000 ms); each rendered_oil x6, pays ember_marrow"
+    unforged_keeps: 68
+    note: "provisional (N1, N4); tuned with the X3 generator, never by hand"
+    referenced_by: []
+  - name: heron
+    status: active
+    source: design/gdd/fight-and-dungeon-routes.md
+    type: combatant
+    display_name: Lotus Heron
+    stats: "might 15, guard 10, vigor 50, speed 60"
+    fought_on: "hunt_heron (Ember Breath, 630000 ms) and deep_floor_2 (Still Water, 210000 ms, gate reached(ember_marrow, 1)); each seasoned_plank x5, pays cloud_lotus"
+    unforged_keeps: 46
+    note: "provisional (N1, N4); tuned with the X3 generator, never by hand"
+    referenced_by: []
+  - name: tide_crab
+    status: active
+    source: design/gdd/fight-and-dungeon-routes.md
+    type: combatant
+    display_name: Tide Crab
+    stats: "might 15, guard 30, vigor 60, speed 20"
+    fought_on: "hunt_crab (Ember Breath, 900000 ms) and deep_floor_3 (Still Water, 210000 ms, gate reached(cloud_lotus, 1)); each jade_blank x4, pays tidewater_pearl"
+    unforged_keeps: 19
+    note: "provisional (N1, N4); tuned with the X3 generator, never by hand"
+    referenced_by: []
+
+items:
+  - name: ash_tallow
+    status: active
+    source: design/gdd/resources-and-caps.md
+    type: resource
+    tier: raw
+    base_cap: 40
+    start: 0
+    note: "provisional until Crafting route (#8) and Fight and dungeon routes (#9) approve (K1.3)"
+    referenced_by: [design/gdd/crafting-route.md]
+  - name: ironbark_log
+    status: active
+    source: design/gdd/resources-and-caps.md
+    type: resource
+    tier: raw
+    base_cap: 30
+    start: 0
+    note: provisional (K1.3)
+    referenced_by: [design/gdd/crafting-route.md]
+  - name: rough_jade
+    status: active
+    source: design/gdd/resources-and-caps.md
+    type: resource
+    tier: raw
+    base_cap: 20
+    start: 0
+    note: provisional (K1.3)
+    referenced_by: [design/gdd/crafting-route.md]
+  - name: rendered_oil
+    status: active
+    source: design/gdd/resources-and-caps.md
+    type: resource
+    tier: refined
+    base_cap: 12
+    start: 0
+    note: provisional (K1.3)
+    referenced_by: [design/gdd/crafting-route.md, design/gdd/fight-and-dungeon-routes.md]
+  - name: seasoned_plank
+    status: active
+    source: design/gdd/resources-and-caps.md
+    type: resource
+    tier: refined
+    base_cap: 10
+    start: 0
+    note: provisional (K1.3)
+    referenced_by: [design/gdd/crafting-route.md, design/gdd/fight-and-dungeon-routes.md]
+  - name: jade_blank
+    status: active
+    source: design/gdd/resources-and-caps.md
+    type: resource
+    tier: refined
+    base_cap: 8
+    start: 0
+    note: provisional (K1.3)
+    referenced_by: [design/gdd/crafting-route.md, design/gdd/fight-and-dungeon-routes.md]
+  - name: hearth_lamp
+    status: active
+    source: design/gdd/resources-and-caps.md
+    type: resource
+    tier: key item (base cap 1; never an input, read by a reached atom)
+    base_cap: 1
+    start: 0
+    note: provisional (K1.3)
+    referenced_by: [design/gdd/crafting-route.md]
+  - name: tuning_chisel
+    status: active
+    source: design/gdd/resources-and-caps.md
+    type: resource
+    tier: key item (base cap 1; never an input, read by a reached atom)
+    base_cap: 1
+    start: 0
+    note: provisional (K1.3)
+    referenced_by: [design/gdd/crafting-route.md]
+  - name: ember_breath
+    status: active
+    source: design/gdd/methods.md
+    type: method
+    feeds: "ember_marrow might +10"
+    quenches: "ironbark_heartwood guard"
+    opens: "three hunts, paying ember_marrow, cloud_lotus, tidewater_pearl (#9 authors)"
+    redo_cost: absent
+    note: "patches are #6 S9's, kept unchanged (W6); best makeup echo_jade, ironbark_heartwood, ember_marrow, cloud_lotus at 4 seals"
+    referenced_by: [design/gdd/forge-and-proving.md, design/gdd/fight-and-dungeon-routes.md]
+  - name: still_water
+    status: active
+    source: design/gdd/methods.md
+    type: method
+    feeds: "echo_jade vigor +20; tidewater_pearl vigor +30"
+    quenches: none
+    opens: "the dungeon's three floors, paying ember_marrow, cloud_lotus, tidewater_pearl (#9 authors)"
+    redo_cost: absent
+    note: "patches are #6 S9's, kept unchanged (W6); best makeup echo_jade, ironbark_heartwood, ember_marrow, tidewater_pearl at 4 seals"
+    referenced_by: [design/gdd/forge-and-proving.md, design/gdd/fight-and-dungeon-routes.md]
+
+formulas:
+  - name: high_water
+    status: active
+    source: design/gdd/content-records-and-schema.md
+    expression: "high_water[id] = max(high_water_prev[id], held[id]), once per unit completion (deduct inputs, add outputs, clamp, then update); high_water_prev starts at min(start, effective cap)"
+    variables: [high_water_prev, held]
+    output: "0 to 10^9; never decreases within a run; starts at min(start[id], effective cap); held never exceeds it; an ingredient is held 0 or 1 (clamped by #3)"
+    referenced_by: [design/gdd/save-and-run-lifecycle.md]
+  - name: atom_met
+    status: active
+    source: design/gdd/content-records-and-schema.md
+    expression: "reached(id, n) = high_water[id] >= n; committed() = committed_method != none; forged(realm) = realm in forged_realms"
+    variables: [high_water, n, committed_method, forged_realms]
+    output: "bool; monotone false to true"
+    referenced_by: []
+  - name: gate_met
+    status: active
+    source: design/gdd/content-records-and-schema.md
+    expression: "true if absent, else AND of atom_met over the gate"
+    variables: [atom_met]
+    output: "bool; monotone"
+    referenced_by: []
+  - name: shortfall
+    status: active
+    source: design/gdd/content-records-and-schema.md
+    expression: "shortfall(id, n) = n - held[id] for each unmet reached atom"
+    variables: [n, held]
+    output: "1 to n"
+    referenced_by: []
+  - name: div_floor
+    status: active
+    source: design/gdd/content-records-and-schema.md
+    expression: "largest integer q with q * d <= a; d >= 1"
+    variables: [a, d]
+    output: "exact integer, rounds toward minus infinity; d <= 0 throws"
+    referenced_by: [design/gdd/forge-and-proving.md, design/gdd/content-validator-and-balance-enumeration.md]
+  - name: bp_of
+    status: active
+    source: design/gdd/content-records-and-schema.md
+    expression: "div_floor(x * b, 10000)"
+    variables: [x, b]
+    output: "exact while |x * b| <= 2^53 - 1"
+    referenced_by: []
+  - name: record_state
+    status: active
+    source: design/gdd/content-records-and-schema.md
+    expression: "hidden if reveal unmet; waiting if no commit; withdrawn if disabled in committed set; actionable if need met; else waiting"
+    variables: [reveal, need, committed_method, enabled]
+    output: "hidden | waiting | withdrawn | actionable; derived, never saved"
+    referenced_by: []
+  - name: method_change_set
+    status: active
+    source: design/gdd/content-records-and-schema.md
+    expression: "changed(m) = set of (target, field, key?) over m.patches; output differs from input exactly there"
+    variables: [patches]
+    output: "0 to |patches| triples"
+    referenced_by: [design/gdd/methods.md]
+  - name: op_result
+    status: active
+    source: design/gdd/modifier-pipeline-and-recompute.md
+    expression: "set gives x; add gives v + x; scale_bp gives bp_of(v, x)"
+    variables: [op, v, x]
+    output: "safe integer; inside the row's range only after the stage clamp"
+    referenced_by: []
+  - name: stage_apply
+    status: active
+    source: design/gdd/modifier-pipeline-and-recompute.md
+    expression: "one entry gives op_result(op, v, operand); 1 to 16 add entries with distinct sources give v + sum of operands; no entries give v"
+    variables: [v, entries]
+    output: "abs value at most 17 * B before the clamp (B = row's largest absolute bound)"
+    referenced_by: []
+  - name: stage_clamp
+    status: active
+    source: design/gdd/modifier-pipeline-and-recompute.md
+    expression: "min(max(v, lo), hi) over the row's interval, once per stage, only on values the Foundation or tending stage touched"
+    variables: [v, lo, hi]
+    output: "lo to hi; a changed value adds a clamp step to its trail"
+    referenced_by: []
+  - name: effective_value
+    status: active
+    source: design/gdd/modifier-pipeline-and-recompute.md
+    expression: "clamp_T(stage_apply(clamp_F(stage_apply(v_method, F)), T)); method, then Foundation, then tending; pure in (frozen set, F, T)"
+    variables: [v_method, F, T]
+    output: "the row's range; for a sealInput row tended equals untended"
+    referenced_by: [design/gdd/tending.md, design/gdd/content-validator-and-balance-enumeration.md]
+  - name: trail_replay
+    status: active
+    source: design/gdd/modifier-pipeline-and-recompute.md
+    expression: "fold steps from base with op_result (a clamp step takes its result); must equal final"
+    variables: [base, steps]
+    output: "equals final; 0 to 35 steps"
+    referenced_by: []
+  - name: scale_product_bound
+    status: active
+    source: design/gdd/modifier-pipeline-and-recompute.md
+    expression: "max_abs(row) * SCALE_BP_MAX <= 2^53 - 1 for contrib, inputs, outputs, duration, cap"
+    variables: [max_abs, scale_bp_operand_max]
+    output: "true; largest product 10^14"
+  - name: combat_life_start
+    status: active
+    source: design/gdd/combat-resolver.md
+    expression: "max(1, vigor)"
+    variables: [vigor]
+    output: "1 to 1000000 Life"
+    referenced_by: []
+  - name: combat_hit
+    status: active
+    source: design/gdd/combat-resolver.md
+    expression: "1 if might + guard = 0, else max(1, div_floor(might^2, might + guard))"
+    variables: [might, guard]
+    output: "1 to 1000000 Life per strike"
+    referenced_by: []
+  - name: combat_rate
+    status: active
+    source: design/gdd/combat-resolver.md
+    expression: "SPEED_BASE + speed"
+    variables: [speed, SPEED_BASE]
+    output: "SPEED_BASE to 1000000 + SPEED_BASE strikes per time unit"
+    referenced_by: []
+  - name: combat_strikes_needed
+    status: active
+    source: design/gdd/combat-resolver.md
+    expression: "div_floor(L + hit - 1, hit)"
+    variables: [L, hit]
+    output: "1 to 1000000 strikes"
+    referenced_by: []
+  - name: combat_won
+    status: active
+    source: design/gdd/combat-resolver.md
+    expression: "n(C->F) * rate(F) <= n(F->C) * rate(C); tie goes to the challenger"
+    variables: [n_challenger, n_opponent, rate_challenger, rate_opponent]
+    output: "boolean"
+    referenced_by: []
+  - name: combat_life_left
+    status: active
+    source: design/gdd/combat-resolver.md
+    expression: "win: L_C - div_floor(n(C->F) * rate(F) - 1, rate(C)) * hit(F->C); loss: L_F - div_floor(n(F->C) * rate(C), rate(F)) * hit(C->F)"
+    variables: [L_C, L_F, n_challenger, n_opponent, rate_challenger, rate_opponent, hit_challenger, hit_opponent]
+    output: "1 to starting Life of the winner"
+    referenced_by: []
+  - name: combat_score
+    status: active
+    source: design/gdd/combat-resolver.md
+    expression: "win: 10000 + div_floor(life_end_C * 10000, L_C); loss: div_floor((L_F - life_end_F) * 10000, L_F)"
+    variables: [life_end_C, L_C, life_end_F, L_F]
+    output: "loss 0 to 9999; win 10000 to 20000; monotone in every stat"
+    referenced_by: []
+  - name: effective_cap
+    status: active
+    source: design/gdd/resources-and-caps.md
+    expression: "cap(id) = final value of (id, cap) in effective(set_m, F, none) (#2 M4) for a resource; INGREDIENT_HELD_MAX for an ingredient"
+    variables: [base, F, INGREDIENT_HELD_MAX]
+    output: "1 to 10^9; the base cap before the forge, then the base cap or a value in raise_envelope"
+    referenced_by: []
+  - name: settle
+    status: active
+    source: design/gdd/resources-and-caps.md
+    expression: "throws unless in <= held (checked before netting); raw = held - in + out; held' = min(raw, cap); lost = raw - held'"
+    variables: [held, in, out, cap]
+    output: "held' 0 to cap; lost 0 to out for a unit, 0 to held - cap for a re-clamp; marks update once after the call"
+    referenced_by: [design/gdd/save-and-run-lifecycle.md]
+  - name: start_held
+    status: active
+    source: design/gdd/resources-and-caps.md
+    expression: "held0 = min(start, cap) for a resource; 0 for an ingredient"
+    variables: [start, cap]
+    output: "0 to cap; marks start at held0"
+    referenced_by: [design/gdd/save-and-run-lifecycle.md]
+  - name: room
+    status: active
+    source: design/gdd/resources-and-caps.md
+    expression: "room = cap - held; full = (room = 0)"
+    variables: [cap, held]
+    output: "0 to cap"
+    referenced_by: []
+  - name: raise_envelope
+    status: active
+    source: design/gdd/resources-and-caps.md
+    expression: "lo(b) = max(b + 1, ceil_div(b * RAISE_MIN_BP, 10000)); hi(b) = div_floor(b * RAISE_MAX_BP, 10000); pass if E = b or lo <= E <= hi (b >= 2); E = 1 and no entry for b = 1"
+    variables: [b, E, RAISE_MIN_BP, RAISE_MAX_BP]
+    output: "bool; hi >= lo for every b >= 2"
+    referenced_by: []
+  - name: bill_share
+    status: active
+    source: design/gdd/resources-and-caps.md
+    expression: "share_bp(r) = div_floor(B(r) * 10000, b(r)); B(r) = largest inputs amount of r over sources"
+    variables: [B, b]
+    output: "1 and up; V2 passes from BILL_FLOOR_BP to 10000"
+    referenced_by: []
+  - name: first_cap
+    status: active
+    source: design/gdd/resources-and-caps.md
+    expression: "fill_units = ceil_div(b - start, out); ok = start < b AND fill_units <= div_floor(FIRST_CAP_MS, duration)"
+    variables: [b, start, out, duration, FIRST_CAP_MS]
+    output: "bool; forms no units-times-duration product"
+    referenced_by: []
+  - name: rest_bank
+    status: active
+    source: design/gdd/activity-slot-rest-and-away-time.md
+    expression: "budget = running ? dt + min(dt, b) : 0; used = min(budget, A_stop); b' = min(BANK_CAP, b + dt - used); t' = t + used"
+    variables: [dt, b, running, A_stop, t, BANK_CAP]
+    output: "b' 0 to BANK_CAP; used 0 to 2 dt; from run start sum(used) + b <= sum(dt) (activity time never exceeds real time); composes exactly"
+    referenced_by: []
+  - name: progress_rescale
+    status: active
+    source: design/gdd/activity-slot-rest-and-away-time.md
+    expression: "p' = min(p, div_floor(p * D', D)), on a recompute during play only (never on load); amended A2 2026-11-21 (was div_floor(p * D', D))"
+    variables: [p, D, D']
+    output: "0 <= p' < D'; p' <= p (never grows; a lengthening keeps ms, a shortening keeps the fraction); product at most 86400000^2"
+    referenced_by: [design/gdd/tending.md]
+  - name: run_unit_bound
+    status: active
+    source: design/gdd/activity-slot-rest-and-away-time.md
+    expression: "units_max = 1 + ceil((AWAY_CAP - 1) / UNIT_FLOOR_MS)"
+    variables: [AWAY_CAP, UNIT_FLOOR_MS]
+    output: "86401 with the provisional constants; at most UNITS_MAX (T3)"
+    referenced_by: []
+  - name: units_to_stop
+    status: active
+    source: design/gdd/activity-slot-rest-and-away-time.md
+    expression: "U = min over ids of u; net = out - in; u = 0 if held < in; div_floor(held - in, -net) + 1 if net < 0; ceil(room / net) if net > 0 and an output; else infinity"
+    variables: [held, in, out, room]
+    output: "0 to infinity units; a read-only projection, never used to skip units"
+    referenced_by: []
+  - name: eta
+    status: active
+    source: design/gdd/activity-slot-rest-and-away-time.md
+    expression: "eta(r, b) = r <= 2b ? ceil(r / 2) : r - b"
+    variables: [r, b]
+    output: "0 to r real ms; pacing ceilings read b = 0, floors b = BANK_CAP"
+    referenced_by: [design/gdd/content-validator-and-balance-enumeration.md]
+  - name: affinity_total
+    status: active
+    source: design/gdd/forge-and-proving.md
+    expression: "T_a = sum over makeup ingredients i of contrib_m[i][a]"
+    variables: [contrib_m, a]
+    output: "-4,000,000 to 4,000,000 per affinity (N = 4)"
+    referenced_by: []
+  - name: effective_affinity
+    status: active
+    source: design/gdd/forge-and-proving.md
+    expression: "e_a = max(0, max(0, T_a) - div_floor(max(0, T_opp(a)) * CLASH_BP, 10000)); opposed pairs might-vigor (Cinder-Bark), guard-speed (Jade-Gale)"
+    variables: [T_a, T_opp, CLASH_BP]
+    output: "0 to T_a positive part"
+    referenced_by: []
+  - name: foundation_stat
+    status: active
+    source: design/gdd/forge-and-proving.md
+    expression: "stat_a = min(1000000, FOUNDATION_BASE_a + e_a)"
+    variables: [FOUNDATION_BASE_a, e_a]
+    output: "0 to 1,000,000; speed capped at SPEED_BASE by B11"
+    referenced_by: []
+  - name: door_tier
+    status: active
+    source: design/gdd/forge-and-proving.md
+    expression: "tier = [score >= t1] + [score >= t2]"
+    variables: [score, t1, t2]
+    output: "0, 1 or 2; a lost fight is always 0"
+    referenced_by: []
+  - name: seals
+    status: active
+    source: design/gdd/forge-and-proving.md
+    expression: "seals(makeup, m) = sum over doors of tier_d; bestSeals(m) = max over makeups of seals"
+    variables: [tier_d, doors]
+    output: "0 to 2 x doors (0-6 in the MVP); B6 makes the maximum unreachable"
+    referenced_by: [design/gdd/content-validator-and-balance-enumeration.md]
+  - name: foundation_cap_raise
+    status: active
+    source: design/gdd/forge-and-proving.md
+    expression: "w(r) = sum of e_a over affinities listing r; E = b if w = 0, else lo(b) + div_floor((hi(b) - lo(b)) * min(w, WIDEN_FULL), WIDEN_FULL); D = E - b split per ingredient by cumulative rounding of positive contrib in id order"
+    variables: [e_a, b, lo, hi, WIDEN_FULL, contrib_m]
+    output: "E = b or lo(b) to hi(b); lines sum to D, each >= 0, at most N per store"
+    referenced_by: []
+  - name: gather_time
+    status: active
+    source: design/gdd/forge-and-proving.md
+    expression: "T(X, m) = sum over sources s used by the chains of X of ceil_div(D_s(X), out_s) * d_s; shared inputs made once; for one id, D = max(consumed demand, largest n of its reached atoms) (A2); no by-product credit"
+    variables: [X, D_s, out_s, d_s]
+    output: "0 ms upward; B9 needs T_all >= 1.35 x T_best, +6 min, <= 60 min"
+    referenced_by: [design/gdd/methods.md, design/gdd/crafting-route.md, design/gdd/fight-and-dungeon-routes.md, design/gdd/content-validator-and-balance-enumeration.md]
+  - name: source_price
+    status: active
+    source: design/gdd/forge-and-proving.md
+    expression: "price(s) = d_s + sum over inputs r of ceil_div(in_s[r], out_r) * price(src(r)) + sum of reached-atom prices; ceiling(i) = max(div_floor(p_i * FIGHTLESS_CEILING_BP, 10000), p_i + FIGHTLESS_SLACK_MS)"
+    variables: [d_s, in_s, out_r, p_i, FIGHTLESS_CEILING_BP, FIGHTLESS_SLACK_MS]
+    output: "1 ms upward; B10 passes when the cheapest fightless price <= ceiling"
+    referenced_by: [design/gdd/methods.md, design/gdd/crafting-route.md, design/gdd/fight-and-dungeon-routes.md, design/gdd/content-validator-and-balance-enumeration.md]
+  - name: gives_up
+    status: active
+    source: design/gdd/methods.md
+    expression: "givesUp(m) = for each method o != m in id order: o, then opened(o) in id order, where opened(o) = sources s with (s, enabled) in changed(o); each prints as Closes: {name}"
+    variables: [m, o, opened]
+    output: "(M - 1) x (1 + |opened(o)|) lines; 4 in the MVP"
+    referenced_by: [design/gdd/content-records-and-schema.md]
+  - name: redo_line
+    status: active
+    source: design/gdd/methods.md
+    expression: "redoLine(m) = Redo: only by starting a new run, if redoCost is absent; else Redo: {duration(redoCost)} to change method"
+    variables: [redoCost, duration]
+    output: "one line; the number only from the field"
+    referenced_by: [design/gdd/content-records-and-schema.md]
+  - name: route_count
+    status: active
+    source: design/gdd/methods.md
+    expression: "routes(i, m) = number of enabled sources in set_m whose outputs hold ingredient i"
+    variables: [i, m, enabled, outputs]
+    output: "0 upward; #1 R8.4 needs >= 2; exactly 2 for all 12 pairs under the route plan"
+    referenced_by: [design/gdd/fight-and-dungeon-routes.md]
+  - name: price_leak
+    status: active
+    source: design/gdd/methods.md
+    expression: "leak(m) = [T(best_m, m) <= min over makeups X of T(X, m)]; H5 fails when 1"
+    variables: [T, best_m]
+    output: "0 or 1; not evaluated when B1 fails"
+    referenced_by: [design/gdd/crafting-route.md, design/gdd/fight-and-dungeon-routes.md]
+  - name: hearth_gather_time
+    status: active
+    source: design/gdd/crafting-route.md
+    expression: "T_fl(X, m) = #6 S7's gather_time restricted to the hearth road: enabled sources with no fights whose inputs and reached atoms all have producers on the road"
+    variables: [X, m, d_s, out_s, in_c, n_star]
+    output: "0 to 4.5e11 ms, or undefined when an ingredient of X has no hearth producer; 290,000 (Ember Marrow) to 3,330,000 (all six) on #8's L2"
+    referenced_by: []
+  - name: run_floor
+    status: active
+    source: design/gdd/crafting-route.md
+    expression: "floor_ok(s) = d_s >= RUN_FLOOR_MS if s has inputs; else, for each output store r with a hearth sink, ceil_div(B(r), out_s[r]) >= ceil_div(RUN_FLOOR_MS, d_s), where B(r) is the smallest net draw on r"
+    variables: [d_s, out_s, B, RUN_FLOOR_MS]
+    output: "true or false; X1 fails on false"
+    referenced_by: []
+  - name: fight_floor
+    status: active
+    source: design/gdd/crafting-route.md
+    expression: "p_min(f) = max(1, min(ceil_div(f x 10000, FIGHTLESS_CEILING_BP), f - FIGHTLESS_SLACK_MS)); B10 passes for i exactly when p_i >= p_min(f_i)"
+    variables: [f, p, FIGHTLESS_CEILING_BP, FIGHTLESS_SLACK_MS]
+    output: "1 to f; ceil_div(f, 2) when f > 120,000 ms"
+    referenced_by: []
+  - name: route_price
+    status: active
+    source: design/gdd/fight-and-dungeon-routes.md
+    expression: "price(f) = d_f + ceil_div(b_f, out_r) * price(src(r)) + [f is floor k >= 2] * price_1(g_(k-1)); #6 S8 on one refined bill and at most one reached gate"
+    variables: [d_f, b_f, out_r, price_1]
+    output: "d_f upward; 224 s to 944 s on the provisional content with every bill at 44 s"
+    referenced_by: [design/gdd/crafting-route.md]
+  - name: premium_ok
+    status: active
+    source: design/gdd/fight-and-dungeon-routes.md
+    expression: "premium_ok(i, m) = [price(f_im) * 10000 <= PREMIUM_MAX_BP * price(r_im)]; band(i) = [ceil_div(max over m of price(f_im) * 10000, PREMIUM_MAX_BP), min over m of ceiling_m(i)] with ceiling_m from source_price"
+    variables: [f_im, r_im, PREMIUM_MAX_BP, FIGHTLESS_CEILING_BP, FIGHTLESS_SLACK_MS]
+    output: "0 or 1, U3 fails when 0; recipe bands in s: EJ 280-448, IH 317.5-508, EM 317.5-508, CL 842.5-1016, GM 692.5-1108, TP 1180-1524"
+    referenced_by: [design/gdd/tending.md]
+  - name: heap_add
+    status: active
+    source: design/gdd/tending.md
+    expression: "heap_add(out) = max(1, div_floor(out * HEAP_YIELD_BP, 10000)); out_t = out + heap_add(out); out read from checked (D3.2)"
+    variables: [out, HEAP_YIELD_BP]
+    output: "1 to 5e8; skim 5 -> 7, fell 3 -> 4, quarry 2 -> 3"
+    referenced_by: []
+  - name: heap_duration
+    status: active
+    source: design/gdd/tending.md
+    expression: "d_t = bp_of(d, HEAP_TIME_BP) (#2 scale_bp)"
+    variables: [d, HEAP_TIME_BP]
+    output: "above d for every d >= 1000 in the safe range; 5000 -> 6250; at most DURATION_CEILING by J1(d)"
+    referenced_by: []
+  - name: fill_time
+    status: active
+    source: design/gdd/tending.md
+    expression: "fill(R, o, D) = ceil_div(R, o) * D; heap_wins(R) = [fill(R, out_t, d_t) < fill(R, out, d)]"
+    variables: [R, o, D]
+    output: "D to 8.64e16 activity ms (Validator BigInt); skim wins 25 of 40 rooms, fell 16 of 30, quarry 16 of 20"
+    referenced_by: []
+  - name: heap_ceilings
+    status: active
+    source: design/gdd/tending.md
+    expression: "J1 = [out_t * 10000 <= YIELD_CEIL_BP * out] and [out_t <= div_floor(cap, 3)] and [out_t * d * 10000 <= RATE_CEIL_BP * out * d_t] and [d_t <= DURATION_CEILING]"
+    variables: [out, out_t, d, d_t, cap, YIELD_CEIL_BP, RATE_CEIL_BP, DURATION_CEILING]
+    output: "bool; speed ratios skim 1.12, fell 1.067, quarry 1.20; quarry yield at the ceiling exactly"
+    referenced_by: []
+  - name: load_gap
+    status: active
+    source: design/gdd/save-and-run-lifecycle.md
+    expression: "gap = min(max(0, now - lastSeen), DT_MAX); then lastSeen := now; now sampled once per load, floored"
+    variables: [now, lastSeen, DT_MAX]
+    output: "0 to DT_MAX ms; state saturates past AWAY_CAP + longest unit + BANK_CAP (about 49 h); gap 0 still calls advance(s, 0)"
+    referenced_by: []
+  - name: format_action
+    status: active
+    source: design/gdd/save-and-run-lifecycle.md
+    expression: "load if v = SAVE_FORMAT; migrate(SAVE_FORMAT - v) if F_pub != none and F_pub <= v < SAVE_FORMAT; refuseOlder if v < SAVE_FORMAT otherwise; refuseNewer if v > SAVE_FORMAT"
+    variables: [v, SAVE_FORMAT, F_pub]
+    output: "one of load, migrate(1 to SAVE_FORMAT - F_pub), refuseOlder, refuseNewer; F_pub is none before the first public build"
+    referenced_by: []
+  - name: run_start_state
+    status: active
+    source: design/gdd/save-and-run-lifecycle.md
+    expression: "held0 per start_held; mark0 = held0; occupant rest, no stop reason, no kept progress, t 0, b 0, committed none, no snapshot; cap is the base cap at run start and at the pre-commit reset (D3.8), the effective cap for new content (D3.10)"
+    variables: [start, cap]
+    output: "every slice at its run-start value; shared by the first game, every new run and a refusal resolved by New run"
+    referenced_by: []
+  - name: load_clamp
+    status: active
+    source: design/gdd/save-and-run-lifecycle.md
+    expression: "p' = min(p, D' - 1); b' = min(b, BANK_CAP); held' = min(held, cap_eff), spill = held - held'; mark' = max(mark, held')"
+    variables: [p, D', b, BANK_CAP, held, cap_eff, mark]
+    output: "p' 1 to D' - 1 (D' >= UNIT_FLOOR_MS); b' 0 to BANK_CAP; held' 0 to cap_eff, one overflow cause cap per spilling id; mark' >= held'"
+    referenced_by: []
+  - name: write_fail
+    status: active
+    source: design/gdd/save-and-run-lifecycle.md
+    expression: "n := n + 1 on a failed write attempt, n := 0 on a committed write; 'Not saving' shows when n >= WRITE_FAIL_PROMPT, or at once after a failed commit or forge write"
+    variables: [n, WRITE_FAIL_PROMPT]
+    output: "notice shown or not; n not saved; replaced or fenced writes are not attempts; new run and import commit before switching"
+    referenced_by: []
+  - name: case_count
+    status: active
+    source: design/gdd/content-validator-and-balance-enumeration.md
+    expression: "cases = sum over methods m and realms r of C(M_r, N_r); door_fights = sum of C(M_r, N_r) * D_r"
+    variables: [m, M_r, N_r, D_r]
+    output: "MVP 2 x C(6,4) = 30 cases, 90 door fights; bounded by CASES_MAX (VF6)"
+    referenced_by: []
+  - name: tending_pairs
+    status: active
+    source: design/gdd/content-validator-and-balance-enumeration.md
+    expression: "pairs = sum over m of 2^k_m (k_m <= TENDING_K_MAX); seal_comparisons = sum over m of C(M, N) * 2^k_m"
+    variables: [k_m, TENDING_K_MAX, M, N]
+    output: "MVP k = 3 per method: 16 pairs, 240 seal comparisons (VC6); J3 runs on the non-empty sets only"
+    referenced_by: []
+  - name: b1_margin
+    status: active
+    source: design/gdd/content-validator-and-balance-enumeration.md
+    expression: "margin_ok(m) = for every (door d, stat s, delta = +-B1_MARGIN_STEP) with v_ds + delta in the combatant.stats row and speed <= SPEED_BASE: the argmax over makeups of seals is unique; perturbations(m) <= D x 4 x 2; resolver_calls(m) = perturbations(m) x C(M, N)"
+    variables: [d, s, delta, v_ds, B1_MARGIN_STEP, SPEED_BASE]
+    output: "true or false per method, false is a VC11 warning; MVP <= 24 perturbations and 360 resolver calls per method; S9's doors fail it (Furnace Gate vigor 191 -> 190)"
+    referenced_by: []
+  - name: run_verdict
+    status: active
+    source: design/gdd/content-validator-and-balance-enumeration.md
+    expression: "verdict = load_failed or E > 0 ? FAIL : (NE > 0 ? INCOMPLETE : PASS); exit = load_failed ? 1 : tool_fault ? 2 : verdict = PASS ? 0 : (verdict = INCOMPLETE and U = 0 and not release ? 0 : 1)"
+    variables: [load_failed, E, NE, U, release, tool_fault]
+    output: "verdict PASS, INCOMPLETE or FAIL; exit 0, 1 or 2; warnings change neither; U counts not-evaluated roots with no pending entry"
+    referenced_by: []
+  - name: price_bound
+    status: active
+    source: design/gdd/content-validator-and-balance-enumeration.md
+    expression: "PRICE_MAX = div_floor(2^53 - 1, FIGHTLESS_CEILING_BP); VC15 passes when price(s) <= PRICE_MAX"
+    variables: [price(s), FIGHTLESS_CEILING_BP]
+    output: "450,359,962,737 ms at 20,000 (shipped); 300,239,975,158 ms at 30,000; 900,719,925,474 ms at 10,000"
+    referenced_by: []
+  - name: enumeration_bounds
+    status: active
+    source: design/gdd/content-validator-and-balance-enumeration.md
+    expression: "case_ok = cases <= CASES_MAX; tending_ok(m) = k_m <= TENDING_K_MAX; rooms_ok(r) = base_cap(r) <= ROOMS_MAX"
+    variables: [cases, CASES_MAX, k_m, TENDING_K_MAX, base_cap(r), ROOMS_MAX]
+    output: "true or false; false makes the affected instances one * instance, not evaluated OVER_BOUND; MVP 30 <= 2000, 3 <= 10, cap 40 <= 1e6"
+    referenced_by: []
+
+constants:
+  - name: id_max_length
+    status: active
+    source: design/gdd/content-records-and-schema.md
+    value: 32
+    unit: code points
+    referenced_by: []
+  - name: name_max_length
+    status: active
+    source: design/gdd/content-records-and-schema.md
+    value: 24
+    unit: code points
+    referenced_by: [design/gdd/methods.md]
+  - name: desc_max_length
+    status: active
+    source: design/gdd/content-records-and-schema.md
+    value: 80
+    unit: code points
+    referenced_by: []
+  - name: flavor_max_length
+    status: active
+    source: design/gdd/content-records-and-schema.md
+    value: 140
+    unit: code points
+    referenced_by: []
+  - name: commit_text_max_length
+    status: active
+    source: design/gdd/content-records-and-schema.md
+    value: 200
+    unit: code points
+    referenced_by: []
+  - name: basis_point_scale
+    status: active
+    source: design/gdd/content-records-and-schema.md
+    value: 10000
+    unit: basis points per 100 percent
+    referenced_by: []
+  - name: duration_ceiling
+    status: active
+    source: design/gdd/content-records-and-schema.md
+    value: 86400000
+    unit: ms per unit
+    referenced_by: [design/gdd/tending.md, design/gdd/content-validator-and-balance-enumeration.md]
+  - name: max_fights_per_source
+    status: active
+    source: design/gdd/content-records-and-schema.md
+    value: 3
+    unit: fights
+    referenced_by: []
+  - name: max_doors_per_realm
+    status: active
+    source: design/gdd/content-records-and-schema.md
+    value: 6
+    unit: doors
+    referenced_by: [design/gdd/content-validator-and-balance-enumeration.md]
+  - name: resource_cap_max
+    status: active
+    source: design/gdd/content-records-and-schema.md
+    value: 1000000000
+    unit: units
+    referenced_by: [design/gdd/content-validator-and-balance-enumeration.md]
+  - name: contrib_abs_max
+    status: active
+    source: design/gdd/content-records-and-schema.md
+    value: 1000000
+    unit: stat points
+    referenced_by: []
+  - name: stats_max
+    status: active
+    source: design/gdd/content-records-and-schema.md
+    value: 1000000
+    unit: stat points
+    referenced_by: []
+  - name: ingredient_held_max
+    status: active
+    source: design/gdd/content-records-and-schema.md
+    value: 1
+    unit: ingredients
+    referenced_by: [design/gdd/forge-and-proving.md]
+  - name: thresholds_count
+    status: active
+    source: design/gdd/content-records-and-schema.md
+    value: 2
+    unit: thresholds per door
+    referenced_by: [design/gdd/forge-and-proving.md]
+  - name: safe_integer_max
+    status: active
+    source: design/gdd/content-records-and-schema.md
+    value: 9007199254740991
+    unit: integer
+    referenced_by: []
+  - name: load_time_ceiling_provisional
+    status: active
+    source: design/gdd/content-records-and-schema.md
+    value: 20
+    unit: ms, median, build runtime
+    referenced_by: []
+  - name: scale_bp_operand_max
+    status: active
+    source: design/gdd/modifier-pipeline-and-recompute.md
+    value: 100000
+    unit: basis points
+    referenced_by: []
+  - name: max_adds_per_value
+    status: active
+    source: design/gdd/modifier-pipeline-and-recompute.md
+    value: 16
+    unit: add entries per value per stage
+    referenced_by: [design/gdd/forge-and-proving.md]
+  - name: recompute_time_ceiling_provisional
+    status: active
+    source: design/gdd/modifier-pipeline-and-recompute.md
+    value: 2
+    unit: ms, median, build runtime
+  - name: speed_base
+    status: active
+    source: design/gdd/combat-resolver.md
+    value: 100
+    unit: strike rate at speed 0 (safe range 10 to 10000)
+    referenced_by: [design/gdd/forge-and-proving.md, design/gdd/fight-and-dungeon-routes.md, design/gdd/content-validator-and-balance-enumeration.md]
+  - name: combat_score_win_floor
+    status: active
+    source: design/gdd/combat-resolver.md
+    value: 10000
+    unit: proving points (every win scores at least this, every loss below it)
+    referenced_by: [design/gdd/forge-and-proving.md]
+  - name: combat_score_max
+    status: active
+    source: design/gdd/combat-resolver.md
+    value: 20000
+    unit: proving points
+    referenced_by: [design/gdd/forge-and-proving.md]
+  - name: combat_stat_count
+    status: active
+    source: design/gdd/combat-resolver.md
+    value: 4
+    unit: "stats (might, guard, vigor, speed)"
+    referenced_by: []
+  - name: max_opponents_per_call
+    status: active
+    source: design/gdd/combat-resolver.md
+    value: 3
+    unit: opponents per resolver call (equals max_fights_per_source)
+    referenced_by: []
+  - name: bill_floor_bp
+    status: active
+    source: design/gdd/resources-and-caps.md
+    value: 7000
+    unit: basis points of the base cap (V2 floor for the largest bill)
+    referenced_by: [design/gdd/crafting-route.md]
+  - name: raise_min_bp
+    status: active
+    source: design/gdd/resources-and-caps.md
+    value: 12000
+    unit: basis points of the base cap (smallest Foundation raise)
+    referenced_by: [design/gdd/forge-and-proving.md]
+  - name: raise_max_bp
+    status: active
+    source: design/gdd/resources-and-caps.md
+    value: 17500
+    unit: basis points of the base cap (largest Foundation raise)
+    referenced_by: [design/gdd/forge-and-proving.md]
+  - name: first_cap_ms
+    status: active
+    source: design/gdd/resources-and-caps.md
+    value: 45000
+    unit: ms after the commit (V7)
+    referenced_by: [design/gdd/methods.md, design/gdd/crafting-route.md]
+  - name: bank_cap_ms
+    status: active
+    source: design/gdd/activity-slot-rest-and-away-time.md
+    value: 1800000
+    unit: ms of held breath (rest bank cap, 30 min)
+    referenced_by: [design/gdd/methods.md, design/gdd/save-and-run-lifecycle.md, design/gdd/content-validator-and-balance-enumeration.md]
+  - name: rest_speed
+    status: active
+    source: design/gdd/activity-slot-rest-and-away-time.md
+    value: 2
+    unit: activity ms per real ms while held breath is spent (integer only)
+    referenced_by: []
+  - name: away_cap_ms
+    status: active
+    source: design/gdd/activity-slot-rest-and-away-time.md
+    value: 86400000
+    unit: activity ms since the last input (provisional; architecture pins the value)
+    referenced_by: [design/gdd/save-and-run-lifecycle.md]
+  - name: unit_floor_ms
+    status: active
+    source: design/gdd/activity-slot-rest-and-away-time.md
+    value: 1000
+    unit: ms (shortest effective source duration, T1)
+    referenced_by: [design/gdd/crafting-route.md, design/gdd/tending.md, design/gdd/save-and-run-lifecycle.md, design/gdd/content-validator-and-balance-enumeration.md]
+  - name: units_max
+    status: active
+    source: design/gdd/activity-slot-rest-and-away-time.md
+    value: 100000
+    unit: units one advance may complete (declared product pair with source.inputs and source.outputs)
+    referenced_by: []
+  - name: dt_max
+    status: active
+    source: design/gdd/activity-slot-rest-and-away-time.md
+    value: 1125899906842624
+    unit: real ms (2^50; a larger dt is clamped, exactly)
+    referenced_by: [design/gdd/save-and-run-lifecycle.md]
+  - name: clash_bp
+    status: active
+    source: design/gdd/forge-and-proving.md
+    value: 5000
+    unit: basis points of the opposed total taken off (safe 2500 to 7500)
+    referenced_by: []
+  - name: foundation_base_might
+    status: active
+    source: design/gdd/forge-and-proving.md
+    value: 20
+    unit: might points (safe 0 to 50)
+    referenced_by: [design/gdd/fight-and-dungeon-routes.md]
+  - name: foundation_base_guard
+    status: active
+    source: design/gdd/forge-and-proving.md
+    value: 10
+    unit: guard points (safe 0 to 50)
+    referenced_by: [design/gdd/fight-and-dungeon-routes.md]
+  - name: foundation_base_vigor
+    status: active
+    source: design/gdd/forge-and-proving.md
+    value: 100
+    unit: vigor points (safe 50 to 200)
+    referenced_by: [design/gdd/fight-and-dungeon-routes.md]
+  - name: foundation_base_speed
+    status: active
+    source: design/gdd/forge-and-proving.md
+    value: 0
+    unit: speed points (safe 0 to 20)
+    referenced_by: [design/gdd/fight-and-dungeon-routes.md]
+  - name: widen_full
+    status: active
+    source: design/gdd/forge-and-proving.md
+    value: 200
+    unit: widening at which a store reaches hi(b)
+    referenced_by: []
+  - name: overgather_ratio_bp
+    status: active
+    source: design/gdd/forge-and-proving.md
+    value: 13500
+    unit: basis points of the best makeup gathering time (B9; safe 12500 to 15000)
+    referenced_by: [design/gdd/methods.md, design/gdd/crafting-route.md, design/gdd/fight-and-dungeon-routes.md]
+  - name: overgather_min_ms
+    status: active
+    source: design/gdd/forge-and-proving.md
+    value: 360000
+    unit: ms more than the best makeup (B9)
+    referenced_by: [design/gdd/methods.md, design/gdd/crafting-route.md, design/gdd/fight-and-dungeon-routes.md]
+  - name: overgather_max_ms
+    status: active
+    source: design/gdd/forge-and-proving.md
+    value: 3600000
+    unit: ms to gather all ingredients at most (B9)
+    referenced_by: [design/gdd/methods.md, design/gdd/crafting-route.md, design/gdd/fight-and-dungeon-routes.md]
+  - name: fightless_ceiling_bp
+    status: active
+    source: design/gdd/forge-and-proving.md
+    value: 20000
+    unit: basis points of the cheapest other source price (B10; safe 15000 to 25000)
+    referenced_by: [design/gdd/methods.md, design/gdd/crafting-route.md, design/gdd/fight-and-dungeon-routes.md, design/gdd/content-validator-and-balance-enumeration.md]
+  - name: fightless_slack_ms
+    status: active
+    source: design/gdd/forge-and-proving.md
+    value: 60000
+    unit: ms of absolute slack (B10)
+    referenced_by: [design/gdd/methods.md, design/gdd/crafting-route.md, design/gdd/fight-and-dungeon-routes.md]
+  - name: door_threshold_min
+    status: active
+    source: design/gdd/forge-and-proving.md
+    value: 10000
+    unit: proving points (each door threshold; equals combat_score_win_floor)
+    referenced_by: []
+  - name: door_threshold_max
+    status: active
+    source: design/gdd/forge-and-proving.md
+    value: 20000
+    unit: proving points (each door threshold; equals combat_score_max)
+    referenced_by: []
+  - name: feed_max
+    status: active
+    source: design/gdd/methods.md
+    value: 40
+    unit: stat points per feed (H1; safe 30 to 60)
+    referenced_by: []
+  - name: method_patch_max
+    status: active
+    source: design/gdd/methods.md
+    value: 8
+    unit: triples per method (H4; safe 5 to 12)
+    referenced_by: []
+  - name: mvp_source_target
+    status: active
+    source: design/gdd/methods.md
+    value: 23
+    unit: source records in the MVP, 20 enabled under each method (a content target, not a check; Y3)
+    referenced_by: [design/gdd/content-records-and-schema.md]
+  - name: run_floor_ms
+    status: active
+    source: design/gdd/crafting-route.md
+    value: 30000
+    unit: ms, the shortest uninterrupted hearth run (X1; safe 20,000 to 30,000 on #8's L2)
+    referenced_by: [design/gdd/content-validator-and-balance-enumeration.md]
+  - name: premium_max_bp
+    status: active
+    source: design/gdd/fight-and-dungeon-routes.md
+    value: 8000
+    unit: basis points of the recipe price a fight route may cost at most (U3; safe 7000 to 9000)
+    referenced_by: [design/gdd/crafting-route.md]
+  - name: first_ingredient_ms
+    status: active
+    source: design/gdd/fight-and-dungeon-routes.md
+    value: 300000
+    unit: ms for some ingredient's cheapest source under each method (U5, rule 17; safe 180000 to 420000)
+    referenced_by: [design/gdd/crafting-route.md]
+  - name: heap_yield_bp
+    status: active
+    source: design/gdd/tending.md
+    value: 4000
+    unit: basis points of a gatherer's output added per heaped unit, floor 1 (Z1; safe 1000 to 5000)
+    referenced_by: []
+  - name: heap_time_bp
+    status: active
+    source: design/gdd/tending.md
+    value: 12500
+    unit: basis points of a gatherer's duration per heaped unit (Z2; safe 12000 to 15000)
+    referenced_by: []
+  - name: yield_ceil_bp
+    status: active
+    source: design/gdd/tending.md
+    value: 15000
+    unit: basis points of untended output a heaped unit may bring at most (J1(a); safe 12500 to 20000)
+    referenced_by: []
+  - name: rate_ceil_bp
+    status: active
+    source: design/gdd/tending.md
+    value: 12500
+    unit: basis points of untended output per minute a heaped gatherer may bring at most (J1(c); safe 10500 to 15000; inert at the shipped heap)
+    referenced_by: []
+  - name: tended_share_divisor
+    status: active
+    source: design/gdd/tending.md
+    value: 3
+    unit: a heaped unit is at most base cap divided by this (J1(b); answers #3 Open Question 7)
+    referenced_by: [design/gdd/resources-and-caps.md]
+  - name: write_fail_prompt
+    status: active
+    source: design/gdd/save-and-run-lifecycle.md
+    value: 3
+    unit: consecutive failed write attempts before the Not saving notice (J5; safe 1 to 10)
+    referenced_by: []
+  - name: import_max_bytes
+    status: active
+    source: design/gdd/save-and-run-lifecycle.md
+    value: 1048576
+    unit: UTF-8 bytes of trimmed pasted text Load save accepts (D9.2; safe save_max_bytes to 5242880)
+    referenced_by: []
+  - name: save_max_bytes
+    status: active
+    source: design/gdd/save-and-run-lifecycle.md
+    value: 65536
+    unit: bytes of the largest record a build may write (provisional; safe 16384 to 262144; must stay <= import_max_bytes)
+    referenced_by: []
+  - name: cases_max
+    status: active
+    source: design/gdd/content-validator-and-balance-enumeration.md
+    value: 2000
+    unit: case-table rows enumerated before case checks report OVER_BOUND (safe 500 to 20000)
+    referenced_by: []
+  - name: tending_k_max
+    status: active
+    source: design/gdd/content-validator-and-balance-enumeration.md
+    value: 10
+    unit: tendable sources per method whose 2^k sets are enumerated (safe 6 to 12)
+    referenced_by: []
+  - name: rooms_max
+    status: active
+    source: design/gdd/content-validator-and-balance-enumeration.md
+    value: 1000000
+    unit: largest base cap J2 loops over (safe 1e4 to 1e7)
+    referenced_by: []
+  - name: b1_margin_step
+    status: active
+    source: design/gdd/content-validator-and-balance-enumeration.md
+    value: 1
+    unit: door opponent stat points moved per VC11 perturbation (safe 1 to 5)
+    referenced_by: []
+  - name: validate_time_ceiling_ms
+    status: active
+    source: design/gdd/content-validator-and-balance-enumeration.md
+    value: 2000
+    unit: ms, median wall time of 5 cold bun run validate runs on shipped content (provisional; safe 1000 to 10000)
+    referenced_by: []
