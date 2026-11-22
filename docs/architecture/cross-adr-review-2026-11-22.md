@@ -1,8 +1,8 @@
-## Cross-GDD Review Report (adapted: cross-ADR, partial)
+## Cross-ADR Review Report (partial)
 
 Date: 2026-11-22 (second version, same day; it replaces the first, which contained errors listed under Corrections)
 Mode: full / guided
-GDDs Reviewed: 0 of 0 present. `design/gdd/` holds only `systems-index.md`; the design lives in ADRs and the design plan (CLAUDE.md).
+Reviewed: `master` at 137737d. This is the attempt that the restart branch (`restart-2026-11-19`) archives under `archive/2026-11-19/`. On `master`, `design/gdd/` holds only `systems-index.md`, so the review covered the ADRs. The restart's GDDs are not on `master` and have their own cross-GDD review of the same date; this report says nothing about them.
 Not read: see Coverage. This run did **not** read all 39 ADRs in full.
 Baseline: `docs/architecture/architecture-review-2026-10-29.md` (verdict FAIL, three cross-ADR conflicts left as housekeeping).
 
@@ -107,6 +107,8 @@ One design warning (W6) and three minor items (N1 to N3) remain; nothing blocks.
 - **Independent second pass.** The sub-agents did not run, so nothing here was cross-checked by a separate reader.
 
 ### What would lift the verdict
+
+The restart archives these ADRs, so the items below matter only if this attempt is revived.
 
 1. A full read of all 39 ADRs against the checklist, with the economy and scenario passes run from `src/data/`. This is the bulk of what is NOT ASSESSED.
 2. N1 and N2: two small ADR edits.
