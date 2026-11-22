@@ -15,3 +15,6 @@ production/session-state/
 
 # Local-only leftovers moved aside in the 2026-11-19 restart (never tracked)
 archive/2026-11-19/_untracked/
+
+# Vitest 5 writes reporter output here by default
+.vitest/
