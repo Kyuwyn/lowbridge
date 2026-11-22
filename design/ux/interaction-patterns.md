@@ -1,11 +1,11 @@
 # Interaction Pattern Library
 
-> **Status**: Designed 2026-11-21 (pending `/ux-review patterns`)
+> **Status**: Approved 2026-11-22 (lean `/ux-review patterns`; findings in `design/ux/reviews/interaction-patterns-review-log.md`)
 > **Author**: designer + Claude (`/ux-design patterns`)
-> **Last Updated**: 2026-11-21
+> **Last Updated**: 2026-11-22
 > **Template**: Interaction Pattern Library
 > **Platform Target**: web browser, desktop first; phone width (390 px design width, holds at 320 px) a constraint from the MVP. Inputs: mouse, keyboard and touch. No gamepad (#13 Platform Target)
-> **Drawn from**: Interface shell and goal line (#13, `design/ux/interface-shell.md`) and Method marks and number breakdowns (#14, `design/ux/method-marks.md`), both Designed 2026-11-21
+> **Drawn from**: Interface shell and goal line (#13, `design/ux/interface-shell.md`) and Method marks and number breakdowns (#14, `design/ux/method-marks.md`), both Approved 2026-11-21
 > **Accessibility owner**: `design/accessibility-requirements.md` (landed 2026-11-21: Comprehensive, against WCAG 2.2 AA, so every **[AA assumed]** value stands). Values marked **[AA assumed]** are the WCAG 2.2 AA floor that #13 and #14 state
 
 ---
@@ -30,8 +30,8 @@ designer decisions, listed below.
 - Each decision settles a point where the two specs differed, or where neither said enough to
   build from. The spec edits each decision implies are listed under "Changes needed in existing
   specs". The coordinating session applies them at merge, with the designer's approval.
-- Until those edits land, where an entry here and its source line differ, the entry carries the
-  decision, and the source line is waiting for its listed change.
+- Those edits landed on 2026-11-21 (Changes needed in existing specs), so each entry and its
+  source line now agree.
 - A pattern changes in its source spec and in this library together, never in one alone.
 
 **Accessibility values.** `design/accessibility-requirements.md` owns the project's tier and every
@@ -1436,7 +1436,7 @@ the designer's approval. Line numbers are those of `design/ux/interface-shell.md
 | 1 | **Accessibility requirements not landed.** *Resolved 2026-11-21 by `design/accessibility-requirements.md`:* the tier is Comprehensive, against WCAG 2.2 AA, so every **[AA assumed]** value stands | `design/accessibility-requirements.md` (the parallel `/ux-design accessibility` session) | When it lands |
 | 2 | **Start's accessible name.** Many rows carry a Start button. Is "Start" alone enough in context, or should it be "Start {source}", as the heap switch is "Heap {source}"? | `design/accessibility-requirements.md`, with the `writer` | Before #13's UI stories |
 | 3 | **A named-record line's accessible name.** #14 names a part line "{cause}, {amount}, show breakdown". A named-record line (PD6) needs a name in the same form, for example "{record}, show details" | `writer`, with `design/accessibility-requirements.md` | #13's copy review (AC-13-36) |
-| 4 | **A reading to check.** #13 C17 returns focus to "the control that opened it". For a dialog opened from a menu item, the menu has closed, so this library reads the control as the menu button | `/ux-review` | `/ux-review` of this library |
+| 4 | **A reading to check.** *Resolved 2026-11-22 by `/ux-review patterns`:* the reading holds. Once a menu item opens a dialog the menu has closed, so "the control that opened it" (#13 C17) is the menu button, and focus returns there | `/ux-review` | `/ux-review` of this library |
 | 5 | **The kept-progress bar's text value.** A row's partial bar (IP12) has no text value on the row, unlike every other bar | `design/accessibility-requirements.md`, with #13 | Before #13's UI stories |
 | 6 | **Easing.** #13 sets the sheet's 150 ms slide and the 400 ms commit sweep but no easing for either | `art-director` (art bible) | Art bible |
 | 7 | **No art bible** (#13 Open Questions 3; #14 Open Questions 2). Glyph drawings, the palette, button weights and the focus ring's colour wait on it | `art-director` | Before the UI stories |

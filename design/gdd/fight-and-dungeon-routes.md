@@ -6,7 +6,7 @@
 > **Last Verified**: 2026-11-20
 > **Implements Pillar**: 2 (Methods matter), 4 (No dead ends, no attention tax)
 > **Creative Director Review (CD-GDD-ALIGN)**: APPROVED 2026-11-20 (no blocker; its one watch item, whether the descent reads as its own way to gather, is already Open Question 5 for the first MVP playtest)
-> **Amendments**: A1 2026-11-21 — Open Question 3 marked resolved by Tending (#10, `tending.md` D1, J3): routes are not tendable, and U3 holds under every tending set (status edit only, no rule change; designer-approved). Touches Open Questions row 3 · A2 2026-11-21 — Open Question 4 (a)–(c) marked resolved by Content validator (#12): a pending list for "not evaluated" checks, no timed-action ceiling, and creature speed checked as VC10 (status edit only, no rule change here; designer-approved). Touches Open Questions row 4 · A3 2026-11-21 — N1 gains the road-group values for #1 A8's `source.group` ("Hunts", "The Still Deep"); Open Question 8's display half answered by the Interface shell (#13, C13) (requested by #13; approved by the designer). Touches N1, Open Questions row 8
+> **Amendments**: A1 2026-11-21 — Open Question 3 marked resolved by Tending (#10, `tending.md` D1, J3): routes are not tendable, and U3 holds under every tending set (status edit only, no rule change; designer-approved). Touches Open Questions row 3 · A2 2026-11-21 — Open Question 4 (a)–(c) marked resolved by Content validator (#12): a pending list for "not evaluated" checks, no timed-action ceiling, and creature speed checked as VC10 (status edit only, no rule change here; designer-approved). Touches Open Questions row 4 · A3 2026-11-21 — N1 gains the road-group values for #1 A8's `source.group` ("Hunts", "The Still Deep"); Open Question 8's display half answered by the Interface shell (#13, C13) (requested by #13; approved by the designer). Touches N1, Open Questions row 8 · A4 2026-11-22 — Dependencies: #8, #10 and #12 are Approved and list this GDD (status edit only, no rule change; designer-approved). Touches Dependencies
 
 ## Summary
 
@@ -754,8 +754,8 @@ matters.*
   (Interactions row 8–9 and Dependencies) and #7 (Interactions row 9 and Dependencies) already
   list this system. #1 lists it in Interactions row 9 and in Dependencies.
 - #3 names "Crafting route; Fight and dungeon routes" in Interactions row 8–9.
-- #8, #10 and #12 are undesigned or in design. Each must list "depends on: Fight and dungeon
-  routes" when it is written.
+- #8, #10 and #12 are Approved and list Fight and dungeon routes in their Dependencies (row 9 in
+  each).
 - The systems index row #9 lists Activity slot, Combat resolver, Forge and proving and Methods.
   This GDD adds Content records and schema and Resources and caps, whose rows and stores it
   reads directly.

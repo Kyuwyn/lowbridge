@@ -4,7 +4,7 @@
 > **Author**: designer + agents
 > **Last Updated**: 2026-11-21
 > **Last Verified**: 2026-11-21
-> **Amendments**: A1 2026-11-21 — D10.2: the persistent-storage request is never automatic; the menu item "Keep my save in this browser" makes it, once per choice; `requestPersistence()` joins D12's actions; Open Questions 2 (the log is not saved) and 6 answered (requested by Interface shell #13; approved by the designer). Touches D10.2, D12, UI Requirements 6, AC-D10-1, Open Questions rows 2 and 6
+> **Amendments**: A1 2026-11-21 — D10.2: the persistent-storage request is never automatic; the menu item "Keep my save in this browser" makes it, once per choice; `requestPersistence()` joins D12's actions; Open Questions 2 (the log is not saved) and 6 answered (requested by Interface shell #13; approved by the designer). Touches D10.2, D12, UI Requirements 6, AC-D10-1, Open Questions rows 2 and 6 · A2 2026-11-22 — Dependencies: #12 and #13 are Approved and name this GDD; #15, #16 and #19 are still to be designed (status edit only, no rule change; designer-approved). Touches Dependencies
 > **Implements Pillar**: 4 (No dead ends, no attention tax); supports 2 (Methods matter) and 1 (The forge is the milestone)
 > **Creative Director Review (CD-GDD-ALIGN)**: APPROVED 2026-11-21. Three non-blocking advisories, each carried into the GDD: frame `lastRun` as a comparison under the other method, never as a best to beat (UI Requirements 5); revisit the accepted save-scumming case if #16 or #19 add hidden information or chance (Open Question 8); prefer putting the persistent-storage request behind a settings action, so the first post-commit write is never interrupted (Open Question 6)
 
@@ -738,8 +738,9 @@ extra snapshot fields, and corrected the backup-loss case.*
   Dependencies.
 - **#5** saves nothing, so it is not a dependency (Interactions row 5).
 - **#10** lists Save and run lifecycle in its Dependencies (`tending.md` Dependencies, row 11).
-- **#12, #13, #15, #16 and #19** are undesigned. Each must list "depends on: Save and run
-  lifecycle" in its own Dependencies.
+- **#12 and #13** are Approved and name Save and run lifecycle (#12 Dependencies; #13 Data
+  Requirements). **#15, #16 and #19** are undesigned (#15 in design). Each must list "depends on:
+  Save and run lifecycle" in its own Dependencies.
 - **Systems index.** Row #11's Depends On gains Modifier pipeline and Tending. Rows #12, #13 and
   #15 gain Save and run lifecycle. This GDD's index update makes these edits.
 

@@ -3,7 +3,7 @@
 > **Status**: Approved 2026-11-20 (lean review; recommended follow-ups in `design/gdd/reviews/activity-slot-rest-and-away-time-review-log.md`)
 > **Author**: designer + agents
 > **Last Updated**: 2026-11-21
-> **Amendments**: A1 2026-11-20 — Open Question 5 marked resolved (route fights use the unforged cultivator, #6 G13.2, #9 N3) and Open Question 6's route half resolved (no fight route has a by-product, #9 U2) (from Fight and dungeon routes #9; approved by the designer). Touches Open Questions rows 5 and 6. A2 2026-11-21 — S6.3 and F2 use min(*p*, ⌊*p* × *D′* / *D*⌋): a lengthened unit keeps its milliseconds, not its fraction, so heaping a gatherer mid-unit cannot pay untended time at the heaped yield. Open Question 4 is answered: the choice survives a stop (from Tending #10, `tending.md` D5, D6; designer-approved). Touches S6.3, F2, F3's "why no unit is shorter", Edge Cases "Progress and durations", AC-F2-1 and Open Questions row 4 · A3 2026-11-21 — Open Question 7 marked resolved by Content validator (#12, VR9.1–VR9.2). No MVP check is a pacing floor timed from the commit, because the price checks read activity time, so rest before the commit keeps banking (status edit only, no rule change; designer-approved). Touches Open Questions row 7 · A4 2026-11-21 — Open Question 2 marked resolved: the concept's Session-Level hook is reworded, and the Interface shell (#13) shows it as the away summary (status edit only, no rule change; designer-approved). Touches Open Questions row 2
+> **Amendments**: A1 2026-11-20 — Open Question 5 marked resolved (route fights use the unforged cultivator, #6 G13.2, #9 N3) and Open Question 6's route half resolved (no fight route has a by-product, #9 U2) (from Fight and dungeon routes #9; approved by the designer). Touches Open Questions rows 5 and 6. A2 2026-11-21 — S6.3 and F2 use min(*p*, ⌊*p* × *D′* / *D*⌋): a lengthened unit keeps its milliseconds, not its fraction, so heaping a gatherer mid-unit cannot pay untended time at the heaped yield. Open Question 4 is answered: the choice survives a stop (from Tending #10, `tending.md` D5, D6; designer-approved). Touches S6.3, F2, F3's "why no unit is shorter", Edge Cases "Progress and durations", AC-F2-1 and Open Questions row 4 · A3 2026-11-21 — Open Question 7 marked resolved by Content validator (#12, VR9.1–VR9.2). No MVP check is a pacing floor timed from the commit, because the price checks read activity time, so rest before the commit keeps banking (status edit only, no rule change; designer-approved). Touches Open Questions row 7 · A4 2026-11-21 — Open Question 2 marked resolved: the concept's Session-Level hook is reworded, and the Interface shell (#13) shows it as the away summary (status edit only, no rule change; designer-approved). Touches Open Questions row 2 · A5 2026-11-22 — S9.5's segment boundary drops "including one #10 makes by itself", since #10 D5 changes tending only on the player's `setHeap`; **Blocked** now names the system a criterion waits for, as #10 uses it, because every GDD it named is designed (status edit only, no rule change; designer-approved). Touches S9.5, the Acceptance Criteria preamble
 > **Last Verified**: 2026-11-20
 > **Implements Pillar**: 4 (No dead ends, no attention tax); supports 3 (The build is a problem)
 > **Creative Director Review (CD-GDD-ALIGN)**: APPROVED 2026-11-20. #3's carried pillar-4 item (the switch count of the opening chain) is answered: S8 removes the latency cost of a switch, and Open Question 1 hands the switch frequency to Crafting route (#8). Non-blocking: track whether #8's recipe shape keeps switch frequency within pillar 4, and use the Player Fantasy's "coming back" scene in Open Question 2's rewording
@@ -341,8 +341,8 @@ T2 warns about such sources (S11).
    - the stop rule reads only state;
    - the away cap is measured in activity ms (S7).
 5. **Segments.** One `advance` covers one segment. A segment ends at any player action, and at
-   any event that changes an input of #2's recompute: a tending change (including one #10 makes
-   by itself), the forge, or the commit. The pipeline then recomputes, S6.3 rescales progress,
+   any event that changes an input of #2's recompute: a tending change (only the player's own
+   `setHeap`, #10 D5), the forge, or the commit. The pipeline then recomputes, S6.3 rescales progress,
    and the next segment begins (#2 P9.4). `advance` never sees an effective value change inside
    one call.
 6. **`advance(s, 0)` normalises.** It runs S5's segment-start check and completes nothing.
@@ -880,8 +880,8 @@ follow the concept's Visual Identity Anchor: type, colour, layout and simple gly
 - `[integration]` exercises another system's call path.
 
 **Content:** **Fx** is a fixture loaded against a test schema (#1 R8.2); it may inject small
-constants. **S** is the shipped content. **Blocked** marks a criterion that needs an undesigned
-GDD.
+constants. **S** is the shipped content. **Blocked** names the system a criterion waits for; it runs
+against a stub until that system is built.
 
 **Sources used below** (#3 K1):
 
