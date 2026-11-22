@@ -246,9 +246,9 @@ rules.
 | 9 | Fight and dungeon routes | Gameplay | MVP | Approved | design/gdd/fight-and-dungeon-routes.md | Content records and schema, Resources and caps, Activity slot, Combat resolver, Forge and proving, Methods |
 | 10 | Tending | Gameplay | MVP | Approved | design/gdd/tending.md | Activity slot, Modifier pipeline, Content records and schema (field registry), Resources and caps, Crafting route |
 | 11 | Save and run lifecycle | Persistence | MVP | Approved | design/gdd/save-and-run-lifecycle.md | Content records and schema, Modifier pipeline, Resources and caps, Activity slot, Forge and proving, Methods, Tending |
-| 12 | Content validator and balance enumeration | Meta | MVP | Designed | design/gdd/content-validator-and-balance-enumeration.md | Content records and schema, Modifier pipeline, Resources and caps, Activity slot, Combat resolver, Forge and proving, Methods, Crafting route, Fight and dungeon routes, Tending, Save and run lifecycle |
-| 13 | Interface shell and goal line (inferred) | UI | MVP | Designed | design/ux/interface-shell.md | Content records and schema, Modifier pipeline, Resources and caps, Activity slot, Combat resolver, Forge and proving, Methods, Crafting route, Fight and dungeon routes, Tending, Save and run lifecycle |
-| 14 | Method marks and number breakdowns | UI | MVP | Designed | design/ux/method-marks.md | Modifier pipeline, Methods |
+| 12 | Content validator and balance enumeration | Meta | MVP | Approved | design/gdd/content-validator-and-balance-enumeration.md | Content records and schema, Modifier pipeline, Resources and caps, Activity slot, Combat resolver, Forge and proving, Methods, Crafting route, Fight and dungeon routes, Tending, Save and run lifecycle |
+| 13 | Interface shell and goal line (inferred) | UI | MVP | Approved | design/ux/interface-shell.md | Content records and schema, Modifier pipeline, Resources and caps, Activity slot, Combat resolver, Forge and proving, Methods, Crafting route, Fight and dungeon routes, Tending, Save and run lifecycle |
+| 14 | Method marks and number breakdowns | UI | MVP | Approved | design/ux/method-marks.md | Modifier pipeline, Methods |
 | 15 | Forge screen (inferred) | UI | MVP | Not Started | — | Forge and proving, Methods, Method marks and number breakdowns, Save and run lifecycle |
 | 16 | Reforge and post-commit method switch | Progression | Vertical Slice | Not Started | — | Forge and proving, Methods, Resources and caps, Save and run lifecycle |
 | 17 | Phone layout | UI | Vertical Slice | Not Started | — | Interface shell and goal line, Forge screen |
@@ -490,8 +490,8 @@ session. Wave B starts after the checkpoint, and its order can change on what th
 |--------|-------|
 | Total systems identified | 20 |
 | Design docs started | 14 |
-| Design docs reviewed | 11 |
-| Design docs approved | 11 |
+| Design docs reviewed | 14 |
+| Design docs approved | 14 |
 | MVP systems designed | 14/15 |
 | Vertical Slice systems designed | 0/3 |
 

@@ -160,7 +160,7 @@ one.
   4. **Short viewports** (designer, 2026-11-21: fixed in the MVP). At **640 × 360 CSS px**,
      which is a 1280 × 720 window at 200% zoom, and at any viewport at least that wide and that
      tall, every function stays reachable. The pinned zones (header, pinned log line and tab bar,
-     with no notice showing) take at most **half** the viewport height. #13 designs how. This
+     with no notice showing) take at most **half** the viewport height. #13 meets it by folding the pinned zones at 640 px wide or more and below 600 px tall: the store chips become one row that scrolls sideways inside itself, the running line takes one line and the pinned log line hides, with rule 32's divergence stated (#13 Layout Zones, Short viewports). This
      closes #13 Open Questions 12 for the MVP down to 360 px of height. Below that is #17's.
 - **AR-V5 The greyscale rule** (replaces the template's colour-blind modes; designer,
   2026-11-21).
@@ -195,7 +195,7 @@ one.
 | Text contrast, 4.5:1 and 3:1 (AR-V1) | Basic | All text on every surface | Specified: #13 Accessibility (stone base only); #14 Accessibility | #13 states it against the stone base only. It must name every surface (Changes needed in existing specs). Final values are the art bible's, which must keep these ratios |
 | Non-text contrast, 3:1 (AR-V2) | Standard | Glyphs, notches, underlines, bars, control edges, focus ring | Specified: #13 Accessibility; #14 Accessibility, tint tokens | The tint never colours text below 4.5:1 |
 | Text size floors (AR-V3) | Standard | All text | Specified: #13 Accessibility; #14 Accessibility | Sizes in rem. The browser's text size is the adjustment, with no in-game slider (Tier Definition) |
-| Resize text to 200% (AR-V4.1) | Standard | All screens | **Change needed**: #13 short viewports | Fails today at 640 × 360 CSS px, where the pinned zones can fill the height |
+| Resize text to 200% (AR-V4.1) | Standard | All screens | Specified: #13 Layout Zones, Short viewports; AC-13-38 | The pinned zones fold at 640 px wide or more and below 600 px tall, so they keep to half the height |
 | Reflow at 320 px (AR-V4.2) | Standard | All screens | Specified: #13 AC-13-07; #14 Accessibility, "Size and reflow" (AC-14-20 tests 390 px and 200% text zoom) | Wrap, never truncate. Only the pinned log line may end in an ellipsis |
 | Text spacing (AR-V4.3) | Standard | All screens | Specified: #13 Accessibility | #14 relies on wrapping; covered by the axe and manual checks (Accessibility Test Plan) |
 | Greyscale rule (AR-V5) | Standard (in place of colour-blind modes) | All coloured elements | Specified: #13 AC-13-34; #14 AC-14-04, AC-14-05 | Audit below |
@@ -257,9 +257,10 @@ motor surface: reaching targets, keyboard operation, focus, and touch on a phone
   - Focus moves into an opened card, sheet or dialog, and returns to its trigger when it closes.
   - **Focus is never covered by the game's own content** (SC 2.4.11). On narrow widths, the
     pinned zones sit beside the scrolling content zone, never over it.
-  - On wide widths, the anchored card **closes when focus moves outside it**, the same way a
-    click outside closes it (designer, 2026-11-21). This is a change to #13 C16 (Changes needed
-    in existing specs).
+  - On wide widths, focus is **trapped in the anchored card**, as in the narrow sheet: Tab cycles
+    inside it, and Esc or × closes it. A pointer click outside still closes it and acts on what it
+    lands on. Focus therefore never reaches content the card covers (designer, 2026-11-21,
+    pattern library PD5; this replaces the focus-out close first chosen here).
 - **AR-M4 Target size.**
   - With a coarse pointer, every target is at least **44 × 44 CSS px**.
   - With a fine pointer, every target is at least 32 × 32 CSS px, and 44 × 44 is preferred.
@@ -286,7 +287,7 @@ motor surface: reaching targets, keyboard operation, focus, and touch on a phone
 | Rapid input alternatives | Standard | — | Not applicable | No rapid inputs |
 | Input timing adjustments | Standard | — | Not applicable | No timed inputs: no quick-time events, windows or rhythm |
 | Aim assist, movement and traversal assists | Standard | — | Not applicable | No aiming, movement or platforming |
-| Keyboard operation and focus (AR-M2, AR-M3) | Standard (WCAG AA) | All screens | Specified: #13 Input Method Completeness Checklist; #14 Interaction Map. **Change needed**: #13 C16 wide card | The wide card's focus-out close is new |
+| Keyboard operation and focus (AR-M2, AR-M3) | Standard (WCAG AA) | All screens | Specified: #13 Input Method Completeness Checklist and C16; #14 Interaction Map | Both forms of the card trap focus (PD5) |
 | Target size (AR-M4) | Standard (WCAG AA) | All targets | Specified: #13 AC-13-33; #14 AC-14-19 | — |
 | HUD element repositioning | Comprehensive | — | **Out of scope** | Known Intentional Limitations |
 
@@ -488,8 +489,8 @@ The Addressed column:
 | 10 Tending | The heap state is a word ("Level", "Heaped"), never a colour | A native switch, keyboard-operable, 44 px (UI Requirements 5) | Untended and heaped yields side by side, with no recommendation. Load: 2 | None | Yes | Label-in-name check for the toggle (Open Questions) |
 | 11 Save and run lifecycle | Text screens and notices | Copy save falls back to selected text when the clipboard is refused | Confirmations name what they clear. Refusals say what was found, in words. Load: 2 (the run kept, the run replaced) | None | Change needed (#13) | UI Requirements 8 asks for status and alert roles. #13 has not yet added them all, or session-screen focus (S6, S7; AR-P4, AR-P5) |
 | 12 Content validator and balance enumeration | None: no player-facing output | None | None | None | Yes (not applicable) | — |
-| 13 Interface shell and goal line | Contrast on every surface; short viewports at 200% zoom | Focus leaving the wide card | The goal line and next-step line are always shown. Load: 1 (the next step) | None | Change needed | Changes needed in existing specs, S1–S7 |
-| 14 Method marks and number breakdowns | Greyscale identity; tint tokens are for graphics only | Part and back lines at 44 px | One breakdown form. Drill chains reach six levels, and each back line names where it returns. Load: 2 per level | None | Change needed | Changes needed in existing specs, K1–K3 |
+| 13 Interface shell and goal line | Contrast on every surface; short viewports at 200% zoom | Focus trapped in the wide card (PD5) | The goal line and next-step line are always shown. Load: 1 (the next step) | None | Specified | S1–S3 and S5–S7 applied 2026-11-21; S4 superseded by PD5 |
+| 14 Method marks and number breakdowns | Greyscale identity; tint tokens are for graphics only | Part and back lines at 44 px | One breakdown form. Drill chains reach six levels, and each back line names where it returns. Load: 2 per level | None | Specified | K1 and K2 applied 2026-11-21; K3 superseded by PD5 |
 | 15 Forge screen | Must meet AR-V1 to AR-V6. It owes the pre-commit accent with glyphs, and affinity and tier glyphs distinct from #14's | Must meet AR-M1 to AR-M6 | Carries #6's and #7's flagged loads | None | Not started | Its dialogs are in the tested scope (AR-P7) |
 | 16 Reforge and post-commit method switch | — | — | A redo must name what it changes and its price, as the commit does (AR-C6) | — | Not started | Vertical Slice |
 | 17 Phone layout | Short viewports below 360 px of height | One-handed reach for Stop and the back line | — | — | Not started | Owns two out-of-scope items (Known Intentional Limitations) |
@@ -501,7 +502,8 @@ The Addressed column:
 
 ## Changes needed in existing specs
 
-Where #13 or #14 falls short of this commitment or contradicts it. Nothing here has been applied.
+Where #13 or #14 fell short of this commitment or contradicted it. **Applied at merge on
+2026-11-21**, except S4 and K3: the designer chose pattern PD5 instead, so the wide card traps focus.
 The coordinating session applies each change at merge, with the designer's approval. Line numbers
 are as of commit 5e5deb8. A new acceptance criterion takes the spec's next free number.
 
@@ -512,7 +514,7 @@ are as of commit 5e5deb8. A new acceptance criterion takes the spec's next free 
 | S1 | Accessibility, 1058; Requirement Trace cross-reference check, 1389; Open Questions 2, 1411 | Tier Definition | Replace "**Tier: not yet defined** (Open Questions 2)" with "**Tier: Comprehensive, against WCAG 2.2 AA** (`design/accessibility-requirements.md`)". At 1389, replace "the tier is undefined (Open Questions 2)" with "the tier is Comprehensive; the changes that document lists for this spec apply". Mark Open Questions 2 answered |
 | S2 | Accessibility, "Contrast and text", 1088; C3 Method chip, 364 | AR-V1, AR-V2 | At 1088, replace "Text keeps at least 4.5:1 against the stone base" with "Text keeps at least 4.5:1 against every surface it sits on: the stone base, a card, the sheet, a chip, the notice strip and a dialog". At 364, add: "The name is in ink; a tint colours text only where it keeps 4.5:1" |
 | S3 | Layout Zones, height budget, 277; Platform and preference variants, Zoomed, 821; Open Questions 12, 1421 | AR-V4.4 | Add to the height budget: "At 640 × 360 CSS px (a 1280 × 720 window at 200% zoom), and at any larger viewport, every function stays reachable and the pinned zones, with no notice, take at most half the height." At 821, add "short viewports follow the height budget". Answer Open Questions 12 for viewports down to 360 px tall in the MVP (the designer chose the MVP, 2026-11-21). Below 360 px stays with #17. #13 designs how, for example by folding the store chips into one scrolling row at short heights, which needs a ruling on rule 32. New AC: "At 640 × 360 CSS px after the commit, with no notice, the pinned zones take at most 180 px of height, and the tester reaches and uses Start, Stop, the heap toggle, a card and the menu" |
-| S4 | C16 "Closing", 523; Input Method Completeness Checklist, 1037; AC-13-17, 1211 | AR-M3 (SC 2.4.11) | Add to C16 Closing: "Wide: when focus moves outside the card, the card closes and focus stays where it moved, as with a click outside." At 1037, append "; on wide widths the card closes when focus leaves it". Extend AC-13-17: "With the keyboard, Tab from the wide card's last line closes it, and the newly focused element is not covered" |
+| S4 | C16 "Closing", 523; Input Method Completeness Checklist, 1037; AC-13-17, 1211 | AR-M3 (SC 2.4.11) | **Superseded by PD5; not applied.** Add to C16 Closing: "Wide: when focus moves outside the card, the card closes and focus stays where it moved, as with a click outside." At 1037, append "; on wide widths the card closes when focus leaves it". Extend AC-13-17: "With the keyboard, Tab from the wide card's last line closes it, and the newly focused element is not covered" |
 | S5 | Component Inventory C10, 300; Accessibility, screen-reader table, 1076–1086 | AR-P3 | Change C10's type from "Text" to "Heading" (one level below the centre's view). Add a screen-reader table row: "Group heading: a heading; card, dialog and session-screen titles are headings too" |
 | S6 | Accessibility, screen-reader table, Notice strip row, 1083, and a new row after it | AR-P4 | Add to the Notice strip row: "The internal-error notice is `alert`." Add a row "Messages": "'Copied', 'Working…', 'Loading…', 'This text is too long to be a save.' and 'This is not a save.' are `status`; 'Could not start a new run' and 'Could not load this save' are `alert`." New AC: "A screen reader announces 'Copied', 'Working…' and a Load save refusal without focus moving" |
 | S7 | C18 Session screens, 575 | AR-P5 | Add: "On display, focus moves to the screen's text, which is its heading." Add a screen-reader table row for session screens |
@@ -523,7 +525,7 @@ are as of commit 5e5deb8. A new acceptance criterion takes the spec's next free 
 |---|---|---|---|
 | K1 | Accessibility, 873–876; Open Questions 3, 1089; cross-reference check, 1112 | Tier Definition | Replace "No accessibility tier is committed yet … It **assumes WCAG 2.2 AA as the baseline** until a tier is chosen (Open Questions 3)" with "The committed tier is Comprehensive, against WCAG 2.2 AA (`design/accessibility-requirements.md`). This spec meets it." Mark Open Questions 3 answered. At 1112, replace "No tier is committed. This spec assumes WCAG 2.2 AA (Open Questions 3)" with "The tier is Comprehensive, WCAG 2.2 AA" |
 | K2 | Accessibility, tint token table, 896–900 | AR-V2 | Add under the table: "Tint tokens colour glyphs, notches and underlines only. The light Ember Breath token (4.35:1) may never colour text." |
-| K3 | Input Method Completeness Checklist, 848 | AR-M3 | Append: "On wide widths the card closes when focus leaves it (#13 C16)" |
+| K3 | Input Method Completeness Checklist, 848 | AR-M3 | **Superseded by PD5; not applied.** Append: "On wide widths the card closes when focus leaves it (#13 C16)" |
 
 **No change needed:**
 - #14's forced-colours rules and AC-14-22 exceed the tier and stay as they are (AR-V7).
@@ -558,7 +560,7 @@ The per-spec acceptance criteria named below are the test cases. This plan says 
 | Non-text contrast (AR-V2) | Automated token check (#14 AC-14-21), plus manual check of bars, control edges and the focus ring, which axe does not measure | Every glyph, notch, underline, bar, control edge and focus ring against its neighbours | At least 3:1 | ux-designer | Not Started |
 | Greyscale rule (AR-V5) | Manual, under a greyscale filter | #13 AC-13-34; #14 AC-14-04 (ten shuffled screenshots) | As the criteria state | ux-designer | Not Started |
 | Reflow and short viewports (AR-V4) | Automated in smoke: no sideways scroll at 320 px; pinned-zone height measured at 640 × 360. Manual: 200% browser text size, and text-spacing overrides | #13 AC-13-07; #14 AC-14-20, plus a 320 px pass for #14's reflow rule; #13's new short-viewport criterion (change S3) | No sideways scroll. Pinned zones at most 180 px at 640 × 360. Nothing clipped | qa-tester | Not Started |
-| Keyboard and focus (AR-M2, AR-M3) | Manual, keyboard alone | #13 AC-13-32, extended AC-13-17 (wide card focus-out, change S4); #14 AC-14-12, AC-14-19 | Every function reached and used. Focus always visible and never covered. Esc always leaves | qa-tester | Not Started |
+| Keyboard and focus (AR-M2, AR-M3) | Manual, keyboard alone | #13 AC-13-32, AC-13-17 (focus trapped in the wide card, PD5); #14 AC-14-12, AC-14-19 | Every function reached and used. Focus always visible and never covered. Esc always leaves | qa-tester | Not Started |
 | Target size (AR-M4) | Automated in smoke: bounding boxes of every interactive element, with touch emulation and without | #13 AC-13-33; #14 AC-14-19 | At least 44 × 44 with a coarse pointer, at least 32 × 32 with a fine one | qa-tester | Not Started |
 | Nothing hover-only (AR-M5) | Manual | #13 AC-13-17 (hover 3 s opens nothing) | As the criterion states | qa-tester | Not Started |
 | Reduced motion (AR-V6) | Automated in smoke: `prefers-reduced-motion: reduce` emulated; no transition or animation runs at the commit or on the sheet | #13 AC-13-35; #14 AC-14-14 | No sweep, no draw-in, no slide. Every state is final in its frame | qa-tester | Not Started |

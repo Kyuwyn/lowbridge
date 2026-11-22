@@ -1,6 +1,6 @@
 # Content Validator and Balance Enumeration
 
-> **Status**: Designed 2026-11-21 (pending `/design-review` in a fresh session)
+> **Status**: Approved 2026-11-21 (lean review; findings in `design/gdd/reviews/content-validator-and-balance-enumeration-review-log.md`)
 > **Creative Director Review (CD-GDD-ALIGN)**: APPROVED 2026-11-21. No blocker. One non-blocking note: close Open Question 3 (VC11 warns on S9's provisional doors) before content lock, so pillar 3's best makeup does not rest on a knife edge
 > **Amends** (all designer-approved 2026-11-21): #1 A7 (R8.4 check 2 reads "some producer", gates counted, as #8 X5); #6 A3 (G14's cascade adds B9; Open Question 2 resolved by VC11). Status-only, marking Open Questions resolved: #4 A3 (row 7), #8 A1 (row 3), #9 A2 (row 4 (a)–(c))
 > **Author**: designer + agents

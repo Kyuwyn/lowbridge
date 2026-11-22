@@ -1,6 +1,6 @@
 # UX Spec: Method Marks and Number Breakdowns
 
-> **Status**: Designed 2026-11-21 (pending `/ux-review`)
+> **Status**: Approved 2026-11-21 (lean `/ux-review`; findings in `design/ux/reviews/method-marks-review-log.md`)
 > **System**: #14 Method marks and number breakdowns (MVP, Wave A); `design/gdd/systems-index.md` row 14
 > **Amendments made with this spec** (designer-approved): #1 A10 (R7.2, AC-R7-3; Open Question 5's marking half) and #7 A3 (W1, Edge Cases, Visual/Audio, AC-W7-2, Open Question 7): the commit dialog says "Feeds:" and "Quenches:". #2 A3: Open Question 6 marked resolved (status only)
 > **Author**: designer + Claude (`/ux-design method-marks`)
@@ -598,11 +598,11 @@ The spec has no screen zones of its own. Its components lay out like this inside
 |---|---|---|
 | **Inline mark** | Any number or route name | `number · thin space · glyph+notch`, at the number's inline-end. The channel underline sits under the number's sign and digits. The mark never wraps away from its number: number, unit and mark form one no-break unit |
 | **Breakdown block** | #13's container, directly under the number's line | Indented 1.25 em. Three columns: a glyph column (1.25 em, empty when a line has no glyph); a cause column (`1fr`, which wraps and never truncates); an amount column (auto, at least 7 ch, right-aligned, tabular figures, never wraps). A hairline rule precedes "Total". Lines are at least 1.4 em tall |
-| **Part line** | Inside a composed block | The whole line is the target: cause, amount, mark, then "›" at the inline-end. At least 44 px tall on touch |
-| **Back line** | The first row of the container's content when depth > 0 | Full width, at least 44 px tall: "‹ {parent label} {parent value}" |
+| **Part line** | Inside a composed block | The whole line is the target: cause, amount, mark, then "›" at the inline-end. At least 44 px tall with a coarse pointer and 32 px with a fine one (#13) |
+| **Back line** | The first row of the container's content when depth > 0 | Full width, at least 44 px tall with a coarse pointer and 32 px with a fine one (#13): "‹ {parent label} {parent value}" |
 | **Closed row** | #13's and #15's route lists | The closed glyph at the row's inline-start, where an open row has none; the name; then on the same line, or wrapped beneath at phone width, "Opens under" with the hollow glyph and the method's name |
 
-At 390 px the container is about 358 px wide inside #13's 16 px gutters. A cause of two 24-code-
+At 390 px the container is about 358 px wide inside the sheet's 16 px inline padding (#13 C16). A cause of two 24-code-
 point names ("Heaped · Skim the Ash Pits") wraps onto a second line, and the amount column keeps
 its width. Nothing scrolls sideways.
 
@@ -610,21 +610,20 @@ its width. Nothing scrolls sideways.
 
 | # | Component | Type | Shows | Interactive | Pattern |
 |---|---|---|---|---|---|
-| C1 | Method glyph | Inline SVG symbol | A method's identity, solid or hollow (MK2, MK4) | No | **New:** Method glyph |
-| C2 | Verb notch | Part of C1 | raise, quench, open, lower (reserved) (MK3) | No | **New** |
-| C3 | Method mark | C1 + C2 + tint + channel underline | A marked value (MK1, MK2) | No; its host record is | **New:** Method mark |
-| C4 | Closed mark | Closed glyph + "Opens under" + hollow C1 + name | A route the circulating method does not open; "Closes:" lines (MK5) | No | **New:** Closed mark |
-| C5 | Neutral stage glyphs | Inline SVG | Heap and limit (BD4) | No | **New**; the heap shape is shared with #13's toggle |
-| C6 | Trail breakdown | Ledger block | Base, steps, Total (BD3, BD4) | No | **New:** Number breakdown |
-| C7 | Composed breakdown | Ledger block | Parts, operation lines, Total (BD5) | Parts only | **New:** Number breakdown (composed) |
-| C8 | Part line | Full-width button | A part's name, value, mark and "›" | Yes: drill down | **New:** Drill-down line |
-| C9 | Back line | Full-width button | "‹ {parent label} {value}" | Yes: up one level | **New:** Drill-down line |
-| C10 | Hidden-base line | Text line | "Base shown once {ingredient} is in hand" (BD7) | No | — |
-| C11 | Route method line | Text line | "Opened by {method}" with the open mark, or the closed mark (BD4) | No | — |
-| C12 | Persistent identity | Solid C1 + tint + name | The circulating method (MK9) | Per #13 | #13 places it |
+| C1 | Method glyph | Inline SVG symbol | A method's identity, solid or hollow (MK2, MK4) | No | IP8 |
+| C2 | Verb notch | Part of C1 | raise, quench, open, lower (reserved) (MK3) | No | IP8 |
+| C3 | Method mark | C1 + C2 + tint + channel underline | A marked value (MK1, MK2) | No; its host record is | IP9 |
+| C4 | Closed mark | Closed glyph + "Opens under" + hollow C1 + name | A route the circulating method does not open; "Closes:" lines (MK5) | No | IP10 |
+| C5 | Neutral stage glyphs | Inline SVG | Heap and limit (BD4) | No | IP8 |
+| C6 | Trail breakdown | Ledger block | Base, steps, Total (BD3, BD4) | No | IP6 |
+| C7 | Composed breakdown | Ledger block | Parts, operation lines, Total (BD5) | Parts only | IP7 |
+| C8 | Part line | Full-width button | A part's name, value, mark and "›" | Yes: drill down | IP2 |
+| C9 | Back line | Full-width button | "‹ {parent label} {value}" | Yes: up one level | IP2 |
+| C10 | Hidden-base line | Text line | "Base shown once {ingredient} is in hand" (BD7) | No | IP6 |
+| C11 | Route method line | Text line | "Opened by {method}" with the open mark, or the closed mark (BD4) | No | IP10 |
+| C12 | Persistent identity | Solid C1 + tint + name | The circulating method (MK9) | Per #13 | IP8 |
 
-No interaction pattern library exists yet (`design/ux/interaction-patterns.md`). Every pattern
-marked **New** is flagged for it (Open Questions).
+Patterns are named in `design/ux/interaction-patterns.md`.
 
 ### Information Hierarchy
 
@@ -697,7 +696,7 @@ marked **New** is flagged for it (Open Questions).
 | Greyscale, or colour vision differences | Any | No information is lost: glyph silhouette, notch, solid versus hollow, and the underline's presence carry everything (concept principle 3). After the commit only one hue is on screen (MK6), so a colour-vision difference cannot confuse two methods |
 | Forced colours (Windows High Contrast) | `forced-colors: active` | Glyphs, notches and underlines draw in `CanvasText`. The tint is dropped, and the glyph carries the identity |
 | Reduced motion | `prefers-reduced-motion: reduce` | No underline draw-in at the commit. The marks appear complete (Transitions & Animations) |
-| Phone width (≤ 650 px, about 390 px) | #13's layout | The closed row's "Opens under" wraps beneath the name. Breakdown causes wrap. Part and back lines are at least 44 px tall |
+| Narrow (below 960 px, #13 `WIDE_MIN_PX`; designed at 390 px, holds at 320 px) | #13's layout | The closed row's "Opens under" wraps beneath the name. Breakdown causes wrap. Part and back lines are at least 44 px tall with a coarse pointer (32 px with a fine one) |
 | A content update (#11 load notice) | A new content fingerprint | Nothing special. Marks and breakdowns read the new content's recompute. A saved Foundation's lines apply on the new base (#2 Edge Cases) |
 
 ---
@@ -718,7 +717,7 @@ only targets this spec adds are part lines and back lines. Opening and closing t
 |---|---|---|---|---|---|---|
 | A record (#13, #15 host) | Open its container | Click | Tap | Enter or Space on the focused record | #13's | The container shows the record's fields, and each rule-derived number shows its breakdown block (BD2) |
 | C3 mark, C4 closed mark, C1 glyph | — | Hover does nothing; click goes to the host record | Tap goes to the host record | Not focusable | — | Its meaning is read in the host's container and in its accessible name (Accessibility) |
-| C8 part line | Drill down | Click | Tap | Enter or Space; Tab and Shift+Tab move between part lines | #13's pressed state on the line. The content swaps in the same frame | That part's breakdown, with a back line first. Focus moves to the back line (BD6) |
+| C8 part line | Drill down | Click | Tap | Enter or Space; Tab and Shift+Tab move between part lines | The content swaps in the same frame; there is no pressed style | That part's breakdown, with a back line first. Focus moves to the back line (BD6) |
 | C9 back line | Up one level | Click | Tap | Enter or Space | The content swaps in the same frame | The parent breakdown. Focus returns to the part line that was opened |
 | Container (#13) | Close | #13's close control or dismiss rule | #13's | Esc, at any depth | #13's | Closes and clears the stack. Focus returns to the record that opened it |
 | A breakdown longer than the container | Scroll | Wheel | Vertical swipe | Arrow keys and Page Up/Down while focus is in the container | — | #13's scroll. No horizontal scroll at any width |
@@ -845,14 +844,14 @@ lines and back lines (C8, C9). The container around them is #13's.
 - [x] Focus is visible at all times: #13's 2 px focus ring, which is never removed
   (`design/ux/interface-shell.md` Accessibility, commit 1eca986). This spec adds no style of its
   own.
-- [x] Focus stays inside the container while it is open, as a narrow bottom sheet, and goes back
+- [x] Focus stays inside the container while it is open, in both its forms (#13 C16), and goes back
   to the opening record on close (#13 C16, Interaction Map).
 - [x] Esc closes the container at any depth and does not quit anything (Interaction Map).
 
 **Mouse**
 - [x] Hover states are defined for every interactive element: none show content. Part and back
   lines may take #13's pointer style.
-- [x] Click targets are at least 44 px tall and full width (Layout Zones).
+- [x] Click targets are full width, and at least 32 px tall with a fine pointer or 44 px with a coarse one (#13).
 - [x] Right-click is the browser default; no context menu is defined.
 - [x] Scroll wheel: #13's vertical scroll in the container. There is never horizontal scroll.
 
@@ -870,10 +869,7 @@ lines and back lines (C8, C9). The container around them is #13's.
 
 ## Accessibility
 
-No accessibility tier is committed yet (`design/accessibility-requirements.md` does not exist;
-concept Open Question; #18 decides at the vertical slice). This spec meets the MVP floor in
-systems index paragraph 18 (no hover-only interaction, no repeated or held input, glyph before
-hue). It **assumes WCAG 2.2 AA as the baseline** until a tier is chosen (Open Questions 3).
+The committed tier is Comprehensive, against WCAG 2.2 AA (`design/accessibility-requirements.md`). This spec meets it.
 
 **Colour independence (concept principle 3).** Every distinction this spec draws reads in
 greyscale:
@@ -898,6 +894,8 @@ Hue adds the method's identity and is never alone. AC-14-04 tests it.
   | `--mark-ember-breath` | #B04A1C, 4.35:1 | #E0814F, 6.0:1 |
   | `--mark-still-water` | #2C6A8A, 4.73:1 | #6FA9C8, 6.62:1 |
   | `--ink` (numbers, neutral glyphs, hollow forms) | #24211E, 12.8:1 | #E6E1D8, 13.0:1 |
+
+  Tint tokens colour glyphs, notches and underlines only. The light Ember Breath token (4.35:1) may never colour text.
 
 **Screen readers.**
 - Glyph SVGs are `aria-hidden`. Every mark carries visually hidden words, so a marked number
@@ -1070,7 +1068,7 @@ browser harness exists)
   - the breakdown in AC-14-12 reads "Base, 25", "Ember Breath feeds, plus 10", "Total, 35";
   - each part line is announced as a button ending "show breakdown".
 - [ ] **AC-14-19** [manual] Keyboard alone reaches and activates every part and back line in
-  reading order. At 390 px every part and back line is at least 44 px tall and full width.
+  reading order. Every part and back line is full width, and at least 44 px tall with a coarse pointer (32 px with a fine one).
 - [ ] **AC-14-20** [manual] At 390 px and at 200 % text zoom, no breakdown line, closed row or
   dialog line is truncated or scrolls sideways, and no mark wraps away from its number.
 - [ ] **AC-14-21** [auto] Glyphs, notches and underlines measure at least 3:1 against the stone
@@ -1086,7 +1084,7 @@ browser harness exists)
 |---|---|---|---|
 | 1 | **No player journey map.** Author `design/player-journey.md` from `.claude/docs/templates/player-journey.md` to check the arrival contexts inferred under Player Context on Arrival | Designer | Before `/ux-review` of #13–#15 |
 | 2 | **No art bible.** The glyph drawings, the final tint values and the stone base are provisional. The art bible must keep MK2's silhouette classes, solid and hollow forms, MK3's notches and the contrast minimums under Accessibility | Art bible (`/art-bible`), art-director | Before the vertical slice's visual pass |
-| 3 | **No accessibility tier.** This spec assumes WCAG 2.2 AA. Run `/gate-check` to see whether the missing `design/accessibility-requirements.md` blocks a gate | Accessibility and settings (#18), designer | #18, vertical slice |
+| 3 | **No accessibility tier.** *Resolved 2026-11-21 by `design/accessibility-requirements.md`:* The committed tier is Comprehensive, against WCAG 2.2 AA. | Accessibility and settings (#18), designer | #18, vertical slice |
 | 4 | **Stale input preferences.** `.claude/docs/technical-preferences.md` says "mouse with hover tooltips" and "ⓘ pins tooltips". Both are from the archived attempt and conflict with MVP required item 8 (nothing hover-only, tap-opened container) | Designer, with #13 | Next `/setup-engine` or settings edit |
 | 5 | **#13's container must host the drill stack** (BD6). *Resolved 2026-11-21 by #13 (`design/ux/interface-shell.md`, commit 1eca986 on `claude/ux-interface-shell-b57ec9`):* records open the container and numbers never do; the back line comes first and takes focus; Back restores focus to the line that was opened; Esc closes the stack; lines are at least 44 px; no horizontal scroll at 390 or 320 px. #13 also drills into a record named in a card | Interface shell (#13) | Done, once both branches merge |
 | 6 | **One-handed reach on a phone.** #13 uses a bottom sheet on narrow widths. Whether the back line at a tall sheet's top is in thumb reach is still open | Phone layout (#17) | Vertical slice |
@@ -1098,16 +1096,16 @@ browser harness exists)
 | 12 | **What #15 still owes.** The accent before the commit: whether hollow glyphs in the method-choice view and the dialog take a colour. The view's and the dialog's layout. The words for composed numbers (BD5). The affinity and door-tier glyphs, in ink, distinct from MK2's glyphs and never gate-shaped (MK2) | Forge screen (#15) | #15 UX spec |
 | 13 | **The commit moment split.** #14 animates marks and underlines; #13 changes the shell's tint and persistent identity; #15 closes the dialog. All run on `committed`, and none waits for another. *#13's half resolved 2026-11-21 (commit 1eca986): its sweep ends within 400 ms on the same event.* #15's half is open | #15 | #15 UX spec |
 | 14 | **BD1's reading of "every number".** State numbers (held, progress, the rest bank, log amounts) have no breakdown, because they have no base and no modifiers | `/ux-review` | `/ux-review` of this spec |
-| 15 | **No interaction pattern library.** New patterns to add when it is authored: Method glyph, Method mark, Closed mark, Number breakdown (trail and composed), Drill-down line | UX (`/ux-design patterns`) | Before #15's spec, if possible |
+| 15 | **No interaction pattern library.** *Resolved 2026-11-21 by `design/ux/interaction-patterns.md`:* All five patterns are named there: Method glyph (IP8), Method mark (IP9), Closed mark (IP10), Number breakdown (IP6, IP7), Drill-down line (IP2). | UX (`/ux-design patterns`) | Before #15's spec, if possible |
 | 16 | **Later methods and re-pricing.** The *lower* notch is reserved for re-pricing (#7 Open Question 4). A third method takes an unused silhouette class (falling, coiling, branching, rippling), up to the concept's cap of six | Designer, Reforge (#16) | Vertical slice |
-| 17 | **Phone layout.** Marks and breakdowns already meet 390 px. #17 re-checks them in the drawer and bottom-tab layout | Phone layout (#17) | Vertical slice |
+| 17 | **Phone layout.** Marks and breakdowns already meet 390 px. #17 re-checks them in #13's narrow layout (pinned header, bottom tabs, bottom sheet; no drawer) | Phone layout (#17) | Vertical slice |
 
 ### Cross-reference check (`/ux-design` phase 5, 2026-11-21)
 
 | Check | Result |
 |---|---|
 | GDD requirement coverage | **All covered.** Every hand-off to #14 found by grepping `design/gdd/*.md` for `#14`, "Method marks" and "breakdown" maps to a rule here: #1 R6.4, R7.2, F7, F8, "Before the commit", AC-U-1 and the UX flag (MK1, MK5, MK7, BD7, D5); #2 P8, P8.2.3, P8.3, P8.4, Visual/Audio, UI Requirements and Open Question 6 (BD3, BD4, MK3); #3's cap breakdown and unmarked cap lines (W3, MK1.3); #5 UI Requirement 3 and tier display (BD5, MK2); #6 G7, the clash, tiers and UI Requirement 7 (BD5, MK2); #7 Visual/Audio, UI Requirements 3, 4 and 6, the UX flag and Open Questions 4 and 7 (MK1–MK9, D5); #8 Visual/Audio 1 (MK1.3); #9's Closed state, Still Deep row and glyph distinctness (MK5, MK2); #10 D3.3 and Visual/Audio (BD4, MK8, W5); #11 UI Requirement 5 (MK4); systems index paragraph 14 (all four requirements). Closed during the check: R5.5's citation, AC-U-1's non-zero `set` (MK7), #6 G7's preview bound (BD5), and the tier and affinity glyph seam (MK2) |
-| New patterns for the library | Method glyph, Method mark, Closed mark, Number breakdown (trail and composed), Drill-down line. No library exists, so they are flagged as a gap (Open Questions 15) |
+| New patterns for the library | Method glyph, Method mark, Closed mark, Number breakdown (trail and composed), Drill-down line. Named in `design/ux/interaction-patterns.md` (2026-11-21) |
 | Navigation mismatches | **#13: none.** Checked against `design/ux/interface-shell.md` at commit 1eca986 (another branch). Records open the container, numbers never do, the drill stack and back line match BD6, and Esc and close return focus to the record. **#15: not assessed**, because its spec is not written. The open seams are Open Questions 12 and 13 |
-| Accessibility gaps | No tier is committed. This spec assumes WCAG 2.2 AA (Open Questions 3). One checklist item, one-handed reach, waits on #17 (Open Questions 6) |
+| Accessibility gaps | The tier is Comprehensive, WCAG 2.2 AA. One checklist item, one-handed reach, waits on #17 (Open Questions 6) |
 | Missing empty states | None. Marks (Choosing), breakdowns (base-only, no numbers), closed rows (Choosing), the drill stack (depth 0) and composed numbers with no parts each have a defined empty form (States & Variants) |

@@ -6,7 +6,7 @@
 > **Template**: Interaction Pattern Library
 > **Platform Target**: web browser, desktop first; phone width (390 px design width, holds at 320 px) a constraint from the MVP. Inputs: mouse, keyboard and touch. No gamepad (#13 Platform Target)
 > **Drawn from**: Interface shell and goal line (#13, `design/ux/interface-shell.md`) and Method marks and number breakdowns (#14, `design/ux/method-marks.md`), both Designed 2026-11-21
-> **Accessibility owner**: `design/accessibility-requirements.md` (not yet landed). Values marked **[AA assumed]** are the WCAG 2.2 AA floor that #13 and #14 state
+> **Accessibility owner**: `design/accessibility-requirements.md` (landed 2026-11-21: Comprehensive, against WCAG 2.2 AA, so every **[AA assumed]** value stands). Values marked **[AA assumed]** are the WCAG 2.2 AA floor that #13 and #14 state
 
 ---
 
@@ -35,10 +35,10 @@ designer decisions, listed below.
 - A pattern changes in its source spec and in this library together, never in one alone.
 
 **Accessibility values.** `design/accessibility-requirements.md` owns the project's tier and every
-accessibility value. It is being written in parallel and has not landed. Until it does, each value
+accessibility value. It landed on 2026-11-21 with the Comprehensive tier against WCAG 2.2 AA. Each value
 here is the floor #13 and #14 state, which takes WCAG 2.2 AA as the working baseline, and is marked
-**[AA assumed]**. When the document lands, its values replace these, and any difference becomes a
-change to this library.
+**[AA assumed]**. The committed tier confirms every one, and where that document says more, it
+wins.
 
 **Platform.** `project.yaml` has no platform block, and `.claude/docs/technical-preferences.md`
 still describes the archived attempt (#13 Open Questions 5). This library follows #13: mouse,
@@ -143,7 +143,7 @@ with no pattern of their own (an extension of PD2, not a new decision).
 | C2 Instruction lines | #13 C2 | Text | Each number comes from a realm field; a line names a step, never a source, ingredient or makeup |
 | C5 Running line | #13 C5 | IP12, IP15 (Stop), IP11 ("×2", "full", "Heaped"); opens IP1 (Running card) | Not a live region, because it changes every frame; its stops reach the reader through the log (#13 Accessibility) |
 | C6 Notice strip | #13 C6, States & Variants | IP15 (Copy save, Copy report, Dismiss, Details) | The only place a save at risk is said. It never covers the goal band, never times out, and stands in for every toast (rule 68) |
-| C7 Store row and store chip | #13 C7 | IP11 ("full", "held"), IP12 (wide bar); opens IP1 (Store card) | Chips wrap in rows of three and grow taller rather than truncate a name |
+| C7 Store row and store chip | #13 C7 | IP11 ("full", "held"), IP12 (wide bar); opens IP1 (Store card) | Chips wrap in rows of three and grow taller rather than truncate a name. On a short viewport (at least 640 px wide, below 600 px tall) they fold into one row that scrolls sideways inside itself (#13 Layout Zones) |
 | C8 Ingredient row | #13 C8 | IP11 ("in hand", "not yet", "in the Foundation"); opens IP1 | Wide only; on narrow widths the Goal card lists the six |
 | C10 Group heading | #13 C10 | Text from `source.group` | Display only; a group of one source is a load error (#1 A8) |
 | C12 Ladder block | #13 C12 | IP13 rows, IP11 depth glyph, IP10 | A rail with floors in content order; a sealed floor breaks the rail; depth never fades; a fully closed group is one closed row |
@@ -1251,8 +1251,9 @@ because rows wrap (#13 Accessibility).
 narrow screen. Phone layout (#17) may refine this layout at the vertical slice, but not remove one
 of these without amending #13 (#13 Seams).
 
-**Implementation notes**: short viewports under about 600 px tall and one-handed reach are open
-for #17 (Open Questions 9).
+**Implementation notes**: a narrow viewport at least 640 px wide and below 600 px tall folds the
+pinned zones (#13 Layout Zones, Short viewports). Below 360 px of height, and one-handed reach, are
+open for #17 (Open Questions 9).
 
 **Reference**: #13 ASCII Wireframe, "Narrow (390 px), Committed" and "Narrow, Choosing".
 
@@ -1368,7 +1369,7 @@ IP20–IP22 as they stand, and it builds the Wave A goal line and instruction fr
 
 **Other gaps** (outside #15):
 
-- **Phone layout (#17)**: short viewports and one-handed reach (Open Questions 9).
+- **Phone layout (#17)**: viewports below 360 px of height, and one-handed reach (Open Questions 9).
 - **Accessibility and settings (#18)**: themes, text size and a keyboard shortcut set are #18's.
   This library adds none (#13 Interaction Map, Seams).
 - **Later realms (#19)**: a screen unlocked by a realm would need section records (rule 8,
@@ -1379,8 +1380,8 @@ IP20–IP22 as they stand, and it builds the Wave A goal line and instruction fr
 
 ## Changes needed in existing specs
 
-This library edits neither spec. The coordinating session applies these changes at merge, with the
-designer's approval. Line numbers are those of `design/ux/interface-shell.md` and
+This library edits neither spec. The coordinating session applied these changes at merge on 2026-11-21, with
+the designer's approval. Line numbers are those of `design/ux/interface-shell.md` and
 `design/ux/method-marks.md` at commit 5e5deb8. **No GDD needs a change.**
 
 ### #13 Interface shell and goal line (`design/ux/interface-shell.md`)
@@ -1432,7 +1433,7 @@ designer's approval. Line numbers are those of `design/ux/interface-shell.md` an
 
 | # | Question | Owner | Resolve by |
 |---|---|---|---|
-| 1 | **Accessibility requirements not landed.** Every value marked [AA assumed] is #13's and #14's WCAG 2.2 AA floor. When `design/accessibility-requirements.md` lands, its values replace these. A different tier changes IP20–IP22 first | `design/accessibility-requirements.md` (the parallel `/ux-design accessibility` session) | When it lands |
+| 1 | **Accessibility requirements not landed.** *Resolved 2026-11-21 by `design/accessibility-requirements.md`:* the tier is Comprehensive, against WCAG 2.2 AA, so every **[AA assumed]** value stands | `design/accessibility-requirements.md` (the parallel `/ux-design accessibility` session) | When it lands |
 | 2 | **Start's accessible name.** Many rows carry a Start button. Is "Start" alone enough in context, or should it be "Start {source}", as the heap switch is "Heap {source}"? | `design/accessibility-requirements.md`, with the `writer` | Before #13's UI stories |
 | 3 | **A named-record line's accessible name.** #14 names a part line "{cause}, {amount}, show breakdown". A named-record line (PD6) needs a name in the same form, for example "{record}, show details" | `writer`, with `design/accessibility-requirements.md` | #13's copy review (AC-13-36) |
 | 4 | **A reading to check.** #13 C17 returns focus to "the control that opened it". For a dialog opened from a menu item, the menu has closed, so this library reads the control as the menu button | `/ux-review` | `/ux-review` of this library |
@@ -1440,7 +1441,7 @@ designer's approval. Line numbers are those of `design/ux/interface-shell.md` an
 | 6 | **Easing.** #13 sets the sheet's 150 ms slide and the 400 ms commit sweep but no easing for either | `art-director` (art bible) | Art bible |
 | 7 | **No art bible** (#13 Open Questions 3; #14 Open Questions 2). Glyph drawings, the palette, button weights and the focus ring's colour wait on it | `art-director` | Before the UI stories |
 | 8 | **No player journey map** (#13 Open Questions 1; #14 Open Questions 1) | Designer | Before `/ux-review` of #13–#15 |
-| 9 | **One-handed reach and short viewports** (#13 Open Questions 11, 12; #14 Open Questions 6). Stop and the back line sit at the top of a tall phone, and below about 600 px of height the pinned header exceeds its budget | Phone layout (#17) | Vertical slice |
+| 9 | **One-handed reach and short viewports** (#13 Open Questions 11, 12; #14 Open Questions 6). Stop and the back line sit at the top of a tall phone, and below 360 px of height the pinned header can exceed its budget. From 640 × 360 up, #13 folds it (AR-V4.4) | Phone layout (#17) | Vertical slice |
 | 10 | **A library-wide motion cap.** #14 caps its own motion at 400 ms. Whether that binds every screen, #15's forge moment included (Gap 9) | Forge screen (#15) | #15 UX spec |
 | 11 | **Stale platform note.** `.claude/docs/technical-preferences.md` still says "mouse with hover tooltips" (#13 Open Questions 5; #14 Open Questions 4). This library follows #13 | Technical Director | `/create-architecture` |
 

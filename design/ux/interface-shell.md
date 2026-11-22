@@ -1,6 +1,6 @@
 # UX Spec: Interface Shell and Goal Line
 
-> **Status**: Designed 2026-11-21 (pending `/ux-review`)
+> **Status**: Approved 2026-11-21 (lean `/ux-review`; findings in `design/ux/reviews/interface-shell-review-log.md`)
 > **Author**: designer + Claude (`/ux-design interface-shell`)
 > **Last Updated**: 2026-11-21
 > **System**: #13 in `design/gdd/systems-index.md` (MVP, UI)
@@ -274,8 +274,14 @@ The page never scrolls as a document. Each zone scrolls inside itself, as in Arc
 **Height budget on narrow.** At 390 × 844, N1 + N2 (with no notice) + N4 + N5 together take at most
 45% of the viewport height after the commit, so the content zone keeps at least 460 px. Before the
 commit the instruction block scrolls with the content, which keeps the pinned header the same
-height in every phase. The budget is checked by AC-13-24. Viewports shorter than 600 px are an Open
-Question (#17).
+height in every phase. The budget is checked by AC-13-24.
+
+**Short viewports** (AR-V4.4; designer, 2026-11-21). At 640 × 360 CSS px (a 1280 × 720 window at 200% zoom), and at any larger viewport, every function stays reachable, and the pinned zones with no notice take at most half the height. A narrow viewport at least 640 px wide and shorter than 600 px folds the pinned zones:
+- Row D's store chips become one row that scrolls sideways inside itself. The page never scrolls sideways, and below 640 px wide the chips wrap as before (AR-V4.2).
+- Row C, the running line, takes one line: the occupant, the bar, "{countdown} · stops {countdown}", the breath and Stop. It wraps to a second line before it drops a figure (#4 UI Requirements).
+- N4, the pinned log line, hides. The Log tab keeps every entry.
+
+This diverges from rule 32 (*copy*), stated: a store chip can scroll out of sight inside its row, and the newest log line leaves the screen. Three rows of two-line chips and the log line cannot stay pinned in 360 px and still leave half of it to the content. The wide layout pins only the goal band (Z1) and is not folded. Viewports shorter than 360 px are #17's (Open Questions 12). AC-13-38 checks the budget.
 
 **Ingredients on narrow.** The goal line's slots show how many ingredients are in hand, and the Goal
 card lists all six with their marks. The full list with contributions is the Forge view's (#15).
@@ -283,29 +289,28 @@ This keeps every ingredient one tap away while the header stays within its budge
 
 ### Component Inventory
 
-"New pattern" means the component is not in a pattern library yet, because none exists (Open
-Questions 4).
+The Pattern column names the pattern in `design/ux/interaction-patterns.md`.
 
 | ID | Component | Zone | Type | Shows | Interactive | Pattern |
 |---|---|---|---|---|---|---|
-| C1 | Goal line | Z1 / N1 | Composite display | N slots, the doors in order, the seal total; after the forge, the Foundation | Tap: Goal card | New: Goal line |
-| C2 | Instruction lines | Z1 / N1, N3 | Text | Three lines before the commit, then the next-step line | No (C1's card repeats them) | New |
-| C3 | Method chip | Z1 / N1 | Glyph and label | "No method yet"; after the commit, the method's glyph, name and tint | Tap: Method card | New |
-| C4 | Menu | Z1 / N1 | Menu button and list | New run…, Copy save, Load save…, Keep my save in this browser | Yes | Standard menu |
-| C5 | Running line | Z1 / N1 | Status line with bar | The occupant, progress, countdowns, held breath, "Heaped", the last stop reason | Stop; tap elsewhere on it: Running card | New: Running line |
-| C6 | Notice strip | Z2 / N2 | Stack of notices | "Not saving", "This browser is not keeping your save", an internal error, the load notice | Copy save, Copy report, Dismiss, Details | New: Notice strip |
-| C7 | Store row (wide) / store chip (narrow) | Z3 / N1 | Stat display | Name, held / cap, a bar (wide), "full" with its glyph; a key item as "held" or "not held" | Tap: Store card | New: Store chip |
-| C8 | Ingredient row | Z3 | Stat display | Name and "in hand", "not yet" or "in the Foundation" | Tap: Ingredient card | New |
-| C9 | View tabs | Z4 / N5 | Tab list | Road · Forge (wide); Road · Forge · Log (narrow) | Yes | Standard tabs |
-| C10 | Group heading | Z4 / N3 | Text | The group's `source.group` text | No | New |
-| C11 | Source row | Z4 / N3 | List row | State glyph, name, output, bill, duration, fight result, kept progress, reason; heap toggle on gatherers; Start when Ready | Name: Source card; toggle; Start. Numbers are not targets | New: Source row |
-| C12 | Ladder block | Z4 / N3 | Grouped rows | A rail, the floors in order, depth glyphs, a break at a sealed floor; one closed row when every floor is closed | As C11 | New: Ladder block |
+| C1 | Goal line | Z1 / N1 | Composite display | N slots, the doors in order, the seal total; after the forge, the Foundation | Tap: Goal card | #13 single-use (library catalogue) |
+| C2 | Instruction lines | Z1 / N1, N3 | Text | Three lines before the commit, then the next-step line | No (C1's card repeats them) | #13 single-use (library catalogue) |
+| C3 | Method chip | Z1 / N1 | Glyph and label | "No method yet"; after the commit, the method's glyph, name and tint | Tap: Method card | IP8 |
+| C4 | Menu | Z1 / N1 | Menu button and list | New run…, Copy save, Load save…, Keep my save in this browser | Yes | IP5 |
+| C5 | Running line | Z1 / N1 | Status line with bar | The occupant, progress, countdowns, held breath, "Heaped", the last stop reason | Stop; tap elsewhere on it: Running card | #13 single-use (library catalogue) |
+| C6 | Notice strip | Z2 / N2 | Stack of notices | "Not saving", "This browser is not keeping your save", an internal error, the load notice | Copy save, Copy report, Dismiss, Details | #13 single-use (library catalogue) |
+| C7 | Store row (wide) / store chip (narrow) | Z3 / N1 | Stat display | Name, held / cap, a bar (wide), "full" with its glyph; a key item as "held" or "not held" | Tap: Store card | #13 single-use (library catalogue) |
+| C8 | Ingredient row | Z3 | Stat display | Name and "in hand", "not yet" or "in the Foundation" | Tap: Ingredient card | #13 single-use (library catalogue) |
+| C9 | View tabs | Z4 / N5 | Tab list | Road · Forge (wide); Road · Forge · Log (narrow) | Yes | IP4 |
+| C10 | Group heading | Z4 / N3 | Heading | The group's `source.group` text | No | #13 single-use (library catalogue) |
+| C11 | Source row | Z4 / N3 | List row | State glyph, name, output, bill, duration, fight result, kept progress, reason; heap toggle on gatherers; Start when Ready | Name: Source card; toggle; Start. Numbers are not targets | IP13; its heap toggle (C11a) IP14 |
+| C12 | Ladder block | Z4 / N3 | Grouped rows | A rail, the floors in order, depth glyphs, a break at a sealed floor; one closed row when every floor is closed | As C11 | #13 single-use (library catalogue) |
 | C13 | Post-forge road note | Z4 / N3 | Text | One line once the realm is forged | No | — |
-| C14 | Log | Z5 / N3 (Log tab) | Live list | Entries, newest first; the away block | Scroll only | New: Event log |
-| C15 | Pinned log line | N4 | Text | The newest entry, or the away block's header | Tap: Log tab | New |
-| C16 | Detail container | Overlay | Anchored card (wide) / bottom sheet (narrow) | A card in rule 33's field order, with #14's breakdown under each rule-derived number; a drilled frame under its back line | Close, the back line, part lines (›), records named inside | New: Detail card |
-| C17 | Dialog container | Overlay | Modal dialog | New run, Copy save, Load save; #15's commit dialog and forge confirmation | Yes | Standard modal |
-| C18 | Session screens | Full screen | Text and buttons | Loading, Elsewhere, Superseded, Refused, Content error, No lock support | Per screen | New |
+| C14 | Log | Z5 / N3 (Log tab) | Live list | Entries, newest first; the away block | Scroll only | IP17, IP18 |
+| C15 | Pinned log line | N4 | Text | The newest entry, or the away block's header | Tap: Log tab | IP17 |
+| C16 | Detail container | Overlay | Anchored card (wide) / bottom sheet (narrow) | A card in rule 33's field order, with #14's breakdown under each rule-derived number; a drilled frame under its back line | Close, the back line, part lines (›), records named inside | IP1, IP2 |
+| C17 | Dialog container | Overlay | Modal dialog | New run, Copy save, Load save; #15's commit dialog and forge confirmation | Yes | IP3 |
+| C18 | Session screens | Full screen | Text and buttons | Loading, Elsewhere, Superseded, Refused, Content error, No lock support | Per screen | IP19 |
 
 #### C1 Goal line
 
@@ -364,7 +369,7 @@ Shell strings. Each number comes from a realm field, so the text stays true if c
 - After the commit: the method's solid glyph from #14's glyph sheet, its name and its tint (#14
   MK9). It is the interface's only accent (Visual Identity Anchor, principle 1), and the glyph
   carries the meaning in greyscale (principle 3). The neutral glyph before the commit is this
-  spec's and stays distinct from every #14 glyph (Open Questions 3).
+  spec's and stays distinct from every #14 glyph (Open Questions 3). The name is in ink; a tint colours text only where it keeps 4.5:1.
 - Tap opens the Method card: `desc`, the closes list (`closesLines`, #1 R7.2), the redo line (#7 Y2:
   "Redo: only by starting a new run"), and "{other method}: closed for this run. A new run can
   choose it." The other method stays readable (#7 UI Requirements 4).
@@ -460,7 +465,7 @@ Shell strings. Each number comes from a realm field, so the text stays true if c
   differ in silhouette from #14's method glyphs and its neutral closed, heap and limit glyphs
   (#14 glyph sheet).
 - **Before the commit,** every row reads "Needs a method committed" first and offers no Start.
-  Gatherer toggles are disabled with the same text (#10 UI Requirements 2).
+  Gatherer toggles stay focusable and are marked `aria-disabled`, with the same text as their accessible description; activating one does nothing (#10 UI Requirements 2).
 - **C11a The heap toggle (gatherers only, #10 UI Requirements).** A native toggle on the row itself,
   never in an overflow menu. Its label is "Heap {source}". It carries #14's neutral heap glyph, the
   same shape as a breakdown's heap line, and its state is a word beside the toggle's own position:
@@ -498,13 +503,13 @@ Specified under Events Fired: the event-to-line table, merging, the away block a
   line, already expanded, and a base-only number shows bare (#14 D3, BD2). **Hover opens
   nothing.** On a mouse, a record shows a pointer cursor and an ink underline on its name (rule 33,
   beaten; MVP required item 8). No number takes a hover underline, so a hover never reads as #14's
-  channel underline (#14 MK2).
+  channel underline (#14 MK2). Focus moves to the card's title.
 - **Wide: an anchored card.** It opens below its target if there is room, otherwise above, aligned
   to the target's start edge and kept 16 px inside the viewport. It is 320–400 px wide, at most 70%
   of the viewport tall, and scrolls inside.
 - **Narrow: a bottom sheet.** Full width, at most the viewport height less the pinned header, so the
   goal band, running line and store chips stay visible while it is open (rule 32). A scrim covers
-  only the content zone.
+  only the content zone. Its content sits 16 px in from each inline edge.
 - **One at a time.** Opening another record from outside the card replaces it and clears its stack.
 - **Drill-down stack (#14 BD6).** Two kinds of line inside a card open in the same container, one
   level deeper: a **part line** of a composed breakdown, which ends in "›", and a **record named in
@@ -515,8 +520,8 @@ Specified under Events Fired: the event-to-line table, merging, the away block a
   - Back returns to the parent frame and puts focus on the line that was opened.
   - Depth is unbounded. The MVP's deepest chain is six levels (#14 BD6).
   - The stack is interface state and is never saved (Data Requirements).
-- **Line size.** Part lines and the back line are full width and at least 44 px tall with a coarse
-  pointer. Breakdown lines wrap and never truncate, so the container never scrolls sideways, at
+  - A named record uses the part line's form: a full-width line ending in "›".
+- **Line size.** Part lines, named-record lines and the back line are full width, and at least 44 px tall with a coarse pointer or 32 px with a fine one. Breakdown lines wrap and never truncate, so the container never scrolls sideways, at
   390 px or at the 320 px reflow floor.
 - **Live.** The card repaints with the game, a drilled frame and its back line's value included. It
   never closes on a game event.
@@ -550,15 +555,16 @@ Specified under Events Fired: the event-to-line table, merging, the away block a
 #### C17 Dialog container
 
 - A modal dialog: it traps focus, Esc or Cancel closes it, and it returns focus to the control that
-  opened it. On narrow widths it is full width.
+  opened it, or, after a confirm that changed what is shown, to the heading of the view now shown. When it opens, or its confirm step appears, Cancel holds focus. Cancel sits at inline-start and the confirm at inline-end. On narrow widths it is full width.
 - It carries the shell's dialogs and, unchanged, #15's commit dialog and forge confirmation. #15
   owns their words.
-- **A busy state** for any dialog whose confirm writes the save: the confirm button reads "Working…"
-  and is disabled until the write commits (#11 Game Feel: "New run and import switch only once the
-  write has committed").
+- **A busy state** for a dialog whose confirm switches the run (New run, Load save): the confirm
+  button reads "Working…" and is disabled until the write commits (#11 Game Feel: "New run and
+  import switch only once the write has committed"). The commit and forge dialogs close in the
+  confirm's frame, and a failed write raises Not saving (#11 J5).
 - **New run** (#11 UI Requirements 4, D6.2). It names, by name, what it clears: "{method}", "the
   Foundation ({s} of {2D} seals)" if forged, "everything held", "kept progress" and "held breath".
-  It echoes the redo line (#7 Y2), then Confirm and Cancel. If the write fails, it reads "Could not
+  It echoes the redo line (#7 Y2), then "Start a new run" (provisional copy) and Cancel. If the write fails, it reads "Could not
   start a new run", with Copy save.
 - **Copy save** (D9.1). A read-only text area holding the save, selected on open, with a **Copy**
   button that uses the clipboard and says "Copied" when it succeeds. If the clipboard is
@@ -569,12 +575,12 @@ Specified under Events Fired: the event-to-line table, merging, the away block a
      "This is not a save." A dry-run refusal shows its reason.
   3. A loadable record shows the confirm, which names the run it replaces and the run it loads, for
      example: "Replace your Ember Breath run (forged, 4 of 6 seals) with this Still Water run (not
-     forged)?" Then Confirm and Cancel.
+     forged)?" Then "Load this save" (provisional copy) and Cancel.
   4. If the write fails: "Could not load this save", with Copy save.
 
 #### C18 Session screens (#11 States and Transitions, UI Requirements 1–2)
 
-Each is centred text on the stone base, with no persistent context.
+Each is centred text on the stone base, with no persistent context. On display, focus moves to the screen's text, which is its heading.
 
 | Screen | Text | Actions |
 |---|---|---|
@@ -818,7 +824,8 @@ notice never covers the goal band.
 |---|---|---|
 | Wide | Viewport at least `WIDE_MIN_PX` | Three columns under the goal band |
 | Narrow | Below `WIDE_MIN_PX` | Pinned header, chips, tabs, sheet, pinned log line |
-| Zoomed | Browser zoom or larger default text | Layout follows CSS pixels, so 200% zoom on a 1280 px window falls into the narrow layout, and nothing clips |
+| Short | Narrow, at least 640 px wide and below 600 px tall | One scrolling chip row, a one-line running line, no pinned log line (Layout Zones, Short viewports) |
+| Zoomed | Browser zoom or larger default text | Layout follows CSS pixels, so 200% zoom on a 1280 px window falls into the narrow layout, and nothing clips; short viewports follow the height budget |
 | Reduced motion | `prefers-reduced-motion: reduce` | No commit sweep, no sheet slide (Transitions) |
 | Touch | Coarse pointer | Every target at least 44 × 44 CSS px, at any width |
 
@@ -847,13 +854,14 @@ D2.4). **Before every rules action** the rules core settles time to now (#4 S3.4
 | Ingredient row (C8) | Open the Ingredient card | Click | Enter or Space | Tap | The card opens | Interface only |
 | View tab (C9) | Switch views | Click | Arrow keys within the tab list, Enter | Tap | The view changes and keeps its own scroll position | Interface only |
 | Card close | Close the whole stack | Click × or outside | Esc | Tap × or the scrim | The container closes and focus returns to the record that opened it | Interface only |
+| Card or sheet | Scroll | Wheel | Arrow keys, Page Up and Page Down while focus is inside | Vertical swipe | — | Interface only |
 | Menu (C4) | Open the menu | Click | Enter, then arrows; Esc closes | Tap | The list opens | Interface only |
 | New run… | Open the dialog | Click | Enter | Tap | The dialog opens | — |
-| New run: Confirm | Start a new run | Click | Enter | Tap | Busy until the write commits | `newRun()` |
+| New run: "Start a new run" | Start a new run | Click | Enter | Tap | Busy until the write commits | `newRun()` |
 | Copy save | Open the copy dialog | Click | Enter | Tap | The dialog opens with the text selected | `copySave()`; writes nothing |
 | Copy | Copy to the clipboard | Click | Enter | Tap | "Copied" | Clipboard only |
 | Load save…: Check | Check pasted text | Click | Enter | Tap | A refusal reason, or the confirm text | #11's dry run (D9.2); changes nothing |
-| Load save: Confirm | Replace the run | Click | Enter | Tap | Busy until the write commits | `importSave(text)` |
+| Load save: "Load this save" | Replace the run | Click | Enter | Tap | Busy until the write commits | `importSave(text)` |
 | Keep my save in this browser | Ask the browser to keep storage | Click | Enter | Tap | One log line with the browser's answer; the item turns inert if granted | `requestPersistence()` (#11 A1) |
 | Use here (Elsewhere) | Take the game into this tab | Click | Enter | Tap | Loading | `useHere()` |
 | Refused: New run, Copy save, Load save | As above | Click | Enter | Tap | As above | As above |
@@ -944,7 +952,7 @@ batch.
 
 **One channel** (rules 68, 99). The rules core emits typed events with no DOM, and the shell only
 displays them. **Every log line comes from a typed event** or from the result of an action the
-player took (AC-13-20). The shell derives no event of its own.
+player took (AC-13-20). The shell derives no event of its own. Log lines are plain text: no mark, glyph, tint or target.
 
 | Event (emitter) | Repaints | Log line (provisional copy) |
 |---|---|---|
@@ -992,6 +1000,8 @@ An internal error shows its notice. An unknown field dropped on load is a log li
   breath held for the next" (#4 Open Question 2). On narrow widths the pinned line shows the block's
   header and its first figures: "Away 3 h 12 min: Ash Tallow +40 · Breath 30:00".
 
+  The block is static: no collapse and no dismiss. Newer entries stack above it, and `LOG_MAX` drops it like any other entry.
+
 ---
 
 ## Transitions & Animations
@@ -1024,7 +1034,7 @@ text.
 Inputs: keyboard, mouse and touch. **Gamepad is not supported** (Platform Target), so its block is
 left out.
 
-**Tab order.** Wide: the skip link ("Skip to the road"), the notice strip, the goal band (goal line,
+**Tab order.** Wide: the skip link ("Skip to the forge" or "Skip to the road", following the centre view on screen), the notice strip, the goal band (goal line,
 method chip, menu, running line, Stop), the store column, the view tabs, the centre view, the log.
 Narrow: the skip link, the header, the notice strip, the content, the pinned log line, the tab bar.
 
@@ -1034,7 +1044,7 @@ Narrow: the skip link, the header, the notice strip, the content, the pinned log
 - [x] Tab order follows the visual reading order (above)
 - [x] Every action a mouse can do, the keyboard can do (Interaction Map)
 - [x] Focus is always visible: a 2 px ring that is never removed (Accessibility)
-- [x] Focus stays inside an open dialog or narrow sheet until it closes (C16, C17)
+- [x] Focus stays inside an open dialog, card or sheet until it closes (C16, C17)
 - [x] Esc closes the card or the sheet with its whole stack, the menu or the dialog, and never leaves the game
 
 **Mouse**
@@ -1055,8 +1065,8 @@ Narrow: the skip link, the header, the notice strip, the content, the pinned log
 
 ## Accessibility
 
-**Tier: not yet defined** (Open Questions 2). This spec meets the floor the systems index sets for
-the MVP (#18) and the items below, which take WCAG 2.2 AA as the working baseline.
+**Tier: Comprehensive, against WCAG 2.2 AA** (`design/accessibility-requirements.md`). This spec
+meets it with the items below.
 
 **The floor (systems index #18).**
 
@@ -1067,8 +1077,7 @@ the MVP (#18) and the items below, which take WCAG 2.2 AA as the working baselin
   With a greyscale filter, every screen still reads (AC-13-34).
 
 **Keyboard and focus.** A skip link comes first in the tab order. The focus ring is 2 px and keeps
-3:1 contrast against both colours next to it. Focus moves into an opened card or dialog and returns
-to its trigger when it closes. Inside a card, drilling down moves focus to the back line, and Back
+3:1 contrast against both colours next to it. Focus moves to an opened card's title, or to a dialog's Cancel (its first field, if it has one), and returns to its trigger when it closes. Inside a card, drilling down moves focus to the back line, and Back
 returns it to the line that was opened (C16).
 
 **Screen readers.**
@@ -1076,19 +1085,22 @@ returns it to the line that was opened (C16).
 | Element | Role and behaviour |
 |---|---|
 | Goal band | `banner` landmark. The goal line's accessible name is a sentence: "Goal: 2 of 6 ingredients in hand. Furnace Gate, Deep Well and Listening Hall: up to 6 seals." |
+| Group heading | Heading (one level below the centre view's title); card, dialog and session-screen titles are headings too |
 | Store column | `complementary` landmark, "Stores". Each store reads "{name}, {held} of {cap}", plus "full". The bar is hidden from assistive technology, because the text carries its value |
 | Centre | `main` landmark |
 | Log | `log` role, `aria-live="polite"`, `aria-relevant="additions"`, so a new entry is announced and an in-place merge is not |
 | Running line | Not live: it changes every frame. Its stop reasons reach the reader through the log. The progress bar is a `progressbar` whose value updates at each unit, not each frame |
-| Notice strip | "Not saving" and "This browser is not keeping your save" are `alert`. The load notice is `status` (#11 UI Requirements 8) |
+| Notice strip | "Not saving" and "This browser is not keeping your save" are `alert`. The load notice is `status` (#11 UI Requirements 8). The internal-error notice is `alert`. |
+| Messages | "Copied", "Working…", "Loading…", "This text is too long to be a save." and "This is not a save." are `status`; "Could not start a new run" and "Could not load this save" are `alert` |
 | Heap toggle | A native switch, labelled "Heap {source}", with its checked state (#10 UI Requirements 5) |
 | Glyph-only marks | Every glyph has a text alternative, and every state word is visible text anyway |
-| Cards and dialogs | `dialog`, labelled by the card's title; the narrow sheet and every dialog are modal |
+| Cards and dialogs | `dialog`, labelled by the card's title; the card, the sheet and every dialog are modal |
+| Session screens | Each screen's text is its heading; focus moves to it on display (C18) |
 
-**Contrast and text.** Text keeps at least 4.5:1 against the stone base; glyphs, bars and the focus
+**Contrast and text.** Text keeps at least 4.5:1 against every surface it sits on: the stone base, a card, the sheet, a chip, the notice strip and a dialog; glyphs, bars and the focus
 ring keep at least 3:1. The method's tint must keep 3:1 against the stone base, which the art bible
 checks for each method. Body text is at least 16 px on narrow widths and 14 px on wide ones;
-secondary figures are at least 13 px. Sizes are in rem, so they follow the browser's text size.
+secondary figures are at least 13 px. Breakdown lines are secondary text, at least 14 px at every width; a number's own line follows body size. Sizes are in rem, so they follow the browser's text size.
 
 **Reflow and zoom.** The layout holds at 320 CSS px with no horizontal scroll (WCAG 1.4.10), and
 text spacing overrides never clip, because rows wrap.
@@ -1210,7 +1222,8 @@ ingredients, four per makeup, three doors (Furnace Gate, Deep Well, Listening Ha
 
 - [ ] **AC-13-17** [integration] With a mouse, holding the pointer over any element for 3 s opens
   nothing. Every card opens by click, by Enter or Space on focus, and by tap. Esc closes it and
-  returns focus to its trigger.
+  returns focus to its trigger. With the keyboard, Tab and Shift+Tab cycle inside an open card,
+  wide or narrow, and never reach the page behind it (PD5).
 - [ ] **AC-13-18** [unit] For each record type, a card shows its blocks in the order Title, Kind,
   Description, Time, Needs, Takes, Gives, Fights, Contributes, Widens, Opens, Sources, Flavour, and
   leaves out empty blocks. An ingredient not in hand shows no contribution number.
@@ -1254,7 +1267,7 @@ ingredients, four per makeup, three doors (Furnace Gate, Deep Well, Listening Ha
   record and field and writes no save.
 - [ ] **AC-13-27** [integration] The new-run dialog names the method, the Foundation and its seals
   (when forged), everything held, kept progress and held breath, and shows "Redo: only by starting a
-  new run". Confirm shows "Working…" until the write commits. A failed write keeps the old run and
+  new run". "Start a new run" shows "Working…" until the write commits. A failed write keeps the old run and
   shows "Could not start a new run" with Copy save.
 - [ ] **AC-13-28** [integration] Load save shows "This text is too long to be a save." above
   `IMPORT_MAX_BYTES` and "This is not a save." for unparseable text, and changes nothing in either
@@ -1296,6 +1309,8 @@ ingredients, four per makeup, three doors (Furnace Gate, Deep Well, Listening Ha
 - [ ] **AC-13-37** [playtest] Whether the goal line reads as the goal: the MVP's "States the goal"
   signal, with a tester who has read nothing. Whether anyone flips the heap toggle as a button to
   press (#10 AC-PX-1).
+- [ ] **AC-13-38** [visual] At 640 × 360 CSS px after the commit, with no notice, the pinned zones take at most 180 px of height, and the tester reaches and uses Start, Stop, the heap toggle, a card and the menu
+- [ ] **AC-13-39** [manual] A screen reader announces "Copied", "Working…" and a Load save refusal without focus moving
 
 ---
 
@@ -1380,13 +1395,15 @@ independent reviewer against the GDDs rather than this table):
 
 - GDD requirements: all covered. One conflict sits inside #9 itself (the decider's place), and this
   spec takes one side of it (Open Questions 9).
-- New patterns to add to the library: eight (Open Questions 4).
+- Patterns: named in `design/ux/interaction-patterns.md` (2026-11-21).
 - Navigation mismatches: none. #14 (`design/ux/method-marks.md`, written in parallel on its own
   branch) reached the container through the record, not the number. This spec was aligned with it
   the same day: records open the container, a drill-down stack with a back line, 44 px part
   lines, #14's glyphs on the method chip and heap toggle, and one 400 ms bound on the commit's
   decoration (C16, C3, C11a, Transitions, AC-13-19). #15 must still match the seams above.
-- Accessibility gaps: the tier is undefined (Open Questions 2). The floor is met.
+- Accessibility gaps: none. The tier is Comprehensive (`design/accessibility-requirements.md`), and
+  the changes it lists for this spec are applied, except S4, which pattern PD5 superseded (the wide
+  card traps focus).
 - Missing empty states: none (States & Variants, "Empty and edge states").
 
 ### Amendments made with this spec (designer-approved, 2026-11-21)
@@ -1397,7 +1414,7 @@ independent reviewer against the GDDs rather than this table):
 | #1, **A9** | The rules core emits `opened {sources}` when a settle or the forge moves sources into Actionable (F7). Not at the commit, on load or at run start. Merged per `advance` |
 | #8 Crafting route, **A2** | L9's events line names #1's `opened`. L2 gains the group values. Open Question 5 answered: by line |
 | #9 Fight and dungeon routes, **A3** | N1 gains the group values. Open Question 8's display half answered by C13 |
-| #11 Save and run lifecycle, **A1** | D10.2: the game never asks the browser to keep storage by itself. The menu item "Keep my save in this browser" asks once per choice. Action `requestPersistence()` added to D12; UI Requirements 6 and AC-D10-2 follow; Open Questions 2 and 6 answered |
+| #11 Save and run lifecycle, **A1** | D10.2: the game never asks the browser to keep storage by itself. The menu item "Keep my save in this browser" asks once per choice. Action `requestPersistence()` added to D12; UI Requirements 6 and AC-D10-1 follow; Open Questions 2 and 6 answered |
 | #3, #4 and #10 | Status edits only: #3 Open Question 4, #4 Open Question 2, #10 Open Questions 1 and 5 marked answered |
 | Concept | Mechanic 4 and the Core Loop read "heap whatever gatherer is running", with speed read as output per minute (#10 Open Question 1). Session-Level reads "the stores the last run filled, with the breath held for the next" (#4 Open Question 2) |
 
@@ -1408,9 +1425,9 @@ independent reviewer against the GDDs rather than this table):
 | # | Question | Owner | Resolve by |
 |---|---|---|---|
 | 1 | **No player journey map.** Arrival contexts here are reasoned from the concept and the GDDs. Author `design/player-journey.md` from `.claude/docs/templates/player-journey.md`, then check Player Context on Arrival against it | Designer | Before `/ux-review` of #13–#15 |
-| 2 | **No accessibility tier.** This spec meets the systems index's floor and takes WCAG 2.2 AA as the working baseline. Run `/gate-check` to see whether the missing tier blocks a phase gate | Designer, with `accessibility-specialist` (#18) | Before the Pre-Production gate |
+| 2 | **No accessibility tier.** *Resolved 2026-11-21 by `design/accessibility-requirements.md`:* The tier is Comprehensive, WCAG 2.2 AA. | Designer, with `accessibility-specialist` (#18) | Before the Pre-Production gate |
 | 3 | **No art bible.** Needed from it: the glyph set (rest, the eight row states, slots, seals, door tiers, depth, full, in hand, menu, and the neutral "no method" glyph), the stone palette and the method tint tokens with their contrast, the channel lines, and the commit sweep. The method glyphs and the neutral closed, heap and limit glyphs are #14's (its glyph sheet), so they are not in this list. Every glyph here must differ in silhouette from all of them (AC-13-34). The concept asks for a one-page interface style sheet | `art-director` | Before the shell's UI stories |
-| 4 | **No interaction pattern library.** New patterns introduced here: Goal line, Running line, Notice strip, Store chip, Source row, Ladder block, Event log, Detail card. Flagged for `/ux-design patterns` | `ux-designer` | With #14 and #15, before epics |
+| 4 | **No interaction pattern library.** *Resolved 2026-11-21 by `design/ux/interaction-patterns.md`:* The library is written; patterns are named in the Component Inventory. | `ux-designer` | With #14 and #15, before epics |
 | 5 | **Stale platform note.** `.claude/docs/technical-preferences.md` still describes the archived attempt: "mouse with hover tooltips", "Touch: Partial (ⓘ pins tooltips)", a phone layout at ≤ 650 px, Bun. This spec follows the concept and the systems index instead (tap, no hover-only, 390 px design width). Update the file at `/create-architecture` | Technical Director | Architecture |
 | 6 | **One wording for a held cap-1 store.** #8 UI Requirements 3 asks for "{ingredient} is in hand", #9's States table says "{ingredient} is already held", and #1's shortfall form would print "{name} is full". The rules core's reason text must give one wording. This spec displays "{name} is in hand" for any store of base cap 1, key items included | Events and text ADR, with #4, #8 and #9 | Architecture |
 | 7 | **"Level" and "Heaped".** #10 asks for "the gatherer's verb" as the off-state word, but no field holds a verb. "Level" is a stand-in | `writer`, with #10 | Copy review (AC-13-36) |
@@ -1418,7 +1435,7 @@ independent reviewer against the GDDs rather than this table):
 | 9 | **#9's decider.** #9 Visual/Audio puts the decider ("outlasted") on the row, and #9 UI Requirements 1 puts it in the card. This spec follows UI Requirements 1 | Designer, with #9 | `/ux-review` |
 | 10 | **The frame loop's cost.** The shell paints every frame while visible, even while resting, when only the breath counter changes once a second. On a phone, a once-a-second timer while nothing moves may save battery | Technical Director | Performance ADR, with #4 ADR 5 |
 | 11 | **One-handed reach.** Stop sits in the pinned header, out of thumb reach on a tall phone. A second Stop on the running row would fix it, but #4 places Stop on the running line | #17 | Vertical Slice |
-| 12 | **Short viewports.** Below about 600 px of height (a phone in landscape, a small window), the pinned header exceeds its budget. Should the store chips fold into one scrolling row there, given rule 32? | #17 | Vertical Slice |
+| 12 | **Short viewports.** *Resolved 2026-11-21 for the MVP by `design/accessibility-requirements.md` AR-V4.4 (designer):* a narrow viewport at least 640 px wide and 360–599 px tall folds the pinned zones (Layout Zones, Short viewports), with rule 32's divergence stated there. Below 360 px of height stays #17's. | #17 | Vertical Slice |
 | 13 | **Event payloads.** The events ADR fixes every payload above, including `opened`; whether a stop or refusal reason travels as text or as ids that a rules-core function renders; and how `saveLoaded` carries log-only lines | Technical Director | Events ADR (#3 ADR 2, #4 ADR 4, #11 ADR 8) |
 | 14 | **The Wave A build.** #15's spec must use C1 and C2 for the checkpoint and drop them when the shell lands | Forge screen (#15) | #15 UX spec |
 | 15 | **Closing a forged realm's routes.** C13 says that nothing more can be forged. Whether those routes should close instead is a rules question | Reforge (#16) | Vertical Slice |
