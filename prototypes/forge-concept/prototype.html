@@ -1,0 +1,392 @@
+<!-- PROTOTYPE - NOT FOR PRODUCTION -->
+<!-- Question: Is assembling a Foundation from any four of six ingredients, under a chosen method, a build problem the player wants to solve twice? -->
+<!-- Date: 2026-11-19 -->
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Forge prototype (not for production)</title>
+<style>
+  :root {
+    --stone-0: #f3f1ec; --stone-1: #e7e3da; --stone-2: #cfc9bc; --stone-3: #8d877a;
+    --ink: #24211c; --ink-soft: #5a554b; --tint: #8d877a; --tint-soft: #e7e3da;
+  }
+  body.m-ember { --tint: #b4411f; --tint-soft: #f6ddd3; }
+  body.m-water { --tint: #1f6f8b; --tint-soft: #d5ebf2; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--stone-0); color: var(--ink);
+         font: 15px/1.45 system-ui, -apple-system, "Segoe UI", sans-serif; }
+  header { padding: 12px 18px; border-bottom: 2px solid var(--tint); background: var(--stone-1);
+           display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: center; }
+  header h1 { font-size: 17px; margin: 0; }
+  .tag { font-size: 12px; color: var(--ink-soft); }
+  main { display: grid; grid-template-columns: minmax(320px, 1fr) minmax(320px, 1fr); gap: 16px; padding: 16px 18px; }
+  @media (max-width: 820px) { main { grid-template-columns: 1fr; } }
+  section { background: #fff; border: 1px solid var(--stone-2); border-radius: 8px; padding: 12px 14px; }
+  h2 { font-size: 14px; text-transform: uppercase; letter-spacing: .05em; margin: 0 0 8px; color: var(--ink-soft); }
+  button { font: inherit; padding: 5px 10px; border-radius: 6px; border: 1px solid var(--stone-3);
+           background: var(--stone-0); color: var(--ink); cursor: pointer; }
+  button:hover:not(:disabled) { border-color: var(--tint); }
+  button:disabled { opacity: .45; cursor: not-allowed; }
+  button.primary { background: var(--tint); border-color: var(--tint); color: #fff; font-weight: 600; }
+  .mark { color: var(--tint); font-weight: 700; }
+  .methods { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .method { border: 2px solid var(--stone-2); border-radius: 8px; padding: 12px; }
+  .method.ember { border-color: #b4411f; } .method.water { border-color: #1f6f8b; }
+  .method h3 { margin: 0 0 6px; font-size: 16px; }
+  .method ul { margin: 6px 0 10px; padding-left: 18px; }
+  .ing { border: 1px solid var(--stone-2); border-radius: 8px; padding: 8px 10px; margin-bottom: 8px; }
+  .ing.held { border-color: var(--tint); background: var(--tint-soft); }
+  .ing .top { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+  .ing .name { font-weight: 600; }
+  .ing .gives { margin: 2px 0 6px; }
+  .ing .row { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .pill { display: inline-block; padding: 1px 7px; border-radius: 10px; background: var(--stone-1); font-size: 12px; }
+  .bar { height: 10px; background: var(--stone-1); border-radius: 5px; overflow: hidden; }
+  .bar > div { height: 100%; background: var(--tint); width: 0; }
+  .slots { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin-bottom: 10px; }
+  .slot { border: 1px dashed var(--stone-3); border-radius: 6px; padding: 6px; min-height: 46px; font-size: 13px; text-align: center; }
+  .slot.filled { border-style: solid; border-color: var(--tint); }
+  .slot.missing { background: repeating-linear-gradient(45deg, #fff, #fff 6px, var(--stone-1) 6px, var(--stone-1) 12px); }
+  table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  th, td { text-align: left; padding: 3px 6px; border-bottom: 1px solid var(--stone-1); vertical-align: top; }
+  .door { border: 1px solid var(--stone-2); border-radius: 6px; padding: 6px 8px; margin-top: 6px; }
+  .door.t1 { border-color: var(--tint); } .door.t2 { border-color: var(--tint); background: var(--tint-soft); }
+  .ok { font-weight: 700; } .no { color: var(--ink-soft); }
+  .big { font-size: 20px; font-weight: 700; }
+  details { margin-top: 6px; } summary { cursor: pointer; color: var(--ink-soft); }
+  textarea { width: 100%; height: 150px; font: 12px/1.4 ui-monospace, Menlo, Consolas, monospace; }
+  .note { color: var(--ink-soft); font-size: 13px; }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Forge prototype</h1>
+  <span class="tag">Throwaway build. One question: is the forge a build problem worth solving twice?</span>
+  <span id="hdr-method" class="pill"></span>
+  <span id="hdr-days" class="pill"></span>
+  <button id="btn-new" type="button">New run</button>
+</header>
+
+<main id="screen-pick" >
+  <section style="grid-column: 1 / -1">
+    <h2>Choose a method for this run</h2>
+    <p class="note">You have 9 days before the gate closes. Gather ingredients, then forge a Foundation from any four of the six.
+      The Foundation's five stats decide how far three doors of the next realm open. The method you circulate is fixed for the run.
+      It changes what ingredients are worth and which sources are cheap.</p>
+    <div class="methods" id="method-cards"></div>
+  </section>
+</main>
+
+<main id="screen-run" class="hidden">
+  <section>
+    <h2>Ingredients and sources</h2>
+    <div id="activity" class="note" style="min-height: 38px"></div>
+    <div id="ings"></div>
+    <p class="note">One action runs at a time. A value the method changed is marked <span class="mark" id="glyph-demo"></span>.</p>
+  </section>
+  <div>
+    <section>
+      <h2>Forge</h2>
+      <p class="note">Plan with any ingredient, held or not. Forging needs four that you hold.</p>
+      <div class="slots" id="slots"></div>
+      <div id="preview"></div>
+      <div style="margin-top: 10px; display: flex; gap: 8px; align-items: center; flex-wrap: wrap">
+        <button id="btn-forge" class="primary" type="button" disabled>Forge the Foundation</button>
+        <button id="btn-clear" type="button">Clear plan</button>
+        <span id="forge-why" class="note"></span>
+      </div>
+      <div id="result"></div>
+    </section>
+    <section style="margin-top: 16px">
+      <h2>Runs this session</h2>
+      <div id="runs" class="note">No runs finished yet.</div>
+      <details>
+        <summary>Session log (for the debrief)</summary>
+        <p class="note">Counts what the prototype is testing: makeups you compared before forging, and whether you came back for another run.</p>
+        <textarea id="log" readonly></textarea>
+        <button id="btn-copy" type="button">Copy session log</button> <span id="copied" class="note"></span>
+      </details>
+    </section>
+  </div>
+</main>
+
+<script id="rules">
+// PROTOTYPE - NOT FOR PRODUCTION
+// Question: Is assembling a Foundation from any four of six ingredients, under a chosen method, a build problem the player wants to solve twice?
+// Date: 2026-11-19
+// Rules only: nothing in this block touches the page, so it can be checked from the command line.
+var BUDGET = 9;
+var STAT_NAMES = { Q: 'Qi', V: 'Vigor', I: 'Insight', F: 'Flame', T: 'Tide' };
+var STAT_ORDER = ['Q', 'V', 'I', 'F', 'T'];
+var ING = {
+  marrow:    { name: 'Ember Marrow',       tags: ['body', 'flame'], s: { V: 2, F: 3 }, src: [['craft', 'Render ash-fat', 2],     ['fight', 'Hunt a cinder boar', 4]] },
+  heartwood: { name: 'Ironbark Heartwood', tags: ['body'],          s: { V: 5, Q: 1 }, src: [['craft', 'Season a felled trunk', 5], ['fight', 'Fell a walking ironbark', 3]] },
+  pearl:     { name: 'Tidewater Pearl',    tags: ['qi', 'tide'],    s: { Q: 3, T: 3 }, src: [['craft', 'Culture a pearl bed', 3],  ['dungeon', 'Dive the drowned shrine', 5]] },
+  lotus:     { name: 'Cloud Lotus',        tags: ['qi'],            s: { Q: 5, I: 1 }, src: [['gather', 'Climb to the mist terraces', 4], ['dungeon', 'Clear the lotus cave', 2]] },
+  jade:      { name: 'Echo Jade',          tags: ['mind'],          s: { I: 4 },       src: [['craft', 'Carve and tune raw jade', 5], ['dungeon', 'Sound the hollow vault', 5]] },
+  moss:      { name: 'Ghost Moss',         tags: ['mind'],          s: { I: 2, F: 2, T: 1 }, src: [['gather', 'Comb the grave hill', 4], ['fight', 'Drive off the moss wraith', 2]] }
+};
+var ING_ORDER = ['marrow', 'heartwood', 'pearl', 'lotus', 'jade', 'moss'];
+var PAIRS = [
+  { a: 'marrow', b: 'heartwood', name: 'Kindling',    d: { V: 2 } },
+  { a: 'pearl',  b: 'lotus',     name: 'Water-borne', d: { Q: 1 } },
+  { a: 'jade',   b: 'moss',      name: 'Resonance',   d: { I: 2 } },
+  { a: 'marrow', b: 'pearl',     name: 'Opposed',     d: { F: -2, T: -2 }, opposed: true }
+];
+var METHODS = {
+  ember: { name: 'Ember Breath', glyph: '▲',
+           lines: ['Flame from every ingredient is doubled.', 'Each body ingredient gives +1 Vigor.', 'Fights and dungeons take 1 day less.'] },
+  water: { name: 'Still Water', glyph: '≈',
+           lines: ['Tide from every ingredient is doubled.', 'Each mind ingredient gives +1 Insight.', 'Crafting and gathering take 1 day less.',
+                   'Ember Marrow and Tidewater Pearl no longer oppose each other. Together they give +2 Qi.'] }
+};
+var DOORS = [
+  { name: 'Furnace Gate',   req: { F: 2, V: 3 }, wide: 3 },
+  { name: 'Deep Well',      req: { Q: 4, T: 2 }, wide: 2 },
+  { name: 'Listening Hall', req: { I: 5, Q: 5 }, wide: 3 }
+];
+function sourceCost(key, i, method) {
+  var typ = ING[key].src[i][0], base = ING[key].src[i][2], days = base;
+  if (method === 'ember' && (typ === 'fight' || typ === 'dungeon')) days = Math.max(1, base - 1);
+  if (method === 'water' && (typ === 'craft' || typ === 'gather')) days = Math.max(1, base - 1);
+  return { days: days, changed: days !== base };
+}
+// What one ingredient gives under a method: [{stat, value, changed}]
+function ingredientGives(key, method) {
+  var out = [], s = ING[key].s, extra = {};
+  if (method === 'ember' && ING[key].tags.indexOf('body') >= 0) extra.V = 1;
+  if (method === 'water' && ING[key].tags.indexOf('mind') >= 0) extra.I = 1;
+  STAT_ORDER.forEach(function (st) {
+    var base = s[st] || 0, v = base;
+    if (method === 'ember' && st === 'F') v = base * 2;
+    if (method === 'water' && st === 'T') v = base * 2;
+    v += extra[st] || 0;
+    if (v !== 0) out.push({ stat: st, value: v, changed: v !== base });
+  });
+  return out;
+}
+function foundation(makeup, method) {
+  var st = { Q: 0, V: 0, I: 0, F: 0, T: 0 }, pairs = [];
+  makeup.forEach(function (k) { ingredientGives(k, method).forEach(function (g) { st[g.stat] += g.value; }); });
+  PAIRS.forEach(function (p) {
+    if (makeup.indexOf(p.a) < 0 || makeup.indexOf(p.b) < 0) return;
+    if (p.opposed && method === 'water') { st.Q += 2; pairs.push({ name: 'Harmonised', d: { Q: 2 }, changed: true, a: p.a, b: p.b }); return; }
+    Object.keys(p.d).forEach(function (s) { st[s] += p.d[s]; });
+    pairs.push({ name: p.name, d: p.d, changed: false, a: p.a, b: p.b });
+  });
+  STAT_ORDER.forEach(function (s) { if (st[s] < 0) st[s] = 0; });
+  return { stats: st, pairs: pairs };
+}
+function doorTiers(stats) {
+  return DOORS.map(function (d) {
+    var open = true, wide = true, reqs = [];
+    Object.keys(d.req).forEach(function (s) {
+      var need = d.req[s], have = stats[s];
+      if (have < need) open = false;
+      if (have < need + d.wide) wide = false;
+      reqs.push({ stat: s, need: need, wide: need + d.wide, have: have });
+    });
+    return { name: d.name, tier: open ? (wide ? 2 : 1) : 0, reqs: reqs };
+  });
+}
+function score(tiers) { return tiers.reduce(function (n, t) { return n + t.tier; }, 0); }
+if (typeof module !== 'undefined') module.exports = { BUDGET: BUDGET, ING: ING, ING_ORDER: ING_ORDER, sourceCost: sourceCost, foundation: foundation, doorTiers: doorTiers, score: score };
+</script>
+
+<script>
+// PROTOTYPE - NOT FOR PRODUCTION
+// Question: Is assembling a Foundation from any four of six ingredients, under a chosen method, a build problem the player wants to solve twice?
+// Date: 2026-11-19
+var SECONDS_PER_DAY = 0.5;
+var session = { started: Date.now(), runs: [] };
+var run = null;
+function $(id) { return document.getElementById(id); }
+function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+function mark(text, changed) { return changed ? '<span class="mark">' + esc(text) + ' ' + METHODS[run.method].glyph + '</span>' : esc(text); }
+function sign(n) { return (n > 0 ? '+' : '') + n; }
+
+function showPick() {
+  run = null; document.body.className = '';
+  $('screen-pick').classList.remove('hidden'); $('screen-run').classList.add('hidden');
+  $('hdr-method').textContent = 'No method yet'; $('hdr-days').textContent = '';
+  $('method-cards').innerHTML = Object.keys(METHODS).map(function (m) {
+    var M = METHODS[m];
+    return '<div class="method ' + m + '"><h3>' + M.glyph + ' ' + esc(M.name) + '</h3><ul>' +
+      M.lines.map(function (l) { return '<li>' + esc(l) + '</li>'; }).join('') +
+      '</ul><button type="button" class="primary" style="background:' + (m === 'ember' ? '#b4411f' : '#1f6f8b') + ';border-color:transparent" data-method="' + m + '">Circulate ' + esc(M.name) + '</button></div>';
+  }).join('');
+  writeLog();
+}
+function startRun(method) {
+  run = { n: session.runs.length + 1, method: method, days: BUDGET, held: {}, plan: [], busy: null,
+          startedAt: Date.now(), previewed: {}, planChanges: 0, forged: null, stranded: false };
+  session.runs.push(run);
+  document.body.className = 'm-' + method;
+  $('screen-pick').classList.add('hidden'); $('screen-run').classList.remove('hidden');
+  $('glyph-demo').textContent = METHODS[method].glyph;
+  $('result').innerHTML = '';
+  render();
+}
+function render() {
+  var M = METHODS[run.method];
+  $('hdr-method').textContent = M.glyph + ' ' + M.name;
+  $('hdr-days').textContent = 'Days left: ' + run.days + ' of ' + BUDGET;
+  // ingredients
+  $('ings').innerHTML = ING_ORDER.map(function (k) {
+    var g = ING[k], held = !!run.held[k], planned = run.plan.indexOf(k) >= 0;
+    var gives = ingredientGives(k, run.method).map(function (x) { return mark(STAT_NAMES[x.stat] + ' ' + sign(x.value), x.changed); }).join(', ');
+    var srcs = g.src.map(function (s, i) {
+      var c = sourceCost(k, i, run.method);
+      var dis = held || run.busy || run.forged || c.days > run.days;
+      return '<button type="button" data-src="' + k + ':' + i + '"' + (dis ? ' disabled' : '') + '>' + esc(s[1]) +
+        ' <span class="pill">' + esc(s[0]) + '</span> ' + mark(c.days + (c.days === 1 ? ' day' : ' days'), c.changed) + '</button>';
+    }).join('');
+    return '<div class="ing' + (held ? ' held' : '') + '"><div class="top"><span class="name">' + esc(g.name) + '</span>' +
+      '<span class="tag">' + g.tags.join(', ') + (held ? ' · held' : '') + '</span></div>' +
+      '<div class="gives">' + gives + '</div><div class="row">' + srcs +
+      '<button type="button" data-plan="' + k + '"' + (run.forged ? ' disabled' : '') + '>' + (planned ? 'Remove from plan' : 'Add to plan') + '</button></div></div>';
+  }).join('');
+  // slots
+  var slots = '';
+  for (var i = 0; i < 4; i++) {
+    var k = run.plan[i];
+    slots += k ? '<div class="slot filled' + (run.held[k] ? '' : ' missing') + '">' + esc(ING[k].name) + (run.held[k] ? '' : '<br><span class="tag">not gathered</span>') + '</div>'
+               : '<div class="slot"><span class="tag">empty</span></div>';
+  }
+  $('slots').innerHTML = slots;
+  renderPreview();
+  // forge button
+  var allHeld = run.plan.length === 4 && run.plan.every(function (k) { return run.held[k]; });
+  $('btn-forge').disabled = !allHeld || !!run.forged || !!run.busy;
+  $('forge-why').textContent = run.forged ? 'Forged. Start a new run to try something else.' :
+    run.plan.length < 4 ? 'Plan four ingredients.' : allHeld ? '' : 'Gather every planned ingredient first.';
+  $('btn-clear').disabled = !!run.forged;
+  checkStranded();
+  renderRuns(); writeLog();
+}
+function renderPreview() {
+  var f = foundation(run.plan, run.method), tiers = doorTiers(f.stats);
+  var html = '<table><tr>' + STAT_ORDER.map(function (s) { return '<th>' + STAT_NAMES[s] + '</th>'; }).join('') + '</tr><tr>' +
+    STAT_ORDER.map(function (s) { return '<td class="big">' + f.stats[s] + '</td>'; }).join('') + '</tr></table>';
+  // Every pair is listed so the rules are visible; the ones in the plan are bold.
+  html += '<div class="note" style="margin-top:6px">Pairs, when both are in the Foundation:<br>' + PAIRS.map(function (p) {
+    var harmon = p.opposed && run.method === 'water';
+    var d = harmon ? { Q: 2 } : p.d, name = harmon ? 'Harmonised' : p.name;
+    var eff = Object.keys(d).map(function (s) { return STAT_NAMES[s] + ' ' + sign(d[s]); }).join(', ');
+    var active = run.plan.indexOf(p.a) >= 0 && run.plan.indexOf(p.b) >= 0;
+    var text = mark(name + ': ' + ING[p.a].name + ' + ' + ING[p.b].name + ' → ' + eff, harmon);
+    return active ? '<strong style="color:var(--ink)">' + text + ' (in plan)</strong>' : text;
+  }).join('<br>') + '</div>';
+  html += tiers.map(function (t) {
+    var label = t.tier === 2 ? 'wide open' : t.tier === 1 ? 'open' : 'shut';
+    return '<div class="door t' + t.tier + '"><strong>' + esc(t.name) + '</strong>: ' + label + '<br><span class="note">' +
+      t.reqs.map(function (r) {
+        return STAT_NAMES[r.stat] + ' <span class="' + (r.have >= r.need ? 'ok' : 'no') + '">' + r.have + '</span> (opens at ' + r.need + ', wide at ' + r.wide + ')';
+      }).join(' · ') + '</span></div>';
+  }).join('');
+  html += '<p style="margin:8px 0 0">Seals broken with this plan: <span class="big">' + score(tiers) + '</span> of 6' +
+    (run.plan.length < 4 ? ' <span class="note">(plan is ' + run.plan.length + ' of 4)</span>' : '') + '</p>';
+  $('preview').innerHTML = html;
+}
+function notePlan() {
+  run.planChanges++;
+  if (run.plan.length === 4 && !run.forged) run.previewed[run.plan.slice().sort().join('+')] = true;
+}
+function togglePlan(k) {
+  if (run.forged) return;
+  var i = run.plan.indexOf(k);
+  if (i >= 0) run.plan.splice(i, 1); else if (run.plan.length < 4) run.plan.push(k); else return;
+  notePlan(); render();
+}
+function gather(k, i) {
+  var c = sourceCost(k, i, run.method);
+  if (run.busy || run.held[k] || c.days > run.days || run.forged) return;
+  run.days -= c.days;
+  var total = c.days * SECONDS_PER_DAY * 1000, t0 = Date.now(), my = run;
+  run.busy = { key: k };
+  render();
+  $('activity').innerHTML = esc(ING[k].src[i][1]) + ' (' + c.days + (c.days === 1 ? ' day' : ' days') + ')<div class="bar"><div id="bar"></div></div>';
+  var timer = setInterval(function () {
+    if (run !== my) { clearInterval(timer); return; }
+    var p = Math.min(1, (Date.now() - t0) / total);
+    var bar = $('bar'); if (bar) bar.style.width = (p * 100) + '%';
+    if (p >= 1) {
+      clearInterval(timer); my.busy = null; my.held[k] = true;
+      $('activity').textContent = 'Gathered ' + ING[k].name + '.';
+      render();
+    }
+  }, 50);
+}
+function checkStranded() {
+  if (run.forged || run.busy) return;
+  var held = ING_ORDER.filter(function (k) { return run.held[k]; }).length;
+  if (held >= 4) { run.stranded = false; return; }
+  var costs = ING_ORDER.filter(function (k) { return !run.held[k]; }).map(function (k) {
+    return Math.min(sourceCost(k, 0, run.method).days, sourceCost(k, 1, run.method).days);
+  }).sort(function (a, b) { return a - b; });
+  var need = 4 - held, sum = 0;
+  for (var i = 0; i < need; i++) sum += costs[i];
+  run.stranded = sum > run.days;
+  if (run.stranded) $('activity').innerHTML = '<strong>The gate will close before you can hold four ingredients.</strong> Start a new run.';
+}
+function forge() {
+  if (run.forged) return;
+  var f = foundation(run.plan, run.method), tiers = doorTiers(f.stats);
+  run.forged = { makeup: run.plan.slice(), stats: f.stats, tiers: tiers, score: score(tiers),
+                 daysUsed: BUDGET - run.days, seconds: Math.round((Date.now() - run.startedAt) / 1000) };
+  $('result').innerHTML = '<div class="door t2" style="margin-top:12px"><strong>Foundation forged.</strong> Seals broken: <span class="big">' +
+    run.forged.score + '</span> of 6 (' + tiers.map(function (t) { return esc(t.name) + ' ' + ['shut', 'open', 'wide open'][t.tier]; }).join(', ') +
+    '). Days used: ' + run.forged.daysUsed + ' of ' + BUDGET + '.</div>';
+  render();
+}
+function makeupNames(mk) { return mk.map(function (k) { return ING[k].name; }).join(', '); }
+function renderRuns() {
+  var done = session.runs.filter(function (r) { return r.forged; });
+  if (!done.length) { $('runs').textContent = 'No runs finished yet.'; return; }
+  $('runs').innerHTML = '<table><tr><th>Run</th><th>Method</th><th>Makeup</th><th>Doors</th><th>Seals</th><th>Days</th></tr>' +
+    done.map(function (r) {
+      return '<tr><td>' + r.n + '</td><td>' + esc(METHODS[r.method].name) + '</td><td>' + esc(makeupNames(r.forged.makeup)) + '</td><td>' +
+        r.forged.tiers.map(function (t) { return ['shut', 'open', 'wide'][t.tier]; }).join(' / ') + '</td><td>' + r.forged.score + '</td><td>' + r.forged.daysUsed + '</td></tr>';
+    }).join('') + '</table>';
+}
+function writeLog() {
+  var lines = ['FORGE PROTOTYPE SESSION LOG', 'Session length: ' + Math.round((Date.now() - session.started) / 1000) + ' s',
+               'Runs started: ' + session.runs.length, 'Runs forged: ' + session.runs.filter(function (r) { return r.forged; }).length];
+  var switches = 0, changed = 0, prev = null;
+  session.runs.forEach(function (r) {
+    if (prev && prev.method !== r.method) switches++;
+    if (prev && prev.forged && r.forged && prev.forged.makeup.slice().sort().join('+') !== r.forged.makeup.slice().sort().join('+')) changed++;
+    prev = r;
+  });
+  lines.push('Method switches between runs: ' + switches, 'Runs forged with a different makeup from the run before: ' + changed, '');
+  session.runs.forEach(function (r) {
+    lines.push('Run ' + r.n + ' | ' + METHODS[r.method].name +
+      ' | full makeups compared before forging: ' + Object.keys(r.previewed).length +
+      ' | plan changes: ' + r.planChanges +
+      (r.forged ? ' | forged: ' + makeupNames(r.forged.makeup) + ' | seals ' + r.forged.score + '/6 | days ' + r.forged.daysUsed + '/' + BUDGET + ' | ' + r.forged.seconds + ' s'
+                : r.stranded ? ' | stranded, not forged' : ' | not forged'));
+  });
+  $('log').value = lines.join('\n');
+}
+document.addEventListener('click', function (e) {
+  var b = e.target.closest('button'); if (!b) return;
+  if (b.dataset.method) startRun(b.dataset.method);
+  else if (b.dataset.src) { var p = b.dataset.src.split(':'); gather(p[0], +p[1]); }
+  else if (b.dataset.plan) togglePlan(b.dataset.plan);
+  else if (b.id === 'btn-forge') forge();
+  else if (b.id === 'btn-clear') { if (run && !run.forged) { run.plan = []; notePlan(); render(); } }
+  else if (b.id === 'btn-new') showPick();
+  else if (b.id === 'btn-copy') {
+    writeLog(); var t = $('log'); t.select();
+    var done = function () { $('copied').textContent = 'Copied.'; };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(t.value).then(done, function () { document.execCommand('copy'); done(); });
+    else { document.execCommand('copy'); done(); }
+  }
+});
+showPick();
+</script>
+</body>
+</html>
