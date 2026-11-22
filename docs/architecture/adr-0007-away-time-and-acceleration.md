@@ -53,7 +53,7 @@ Accepted
 | **Depends On** | ADR-0003, ADR-0006 |
 | **Enables** | ADR-0008, ADR-0012, ADR-0013, ADR-0014, ADR-0016, ADR-0018, ADR-0019, ADR-0022, ADR-0025, ADR-0027 |
 | **Blocks** | None |
-| **Ordering Note** | ADR-0025 voids the bank-across-checkpoint-retries row and leaves the lifespan rows with nothing to apply to; the bank itself stands. ADR-0027 means unused away time stops only at an objective or another listed stop, never at a discovery, and away time runs through the slot, then the waiting list (ADR-0022), then the bank. Cited but not listed as dependencies (superseded, or written later): ADR-0002. |
+| **Ordering Note** | ADR-0025 voids the bank-across-checkpoint-retries row and leaves the lifespan rows with nothing to apply to; the bank itself stands. The Storage limit row's fixed few-day cap is overtaken (noted 22 November 2026): the cap starts at 1 h and breakthroughs raise it to 6 h at Foundation, 24 h at the First Direction and 72 h at the Second, per design plan B.6, ADR-0025 §5 and ADR-0030 §4. ADR-0027 means unused away time stops only at an objective or another listed stop, never at a discovery, and away time runs through the slot, then the waiting list (ADR-0022), then the bank. Cited but not listed as dependencies (superseded, or written later): ADR-0002. |
 
 ## GDD Requirements Addressed
 

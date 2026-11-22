@@ -13,7 +13,7 @@ Status: Accepted by owner decision; the bands are provisional and move with cont
 | Foundation | 480–780 s (8–13 min) | the direct routes, the quickest sensible play |
 | Foundation, wandering | at most 1200 s (20 min) | the preference routes, which wander and over-train |
 | Circulation opens | by 600 s (10 min) | the direct routes, leaving a Settling sitting's room before the ceiling |
-| Any outing, sitting or breakthrough | at most 180 s | every timed record |
+| Any outing, sitting or breakthrough | at most 180 s | every timed village and ridge record; a basin record may run to 300 s (22 November amendment) |
 | Foundation to the waystation | 720–1440 s (12–24 min) | every ridge route, from the channel and from the hollow |
 
 On 27 October the direct routes measured 9.47 min (channel) and 10.73 min (hollow), with Circulation opening at about 355 s and 443 s, and every ridge route reached the waystation 15.9–20.2 minutes after Foundation (16.2–19.2 on the eight direct routes, after the Earth and Formation lines began tracing the bandit's cache). Those figures live in [`playtest/SIMULATION-REPORT.md`](../../playtest/SIMULATION-REPORT.md) and in `bun run validate`'s output; the bands above are the decision. `scripts/routes.ts` prints its routes and fails only when one cannot reach Foundation; it enforces no band of its own.
@@ -21,6 +21,8 @@ On 27 October the direct routes measured 9.47 min (channel) and 10.73 min (hollo
 **Consequences.** One bound, in one place: the validator. The design plan, the README and PRODUCT.md say "about ten minutes" and point at the report for the measured figure. The route scripts must play honestly as described above, so a faster figure comes from content, not from a script that skips Rest. A sustained earner no longer exists in chapter one to measure ([ADR 0022](adr-0022-chore-tempo.md)), so the "sustained-only" slow edge the plan once asked for is not reported.
 
 **Supersessions.** Supersedes design plan Part E check 4's 45-minute and 27-minute bounds and the bound line that opens Part C, the validator's 720–1200 s and 850 s bands, the ridge window of 900–2700 s, and the README's and PRODUCT.md's fifteen minutes. Does not change [ADR 0019](adr-0019-early-campaign-pacing.md)'s later-stage targets, which stay provisional and unmeasured.
+
+**Amendment, 22 November 2026.** Two corrections from the cross-ADR reviews of 29 October and 22 November; neither changes what `bun run validate` enforces. First, the 180 s ceiling binds village and ridge records only. A basin-road timed record may run to 300 s (`BASIN_TIMED_CEILING` in `scripts/validate.ts`), as [`design/CHAPTER-2-BASIN-ROAD.md`](../../design/CHAPTER-2-BASIN-ROAD.md) C2.7 sets and [ADR 0030](adr-0030-sphere-techniques.md) accepts. Second, the supersessions above also cover [ADR 0020](adr-0020-knowledge-woven-into-systems.md)'s 35-45-minute Foundation window and 90-240-minute waystation window; that ADR's Ordering Note already points here.
 
 Still open: whether ten minutes survives human play, and whether the ridge, at roughly sixteen to twenty minutes, wants the same honest-play review once later chapters exist.
 
@@ -51,7 +53,7 @@ Accepted
 | **Depends On** | ADR-0019, ADR-0022 |
 | **Enables** | ADR-0032 |
 | **Blocks** | None |
-| **Ordering Note** | None. ADR-0030 keeps the Foundation and ridge bands; the basin-road bands live in `design/CHAPTER-2-BASIN-ROAD.md`. |
+| **Ordering Note** | None. ADR-0030 keeps the Foundation and ridge bands; the basin-road bands live in `design/CHAPTER-2-BASIN-ROAD.md`, including the 300 s ceiling for basin timed records (22 November 2026 amendment). This ADR's bands replace ADR-0020's time windows. |
 
 ## GDD Requirements Addressed
 
